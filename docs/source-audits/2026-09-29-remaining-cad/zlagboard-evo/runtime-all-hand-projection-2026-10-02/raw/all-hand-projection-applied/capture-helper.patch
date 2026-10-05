@@ -1,0 +1,29 @@
+--- prior-capture
++++ projection-capture
+@@ -1,8 +1,8 @@
+ from pathlib import Path
+ import os,sys,json,time,subprocess,hashlib,traceback
+ base=Path('.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo')
+-arm=sys.argv[1];assert arm in ['on','off']
+-out=base/('strict-hands-'+arm+'-b-landscape');out.mkdir(exist_ok=False)
++arm=sys.argv[1];assert arm in ['o1','p1','p2','o2']
++out=base/('all-hand-projection-'+arm+'-landscape');out.mkdir(exist_ok=False)
+ uid='BDCA0D77-94C2-4A97-900B-443F75C64691';commands=[];captures=[];transitions=[];tracefolder=None
+ start=time.monotonic();deadline=start+300;pending=[];known=set();scene=None
+ 
+@@ -30,12 +30,12 @@
+ 
+ try:
+  data=Path(run('xcrun','simctl','get_app_container',uid,'com.hangten.training','data'))
+- flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-strict-hands-b-'+arm,'HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
++ flags={'HANGTEN_REVIEW_BOARD_ID':'zlagboard.evo','HANGTEN_REVIEW_PLAN_ID':'research.max-hangs','HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC':'1','HANGTEN_REVIEW_DIAGNOSTIC_RUN':'placid-badger-cad-second-half-all-hand-projection-'+arm,'HANGTEN_REVIEW_LANDSCAPE':'1','HANGTEN_REVIEW_WORKOUT_BOUNDARY_CENSUS':'1'}
+  flags['HANGTEN_REVIEW_WORKOUT_AT_ROOT']='1'
+- if arm=='off':flags['HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS']='1'
++ if arm.startswith('p'):flags['HANGTEN_REVIEW_ALL_HAND_PERSPECTIVE']='1'
+  env={k:v for k,v in os.environ.items() if not k.startswith('SIMCTL_CHILD_HANGTEN_REVIEW_')};env.update({'SIMCTL_CHILD_'+k:v for k,v in flags.items()})
+  (out/'launch-review-environment.json').write_text(json.dumps(flags,indent=2)+'\n')
+- (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'Existing WorkoutAccessGate and production automatic-start policy in both arms; explicit DEBUG AUTOSTART omitted, fresh process/session; both arms direct root with no openurl; OFF adds only immutable strict all-hand-host suppression flag; old landscape hand-OFF flag absent both arms'},indent=2)+'\n')
++ (out/'protocol.json').write_text(json.dumps({'hardBoundSeconds':300,'plannedPhases':['active','preview','active'],'captureOffsetsAfterActualMutation':[.25,1,3,5],'afterLaunchUIAccess':'screenshots only; no AX queries/taps/Skip','externalTracePollingSeconds':.03,'routineUnchanged':True,'samplerLimit':'Existing120-iteration sampler remains; new identical both-arm boundary census on actual highlight-before/after supplies sparse late-phase app/window/placement evidence, not every capture instant','arm':arm,'startup':'Existing WorkoutAccessGate and production automatic-start policy in both arms; explicit DEBUG AUTOSTART omitted, fresh process/session; both arms direct root with no openurl; P adds only immutable all-actual-hand-camera perspective flag; all suppression/old hand-OFF/camera/standalone/navigation flags absent all arms'},indent=2)+'\n')
+  tracefolder=data/'Documents'/('HighlightDiagnostic-'+flags['HANGTEN_REVIEW_DIAGNOSTIC_RUN']);assert not tracefolder.exists()
+  run('xcrun','simctl','launch','--terminate-running-process',uid,'com.hangten.training',env=env)
+  initialStart=time.time();run('xcrun','simctl','io',uid,'screenshot',out/'launch-initial.png');initialEnd=time.time()

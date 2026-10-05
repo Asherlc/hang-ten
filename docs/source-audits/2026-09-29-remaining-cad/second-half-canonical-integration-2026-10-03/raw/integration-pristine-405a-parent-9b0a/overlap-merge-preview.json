@@ -1,0 +1,30 @@
+{
+  "refs": {
+    "base": "9399160729fcc418cedf47344b41163d244b5d96",
+    "own": "405a4530ab3a26496cf4e44fb59917e5befd7af8",
+    "parent": "9b0a371f72216ab7746d876c141f834f815ffc34"
+  },
+  "files": [
+    {
+      "file": "Tools/HangboardCAD/native_cord_routes.py",
+      "mergeFileExitStatus": 1
+    },
+    {
+      "file": "Tools/HangboardPackages/src/hangboard_packages/cad_source.py",
+      "mergeFileExitStatus": 0
+    },
+    {
+      "file": "docs/HANGBOARD_CORD_AUTHORING.md",
+      "mergeFileExitStatus": 0
+    },
+    {
+      "file": "docs/model-delivery-lock.json",
+      "mergeFileExitStatus": 2
+    },
+    {
+      "file": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "mergeFileExitStatus": 0
+    }
+  ],
+  "previewOnly": true
+}

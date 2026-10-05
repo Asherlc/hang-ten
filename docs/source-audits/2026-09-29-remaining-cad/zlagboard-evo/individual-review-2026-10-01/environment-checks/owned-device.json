@@ -1,0 +1,15 @@
+[
+  {
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "dataPath": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/6969EFC0-48DE-459D-8186-057E71B7A95B/data",
+    "dataPathSize": 598720512,
+    "logPath": "/Users/asherlc/Library/Logs/CoreSimulator/6969EFC0-48DE-459D-8186-057E71B7A95B",
+    "udid": "6969EFC0-48DE-459D-8186-057E71B7A95B",
+    "lastUsedAt": "2026-10-02T02:59:20Z",
+    "isAvailable": true,
+    "logPathSize": 184320,
+    "deviceTypeIdentifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+    "state": "Booted",
+    "name": "Hang Ten Paseo placid-badger-cad-second-half Review Zlagboard Evo"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "package": "yy-baguette",
+  "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "editedFeature": "LeftDepth25",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "yy_edge_25"
+  ],
+  "bodyVolumeBeforeMM3": 487638.68981841794,
+  "bodyVolumeAfterMM3": 486045.9553159474,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

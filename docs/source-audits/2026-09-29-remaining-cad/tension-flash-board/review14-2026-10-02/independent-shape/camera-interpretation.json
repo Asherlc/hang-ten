@@ -1,0 +1,20 @@
+{
+  "finding": "fixed-world inspection camera; no authored grip-orientation defect established",
+  "physicalGate": "pass unchanged",
+  "runtimeVerified": false,
+  "productionFilesChanged": false,
+  "readSources": [
+    {
+      "path": ".context/placid-badger/flash-board-review14/post-handoff-preparation/render-cord-views.py",
+      "sha256": "48d44cbee7d98156866e2602c6193145584b6b638b8b0c6b4ec2a7fb940888b4"
+    },
+    {
+      "path": "HangTen/Views/SuspendedBoardPresentation.swift",
+      "sha256": "dda582178a34701fe8c94ca5f89ae9367e1c89f4e2bea4e4c2825cdf9d4c0ca6"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5"
+    }
+  ]
+}

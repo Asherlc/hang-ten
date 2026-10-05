@@ -1,0 +1,311 @@
+{
+  "status": "pass",
+  "blockingFindings": [],
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "modelSHA256": "f06a5350e07862d1619556d1c81aefe5bf83c64f5688394d2763355c459f637b",
+  "descriptorSHA256": "147f8c18768831c7bc4e04c161c491cbfa7c95c37f99d6ca1ba7a527b9736ffb",
+  "faceEnvelopeMM": [
+    711.0000252723694,
+    221.99988365173337
+  ],
+  "publishedDepths": [
+    {
+      "contactID": "pocket-4-left",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.99957650899887,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-5-left",
+      "expectedDepthMM": 25,
+      "actualMeshDepthMM": 24.999909102916725,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-6-left",
+      "expectedDepthMM": 19,
+      "actualMeshDepthMM": 18.999990075826652,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-7-left",
+      "expectedDepthMM": 36,
+      "actualMeshDepthMM": 35.99990159273148,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-8-left",
+      "expectedDepthMM": 15,
+      "actualMeshDepthMM": 14.999836683273323,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-9-left",
+      "expectedDepthMM": 35,
+      "actualMeshDepthMM": 34.999454393982894,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-10-left",
+      "expectedDepthMM": 17,
+      "actualMeshDepthMM": 17.000000923872,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-11-left",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.99999484419823,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-12-left",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 30.000000260770328,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-13-left",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 14.000000432133682,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-15-center",
+      "expectedDepthMM": 50,
+      "actualMeshDepthMM": 49.99999701976777,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-16-center",
+      "expectedDepthMM": 37,
+      "actualMeshDepthMM": 37.00000047683716,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-17-center",
+      "expectedDepthMM": 28,
+      "actualMeshDepthMM": 27.999999001622207,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-18-center",
+      "expectedDepthMM": 32,
+      "actualMeshDepthMM": 31.999998725950725,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-13-right",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.999845832586296,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-12-right",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.999664984643466,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-11-right",
+      "expectedDepthMM": 14,
+      "actualMeshDepthMM": 13.99999484419823,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-10-right",
+      "expectedDepthMM": 17,
+      "actualMeshDepthMM": 16.99997857213021,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-9-right",
+      "expectedDepthMM": 35,
+      "actualMeshDepthMM": 34.99997220933438,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-8-right",
+      "expectedDepthMM": 15,
+      "actualMeshDepthMM": 14.99998942017556,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-7-right",
+      "expectedDepthMM": 36,
+      "actualMeshDepthMM": 35.99995374679566,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-6-right",
+      "expectedDepthMM": 19,
+      "actualMeshDepthMM": 18.99999752640725,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "edge-5-right",
+      "expectedDepthMM": 25,
+      "actualMeshDepthMM": 24.999909102916725,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "pocket-4-right",
+      "expectedDepthMM": 30,
+      "actualMeshDepthMM": 29.99957650899887,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "expectedDepthMM": 55,
+      "actualMeshDepthMM": 54.999995976686485,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "expectedDepthMM": 55,
+      "actualMeshDepthMM": 54.999995976686485,
+      "passes0001MMGate": true
+    },
+    {
+      "contactID": "round-sloper-3-center",
+      "expectedDepthMM": 65,
+      "actualMeshDepthMM": 64.99999761581421,
+      "passes0001MMGate": true
+    }
+  ],
+  "descriptorContactBounds": [
+    {
+      "contactID": "edge-11-left",
+      "maximumNormalizedBoundsError": 3.1954548035395547e-10
+    },
+    {
+      "contactID": "edge-11-right",
+      "maximumNormalizedBoundsError": 4.259832486752657e-10
+    },
+    {
+      "contactID": "edge-5-left",
+      "maximumNormalizedBoundsError": 3.383290314573628e-10
+    },
+    {
+      "contactID": "edge-5-right",
+      "maximumNormalizedBoundsError": 3.383290314573628e-10
+    },
+    {
+      "contactID": "edge-6-left",
+      "maximumNormalizedBoundsError": 3.56046192528936e-10
+    },
+    {
+      "contactID": "edge-6-right",
+      "maximumNormalizedBoundsError": 4.230803485327783e-10
+    },
+    {
+      "contactID": "edge-7-left",
+      "maximumNormalizedBoundsError": 4.847310330902133e-10
+    },
+    {
+      "contactID": "edge-7-right",
+      "maximumNormalizedBoundsError": 4.6379411422492467e-10
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "maximumNormalizedBoundsError": 3.485209898457242e-10
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "maximumNormalizedBoundsError": 3.485209898457242e-10
+    },
+    {
+      "contactID": "jug-1-left",
+      "maximumNormalizedBoundsError": 3.0039012943738896e-10
+    },
+    {
+      "contactID": "jug-1-right",
+      "maximumNormalizedBoundsError": 3.003901571929646e-10
+    },
+    {
+      "contactID": "jug-14-center",
+      "maximumNormalizedBoundsError": 2.0478230222664706e-10
+    },
+    {
+      "contactID": "pocket-10-left",
+      "maximumNormalizedBoundsError": 3.805106785215173e-10
+    },
+    {
+      "contactID": "pocket-10-right",
+      "maximumNormalizedBoundsError": 4.055641378286623e-10
+    },
+    {
+      "contactID": "pocket-12-left",
+      "maximumNormalizedBoundsError": 4.764078437302643e-10
+    },
+    {
+      "contactID": "pocket-12-right",
+      "maximumNormalizedBoundsError": 4.764078437302643e-10
+    },
+    {
+      "contactID": "pocket-13-left",
+      "maximumNormalizedBoundsError": 4.412249454688322e-10
+    },
+    {
+      "contactID": "pocket-13-right",
+      "maximumNormalizedBoundsError": 4.412249454688322e-10
+    },
+    {
+      "contactID": "pocket-15-center",
+      "maximumNormalizedBoundsError": 3.9227399106778194e-10
+    },
+    {
+      "contactID": "pocket-16-center",
+      "maximumNormalizedBoundsError": 4.986495105718802e-10
+    },
+    {
+      "contactID": "pocket-17-center",
+      "maximumNormalizedBoundsError": 4.852088730800119e-10
+    },
+    {
+      "contactID": "pocket-18-center",
+      "maximumNormalizedBoundsError": 4.09698996950425e-10
+    },
+    {
+      "contactID": "pocket-4-left",
+      "maximumNormalizedBoundsError": 2.3090435119499375e-10
+    },
+    {
+      "contactID": "pocket-4-right",
+      "maximumNormalizedBoundsError": 2.3090440670614498e-10
+    },
+    {
+      "contactID": "pocket-8-left",
+      "maximumNormalizedBoundsError": 4.373748585528858e-10
+    },
+    {
+      "contactID": "pocket-8-right",
+      "maximumNormalizedBoundsError": 4.659743424451079e-10
+    },
+    {
+      "contactID": "pocket-9-left",
+      "maximumNormalizedBoundsError": 3.968181339075727e-10
+    },
+    {
+      "contactID": "pocket-9-right",
+      "maximumNormalizedBoundsError": 2.583030456193569e-10
+    },
+    {
+      "contactID": "round-sloper-3-center",
+      "maximumNormalizedBoundsError": 4.497092698230176e-10
+    }
+  ],
+  "toleranceMM": 0.001,
+  "wholeRuntimeBoundsM": {
+    "min": [
+      -0.3555000126361847,
+      -6.3785243270410894e-18,
+      -2.70316006737429e-19
+    ],
+    "max": [
+      0.3555000126361847,
+      0.22199988365173337,
+      0.09399999678134922
+    ]
+  },
+  "symmetricXBoundsErrorMM": 0.0
+}

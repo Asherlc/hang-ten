@@ -1,0 +1,18 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/check_export_mesh.py"
+  ],
+  "startedUTC": "2026-10-02T02:28:24.128181+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-independent-export-actual-mesh-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 43556,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 1.771492457948625
+}

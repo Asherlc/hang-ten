@@ -1,0 +1,212 @@
+{
+  "package": "captain-fingerfood-dual",
+  "reviewDate": "2026-09-30",
+  "scope": "Read-only independent source and cord cache review; no CAD, package, shared audit or runtime edits",
+  "sidecarSHA256": "8f6de683212d1083583a9795852f6b3458d8a4db63e11ce6de44d10d6b64a8da",
+  "sources": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/captain-fingerfood-dual.html",
+      "url": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+      "publisher": "Captain Fingerfood",
+      "sha256": "c93df995f581f2a731e45f38a8504744ee393059d7a714019dc679b702e3ffb2"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/captain-fingerfood-dual-title.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/DualTitelbild.jpg?v=1739704755",
+      "publisher": "Captain Fingerfood",
+      "sha256": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/DualP1.jpg",
+      "url": "https://captainfingerfood.rocks/cdn/shop/files/DualP1.jpg?v=1739704755",
+      "publisher": "Captain Fingerfood",
+      "sha256": "b67f397ceefa3054f7d6ac038a8459fe8389753713ebb97274acc1a17a6de5c8"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/evidence/DualP2.jpg",
+      "url": "https://captainfingerfood.rocks/cdn/shop/files/DualP2.jpg?v=1739704755",
+      "publisher": "Captain Fingerfood",
+      "sha256": "5b9f30b16919157e9017f51cebe979bd5aae99f69b4c48827c7b5fdb1145649b"
+    }
+  ],
+  "sourceFacts": {
+    "title": "Both loaded orange leads visibly descend across the FRONT opening from above the straight upper lip into separate openings in the cavity floor. They are not merely lines concealed behind the board.",
+    "DualP1": "Two orange spans enter the open front recess; the loose exterior rope/knot is visible. The near lip occludes the exact floor intersections, so this supports the front-side visible approach but not the complete hidden connection.",
+    "DualP2": "The board without rope shows two daylight openings through the recess floor. This corroborates independent floor-to-back holes; no connecting rear U channel is shown."
+  },
+  "unknowns": [
+    "The exact rear return path connecting the two holes is not visible in these retained images.",
+    "No internal U passage between the holes is established.",
+    "Do not treat the support convergence, lead length or bore measurements as manufacturer physical cord specifications."
+  ],
+  "nativeCoordinates": {
+    "basis": "Native (X,Y,Z) mm \u2192 runtime (X,Z,-Y)/1000; native front is -Y, runtime front is +Z",
+    "frontMouthRuntimeMeters": [
+      [
+        -0.026,
+        0.001,
+        -0.005
+      ],
+      [
+        0.026,
+        0.001,
+        -0.005
+      ]
+    ],
+    "rearMouthRuntimeMeters": [
+      [
+        -0.026,
+        0.001,
+        -0.015
+      ],
+      [
+        0.026,
+        0.001,
+        -0.015
+      ]
+    ],
+    "source": "native-channel-measurements.json and geometry-authoring-notes.md:5-7"
+  },
+  "poseApproachEvidence": {
+    "curved-lip-front": {
+      "left-lead": {
+        "penultimateRuntimeMeters": [
+          -0.025943974,
+          0.001797718,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          -0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      },
+      "right-lead": {
+        "penultimateRuntimeMeters": [
+          0.025943974,
+          0.001797718,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      }
+    },
+    "exterior-jug-back": {
+      "left-lead": {
+        "penultimateRuntimeMeters": [
+          -0.025899107,
+          -0.000440507,
+          -0.003444365
+        ],
+        "terminalRuntimeMeters": [
+          -0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": -1.555635,
+        "approachesFrontMouthFrom": "front cavity",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      },
+      "right-lead": {
+        "penultimateRuntimeMeters": [
+          0.025899107,
+          -0.000440507,
+          -0.003444365
+        ],
+        "terminalRuntimeMeters": [
+          0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": -1.555635,
+        "approachesFrontMouthFrom": "front cavity",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      }
+    },
+    "left-pocket-vertical": {
+      "left-lead": {
+        "penultimateRuntimeMeters": [
+          -0.025200192,
+          0.00099786,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          -0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      },
+      "right-lead": {
+        "penultimateRuntimeMeters": [
+          0.026799778,
+          0.000997514,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      }
+    },
+    "straight-lip-inverted": {
+      "left-lead": {
+        "penultimateRuntimeMeters": [
+          -0.025944005,
+          0.000202283,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          -0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      },
+      "right-lead": {
+        "penultimateRuntimeMeters": [
+          0.025944005,
+          0.000202283,
+          -0.015
+        ],
+        "terminalRuntimeMeters": [
+          0.026,
+          0.001,
+          -0.005
+        ],
+        "lastSegmentDeltaZmm": 9.999999999999998,
+        "approachesFrontMouthFrom": "rear/bore interior",
+        "nativeBoreFrontRuntimeZmm": -5,
+        "nativeBoreRearRuntimeZmm": -15
+      }
+    }
+  },
+  "defect": "Correct front terminal positions, but unconstrained section route takes the shortest REAR entrance in curved-lip-front, straight-lip-inverted and left-pocket-vertical. Their final segment passes through the bore from rear z=-.015 to front z=-.005, hiding the cord behind the board. Native clearance success does not validate source threading.",
+  "existingConstraintGap": "planeAxis [0,0,1] selects a plane direction, not the signed mouth entry side; mouthAxis is absent.",
+  "minimalCorrectionRecommendation": "Keep both native holes, terminal stations and independent visible lead graph. Supply the evidenced outward front mouthAxis [0,0,1] for both leads, letting the native solver derive clear front exits and routes into the recess. Regenerate every pose and validate native clearance/tubes/length/current app imagery. Do not add a guessed rear connection.",
+  "misleadingPriorClaim": "geometry-authoring-notes.md:11 describes front-mouth termination accurately but claims the section preserves the front cavity approach; the terminal side alone does not establish the path side."
+}

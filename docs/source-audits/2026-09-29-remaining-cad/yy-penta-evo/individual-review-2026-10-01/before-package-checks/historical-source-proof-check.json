@@ -1,0 +1,268 @@
+{
+  "hashes": {
+    "Hangboards/yy-penta-evo/suspension.json": "e419f73232d56bdf29b609f94316cf8b6fc1db215c0423a6348841ddd9714c8f",
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+    "Hangboards/yy-penta-evo/assets/primary.usdz": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+    "Hangboards/yy-penta-evo/assets/primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764"
+  },
+  "initialMigrationBytePreserved": {
+    "Hangboards/yy-penta-evo/suspension.json": true,
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": true,
+    "Hangboards/yy-penta-evo/assets/primary.usdz": true,
+    "Hangboards/yy-penta-evo/assets/primary.model.json": true
+  },
+  "historicalProofsMatch": {
+    "source": true,
+    "asset": true,
+    "descriptor": true,
+    "sidecar": true
+  },
+  "evidence": [
+    {
+      "path": "evidence/yy-penta-evo-front-reverse.webp",
+      "actualSHA256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+      "matches": true
+    },
+    {
+      "path": "evidence/yy-penta-evo-close-up.webp",
+      "actualSHA256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+      "matches": true
+    }
+  ],
+  "archiveValid": true,
+  "nativeObjectTypes": {
+    "Part::Feature": 1,
+    "Sketcher::SketchObject": 48,
+    "Part::Extrusion": 2,
+    "Part::Loft": 15,
+    "Part::Face": 4,
+    "Part::Compound": 4,
+    "Part::Fillet": 1,
+    "Part::Cut": 7,
+    "Part::Common": 9
+  },
+  "sketches": [
+    {
+      "name": "OuterUnitProfile",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile4",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile4",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile4",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "OpeningProfile5",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "TrayProfile5",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "RingProfile5",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "UpperBandRun",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_25Section0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_25Section1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_25Section2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_25Section3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_20Section0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_20Section1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_20Section2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_20Section3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_15Section0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_15Section1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_15Section2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_15Section3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_10Section0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_10Section1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_10Section2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "edge_10Section3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection4",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "monoSection5",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection0",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection1",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection2",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection3",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection4",
+      "fullyConstrainedSaved": true
+    },
+    {
+      "name": "duoSection5",
+      "fullyConstrainedSaved": true
+    }
+  ],
+  "parameters": [
+    {
+      "object": "Parameters",
+      "PocketDepthScale": {
+        "value": "1.0000000000000000"
+      }
+    }
+  ],
+  "rawHistoricalProofSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/source-register.json": "f117fc319fd0ff7e355227e6ae6234f5e7bf953504fccaeccaff212df560d36d",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/metadata-preservation.json": "33932ad19a2c20e10271e756b9e5fe4113cbcd4f900ba8ad90f634d9f4205b10",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-authoring-geometry.json": "1d7c66283ff677b01dce83b7dbb45cf8bdd1337cfb4b0522da431d969a790e50",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-validation.json": "842df4546cc19bd611b710934e673dd72193af2175e9431c778f2eabe80cea41",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/compile-final-check.json": "b3849aed7e00c84e7037e1b44da292f35832d7b273870631a8c502585e54ef54",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-route-right-check.json": "ea6a5a5db263d19b1daf133c1a22979aa71793ddef71a15b1d91ecaf7a212332",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/geometry-visual-review.json": "41070495279caa618c44276a921ed032da33e6afbd711c8714f6e6465ae6d617",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-route-left-check.json": "ea6a5a5db263d19b1daf133c1a22979aa71793ddef71a15b1d91ecaf7a212332",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/compile-initial-superseded.json": "9ded596e5af533b7cce5f0c27c7329ff543e2532e2ca52c8d35260bf00ce665b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-route-right-report.json": "ea6a5a5db263d19b1daf133c1a22979aa71793ddef71a15b1d91ecaf7a212332",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/metadata-diff.json": "a3398eb541f25f0808a29d4298a95eded77492598ef0a223aaae51f43b6c4159",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/continuous-cord-clearance.json": "23a966d9e77af4ed3d7dd6226d7a3dce039e6c97f80ab3722daa0f8c65872c84",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/final-hash-closure.json": "2db7ecfbfdca40cc1029eef06f04ab256952a99777466a5c3f22255c82513b00",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/retained-evidence-check.json": "498e5459fafd0708fe5697b0899740053c861a911f770a7d4dc86fcb7a23095a",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/native-route-left-report.json": "ea6a5a5db263d19b1daf133c1a22979aa71793ddef71a15b1d91ecaf7a212332",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/cord-authoring-review.json": "3614dc57d92de9e1f3cf5c1448a155396a5c428434c581a3059cc281172b4b3c",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/app-review/default-accessibility.json": "7d728691af6679211bfb5fa1dc067389f4dbc6badfe856bf3fb49719c966bde9",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/app-review/contact-selection-accessibility.json": "fb65d4011a9cc931a7806cfd05619158393e838ec2150f31854bf1a55dab8295",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-penta-evo/app-review/validation.json": "a3bd115bfec488157e95db3c8535c2ce184dda84dbb4e0502efcf3a8e078f8c2"
+  },
+  "cheapestVerification": "Reuse exact-hash native edit/compile/cord certificates; independent current package/USD and narrow staging. No unchanged re-export/re-solve."
+}

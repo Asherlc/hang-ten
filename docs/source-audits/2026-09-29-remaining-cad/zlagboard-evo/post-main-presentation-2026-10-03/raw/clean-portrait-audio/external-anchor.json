@@ -1,0 +1,11 @@
+{
+  "routeStart": {
+    "epoch": 1791056554.9473522,
+    "monotonic": 121432.793342708
+  },
+  "routeCompleted": {
+    "epoch": 1791056555.155,
+    "monotonic": 121433.000992
+  },
+  "noAppPhaseInference": true
+}

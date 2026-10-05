@@ -1,0 +1,201 @@
+{
+  "owner": "placid-badger",
+  "records": [
+    {
+      "slug": "aelith-cyclops-011",
+      "surfaceFinish": "neutral",
+      "sourceBeforeSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "sourceAfterSHA256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/aelith-cyclops-011/assets/primary.model.json": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7",
+        "Hangboards/aelith-cyclops-011/assets/primary.usdz": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "captain-fingerfood-dual",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "sourceAfterSHA256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/captain-fingerfood-dual/assets/primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+        "Hangboards/captain-fingerfood-dual/assets/primary.usdz": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "captain-fingerfood-unlevel",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "sourceAfterSHA256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/captain-fingerfood-unlevel/assets/primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89",
+        "Hangboards/captain-fingerfood-unlevel/assets/primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "frictitious-nug",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "sourceAfterSHA256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/frictitious-nug/assets/primary.model.json": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+        "Hangboards/frictitious-nug/assets/primary.usdz": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "frictitious-port-a-board",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "sourceAfterSHA256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/frictitious-port-a-board/assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+        "Hangboards/frictitious-port-a-board/assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "metolius-contact",
+      "surfaceFinish": "plastic",
+      "sourceBeforeSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "sourceAfterSHA256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/metolius-contact/assets/primary.model.json": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+        "Hangboards/metolius-contact/assets/primary.usdz": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": [
+        "flat-sloper-center",
+        "edge-17-center",
+        "edge-18-center"
+      ]
+    },
+    {
+      "slug": "yy-baguette",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "sourceAfterSHA256": "9e56cec4e8494d26bc97629c8a73a11dc7b4adf9e5071a0963eafe3827c95d52",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/yy-baguette/assets/primary.model.json": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+        "Hangboards/yy-baguette/assets/primary.usdz": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "yy-baguette-evo",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "sourceAfterSHA256": "4fb7a667d4bccea4edb2bb3eebfd4fa44bb463fa9b2c68ba9e169a0359cd4f06",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/yy-baguette-evo/assets/primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921",
+        "Hangboards/yy-baguette-evo/assets/primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "yy-penta-evo",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+      "sourceAfterSHA256": "9428f611eacebba0345d860fb935f50e1bedf3dac4317a1ffe89cc52d371c4fa",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/yy-penta-evo/assets/primary.model.json": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764",
+        "Hangboards/yy-penta-evo/assets/primary.usdz": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "yy-travelboard",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+      "sourceAfterSHA256": "620d6252a52c4931966323b0027e0629f8e7f30fb896e49f568ddf975cffbd7e",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/yy-travelboard/assets/primary.model.json": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69",
+        "Hangboards/yy-travelboard/assets/primary.usdz": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "zlagboard-evo",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+      "sourceAfterSHA256": "dd77c88760621bb0b1e2a27cee437837e342ea1fefbc01b30270977825264952",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/zlagboard-evo/assets/primary.model.json": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383",
+        "Hangboards/zlagboard-evo/assets/primary.usdz": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    },
+    {
+      "slug": "zlagboard-pro",
+      "surfaceFinish": "wood",
+      "sourceBeforeSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "sourceAfterSHA256": "73bd799fa6b8d4ce8b1900ae26e9fc6cb489017e70845fd837a21c2b5c6bb820",
+      "archiveChangedMembers": [
+        "Document.xml"
+      ],
+      "allBRepsByteIdentical": true,
+      "assetsByteIdentical": {
+        "Hangboards/zlagboard-pro/assets/primary.model.json": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+        "Hangboards/zlagboard-pro/assets/primary.usdz": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7"
+      },
+      "suspensionByteIdentical": true,
+      "handCapacity2ContactsFromMain": []
+    }
+  ]
+}

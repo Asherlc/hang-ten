@@ -1,0 +1,22 @@
+F.....                                                                   [100%]
+=================================== FAILURES ===================================
+___ test_absent_option_preserves_seed_exactly_and_invalid_option_fails[None] ___
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10cfaac30>
+invalid = None
+
+    @pytest.mark.parametrize("invalid", [None, True, 1, "unrecognized", {}, []])
+    def test_absent_option_preserves_seed_exactly_and_invalid_option_fails(monkeypatch, invalid):
+        import native_cord_routes as native
+        data={"suspension":{"strands":[],"canonicalPoses":{}},"ropeSolver":{}}
+        seed={"sentinel":{"routes":[1,2,3]}}
+        monkeypatch.setattr(native,"_solve_native_routes",lambda *args,**kwargs:seed)
+        assert native.solve_native_routes(None,data,{}) is seed
+        data["ropeSolver"]["tightening"]=invalid
+>       with pytest.raises(ValueError,match="tightening"):
+E       Failed: DID NOT RAISE ValueError
+
+Tools/HangboardCAD/tests/test_native_cord_tightening.py:118: Failed
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_tightening.py::test_absent_option_preserves_seed_exactly_and_invalid_option_fails[None]
+1 failed, 5 passed, 8 deselected in 1.14s

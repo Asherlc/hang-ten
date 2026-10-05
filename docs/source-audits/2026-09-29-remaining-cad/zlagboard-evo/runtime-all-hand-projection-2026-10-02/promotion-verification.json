@@ -1,0 +1,12 @@
+{
+  "createdUTC": "2026-10-02T23:59:46.026582+00:00",
+  "copiedRawFiles": 327,
+  "allRawHashesMatch": true,
+  "worker283FileFreezeVerified": true,
+  "previousPacketFilesCheckedUnchanged": 3956,
+  "manifestSHA256": "55f81302c923a8ef10817e278fd944a2114d75738ce63a9d7d3e9b5321f4edc5",
+  "aggregateSHA256": "b065d25a86e45e823ce4699f71c3a5e47ae5831efb0158d8eee10a1ec368e155",
+  "sourceRuntimeIndexCommitMutation": false,
+  "normalRouteEvidenceExcluded": true,
+  "independentO2AuditRetained": true
+}

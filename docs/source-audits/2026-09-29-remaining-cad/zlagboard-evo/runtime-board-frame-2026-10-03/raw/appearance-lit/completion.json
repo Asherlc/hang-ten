@@ -1,0 +1,12 @@
+{
+  "captureCompleted": true,
+  "plannedCaptures": 18,
+  "actualCaptures": 18,
+  "errors": [],
+  "visualResult": "PENDING_WHOLE_IMAGE_REVIEW",
+  "CPUBracketsAvailable": false,
+  "phaseTimingsKnown": false,
+  "noRetries": true,
+  "appearanceOnly": true,
+  "fullWorkflowClaimed": false
+}

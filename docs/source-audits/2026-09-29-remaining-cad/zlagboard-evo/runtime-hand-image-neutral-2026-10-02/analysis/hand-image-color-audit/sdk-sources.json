@@ -1,0 +1,56 @@
+[
+  {
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CIImage.h",
+    "sha256": "ac772172c97e56b2ca7f9eeedb31a0f05d0ad6011027562cc5df570aa4c87e7a",
+    "lineRanges": [
+      [
+        95,
+        100
+      ],
+      [
+        338,
+        342
+      ],
+      [
+        424,
+        426
+      ],
+      [
+        456,
+        478
+      ]
+    ]
+  },
+  {
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/CoreImage.framework/Headers/CIContext.h",
+    "sha256": "ef87632884caeebd6a67577d43212d7e0da8ac609ec83db64cccf8e62609193d",
+    "lineRanges": [
+      [
+        38,
+        45
+      ],
+      [
+        89,
+        105
+      ],
+      [
+        144,
+        159
+      ],
+      [
+        509,
+        537
+      ]
+    ]
+  },
+  {
+    "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLPixelFormat.h",
+    "sha256": "3c365a8f6d2828a4ead5417be886077cf96c190540746d07c8a86f0cc42ad7f9",
+    "lineRanges": [
+      [
+        97,
+        104
+      ]
+    ]
+  }
+]

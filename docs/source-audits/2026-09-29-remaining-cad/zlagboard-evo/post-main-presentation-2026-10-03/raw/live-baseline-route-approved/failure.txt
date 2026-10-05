@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/capture-prep/capture.py", line 81, in <module>
+    tree=json.loads(run(['/opt/homebrew/bin/axe','describe-ui','--udid',UID]));nodes=flat(tree);assert any(n.get('AXUniqueId')=='train.settings' for n in nodes) and any(n.get('AXUniqueId')=='train.board' and n.get('AXLabel')==('Zlagboard.Evo' if g['boardID']=='zlagboard.evo' else 'Zlagboard.Pro 2.0') for n in nodes),'Normal Train and expected board setup not present; stop without retry'
+                                                                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Normal Train and expected board setup not present; stop without retry

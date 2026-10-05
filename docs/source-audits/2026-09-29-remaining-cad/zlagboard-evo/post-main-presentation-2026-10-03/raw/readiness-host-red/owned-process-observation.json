@@ -1,0 +1,37 @@
+[
+  {
+    "pid": 15003,
+    "ppid": 15002,
+    "elapsed": "03:01",
+    "status": "S",
+    "command": "rtk proxy xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=E0AC7F37-369F-414E-B407-353435A0BE03 -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult -only-testing:HangTenTests/WorkoutRendererPreferenceTests test"
+  },
+  {
+    "pid": 15004,
+    "ppid": 15003,
+    "elapsed": "03:01",
+    "status": "S",
+    "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination platform=iOS Simulator,id=E0AC7F37-369F-414E-B407-353435A0BE03 -derivedDataPath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/DerivedData-placid-badger-cad-second-half -resultBundlePath /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult -only-testing:HangTenTests/WorkoutRendererPreferenceTests test"
+  },
+  {
+    "pid": 15137,
+    "ppid": 15004,
+    "elapsed": "02:59",
+    "status": "S",
+    "command": "/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/MacOS/SWBBuildService"
+  },
+  {
+    "pid": 15263,
+    "ppid": 15004,
+    "elapsed": "02:44",
+    "status": "S",
+    "command": "/Applications/Xcode.app/Contents/SharedFrameworks/DVTInstrumentsFoundation.framework/Resources/DTServiceHub"
+  },
+  {
+    "pid": 15458,
+    "ppid": 15004,
+    "elapsed": "02:20",
+    "status": "S",
+    "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=2m --output=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/ios/tests-placid-badger-cad-second-half.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=E0AC7F37-369F-414E-B407-353435A0BE03"
+  }
+]

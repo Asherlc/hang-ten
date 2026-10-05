@@ -1,0 +1,264 @@
+{
+  "sourceSHA256": "695845291f92314d7ddc6369f663d25312eb52c7c75283b75e2b9e1f7a29ffa4",
+  "nativeBoundsMM": "BoundBox (-425.275, -78.0585, -96.0009, 425.275, 0.504289, 100.504)",
+  "solidCount": 1,
+  "faceCount": 404,
+  "contacts": [
+    "mam-jug-l",
+    "mam-jug-r",
+    "mam-lateral-ledge-l",
+    "mam-lateral-ledge-r",
+    "mam-lower-edge-c",
+    "mam-mid-edge-c",
+    "mam-mono-l",
+    "mam-mono-r",
+    "mam-sloper-c",
+    "mam-upper-inset-l",
+    "mam-upper-inset-r",
+    "mam-upper-open-bay-l",
+    "mam-upper-open-bay-r",
+    "mam-upper-pocket-c",
+    "mam-upper-pocket-l",
+    "mam-upper-pocket-r"
+  ],
+  "sketchCount": 39,
+  "frontAndBackOutlines": {
+    "back": [
+      [
+        0,
+        91
+      ],
+      [
+        190,
+        91
+      ],
+      [
+        218,
+        100
+      ],
+      [
+        401,
+        100
+      ],
+      [
+        410,
+        89
+      ],
+      [
+        402,
+        83
+      ],
+      [
+        418,
+        22
+      ],
+      [
+        425,
+        16
+      ],
+      [
+        425,
+        4
+      ],
+      [
+        410,
+        0
+      ],
+      [
+        375,
+        -83
+      ],
+      [
+        361,
+        -96
+      ],
+      [
+        259,
+        -96
+      ],
+      [
+        213,
+        -51
+      ],
+      [
+        143,
+        -51
+      ],
+      [
+        98,
+        -96
+      ],
+      [
+        0,
+        -96
+      ]
+    ],
+    "front": [
+      [
+        0,
+        75
+      ],
+      [
+        190,
+        75
+      ],
+      [
+        220,
+        90
+      ],
+      [
+        401,
+        90
+      ],
+      [
+        410,
+        81
+      ],
+      [
+        402,
+        76
+      ],
+      [
+        418,
+        22
+      ],
+      [
+        425,
+        16
+      ],
+      [
+        425,
+        4
+      ],
+      [
+        410,
+        0
+      ],
+      [
+        375,
+        -83
+      ],
+      [
+        361,
+        -96
+      ],
+      [
+        259,
+        -96
+      ],
+      [
+        213,
+        -51
+      ],
+      [
+        143,
+        -51
+      ],
+      [
+        98,
+        -96
+      ],
+      [
+        0,
+        -96
+      ]
+    ]
+  },
+  "lowerCenterTray": [
+    [
+      -180,
+      -28
+    ],
+    [
+      -165,
+      -13
+    ],
+    [
+      165,
+      -13
+    ],
+    [
+      180,
+      -28
+    ],
+    [
+      107,
+      -28
+    ],
+    [
+      81,
+      -54
+    ],
+    [
+      -81,
+      -54
+    ],
+    [
+      -107,
+      -28
+    ]
+  ],
+  "displayEstimates": "196 mm height, 78 mm overall thickness, all cavities, local front depths, bevel widths and corner radii are operator-selected display estimates. 850 mm width is manufacturer-confirmed. No raster measurement or new grip fact.",
+  "style": "Flat terraces, straight chamfers, small analytic corner arcs, true stadium slots; locally varying top shoulders/endbays and no global spline relief.",
+  "manifestExact": true,
+  "sourceSavedOnlyUnderScratch": true,
+  "revision": 2,
+  "tessellatedBoundsMM": {
+    "minimum": [
+      -425.0000000000001,
+      -78.00000000000001,
+      -96.00000000000001
+    ],
+    "maximum": [
+      425.00000000000006,
+      2.220446049250313e-14,
+      100.0
+    ],
+    "size": [
+      850.0000000000002,
+      78.00000000000004,
+      196.0
+    ]
+  },
+  "nativeBoundsNote": "OpenCascade conservative B-spline face bounds overrun the actual profile and tessellated extent; not an increase in authored dimensions.",
+  "mono": {
+    "profile": "analytic stadium",
+    "widthMM": 42,
+    "heightMM": 22,
+    "depthMM": 42
+  },
+  "edgeRounds": {
+    "nativeFilletRadiusMM": 0.8,
+    "flatTerracedBlankFrontEdgeCount": 60,
+    "mainRailFrontEdgeCount": 8,
+    "rightJugFrontEdgeCount": 8,
+    "leftJug": "native mirror of right filleted feature",
+    "outlineCornerRadiusMM": 2
+  },
+  "lowerTray": {
+    "nominalCutterDepthMM": 30,
+    "floorZScale": 0.76,
+    "floorTiltDegrees": 17,
+    "upperRayDepthMM": 26.71339517,
+    "dipRayDepthMM": 33.43947017
+  },
+  "lateralShelf": {
+    "nominalCutterDepthMM": 49,
+    "cutterFrontYMM": -78,
+    "localFlatFrontYMM": -62,
+    "floorZScale": 0.7,
+    "floorTiltDegrees": 10,
+    "measuredLocalFloorDepthRangeMM": [
+      30.06121699,
+      34.46939151
+    ]
+  },
+  "centerSloper": {
+    "backZMM": 91,
+    "frontZMM": 75,
+    "depthSpanMM": 62,
+    "frontEdgeRoundMM": 0.8
+  },
+  "verification": "native-verification.json",
+  "physicalOpeningProof": "native-mesh-ray-proof.json"
+}

@@ -1,0 +1,17 @@
+{
+  "releasedAtUTC": "2026-10-02T15:01:27.345009+00:00",
+  "parentAgentID": "62e01d1f-0832-4466-9e2c-315d62e8f0cb",
+  "deliveryAcknowledged": true,
+  "reservedPaths": [
+    "HangTen/Models/BoardModelRealityTypes.swift",
+    "HangTen/Views/BoardModelView.swift",
+    "HangTen/Views/RootView.swift",
+    "HangTenTests/BoardModelRealityTests.swift",
+    "HangTenTests/BoardModelTests.swift"
+  ],
+  "sourceDiffAgainstHEAD": "empty",
+  "diagnosticPatchApplied": false,
+  "diagnosticBuiltOrRun": false,
+  "reason": "Isolated Simulator did not reach Home within uninterrupted900seconds; no source changes were needed for this blocked attempt",
+  "futureRule": "Coordinate again before applying diagnostics; no implicit shared integration"
+}

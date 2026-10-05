@@ -1,0 +1,50 @@
+[
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-cpu-semantics.py",
+    "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-frames.py",
+    "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-constructors.py",
+    "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-ownership.py",
+    "sha256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-navigation.py",
+    "sha256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-real-hands.py",
+    "sha256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py",
+    "sha256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-sync-counters.py",
+    "sha256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-prestart-hands.py",
+    "sha256": "03f591bd6ed7a49fe6d53d6dd298dd4c8bcf7842f6e0485a875568d4045644a0"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/check-supplemental-timing.py",
+    "sha256": "ba62ecddd10c4515fd84cf0049fc96c6e2c16a7f139fccabfdc1d014baec37a0"
+  },
+  {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/marker_correlations.py",
+    "sha256": "edfdd6480f5054c53607cc5bdbf2420feb80cf606138698a55551bb1b023a0cc"
+  },
+  {
+    "path": "HangTen/Views/RootView.swift",
+    "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+  }
+]

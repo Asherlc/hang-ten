@@ -1,0 +1,14 @@
+{
+  "files": {
+    "HangTen/Views/GripHandModelView.swift": {
+      "before": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1",
+      "proposed": "4167f03260fbefbd7d9e8256c3b16c34da4dfb2ff9645dca54bbaa3caa83ebc1"
+    },
+    "HangTen/Models/BoardModelRealityTypes.swift": {
+      "before": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "proposed": "f4bf7643c847d6e23e6d3254f2e0e35cbf86afc04f84ea67c79d0d60a26ab05f"
+    }
+  },
+  "patchSHA256": "ad66364c11e903e56cac88f342dae8cc5a00ce1feae3a2f94ae7a8d3c219ace8",
+  "applied": false
+}

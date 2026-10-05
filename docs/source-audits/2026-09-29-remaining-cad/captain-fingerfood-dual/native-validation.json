@@ -1,0 +1,17 @@
+{
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "nativeReopenRecompute": "passed",
+  "oneValidSolid": true,
+  "contactNodeCount": 4,
+  "allContactShapesOpenValid": true,
+  "fullyConstrainedSketches": true,
+  "edit": {
+    "parameter": "Thickness",
+    "from": 30.0,
+    "to": 30.749999999999996,
+    "bodyVolumeBeforeMM3": 167082.73459286458,
+    "bodyVolumeEditedMM3": 173299.28113247297,
+    "restoredVolumeDeltaMM3": 5.820766091346741e-11
+  },
+  "sourceBytesUnchanged": true
+}

@@ -1,0 +1,488 @@
+{
+  "createdAt": "2026-10-01T01:21:21.532396+00:00",
+  "status": "read-only route-to-runtime diagnosis; no code change indicated",
+  "fixedSupportWorld": [
+    0.0,
+    0.17,
+    0.0
+  ],
+  "metrics": {
+    "front-upright": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.25756344092162,
+        "projectedYZTurnDegrees": 0.26970844519735937,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.2251662485564928,
+        "totalLengthMM": 300.0000009736199,
+        "maxInteriorTurnDegrees": 12.25756344092162
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    },
+    "front-inverted": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          -0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          -0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          -0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          -0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    },
+    "reverse-upright": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.25756344092162,
+        "projectedYZTurnDegrees": 0.26970844519735937,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.2251662485564928,
+        "totalLengthMM": 300.0000009736199,
+        "maxInteriorTurnDegrees": 12.25756344092162
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    },
+    "reverse-inverted": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          -0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          -0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          -0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          -0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    },
+    "outer-upper": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.25756344092162,
+        "projectedYZTurnDegrees": 0.26970844519735937,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.2251662485564928,
+        "totalLengthMM": 300.0000009736199,
+        "maxInteriorTurnDegrees": 12.25756344092162
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    },
+    "pinch-side": {
+      "left-front": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362135,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "left-rear": {
+        "firstCachedBodyPoint": [
+          -0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          -0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097362033,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      },
+      "right-front": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          0.025646995
+        ],
+        "seamTurnDegrees": 12.25756344092162,
+        "projectedYZTurnDegrees": 0.26970844519735937,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.2251662485564928,
+        "totalLengthMM": 300.0000009736199,
+        "maxInteriorTurnDegrees": 12.25756344092162
+      },
+      "right-rear": {
+        "firstCachedBodyPoint": [
+          0.05,
+          0.064170155,
+          -0.025646995
+        ],
+        "firstWorldPoint": [
+          0.05,
+          -0.05876292999999999,
+          -0.025646995
+        ],
+        "seamTurnDegrees": 12.257561470607286,
+        "projectedYZTurnDegrees": 0.26961749316921796,
+        "incomingOutOfYZPlaneDegrees": 12.254641222723137,
+        "supportSpanMM": 235.5636782161353,
+        "nextSpanMM": 0.135371323421912,
+        "totalLengthMM": 300.00000097361936,
+        "maxInteriorTurnDegrees": 12.257561470607286
+      }
+    }
+  },
+  "fileSHA256": {
+    "Hangboards/frictitious-port-a-board/suspension.json": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+    "Hangboards/frictitious-port-a-board/assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+    "HangTen/Models/BoardPackageStore.swift": "af66408a5ea48e0381a5b443790367f7cc2a2712d44dc5c6ecfb992ef797639a",
+    "HangTen/Views/SuspendedBoardPresentation.swift": "dda582178a34701fe8c94ca5f89ae9367e1c89f4e2bea4e4c2825cdf9d4c0ca6",
+    "HangTen/Models/BoardModelRealityTypes.swift": "07cd4392567103ae157c2bea2d5470d45bac8824b3a946911b14a13bbb7c9e7f",
+    "HangTen/Models/SuspensionProfiles.swift": "f31abdc44591127fe10277b1d71c7d24247175578b9ed8d9e6fa23eff9a2a6e1",
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17"
+  }
+}

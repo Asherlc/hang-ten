@@ -1,0 +1,227 @@
+{
+  "run": "on-demand",
+  "reviewer": "baguette_review_prep",
+  "scope": "Train and all18 early complete original frames",
+  "directlyViewedImageCount": 19,
+  "boardColorResultInVisibleActiveRestFrames": "PASS_15_OF_15_OBSERVED",
+  "overallVisualResult": "FAIL_APPEARANCE_REGRESSION",
+  "summary": "Visible active004\u2013009 selection red; Rest010\u2013018 selection blue. Workout board is uniformly dark brown with little usable cavity/top-feature relief, unlike the legible light wood live Train board. Early hands absent004\u2013005; present006 onward.",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/train-setup.png",
+      "sha256": "78fe942e46da8d82ddb491c4dc28271f2f49652a104dfd615d51644af97fbbf1",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Train",
+      "timer": null,
+      "selectedContactColor": "None",
+      "handsVisible": false,
+      "appearance": "NORMAL_LIGHT_WOOD_WITH_LEGIBLE_POCKETS",
+      "note": "Full board visible with relief and cavities; live Train rendering."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-001s.png",
+      "sha256": "535ab4b6159e78cf57ec5c57e8fe225bc5e3e0e7463960abb0fab4db62e686aa",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Get ready",
+      "timer": "00:02",
+      "selectedContactColor": "Not evaluable",
+      "handsVisible": false,
+      "appearance": "LOADING_INDICATOR",
+      "note": "Navigation transition and Downloading 3D model indicator."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-002s.png",
+      "sha256": "bee2508708d17e4c1898512349ffebcd09174e68a61f2b4675935f230fd9518c",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Get ready",
+      "timer": "00:02",
+      "selectedContactColor": "None visible",
+      "handsVisible": false,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Dark brown silhouette with grain but cavity depths/hold inventory not legible; no geometry-loss inference."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-003s.png",
+      "sha256": "a79bf3c6a590a26c02a8c77cd766f18ea218486d7f3cfe440b33fb6a9534fa7f",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Get ready",
+      "timer": "00:01",
+      "selectedContactColor": "None visible",
+      "handsVisible": false,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Dark brown silhouette with grain but cavity depths/hold inventory not legible; no geometry-loss inference."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-004s.png",
+      "sha256": "a3c3c185abf536ecdb1f922c5d8ce7dd4308d4b5d2a6806c485124dbe20a13d1",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:06",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": false,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Hands absent."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-005s.png",
+      "sha256": "1c704af347feb6814ef1db9b39c302b75aeeb89a3430d9aea24e454556748725",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:05",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": false,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Hands absent."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-006s.png",
+      "sha256": "cca49b7c811a89a537deffda07ba0a74ae8da6d93ee03a30c678009c4792a850",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:04",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-007s.png",
+      "sha256": "9cf0afdaef2494ef88e6552a6ed64663035e35faae6bb105ce3dc2ead9a9e24a",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:03",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-008s.png",
+      "sha256": "ca514b4991fcc718d48022546b20269dc96ab50f0b416f00d635e98e42246bff",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:02",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-009s.png",
+      "sha256": "f522ae55e5b8539ba9df325ee813e90fddd24409c1c3a7cbf5fbf8748ee11da6",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step1 Hang",
+      "timer": "00:01",
+      "selectedContactColor": "RED_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-010s.png",
+      "sha256": "3f9a868b587ef2a2ce14ddb899e790c9b9a00d6bf9e08faa5ff6c2ac72b53f01",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "03:00",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-011s.png",
+      "sha256": "2c89c4e0acdfd51ab0baca991daf196fb232102fa0f95f15134730fa734a752a",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:59",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-012s.png",
+      "sha256": "af5a4e327851e50ceac666e58959a849ea85346a937d0c847c524a0073905bbe",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:58",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-013s.png",
+      "sha256": "029cf45900ccc2c187e68a7eaee150dc0f37e2cd0d51bb887f1de1241211f665",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:57",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-014s.png",
+      "sha256": "98f542e6a937228747449a115de0e97d8313df08219593b3ef7f2a45a0f4e324",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:56",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-015s.png",
+      "sha256": "f71c8770269d1e66887bf45b1bc98e1713f24c478635811650c5ead75f02880a",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:55",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-016s.png",
+      "sha256": "ada11c5f2293839f5bd61f3ac761b327b4dcd379ea788bdb51cba86442d2d67c",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:54",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-017s.png",
+      "sha256": "daa2ab1264389525d4c541216744acfdeacf7f086315d98e60d547440799817d",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:53",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand/elapsed-018s.png",
+      "sha256": "3d34c9d4b461cbda3bb705591b5b6795215bc0d53159ec8cdd92d9c9a403fc86",
+      "wholeImageDirectlyViewed": true,
+      "phase": "Step2 Rest",
+      "timer": "02:52",
+      "selectedContactColor": "BLUE_CORRECT",
+      "handsVisible": true,
+      "appearance": "REGRESSION_DARK_FLAT_APPEARANCE",
+      "note": "Bilateral lower outer selected patches visible; unselected cavities/top features not legible. Full silhouette fits. Both hands visible with red four-finger cues."
+    }
+  ],
+  "limitations": [
+    "Whole images only; no crop, pixel measurement or image processing.",
+    "No CPU brackets or phase mutation timing inferred.",
+    "No tail reviewed in this report.",
+    "Appearance observation does not prove missing source geometry or establish lighting as sole cause.",
+    "No overall fix, production readiness or human acceptance claim."
+  ]
+}

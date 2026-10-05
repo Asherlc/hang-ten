@@ -1,0 +1,33 @@
+{
+  "scope": "Root directly viewed these three whole images only; worker reviewed all twelve.",
+  "observations": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-3.png",
+      "sha256": "a3ab18b11e63afbb4c706c904b0ac69f70639f9ba6335d84b961803fef764720",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "red",
+      "timer": "02:58",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-5.png",
+      "sha256": "6899840cfbf4ba92984fe46c9b5a7ab5b474863d2ae704ee225d7e4301f711d1",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "blue",
+      "timer": "02:55",
+      "boardPhaseColorCorrect": true,
+      "bothHandsVisible": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "wholeImageDirectlyViewed": true,
+      "boardColor": "blue",
+      "timer": "00:02",
+      "boardPhaseColorCorrect": false,
+      "bothHandsVisible": true
+    }
+  ],
+  "conclusion": "Full-sequence visual failure reproduced. No pixel measurement, camera cause or hardware claim."
+}

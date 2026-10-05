@@ -1,0 +1,18 @@
+{
+  "package": "yy-penta-evo",
+  "number": 18,
+  "reviewAnswer": "Y",
+  "question": "Does #18 look right?",
+  "acceptedDate": "2026-10-01",
+  "reviewedCommit": "3da6a781d40788e7fdaacfb14858907fd4fdbc6f",
+  "acceptedScope": "Displayed Penta Evo revision: enclosed rear 10 mm recess, wood finish, seven loadable grip poses with native-solved cords, fourteen contact selections and bilateral workout highlighting. Display estimates remain labeled.",
+  "sourceSHA256": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+  "presentations": {
+    "front-pair": {
+      "descriptorSHA256": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+      "modelSHA256": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab"
+    }
+  },
+  "reviewPacket": "individual-review-2026-10-01/review.md",
+  "status": "accepted"
+}

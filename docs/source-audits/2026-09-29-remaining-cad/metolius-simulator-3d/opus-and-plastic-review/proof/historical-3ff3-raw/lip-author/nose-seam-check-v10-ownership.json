@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "nose-seam-check-v10",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/check_nose_seam.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T17:21:59.432445+00:00",
+  "ownedProcessGroup": 64364,
+  "elapsedSeconds": 5.196031791972928,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

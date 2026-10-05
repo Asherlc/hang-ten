@@ -1,0 +1,131 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "FF88F87E-A40C-45C0-AAF9-397DD661E934.mp4",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Screen Recording 2026-10-03 at 04.58.16 PM.mp4",
+        "timestamp" : 1791071896.06
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testLandscapeMultiPresentationBoardDetailKeepsMapInViewport()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapeMultiPresentationBoardDetailKeepsMapInViewport"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "B254B326-C8AE-4EC0-AC92-CBB2EE98F119.mp4",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Screen Recording 2026-10-03 at 04.58.24 PM.mp4",
+        "timestamp" : 1791071904.576
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testLandscapeSquareBoardDetailKeepsMapInViewport()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapeSquareBoardDetailKeepsMapInViewport"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "208DD84E-7E4D-42D7-B151-CBE445279A9D.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Poker Face A selected_0_95FE3416-0116-4CAF-B6B7-925B8D7594AA.png",
+        "timestamp" : 1791071921.365
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "0F5A64D1-B2E6-4B56-935A-F18323684AD3.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Poker Face A normal_0_F90D233A-F586-4D71-8048-492113A9005F.png",
+        "timestamp" : 1791071921.169
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testModelBoardDetailRendersAndSelectsHold()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testModelBoardDetailRendersAndSelectsHold"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "20C2C063-0595-4604-B8B8-447B5CBE7D0B.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Pivot position 5 selected upper-sloped-crimp-right_0_61DD0CBA-FC05-467F-B618-945316098B7C.png",
+        "timestamp" : 1791071975.789
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "44B8A0A3-ED76-4622-A102-E490F010A23C.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Pivot position 3 selected outer-sloped-crimp-left_0_A580A23F-B4EA-46E9-8C4C-3821DB33B75F.png",
+        "timestamp" : 1791071961.566
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "2DA03C83-DC5F-46D4-87CD-6CD4828A0A12.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Pivot position 2 selected outer-sloped-crimp-right_0_A66909C3-F419-4C08-83B3-D9157E163CE7.png",
+        "timestamp" : 1791071947.445
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "4F2F3D53-6E08-4E28-95AB-3E2310A2F039.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Pivot position 1_0_AFD92587-3413-4ED9-92BD-22786B159DFA.png",
+        "timestamp" : 1791071931.081
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testPivotRotationPresetsPersistWhenSelectingHolds()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testPivotRotationPresetsPersistWhenSelectingHolds"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "202C08EB-0CF0-4AAC-AEF4-C9109FF13AE4.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Beastmaker pocket returns to front_0_7F9CDA23-97DC-462D-BBFB-A69D4E999BB5.png",
+        "timestamp" : 1791071994.425
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "6F72306C-E28D-4B7F-A76F-5305567DC415.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Beastmaker manual orbit after selection_0_73BE529F-D6B1-4948-88D6-83E496CEDCA0.png",
+        "timestamp" : 1791071990.559
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "055BDCE2-3263-470D-89DF-04B967EF7790",
+        "deviceName" : "Hang Ten Paseo placid-badger-cad-second-half CombinedIntegration20261003 37186",
+        "exportedFileName" : "8486282D-9D51-4AAD-BA24-A5C8E5E15538.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Beastmaker top sloper pivoted_0_F9D43F5F-4385-4EB6-81CB-A67D2BCB034D.png",
+        "timestamp" : 1791071986.597
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testSelectedTopSloperAnimatesAndPocketReturnsToFront()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testSelectedTopSloperAnimatesAndPocketReturnsToFront"
+  }
+]

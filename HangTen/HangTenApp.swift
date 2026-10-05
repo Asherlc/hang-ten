@@ -3,6 +3,15 @@ import Sentry
 
 @main
 struct HangTenApp: App {
+    #if DEBUG
+    // Hosted unit tests load their bundle in this process. UI tests run in a
+    // separate runner, so they must still launch the full application UI.
+    static var isUnitTestHost: Bool {
+        ProcessInfo.processInfo.environment["XCTestBundlePath"]?
+            .hasSuffix("/HangTenTests.xctest") == true
+    }
+    #endif
+
 	@StateObject private var motherboardBluetoothService: MotherboardBluetoothService
 	@StateObject private var motherboardSettingsStore: MotherboardSettingsStore
 	@StateObject private var purchaseManager: PurchaseManager
@@ -55,6 +64,19 @@ struct HangTenApp: App {
 		#else
 		let purchaseManager = PurchaseManager()
 		#endif
+		#if DEBUG
+		let customRoutineStore: CustomRoutineStoring?
+		if environment["HANGTEN_REVIEW_ISOLATED_CUSTOM_ROUTINES"] == "1" {
+			// Review launches start empty without changing the athlete's library.
+			let reviewKey = "HangTen.review.customRoutines.v2"
+			UserDefaults.standard.removeObject(forKey: reviewKey)
+			customRoutineStore = CustomRoutineStore(key: reviewKey)
+		} else {
+			customRoutineStore = nil
+		}
+		#else
+		let customRoutineStore: CustomRoutineStoring? = nil
+		#endif
 		let telemetry = TelemetryComposition.make(bundle: .main)
 
 		_motherboardBluetoothService = StateObject(wrappedValue: motherboardBluetoothService)
@@ -64,6 +86,7 @@ struct HangTenApp: App {
 			motherboardBluetoothService: motherboardBluetoothService,
 			motherboardSettingsStore: motherboardSettingsStore,
 			workoutSessionStore: workoutSessionStore,
+			customRoutineStore: customRoutineStore,
 			workoutAccessStore: workoutAccessStore,
 			purchaseManager: purchaseManager,
 			telemetry: telemetry
@@ -81,7 +104,11 @@ struct HangTenApp: App {
         WindowGroup {
             Group {
                 #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
+                if Self.isUnitTestHost {
+                    // Cold RealityKit shader compilation can block the main
+                    // queue and starve unrelated asynchronous unit tests.
+                    EmptyView()
+                } else if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_GRIP_MODEL"] == "1" {
                     GripHandModelReviewView()
                 } else {
                     RootView()
@@ -94,6 +121,9 @@ struct HangTenApp: App {
 				.environmentObject(motherboardBluetoothService)
 				.environmentObject(motherboardSettingsStore)
 				.task {
+                    #if DEBUG
+                    guard !Self.isUnitTestHost else { return }
+                    #endif
 					await purchaseManager.prepare()
 				}
         }

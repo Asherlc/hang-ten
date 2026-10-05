@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=5E4F7561-42C9-488E-A4C2-638A628BE300",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/unlevel-review/placid-badger-unlevel-front-entry-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 540,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/unlevel-review/placid-badger-unlevel-front-entry-tests.xcresult",
+  "exitCode": 0,
+  "elapsedSeconds": 47.40234241698636
+}

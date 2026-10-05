@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py", line 157, in <module>
+    openCompleted=reviewed_tap('url-open',out/'url-confirmation-setup.png','Open in Hang Ten system confirmation: Open button')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py", line 122, in reviewed_tap
+    r=review_stage(stage,image,control)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/prep/runtime/capture.py", line 111, in review_stage
+    assert time.monotonic()<until and time.monotonic()<deadline and awake.poll() is None,'Bounded whole-image setup review missing'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Bounded whole-image setup review missing

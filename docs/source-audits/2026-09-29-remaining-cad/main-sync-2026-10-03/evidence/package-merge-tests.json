@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+    "Tools/HangboardPackages/tests/test_single_threaded_loop.py",
+    "Tools/HangboardPackages/tests/test_rock_ring_threaded_loop.py",
+    "Tools/HangboardPackages/tests/test_rope_physics.py",
+    "Tools/HangboardPackages/tests/test_cord_audit_reusable_instances.py",
+    "Tools/HangboardPackages/tests/test_model_first_packages.py",
+    "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+    "Tools/HangboardCAD/tests/test_presentations.py",
+    "Tools/HangboardCAD/tests/test_native_pose_terminals.py",
+    "-q"
+  ],
+  "exitCode": 2,
+  "duration": 0.5915341377258301
+}

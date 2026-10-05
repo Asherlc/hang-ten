@@ -1,0 +1,8 @@
+{
+  "failure": "Parent configuration test methods were appended to final FileManager fixture rather than XCTestCase; build65 retained",
+  "fix": "Moved both intact methods into WorkoutActivityRecordingTests before its configuredBoard helper",
+  "path": "HangTenTests/WorkoutActivityRecordingTests.swift",
+  "beforeSHA256": "876ba50b82d28c728ec24715a3206dcaf839eab1291f11e2ede7c4ee37479c35",
+  "afterSHA256": "7519d6d3d016cfedc41b073c1e1a9807718bc1235f468d1c8aa7e83e2a6bb531",
+  "assertionsUnchanged": true
+}

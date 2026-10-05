@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "boardNumber": 21,
+  "package": "zlagboard-pro",
+  "date": "2026-10-03",
+  "sourceCommit": "1e1a931ed97a067c9f31bfffd84e50051f883294",
+  "runtimeRepairCommit": "c42815f8cf4ac09d0d409e53e466d0e3ade92cb8",
+  "humanAppAccepted": false,
+  "humanAppReview": "pending separate user reply; prior native geometry acceptance is preserved",
+  "appVisualReviewPassed": true,
+  "physicalContactPickingPassed": true,
+  "freshAppContactCoverage": {
+    "expected": 28,
+    "verified": 28,
+    "wholeScreenshots": 40,
+    "yawViews": 6,
+    "freshViewReentries": 6
+  },
+  "staticBuild": {
+    "debugDylibSHA256": "d191ee271347c493138509232b6bdf4514832047ab3ae4c1ddeb6a3feb2846d7",
+    "sourceReference": "raw/source-reference.json",
+    "sourceFileCount": 12,
+    "sourceBuiltInstalledParity": "raw/build/parity.json"
+  },
+  "wholeImageReview": {
+    "path": "raw/whole-image-review.json",
+    "sha256": "fb77d2b673708983f3bdf00712354fce5d58370c39bcda08546939ff80e76f08",
+    "reviewer": "baguette_review_prep"
+  },
+  "captureCompletion": {
+    "path": "raw/captures-v4/completion.json",
+    "sha256": "d5d48babd19e3932a0042c097f64bcb4337d9401c9cfa9bf8bab23708e12fa58",
+    "originalVisualStatus": "PENDING_WHOLE_IMAGE_REVIEW",
+    "qualification": "Independent additive whole-image review supplies the visual result; original capture status is unchanged."
+  },
+  "packagePreservation": {
+    "nativePackageByteUnchanged": true,
+    "files": [
+      {
+        "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+        "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a"
+      },
+      {
+        "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+        "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+      },
+      {
+        "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+        "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+      }
+    ],
+    "sourceAndAssetHashesExactAcceptedRevision": true,
+    "noNewExportOrGeometryChange": true,
+    "sourceAudit": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/source-audit.md",
+    "manufacturerWholeSourcesReviewed": [
+      "sources/product-01.png",
+      "sources/product-02.png"
+    ],
+    "displayEstimateLabelsPreserved": true,
+    "proof": "Worker preservation audit and current generated manifest/source freeze"
+  },
+  "workflow": {
+    "passed": true,
+    "wholeScreenshots": 58,
+    "route": "normal Train to workout; natural countdown/Hang/180-second Rest/following Hang; passive captures after entry",
+    "review": "../../zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-pro-whole-visual-review.json",
+    "reviewSHA256": "87bce82057a1665a4164cf1d046755716bb4f3fe1b11a22d87369b27e11dcea7",
+    "debugDylibSHA256": "97f7f90cc61f594cb75c4fe17e68dade07ffa90173cad7d3b3b986944fd69453",
+    "qualification": "Separate prior clean build; all12 frozen source hashes match this fresh static build. Binaries are not claimed identical."
+  },
+  "cleanup": {
+    "passed": true,
+    "ownedSimulatorUUID": "790E10AD-5154-463E-8232-288E28FA57D7",
+    "primary": "raw/ios/cleanup-verification.json",
+    "independent": "raw/ios/independent-cleanup.json",
+    "appTrials": [
+      "raw/captures/cleanup.json",
+      "raw/captures-v2/cleanup.json",
+      "raw/captures-v3/cleanup.json",
+      "raw/captures-v4/cleanup.json"
+    ]
+  },
+  "rawArchive": {
+    "fileCount": 853,
+    "manifest": "raw-manifest-7d74eca0b393afad1287a13aab97d1e7bfc26d706c6cbe9d2bf3a0b2f1d6d743.json",
+    "manifestSHA256": "7d74eca0b393afad1287a13aab97d1e7bfc26d706c6cbe9d2bf3a0b2f1d6d743",
+    "independentVerification": {
+      "path": "archive-independent-verification.json",
+      "sha256": "faf0b981f9adf97c475707e0db3df878c0c5497bb504c1d82fe1caddb08813d0"
+    }
+  },
+  "limits": [
+    "Visible crest/corner coverage only; hidden backside coverage and exact manufacturing dimensions are not established by these yaw images.",
+    "Flat/incut contacts remain distinct and show expected separate red regions; screenshots do not measure bearing angles or depths.",
+    "All six gestures here are successful horizontal yaw; earlier failed diagonal probes remain failures, untouched.",
+    "Fresh-view reset means app detail re-entry after relaunch, not a reset button or same-contact toggle.",
+    "Selected title/specification text fits; long hold-map button titles are ellipsized and lower rows continue below the viewport/tab bar. No full scrolling legend review claimed.",
+    "System black status capsule appears in some raw images without obscuring board or selected title; no cause assigned.",
+    "The original independent image-review app cleanup did not itself certify Simulator/DerivedData deletion. The final aggregate cleanup links separate root and independent deletion proofs, both passed.",
+    "Only completed screenshots reviewed, no continuous-frame/GPU timing or physical-device claim.",
+    "Native source geometry remains previously accepted and unchanged; this independent review does not confer human app acceptance.",
+    "Simulator evidence only; no physical iPhone available. No manufacturing-accuracy claim or full-suite pass. Earlier null-accessibility-ID and unsuccessful diagonal-orbit trials remain retained failures.",
+    "The source reference raw uncommittedCandidate field is retained as captured; all12 actual source hashes match committed clean candidate c428."
+  ]
+}

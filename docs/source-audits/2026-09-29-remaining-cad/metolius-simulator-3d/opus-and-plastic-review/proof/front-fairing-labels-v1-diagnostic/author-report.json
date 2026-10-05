@@ -1,0 +1,123 @@
+{
+  "status": "pass",
+  "scope": "Native authoring, source-bound technical previews and fresh independent native reports pass; root/Opus visual/export/app/human gates separate",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "nativeValidity": {
+    "validSingleSolid": true,
+    "finalBody": "BodySolid",
+    "finalBodyType": "Part::Fuse",
+    "fullyConstrainedSketchCount": 159,
+    "reopenedRecomputedAndEditRestored": true,
+    "all24CavityVoidIntersections": "pass",
+    "all30ContactsAnd27DepthFacts": "pass"
+  },
+  "rawManifestExact": true,
+  "surfaceFinish": "plastic",
+  "normalFlagsPreserved": true,
+  "contactCount": 30,
+  "publishedDepthFactCount": 27,
+  "measuredEnvelopeXYZMM": [
+    711.0000002,
+    94.00075012973058,
+    222.00000010067734
+  ],
+  "thicknessInterpretation": "Existing approximately 94 mm display estimate, measured 94.0007501297 mm; published face 711\u00d7222 mm unchanged.",
+  "protectedUpperGeometry": {
+    "zMinimumMM": 135,
+    "bidirectionalBooleanDifferenceVolumesMM3": [
+      0,
+      0
+    ]
+  },
+  "frontFairing": {
+    "anchors": "Existing native depths retained; exact trimmed original 147\u2192135 mm profile plus lower cubic spans with shared nonzero tangents",
+    "lowerSketchIndices": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "joins": "Zero native tangent-angle differences and endpoint gaps no larger than 3.18e\u221214 mm",
+    "authoringScope": "Display curvature estimates; no pixel measurements"
+  },
+  "evidence": {
+    "baseline-freeze.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/baseline-freeze.json",
+      "sha256": "022d0fc1983411b0c188651ef46ac5d3dc846274147ba744b319848921369077"
+    },
+    "source-freeze.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/source-freeze.json",
+      "sha256": "440b46519eec974b8f22e39764f9d87846224dca3b908cdd8da2fe17f4b801b9"
+    },
+    "author-disposition.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-disposition.md",
+      "sha256": "e4674887ee18a0635cf68e0fbbc0f826c38adb1b1d05991b7215b15b1ba46924"
+    },
+    "authored-design.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/authored-design.json",
+      "sha256": "9c7144b5ad3c5d09d1634b96f7dfe3c4d0d1bbfc70ba1eb985a5c42544ab1241"
+    },
+    "source-audit.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/source-audit.json",
+      "sha256": "78f606184de0661f8df58e87f19e985fe922bb417bc5dc3f239287192d88251b"
+    },
+    "author-native-check.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/author-native-check.json",
+      "sha256": "e2c077c96addb310a9ceedf1a1e5369a6dc711016d0b8f286f6184d4b09a0d93"
+    },
+    "bounds-diagnosis.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/bounds-diagnosis.json",
+      "sha256": "dee7cc48d8ae2f01f8a5a7f4aa55439448ed4887b2f6ef97e3ca4b7c01ecadce"
+    },
+    "native-preview-provenance.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-preview-provenance.json",
+      "sha256": "1e9a4cafd9d7a8e85153dd912967ed5a0a2e63111f0dfffccafce5d28196ee8c"
+    },
+    "native-stage-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/native-stage-cleanup.json",
+      "sha256": "47b6d76d507b0285df9d56fc2dc886c7d773a98c05195d369a99721d169a6da2"
+    },
+    "independent-validation/native-check-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/native-check-b722.json",
+      "sha256": "9e110dcf3cb32c16707dd0e6781d88c7fd7d6437a8dadbf386cc7d6037d57fca"
+    },
+    "independent-validation/front-fairing-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722.json",
+      "sha256": "773c81396cb4ce36e2f92c62b0e91f339dc6c117fb1ee8567d43df5f16f82688"
+    },
+    "independent-validation/cavity-voids-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/cavity-voids-b722.json",
+      "sha256": "f6f7548993e08b87a68914f39bdb9e70a2a86a19eba2529106080698c0515755"
+    },
+    "independent-validation/functional-sections-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json",
+      "sha256": "fb0763cad6099e54d2a9cf2bb673131a446d1a64463f38a877652012b17edbf5"
+    },
+    "independent-validation/local-contact-joins-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/local-contact-joins-b722.json",
+      "sha256": "78ff992914ce765f4ed7dedbbbbb78eaf816646fe34d18e5699cd3d6638f1c33"
+    },
+    "independent-validation/final-independent-native-review-b722.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722.json",
+      "sha256": "048cdbe765a920da6b6a1a072afd4ecfd6524d0c535e9c8251b1b048e4a82bb7"
+    },
+    "independent-validation/final-independent-native-review-b722.md": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/final-independent-native-review-b722.md",
+      "sha256": "1caf7c9169df33cf718bfdc3c3951b9078d64448ddf0ba7c570c20b51e5f46d7"
+    }
+  },
+  "remainingGates": {
+    "independentNativeAggregate": "pass",
+    "rootOpusNativeVisual": "pending",
+    "compilerExport": "not started",
+    "actualApp": "pending",
+    "humanAcceptance": "pending"
+  },
+  "limits": [
+    "The soft upper band between Z 170 and 147 mm is intentionally retained to preserve the corrected grip geometry.",
+    "C1 statement applies to new lower profile spans, not every unchanged roof join.",
+    "Fresh source bounds are measured with triangulation/tolerance disabled; inflated post-preview tessellation-cache bounds retained raw and independently resolved.",
+    "CPU neutral previews do not establish actual plastic app appearance."
+  ]
+}

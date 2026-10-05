@@ -1,0 +1,230 @@
+[
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1790996043.71399,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-0.25.png",
+    "sha256": "f83486bfc00110c12f2c153167afe1faca3f4fad35516949868bd56df2b0fb7f",
+    "startEpoch": 1790996043.730222,
+    "endEpoch": 1790996044.2322938,
+    "startDelayFromTarget": 0.016232013702392578,
+    "traceReadBefore": {
+      "observedEpoch": 1790996043.730221,
+      "lastSequence": 34
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996044.234731,
+      "lastSequence": 34
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 1,
+    "targetEpoch": 1790996044.46399,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-1.png",
+    "sha256": "1ef59746366798f437d2825c309b6155f8e3f9e607f324de892ce5b708be8bff",
+    "startEpoch": 1790996044.480039,
+    "endEpoch": 1790996044.979444,
+    "startDelayFromTarget": 0.016048908233642578,
+    "traceReadBefore": {
+      "observedEpoch": 1790996044.480039,
+      "lastSequence": 35
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996044.981351,
+      "lastSequence": 35
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 3,
+    "targetEpoch": 1790996046.46399,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-3.png",
+    "sha256": "3ab442cf6b7d04dd6a4d067dc64ffef25ecb605be3b8815b053db57c68b59fd7",
+    "startEpoch": 1790996046.50173,
+    "endEpoch": 1790996046.997086,
+    "startDelayFromTarget": 0.03773999214172363,
+    "traceReadBefore": {
+      "observedEpoch": 1790996046.501729,
+      "lastSequence": 36
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996046.998784,
+      "lastSequence": 37
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 5,
+    "targetEpoch": 1790996048.46399,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-0-active-plus-5.png",
+    "sha256": "2a097682eedf16d2ee361b8cfb133f79f3d9597480aac8d67325c531fa506e35",
+    "startEpoch": 1790996048.486146,
+    "endEpoch": 1790996048.943443,
+    "startDelayFromTarget": 0.0221560001373291,
+    "traceReadBefore": {
+      "observedEpoch": 1790996048.486146,
+      "lastSequence": 38
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996048.944886,
+      "lastSequence": 39
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 0.25,
+    "targetEpoch": 1790996050.649695,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-0.25.png",
+    "sha256": "0f842098fc1f611393217a0fc90f7015bbfb02e40312503bf08af00cbeff72c1",
+    "startEpoch": 1790996050.6706629,
+    "endEpoch": 1790996051.1386611,
+    "startDelayFromTarget": 0.020967960357666016,
+    "traceReadBefore": {
+      "observedEpoch": 1790996050.6706629,
+      "lastSequence": 44
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996051.141214,
+      "lastSequence": 45
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 1,
+    "targetEpoch": 1790996051.399695,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-1.png",
+    "sha256": "012e58de9bf1a3d9023efc8ff2c29a391599b9f52081ab4ca58fbd8fe9da6ac8",
+    "startEpoch": 1790996051.407052,
+    "endEpoch": 1790996051.884106,
+    "startDelayFromTarget": 0.007357120513916016,
+    "traceReadBefore": {
+      "observedEpoch": 1790996051.407052,
+      "lastSequence": 45
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996051.888878,
+      "lastSequence": 46
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 3,
+    "targetEpoch": 1790996053.399695,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-3.png",
+    "sha256": "99f6a8878ad3c88637582bc8325efb139d4edbbe1826657e50afa9e2263ef786",
+    "startEpoch": 1790996053.433554,
+    "endEpoch": 1790996053.9306839,
+    "startDelayFromTarget": 0.0338590145111084,
+    "traceReadBefore": {
+      "observedEpoch": 1790996053.433553,
+      "lastSequence": 47
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996053.934299,
+      "lastSequence": 47
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 5,
+    "targetEpoch": 1790996055.399695,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-1-preview-plus-5.png",
+    "sha256": "21852d9f24c1bc4ec66838d9f6e45d7f9f7660acda129c0c0bfd5190f9a6db7e",
+    "startEpoch": 1790996055.409954,
+    "endEpoch": 1790996055.875554,
+    "startDelayFromTarget": 0.010259151458740234,
+    "traceReadBefore": {
+      "observedEpoch": 1790996055.409953,
+      "lastSequence": 49
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996055.879191,
+      "lastSequence": 49
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1790996231.023608,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-0.25.png",
+    "sha256": "04fa46327dbf82e1f267569cc9dc33d71609f694bf6f18545e2bf45eeadbdd8d",
+    "startEpoch": 1790996231.059691,
+    "endEpoch": 1790996231.549161,
+    "startDelayFromTarget": 0.03608298301696777,
+    "traceReadBefore": {
+      "observedEpoch": 1790996231.05969,
+      "lastSequence": 161
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996231.559623,
+      "lastSequence": 161
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 1,
+    "targetEpoch": 1790996231.773608,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-1.png",
+    "sha256": "3e12ae25c8e18e70916a4a814ffcb586a53821a1d5613009795b2af124c95c6e",
+    "startEpoch": 1790996231.793609,
+    "endEpoch": 1790996232.273725,
+    "startDelayFromTarget": 0.020000934600830078,
+    "traceReadBefore": {
+      "observedEpoch": 1790996231.793609,
+      "lastSequence": 161
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996232.28623,
+      "lastSequence": 161
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 3,
+    "targetEpoch": 1790996233.773608,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-3.png",
+    "sha256": "8ae1b080a3a679f1b721e88b75ba340bd7d09b16003d9f7cc4ca7d60ffca3137",
+    "startEpoch": 1790996233.796565,
+    "endEpoch": 1790996234.286531,
+    "startDelayFromTarget": 0.02295708656311035,
+    "traceReadBefore": {
+      "observedEpoch": 1790996233.7965639,
+      "lastSequence": 161
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996234.302855,
+      "lastSequence": 161
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 5,
+    "targetEpoch": 1790996235.773608,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-landscape/phase-2-active-plus-5.png",
+    "sha256": "70057ad71fc0677088b8b144a7c4e432e755e919485d2ab54b18d226f11b4a6c",
+    "startEpoch": 1790996235.8199549,
+    "endEpoch": 1790996236.282091,
+    "startDelayFromTarget": 0.04634690284729004,
+    "traceReadBefore": {
+      "observedEpoch": 1790996235.8199549,
+      "lastSequence": 161
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1790996236.2949498,
+      "lastSequence": 161
+    }
+  }
+]

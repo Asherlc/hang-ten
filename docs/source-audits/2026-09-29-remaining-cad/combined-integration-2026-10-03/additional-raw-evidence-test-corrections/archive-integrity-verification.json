@@ -1,0 +1,56 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "method": "Byte/archive identity verification only; not execution-result validation.",
+  "archives": [
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-integration-test-corrections/build-placid-badger-cad-second-half-integration-test-corrections.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-integration-test-corrections/build-placid-badger-cad-second-half-integration-test-corrections.xcresult.zip",
+      "archiveSHA256": "036fbcd281533468847f57107986074c79fe666c81e3a3cbee1c120f84306fbb",
+      "archiveBytes": 36131,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-integration-test-corrections/build-placid-badger-cad-second-half-integration-test-corrections.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/integration-test-corrections-focus/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/integration-test-corrections-focus/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult.zip",
+      "archiveSHA256": "fff1029e8f3f3de5353da53eef13eddc1b06dbbeaaa8d44f0c3e7904d83e336f",
+      "archiveBytes": 183359989,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/integration-test-corrections-focus/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult.archive.json",
+      "verifiedMemberCount": 780,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-penta-task-correction/build-placid-badger-cad-second-half-penta-task-correction.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-penta-task-correction/build-placid-badger-cad-second-half-penta-task-correction.xcresult.zip",
+      "archiveSHA256": "7f263bd03999581cc5a701a9d9025f502631e875d13671420b2d0bd0e5cb5055",
+      "archiveBytes": 44326,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-penta-task-correction/build-placid-badger-cad-second-half-penta-task-correction.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-penta-task-correction-retry/build-placid-badger-cad-second-half-penta-task-correction-retry.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-penta-task-correction-retry/build-placid-badger-cad-second-half-penta-task-correction-retry.xcresult.zip",
+      "archiveSHA256": "e8553f3bb0cf43dd9702d0cb75eafbc7dc71aeca56eb389bb5bd584d10296bae",
+      "archiveBytes": 43480,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-penta-task-correction-retry/build-placid-badger-cad-second-half-penta-task-correction-retry.xcresult.archive.json",
+      "verifiedMemberCount": 8,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/penta-task-correction-focus/tests-placid-badger-cad-second-half-penta-task-correction-focus.xcresult.zip",
+      "retained": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/penta-task-correction-focus/tests-placid-badger-cad-second-half-penta-task-correction-focus.xcresult.zip",
+      "archiveSHA256": "e9e922badbe70c8fa6f75297932952d0f68c96f89cb70b304fc37473d49a1bfc",
+      "archiveBytes": 74405,
+      "originalArchiveRecord": ".context/placid-badger-cad-second-half/combined-integration-2026-10-03/penta-task-correction-focus/tests-placid-badger-cad-second-half-penta-task-correction-focus.xcresult.archive.json",
+      "verifiedMemberCount": 94,
+      "everyMemberSHA256SizeKindAndExternalAttributesMatchOriginal": true,
+      "method": "Read and hash every archived member in place without extraction or modification."
+    }
+  ]
+}

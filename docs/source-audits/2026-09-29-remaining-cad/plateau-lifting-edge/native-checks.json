@@ -1,0 +1,17 @@
+{
+  "package": "plateau-lifting-edge",
+  "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "editedFeature": "Depth18OakRail",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "Depth18OakContact"
+  ],
+  "bodyVolumeBeforeMM3": 241529.20065876975,
+  "bodyVolumeAfterMM3": 245109.88649347553,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

@@ -1,0 +1,104 @@
+{
+  "owner": "placid-badger",
+  "atUTC": "2026-10-03T04:04:02.386237+00:00",
+  "exitTrapInstalledBeforeResources": true,
+  "allRecordedProcessGroups": [
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-above",
+      "action": "apply",
+      "pid": 37850,
+      "processGroupID": 37850,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T04:03:24.687674+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    },
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-above",
+      "action": "check",
+      "pid": 38462,
+      "processGroupID": 38462,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T04:03:34.123454+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    },
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-below",
+      "action": "apply",
+      "pid": 38567,
+      "processGroupID": 38567,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T04:03:42.720640+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    },
+    {
+      "owner": "placid-badger",
+      "job": "placid-badger-mini10-below",
+      "action": "check",
+      "pid": 39078,
+      "processGroupID": 39078,
+      "createdNewSession": true,
+      "atUTC": "2026-10-03T04:03:53.434868+00:00",
+      "actionsDuringFinalCleanup": [],
+      "processGroupAbsent": true
+    }
+  ],
+  "temporaryCacheConfigResources": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-apply-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-above/placid-badger-mini10-check-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-apply-tmp",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-config",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-cache",
+      "absent": true
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-correction/cord-experiment/serialization1nm/placid-badger-mini10-below/placid-badger-mini10-check-tmp",
+      "absent": true
+    }
+  ],
+  "allRecordedGroupsAbsent": true,
+  "allOwnedTemporaryResourcesAbsent": true,
+  "unknownOrSharedResourcesTouched": false
+}

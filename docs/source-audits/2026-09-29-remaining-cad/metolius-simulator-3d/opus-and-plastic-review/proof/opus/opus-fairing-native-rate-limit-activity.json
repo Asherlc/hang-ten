@@ -1,0 +1,14 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\n  \"agentId\": \"918cc0e7-961d-4672-9f95-b4f2918098b7\",\n  \"updateCount\": 149,\n  \"currentModeId\": \"bypassPermissions\",\n  \"content\": \"Showing 1 of 132 activities (limited to 1)\\n\\nYou've hit your session limit · resets 11:40am (America/Los_Angeles)\"\n}"
+    }
+  ],
+  "structuredContent": {
+    "agentId": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+    "updateCount": 149,
+    "currentModeId": "bypassPermissions",
+    "content": "Showing 1 of 132 activities (limited to 1)\n\nYou've hit your session limit · resets 11:40am (America/Los_Angeles)"
+  }
+}

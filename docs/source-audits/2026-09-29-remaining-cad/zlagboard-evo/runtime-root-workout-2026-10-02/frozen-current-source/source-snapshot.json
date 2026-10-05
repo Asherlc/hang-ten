@@ -1,0 +1,32 @@
+{
+  "createdAtUTC": "2026-10-02T22:13:01.270463+00:00",
+  "owner": "placid-badger-cad-second-half",
+  "head": "48acf4ceca70f1b047cc9e98f4090d176e94f3a1",
+  "requestedParentHEAD": "48acf4ceca70f1b047cc9e98f4090d176e94f3a1",
+  "scope": "Source freeze only; experiment remains incomplete and no pass claim is made.",
+  "files": [
+    {
+      "source": "HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 85117,
+      "sha256": "89898763d913d908b35abfce0baf4da365efb37aed84c6823d76f0307c5b8ddd"
+    },
+    {
+      "source": "HangTen/Views/BoardModelView.swift",
+      "retained": "HangTen/Views/BoardModelView.swift",
+      "bytes": 22063,
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "source": "HangTen/Views/RootView.swift",
+      "retained": "HangTen/Views/RootView.swift",
+      "bytes": 147554,
+      "sha256": "0253224a9df668442a2f925d6b686fce57c4cffd94347954abb7b8b9df4c0cd9"
+    }
+  ],
+  "patch": {
+    "path": "current-three-file.patch",
+    "bytes": 58717,
+    "sha256": "c718d70edd9a57688882eaeaa6ddc35ba0d2a66cd144b7267f1915c156f7ebd9"
+  }
+}

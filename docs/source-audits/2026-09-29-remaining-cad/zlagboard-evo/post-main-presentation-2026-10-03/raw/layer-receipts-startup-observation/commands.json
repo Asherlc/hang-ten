@@ -1,0 +1,550 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "17341",
+      "-o",
+      "pid=,command="
+    ],
+    "startEpoch": 1791051168.0390358,
+    "startMonotonic": 116045.870233958,
+    "limitSeconds": 20,
+    "pid": 8820,
+    "endEpoch": 1791051168.0656278,
+    "endMonotonic": 116045.896826916,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791051168.070184,
+    "startMonotonic": 116045.901381666,
+    "limitSeconds": 20,
+    "pid": 8823,
+    "endEpoch": 1791051168.28042,
+    "endMonotonic": 116046.111619916,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "--stdout=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/app.stdout",
+      "--stderr=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/app.stderr",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "com.hangten.training",
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "startEpoch": 1791051168.31637,
+    "startMonotonic": 116046.147569125,
+    "limitSeconds": 20,
+    "pid": 8833,
+    "endEpoch": 1791051168.627051,
+    "endMonotonic": 116046.458251125,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "E0AC7F37-369F-414E-B407-353435A0BE03"
+    ],
+    "startEpoch": 1791051171.629558,
+    "startMonotonic": 116049.460766666,
+    "limitSeconds": 20,
+    "pid": 8886,
+    "endEpoch": 1791051174.667526,
+    "endMonotonic": 116052.498744666,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/train-setup.png"
+    ],
+    "startEpoch": 1791051174.672464,
+    "startMonotonic": 116052.503681416,
+    "limitSeconds": 20,
+    "pid": 8899,
+    "endEpoch": 1791051175.1706119,
+    "endMonotonic": 116053.001831208,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "openurl",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "hangten://plan/research.max-hangs/workout"
+    ],
+    "startEpoch": 1791051175.1712909,
+    "startMonotonic": 116053.002509208,
+    "limitSeconds": 20,
+    "pid": 8943,
+    "endEpoch": 1791051175.387574,
+    "endMonotonic": 116053.218793708,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-001s.png"
+    ],
+    "startEpoch": 1791051176.389063,
+    "startMonotonic": 116054.220285208,
+    "limitSeconds": 20,
+    "pid": 8957,
+    "endEpoch": 1791051176.902133,
+    "endMonotonic": 116054.7333575,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-002s.png"
+    ],
+    "startEpoch": 1791051177.3919842,
+    "startMonotonic": 116055.223209666,
+    "limitSeconds": 20,
+    "pid": 8970,
+    "endEpoch": 1791051177.885616,
+    "endMonotonic": 116055.716843291,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-003s.png"
+    ],
+    "startEpoch": 1791051178.389915,
+    "startMonotonic": 116056.221142833,
+    "limitSeconds": 20,
+    "pid": 8995,
+    "endEpoch": 1791051178.8671732,
+    "endMonotonic": 116056.698402791,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-004s.png"
+    ],
+    "startEpoch": 1791051179.391637,
+    "startMonotonic": 116057.222867458,
+    "limitSeconds": 20,
+    "pid": 9015,
+    "endEpoch": 1791051179.8737202,
+    "endMonotonic": 116057.704952416,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-005s.png"
+    ],
+    "startEpoch": 1791051180.39028,
+    "startMonotonic": 116058.221513916,
+    "limitSeconds": 20,
+    "pid": 9026,
+    "endEpoch": 1791051180.875274,
+    "endMonotonic": 116058.706510041,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-006s.png"
+    ],
+    "startEpoch": 1791051181.3927739,
+    "startMonotonic": 116059.224010791,
+    "limitSeconds": 20,
+    "pid": 9037,
+    "endEpoch": 1791051181.917449,
+    "endMonotonic": 116059.748688625,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-007s.png"
+    ],
+    "startEpoch": 1791051182.388735,
+    "startMonotonic": 116060.219974375,
+    "limitSeconds": 20,
+    "pid": 9051,
+    "endEpoch": 1791051182.877753,
+    "endMonotonic": 116060.708994916,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-008s.png"
+    ],
+    "startEpoch": 1791051183.388722,
+    "startMonotonic": 116061.219964083,
+    "limitSeconds": 20,
+    "pid": 9066,
+    "endEpoch": 1791051183.865974,
+    "endMonotonic": 116061.697217958,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-009s.png"
+    ],
+    "startEpoch": 1791051184.391289,
+    "startMonotonic": 116062.222534083,
+    "limitSeconds": 20,
+    "pid": 9087,
+    "endEpoch": 1791051184.894732,
+    "endMonotonic": 116062.725979541,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-010s.png"
+    ],
+    "startEpoch": 1791051185.39044,
+    "startMonotonic": 116063.221688541,
+    "limitSeconds": 20,
+    "pid": 9119,
+    "endEpoch": 1791051185.894718,
+    "endMonotonic": 116063.725968916,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-011s.png"
+    ],
+    "startEpoch": 1791051186.388791,
+    "startMonotonic": 116064.220042,
+    "limitSeconds": 20,
+    "pid": 9300,
+    "endEpoch": 1791051186.865775,
+    "endMonotonic": 116064.69702825,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-012s.png"
+    ],
+    "startEpoch": 1791051187.3908029,
+    "startMonotonic": 116065.222057125,
+    "limitSeconds": 20,
+    "pid": 9318,
+    "endEpoch": 1791051187.896419,
+    "endMonotonic": 116065.727675875,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-013s.png"
+    ],
+    "startEpoch": 1791051188.3889909,
+    "startMonotonic": 116066.220248416,
+    "limitSeconds": 20,
+    "pid": 9330,
+    "endEpoch": 1791051188.9203572,
+    "endMonotonic": 116066.75161675,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-014s.png"
+    ],
+    "startEpoch": 1791051189.388679,
+    "startMonotonic": 116067.219938333,
+    "limitSeconds": 20,
+    "pid": 9340,
+    "endEpoch": 1791051189.914637,
+    "endMonotonic": 116067.745899166,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-015s.png"
+    ],
+    "startEpoch": 1791051190.391348,
+    "startMonotonic": 116068.222610333,
+    "limitSeconds": 20,
+    "pid": 9359,
+    "endEpoch": 1791051190.897778,
+    "endMonotonic": 116068.72904275,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-016s.png"
+    ],
+    "startEpoch": 1791051191.3886468,
+    "startMonotonic": 116069.219912583,
+    "limitSeconds": 20,
+    "pid": 9372,
+    "endEpoch": 1791051191.9386182,
+    "endMonotonic": 116069.769886208,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-017s.png"
+    ],
+    "startEpoch": 1791051192.3929222,
+    "startMonotonic": 116070.22419075,
+    "limitSeconds": 20,
+    "pid": 9384,
+    "endEpoch": 1791051192.862623,
+    "endMonotonic": 116070.693893125,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-018s.png"
+    ],
+    "startEpoch": 1791051193.392697,
+    "startMonotonic": 116071.223968125,
+    "limitSeconds": 20,
+    "pid": 9395,
+    "endEpoch": 1791051193.896777,
+    "endMonotonic": 116071.72805075,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-019s.png"
+    ],
+    "startEpoch": 1791051194.389813,
+    "startMonotonic": 116072.221087625,
+    "limitSeconds": 20,
+    "pid": 9407,
+    "endEpoch": 1791051194.92526,
+    "endMonotonic": 116072.756536875,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/layer-receipts-startup-observation/elapsed-020s.png"
+    ],
+    "startEpoch": 1791051195.388741,
+    "startMonotonic": 116073.220017625,
+    "limitSeconds": 20,
+    "pid": 9418,
+    "endEpoch": 1791051195.8701591,
+    "endMonotonic": 116073.701437916,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "E0AC7F37-369F-414E-B407-353435A0BE03",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791051195.8717089,
+    "startMonotonic": 116073.702988125,
+    "limitSeconds": 10,
+    "pid": 9428,
+    "endEpoch": 1791051196.121962,
+    "endMonotonic": 116073.953242708,
+    "exitStatus": 0
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8843",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791051196.123391,
+    "startMonotonic": 116073.954670708,
+    "limitSeconds": 3,
+    "pid": 9438,
+    "endEpoch": 1791051196.149811,
+    "endMonotonic": 116073.98109125,
+    "exitStatus": 1
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "8822",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791051196.151875,
+    "startMonotonic": 116073.983154625,
+    "limitSeconds": 3,
+    "pid": 9440,
+    "endEpoch": 1791051196.177015,
+    "endMonotonic": 116074.008295208,
+    "exitStatus": 1
+  }
+]

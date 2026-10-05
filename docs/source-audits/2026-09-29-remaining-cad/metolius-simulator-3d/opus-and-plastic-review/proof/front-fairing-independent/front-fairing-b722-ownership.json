@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "front-fairing-b722",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_front_fairing.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/front-fairing-b722.json"
+  ],
+  "ownedProcessGroup": 62645,
+  "exitCode": 0,
+  "elapsedSeconds": 57.38535783300176,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

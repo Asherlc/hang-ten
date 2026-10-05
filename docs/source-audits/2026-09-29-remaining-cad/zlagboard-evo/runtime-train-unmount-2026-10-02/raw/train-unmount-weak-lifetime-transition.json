@@ -1,0 +1,100 @@
+{
+  "lastObservedAlive": {
+    "sequence": 11,
+    "epoch": 1790991238.915231,
+    "event": "view-disappear",
+    "recordedParentID": "ObjectIdentifier(0x000000011315d520)",
+    "recordedActualSceneID": "ObjectIdentifier(0x00000001050f2400)",
+    "currentRootParentID": "nil",
+    "currentRootSceneID": "nil"
+  },
+  "firstObservedNil": {
+    "sequence": 15,
+    "epoch": 1790991241.511822,
+    "event": "highlight-before",
+    "recordedParentID": "nil",
+    "recordedActualSceneID": "nil",
+    "currentRootParentID": "nil",
+    "currentRootSceneID": "nil"
+  },
+  "firstHangMutation": {
+    "sequence": 19,
+    "epoch": 1790991242.389824,
+    "event": "highlight-after"
+  },
+  "navigationEvents": [
+    {
+      "boardID": "zlagboard.evo",
+      "complete": true,
+      "detachRequested": true,
+      "epoch": 1790991237.874368,
+      "event": "train-navigation-source",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "initialTrainSuppressionRequested": false,
+      "planID": "nil",
+      "presentationCount": 1,
+      "sequence": 2,
+      "showsDeepLinkedWorkout": false,
+      "sourceBranchRequested": "board-map",
+      "stage": "workout-navigation-state",
+      "trialHosts": [],
+      "unmountTrainForWorkoutRequested": true,
+      "uptime": 74312.39507116667
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "complete": true,
+      "detachRequested": true,
+      "epoch": 1790991238.9134011,
+      "event": "train-navigation-source",
+      "handLifecycleCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "initialTrainSuppressionRequested": false,
+      "planID": "research.max-hangs",
+      "presentationCount": 1,
+      "sequence": 8,
+      "showsDeepLinkedWorkout": true,
+      "sourceBranchRequested": "clear-slot",
+      "stage": "workout-navigation-state",
+      "trialHosts": [
+        {
+          "attachmentObserved": true,
+          "cameraActualSceneID": "ObjectIdentifier(0x00000001050f2400)",
+          "cameraParentID": "ObjectIdentifier(0x000000011315d520)",
+          "currentOwner": true,
+          "detached": false,
+          "disappeared": false,
+          "invalid": "nil",
+          "modelRetainedForTrial": true,
+          "ownerToken": "8CBF1C13-C6E2-448E-A33C-1B75CE61E6B7",
+          "reattachedAfterDetach": false,
+          "recordedActualSceneID": "ObjectIdentifier(0x00000001050f2400)",
+          "recordedParentID": "ObjectIdentifier(0x000000011315d520)",
+          "rootActualSceneID": "ObjectIdentifier(0x00000001050f2400)",
+          "rootParentID": "ObjectIdentifier(0x000000011315d520)",
+          "sceneLifecycleToken": "9FF9A764-F0A7-4BC6-A925-D2466ABE89CB",
+          "trainMarked": true,
+          "viewToken": "7D881723-D116-456F-9AFA-02CE8377C635"
+        }
+      ],
+      "unmountTrainForWorkoutRequested": true,
+      "uptime": 74313.43410712501
+    }
+  ],
+  "allSubsequentObservedNil": true,
+  "observationCounts": {
+    "observations": 138,
+    "parentAlive": 2,
+    "sceneAlive": 2
+  },
+  "limitation": "Point weak-reference observations bound the observed liveness change; neither exact deallocation time nor backing UIView/GPU destruction is measured. Retained wrapper/root/camera remain alive and detached."
+}

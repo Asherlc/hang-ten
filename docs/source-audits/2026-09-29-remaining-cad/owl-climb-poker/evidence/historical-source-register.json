@@ -1,0 +1,62 @@
+{
+  "sources": [
+    {
+      "id": "OP1",
+      "publisher": "Owl Climb",
+      "tier": "manufacturer",
+      "url": "https://owlclimb.com/index.php/en/prds-2/poker/",
+      "facts": "Exact Poker, 100 x 100 x 660 mm beam, four faces, listed edge families, two slopers at35 degrees, two half-circles diameter100, Toulipier, 530mm grip separation.",
+      "notEstablished": "No independently calibrated numbered face-depth map or dimensioned D-section end drawing."
+    },
+    {
+      "id": "OP-PHOTO-0",
+      "publisher": "Owl Climb product photograph, retailer/manufacturer distributed",
+      "tier": "retained original product photograph 1920 x 1080",
+      "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+      "facts": "One full face; seven recesses with stable left/right nonmirrored mono/duo sequence; two connecting grip surfaces; bracket context.",
+      "notEstablished": "Photographs are not calibrated metrology. Black external brackets obscure end attachment details. No rights to logos/textures are inferred."
+    },
+    {
+      "id": "OP-PHOTO-1",
+      "publisher": "Owl Climb product photograph, retailer/manufacturer distributed",
+      "tier": "retained original product photograph 1920 x 1080",
+      "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+      "facts": "One full face; seven recesses with stable left/right nonmirrored mono/duo sequence; two connecting grip surfaces; bracket context.",
+      "notEstablished": "Photographs are not calibrated metrology. Black external brackets obscure end attachment details. No rights to logos/textures are inferred."
+    },
+    {
+      "id": "OP-PHOTO-2",
+      "publisher": "Owl Climb product photograph, retailer/manufacturer distributed",
+      "tier": "retained original product photograph 1920 x 1080",
+      "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+      "facts": "One full face; seven recesses with stable left/right nonmirrored mono/duo sequence; two connecting grip surfaces; bracket context.",
+      "notEstablished": "Photographs are not calibrated metrology. Black external brackets obscure end attachment details. No rights to logos/textures are inferred."
+    },
+    {
+      "id": "OP-PHOTO-3",
+      "publisher": "Owl Climb product photograph, retailer/manufacturer distributed",
+      "tier": "retained original product photograph 1920 x 1080",
+      "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+      "facts": "One full face; seven recesses with stable left/right nonmirrored mono/duo sequence; two connecting grip surfaces; bracket context.",
+      "notEstablished": "Photographs are not calibrated metrology. Black external brackets obscure end attachment details. No rights to logos/textures are inferred."
+    },
+    {
+      "id": "OP2",
+      "publisher": "Oliunid",
+      "tier": "retailer",
+      "url": "https://www.oliunid.com/owl-climb-poker-climbing-hangboard",
+      "facts": "Exact Poker; 680 x 140 x 120 mm secondary dimensions and5.5kg.",
+      "notEstablished": "Whether these are boxed or complete bracket-assembly dimensions."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "660 x 100 x 100 maker bare beam versus 680 x 140 x 120 retailer envelope.",
+      "ruling": "Use explicit maker wooden beam measurements. Do not enlarge the wood to possibly bracket/packaging dimensions; scope of retailer value remains uncertain."
+    },
+    {
+      "conflict": "Four photographs do not explicitly label depths or prove their cyclic sequence.",
+      "ruling": "Keep stable face-number contact IDs, disclose provisional depth family placement and mark the asset PARTIAL. Do not present unverified depth labels as factory measurements."
+    }
+  ]
+}

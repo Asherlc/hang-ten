@@ -1,0 +1,2375 @@
+[
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1791020999.355864,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-0.25.png",
+    "sha256": "d9765eca14b7c473c19e588c57d7e0786bc2179292a6dc75ed9c90ec3cbb4246",
+    "startEpoch": 1791020999.378722,
+    "endEpoch": 1791020999.8467798,
+    "startDelayFromTarget": 0.0228579044342041,
+    "traceReadBefore": {
+      "observedEpoch": 1791020999.375999,
+      "lastSequence": 49
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791020999.8485508,
+      "lastSequence": 49
+    },
+    "branchBefore": {
+      "role": "live",
+      "observationStatus": "PENDING_FIRST_BEFORE_CENSUS_GAP",
+      "readinessProven": false,
+      "originalStrictError": "No unique LIVE attached pair in latest sparse census",
+      "precedingCensus": {
+        "boardDetachTrial": {
+          "detachRequested": false,
+          "hosts": [
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "nil",
+              "cameraAlive": false,
+              "cameraParentID": "nil",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": true,
+              "invalid": "nil",
+              "modelAlive": false,
+              "modelRetainedForTrial": false,
+              "ownerToken": "E5365F5F-C069-494C-B1CA-7C2C9420EDB3",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "nil",
+              "recordedParentID": "nil",
+              "rootActualSceneID": "nil",
+              "rootAlive": false,
+              "rootParentID": "nil",
+              "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+              "trainMarked": true,
+              "viewToken": "8C0FA929-542C-4F8E-9235-AE30CF5A25B1"
+            },
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "cameraAlive": true,
+              "cameraParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": false,
+              "invalid": "nil",
+              "modelAlive": true,
+              "modelRetainedForTrial": false,
+              "ownerToken": "8CD7498F-8897-411A-BAC0-1119D0DDC0A4",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "recordedParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "rootActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "rootAlive": true,
+              "rootParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+              "trainMarked": false,
+              "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+            }
+          ],
+          "retentionRequested": false
+        },
+        "boardLifetimeCensus": [
+          {
+            "camera": {
+              "alive": false
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000114a00ae0)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000114a00980)",
+              "wrapperID": "ObjectIdentifier(0x0000000114436680)"
+            },
+            "root": {
+              "alive": false
+            },
+            "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+            "wrapperAlive": false
+          },
+          {
+            "camera": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000114b130c0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x00000001159e4840)",
+              "realitySceneID": "ObjectIdentifier(0x00000001059fcd00)"
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000114b130c0)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000114b109e0)",
+              "wrapperID": "ObjectIdentifier(0x0000000149e54000)"
+            },
+            "root": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000114b109e0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x00000001159e4840)",
+              "realitySceneID": "ObjectIdentifier(0x00000001059fcd00)"
+            },
+            "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+            "wrapperAlive": true
+          }
+        ],
+        "boardRenderMembership": {
+          "cameraActive": true,
+          "cameraEntityID": "ObjectIdentifier(0x0000000114b130c0)",
+          "cameraRealitySceneID": "ObjectIdentifier(0x00000001059fcd00)",
+          "cameraTransform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9438583850860596,
+            -0.33035042881965637,
+            0,
+            0,
+            0.33035042881965637,
+            0.9438583850860596,
+            0,
+            0,
+            0.10610384494066238,
+            0.3241538405418396,
+            1
+          ],
+          "far": 1000,
+          "near": 0.0010000000474974513,
+          "orthographic": false,
+          "perspective": true,
+          "rootActive": true,
+          "rootEntityID": "ObjectIdentifier(0x0000000114b109e0)",
+          "rootRealitySceneID": "ObjectIdentifier(0x00000001059fcd00)",
+          "verticalFOVDegrees": 30
+        },
+        "cachedIDs": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "cachedMode": "active",
+        "cameraID": "ObjectIdentifier(0x0000000114b130c0)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "complete": true,
+        "contentContainsRegisteredRoot": true,
+        "contentRootIDs": [
+          "ObjectIdentifier(0x0000000114b109e0)",
+          "ObjectIdentifier(0x0000000114b130c0)"
+        ],
+        "epoch": 1791020999.106861,
+        "event": "view-update",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeCensus": [
+          {
+            "camera": {
+              "alive": false
+            },
+            "configuredObserved": true,
+            "constructedCameraID": "ObjectIdentifier(0x000000014b05c0a0)",
+            "constructedRootID": "ObjectIdentifier(0x000000014b05c120)",
+            "handLifetimeToken": "BD3A3EEA-E99B-4D12-9250-EEF9143A4C9E",
+            "kind": "pair",
+            "registrationIssue": "nil",
+            "root": {
+              "alive": false
+            },
+            "viewObservations": [
+              {
+                "allAssociatedLifetimeTokens": [
+                  "BD3A3EEA-E99B-4D12-9250-EEF9143A4C9E"
+                ],
+                "lastSwiftUIEvent": "disappeared",
+                "lastSwiftUIEventSequence": 28,
+                "lastSwiftUIEventUptime": 92559.65806204168,
+                "viewToken": "C29B00F3-CA3E-4056-A04D-FD2717582758"
+              }
+            ]
+          }
+        ],
+        "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "requestedMode": "active",
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "rootAttached": true,
+        "rootEnabled": true,
+        "rootID": "ObjectIdentifier(0x0000000114b109e0)",
+        "rootTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sceneID": "ObjectIdentifier(0x0000000149e54000)",
+        "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+        "selectedIDs": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "sequence": 42,
+        "surfaces": [
+          {
+            "ancestors": [
+              "ObjectIdentifier(0x00000001467ad1a0)",
+              "ObjectIdentifier(0x00000001467acee0)",
+              "ObjectIdentifier(0x00000001467adc40)",
+              "ObjectIdentifier(0x0000000114b109e0)",
+              "ObjectIdentifier(0x00000001159e4840)"
+            ],
+            "attached": true,
+            "contactID": "edge-20-left",
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001467ad1a0)",
+            "materialType": "PhysicallyBasedMaterial",
+            "name": "contact_edge_20_left",
+            "resolvedRGBAValid": true,
+            "rgba": [
+              0.9850000739097595,
+              0.2749999761581421,
+              0.10499999672174454,
+              0.6000000238418579
+            ],
+            "transform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "underRegisteredRoot": true
+          },
+          {
+            "ancestors": [
+              "ObjectIdentifier(0x00000001467ad3a0)",
+              "ObjectIdentifier(0x00000001467acee0)",
+              "ObjectIdentifier(0x00000001467adc40)",
+              "ObjectIdentifier(0x0000000114b109e0)",
+              "ObjectIdentifier(0x00000001159e4840)"
+            ],
+            "attached": true,
+            "contactID": "edge-20-right",
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001467ad3a0)",
+            "materialType": "PhysicallyBasedMaterial",
+            "name": "contact_edge_20_right",
+            "resolvedRGBAValid": true,
+            "rgba": [
+              0.9850000739097595,
+              0.2749999761581421,
+              0.10499999672174454,
+              0.6000000238418579
+            ],
+            "transform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "underRegisteredRoot": true
+          }
+        ],
+        "syncDeliveryCounters": {
+          "firstUptime": {
+            "applySyncCompletions": 92559.892911,
+            "applySyncEntries": 92559.88938383335,
+            "baselineMaterialWrites": 92559.81301991668,
+            "cameraComponentWrites": 92559.88953554168,
+            "cameraLookAtWrites": 92559.81582179168,
+            "cameraPositionWrites": 92559.81581875001,
+            "cameraTransformEntries": 92559.81580325,
+            "clearMaterialWrites": 92559.89116075,
+            "frameCalls": 92559.88953983334,
+            "highlightEntries": 92559.889581875,
+            "highlightMaterialWrites": 92562.09939458333,
+            "highlightUpdatePasses": 92559.891088125,
+            "realityMakeEntries": 92559.88878066668,
+            "realityUpdateEntries": 92559.89550825,
+            "unchangedHighlightRequests": 92559.89581325001
+          },
+          "latestUptime": {
+            "applySyncCompletions": 92562.106697375,
+            "applySyncEntries": 92562.08518358335,
+            "baselineMaterialWrites": 92559.81317304168,
+            "cameraComponentWrites": 92562.08536270834,
+            "cameraLookAtWrites": 92562.08540020834,
+            "cameraPositionWrites": 92562.08538933334,
+            "cameraTransformEntries": 92562.08536895835,
+            "clearMaterialWrites": 92562.10126720835,
+            "frameCalls": 92562.08536495834,
+            "highlightEntries": 92562.08540379167,
+            "highlightMaterialWrites": 92562.1011825,
+            "highlightUpdatePasses": 92562.09497925,
+            "realityMakeEntries": 92559.88878066668,
+            "realityUpdateEntries": 92562.08499170834,
+            "unchangedHighlightRequests": 92559.90914420834
+          },
+          "sceneToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+          "sceneTotals": {
+            "applySyncCompletions": 4,
+            "applySyncEntries": 4,
+            "baselineMaterialWrites": 22,
+            "cameraComponentWrites": 4,
+            "cameraLookAtWrites": 6,
+            "cameraPositionWrites": 6,
+            "cameraTransformEntries": 6,
+            "clearMaterialWrites": 40,
+            "frameCalls": 4,
+            "highlightEntries": 4,
+            "highlightMaterialWrites": 2,
+            "highlightUpdatePasses": 2,
+            "realityMakeEntries": 1,
+            "realityUpdateEntries": 3,
+            "unchangedHighlightRequests": 2
+          },
+          "scopeMismatches": 0,
+          "semanticRevision": 2,
+          "synchronousScopeDepth": 0,
+          "version": 2,
+          "views": [
+            {
+              "counts": {
+                "applySyncCompletions": 4,
+                "applySyncEntries": 4,
+                "baselineMaterialWrites": 0,
+                "cameraComponentWrites": 4,
+                "cameraLookAtWrites": 5,
+                "cameraPositionWrites": 5,
+                "cameraTransformEntries": 5,
+                "clearMaterialWrites": 40,
+                "frameCalls": 4,
+                "highlightEntries": 4,
+                "highlightMaterialWrites": 2,
+                "highlightUpdatePasses": 2,
+                "realityMakeEntries": 1,
+                "realityUpdateEntries": 3,
+                "unchangedHighlightRequests": 2
+              },
+              "firstUptime": {
+                "applySyncCompletions": 92559.892911,
+                "applySyncEntries": 92559.88938383335,
+                "cameraComponentWrites": 92559.88953554168,
+                "cameraLookAtWrites": 92559.88956804168,
+                "cameraPositionWrites": 92559.88955870834,
+                "cameraTransformEntries": 92559.88954425,
+                "clearMaterialWrites": 92559.89116075,
+                "frameCalls": 92559.88953983334,
+                "highlightEntries": 92559.889581875,
+                "highlightMaterialWrites": 92562.09939458333,
+                "highlightUpdatePasses": 92559.891088125,
+                "realityMakeEntries": 92559.88878066668,
+                "realityUpdateEntries": 92559.89550825,
+                "unchangedHighlightRequests": 92559.89581325001
+              },
+              "latestUptime": {
+                "applySyncCompletions": 92562.106697375,
+                "applySyncEntries": 92562.08518358335,
+                "cameraComponentWrites": 92562.08536270834,
+                "cameraLookAtWrites": 92562.08540020834,
+                "cameraPositionWrites": 92562.08538933334,
+                "cameraTransformEntries": 92562.08536895835,
+                "clearMaterialWrites": 92562.10126720835,
+                "frameCalls": 92562.08536495834,
+                "highlightEntries": 92562.08540379167,
+                "highlightMaterialWrites": 92562.1011825,
+                "highlightUpdatePasses": 92562.09497925,
+                "realityMakeEntries": 92559.88878066668,
+                "realityUpdateEntries": 92562.08499170834,
+                "unchangedHighlightRequests": 92559.90914420834
+              },
+              "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+            }
+          ]
+        },
+        "uptime": 92562.10709625001,
+        "viewportPoints": [
+          210,
+          36
+        ],
+        "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+      },
+      "constructor": {
+        "complete": true,
+        "epoch": 1791020999.109729,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "handRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "lifecycleEvent": "constructor-entry",
+        "sequence": 46,
+        "uptime": 92562.109963625
+      },
+      "make": {
+        "complete": true,
+        "epoch": 1791020999.12178,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 2,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "handRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "lifecycleEvent": "make-entry",
+        "sequence": 48,
+        "uptime": 92562.12201658334,
+        "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+      },
+      "fit": {
+        "allDepthsFinite": true,
+        "allDepthsInsideUnchangedClips": true,
+        "cameraEvent": "reset-fitted",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.959770917892456,
+          -0.28078407049179077,
+          0,
+          0,
+          0.28078407049179077,
+          0.959770917892456,
+          0,
+          0,
+          3.961261034011841,
+          9.515283584594727,
+          1
+        ],
+        "complete": true,
+        "epoch": 1791020999.176251,
+        "event": "hand-camera",
+        "far": 100,
+        "framingVertexCount": 37284,
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 2,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "maximumDepth": 10.936546325683594,
+        "minimumDepth": 8.617655754089355,
+        "near": 0.10000000149011612,
+        "orthographicPresent": true,
+        "orthographicScale": 1.7647740840911865,
+        "perspectivePresent": false,
+        "sequence": 49,
+        "uptime": 92562.17648979167
+      },
+      "captureStartBound": 1791020999.376,
+      "requiresFullTraceFirstAfterAndRemaining23": true,
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ],
+      "actualCaptureStartEpoch": 1791020999.378722
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "observationStatus": "PENDING_FIRST_BEFORE_CENSUS_GAP",
+      "readinessProven": false,
+      "originalStrictError": "No unique LIVE attached pair in latest sparse census",
+      "precedingCensus": {
+        "boardDetachTrial": {
+          "detachRequested": false,
+          "hosts": [
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "nil",
+              "cameraAlive": false,
+              "cameraParentID": "nil",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": true,
+              "invalid": "nil",
+              "modelAlive": false,
+              "modelRetainedForTrial": false,
+              "ownerToken": "E5365F5F-C069-494C-B1CA-7C2C9420EDB3",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "nil",
+              "recordedParentID": "nil",
+              "rootActualSceneID": "nil",
+              "rootAlive": false,
+              "rootParentID": "nil",
+              "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+              "trainMarked": true,
+              "viewToken": "8C0FA929-542C-4F8E-9235-AE30CF5A25B1"
+            },
+            {
+              "attachmentObserved": true,
+              "cameraActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "cameraAlive": true,
+              "cameraParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "currentOwner": true,
+              "detached": false,
+              "disappeared": false,
+              "invalid": "nil",
+              "modelAlive": true,
+              "modelRetainedForTrial": false,
+              "ownerToken": "8CD7498F-8897-411A-BAC0-1119D0DDC0A4",
+              "reattachedAfterDetach": false,
+              "recordedActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "recordedParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "rootActualSceneID": "ObjectIdentifier(0x00000001059fcd00)",
+              "rootAlive": true,
+              "rootParentID": "ObjectIdentifier(0x00000001159e4840)",
+              "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+              "trainMarked": false,
+              "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+            }
+          ],
+          "retentionRequested": false
+        },
+        "boardLifetimeCensus": [
+          {
+            "camera": {
+              "alive": false
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000114a00ae0)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000114a00980)",
+              "wrapperID": "ObjectIdentifier(0x0000000114436680)"
+            },
+            "root": {
+              "alive": false
+            },
+            "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+            "wrapperAlive": false
+          },
+          {
+            "camera": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000114b130c0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x00000001159e4840)",
+              "realitySceneID": "ObjectIdentifier(0x00000001059fcd00)"
+            },
+            "constructedIDs": {
+              "cameraID": "ObjectIdentifier(0x0000000114b130c0)",
+              "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+              "rootID": "ObjectIdentifier(0x0000000114b109e0)",
+              "wrapperID": "ObjectIdentifier(0x0000000149e54000)"
+            },
+            "root": {
+              "alive": true,
+              "enabled": true,
+              "entityID": "ObjectIdentifier(0x0000000114b109e0)",
+              "isActive": true,
+              "parentEntityID": "ObjectIdentifier(0x00000001159e4840)",
+              "realitySceneID": "ObjectIdentifier(0x00000001059fcd00)"
+            },
+            "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+            "wrapperAlive": true
+          }
+        ],
+        "boardRenderMembership": {
+          "cameraActive": true,
+          "cameraEntityID": "ObjectIdentifier(0x0000000114b130c0)",
+          "cameraRealitySceneID": "ObjectIdentifier(0x00000001059fcd00)",
+          "cameraTransform": [
+            1,
+            0,
+            0,
+            0,
+            0,
+            0.9438583850860596,
+            -0.33035042881965637,
+            0,
+            0,
+            0.33035042881965637,
+            0.9438583850860596,
+            0,
+            0,
+            0.10610384494066238,
+            0.3241538405418396,
+            1
+          ],
+          "far": 1000,
+          "near": 0.0010000000474974513,
+          "orthographic": false,
+          "perspective": true,
+          "rootActive": true,
+          "rootEntityID": "ObjectIdentifier(0x0000000114b109e0)",
+          "rootRealitySceneID": "ObjectIdentifier(0x00000001059fcd00)",
+          "verticalFOVDegrees": 30
+        },
+        "cachedIDs": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "cachedMode": "active",
+        "cameraID": "ObjectIdentifier(0x0000000114b130c0)",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ],
+        "complete": true,
+        "contentContainsRegisteredRoot": true,
+        "contentRootIDs": [
+          "ObjectIdentifier(0x0000000114b109e0)",
+          "ObjectIdentifier(0x0000000114b130c0)"
+        ],
+        "epoch": 1791020999.106861,
+        "event": "view-update",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 1,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeCensus": [
+          {
+            "camera": {
+              "alive": false
+            },
+            "configuredObserved": true,
+            "constructedCameraID": "ObjectIdentifier(0x000000014b05c0a0)",
+            "constructedRootID": "ObjectIdentifier(0x000000014b05c120)",
+            "handLifetimeToken": "BD3A3EEA-E99B-4D12-9250-EEF9143A4C9E",
+            "kind": "pair",
+            "registrationIssue": "nil",
+            "root": {
+              "alive": false
+            },
+            "viewObservations": [
+              {
+                "allAssociatedLifetimeTokens": [
+                  "BD3A3EEA-E99B-4D12-9250-EEF9143A4C9E"
+                ],
+                "lastSwiftUIEvent": "disappeared",
+                "lastSwiftUIEventSequence": 28,
+                "lastSwiftUIEventUptime": 92559.65806204168,
+                "viewToken": "C29B00F3-CA3E-4056-A04D-FD2717582758"
+              }
+            ]
+          }
+        ],
+        "modelSHA256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "requestedMode": "active",
+        "resolvedSurfaceInputs": {
+          "boardID": "zlagboard.evo",
+          "ids": [],
+          "isDisplayOnly": false,
+          "mode": "active",
+          "positionID": "primary",
+          "presentationID": "primary"
+        },
+        "rootAttached": true,
+        "rootEnabled": true,
+        "rootID": "ObjectIdentifier(0x0000000114b109e0)",
+        "rootTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "sceneID": "ObjectIdentifier(0x0000000149e54000)",
+        "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+        "selectedIDs": [
+          "edge-20-left",
+          "edge-20-right"
+        ],
+        "sequence": 42,
+        "surfaces": [
+          {
+            "ancestors": [
+              "ObjectIdentifier(0x00000001467ad1a0)",
+              "ObjectIdentifier(0x00000001467acee0)",
+              "ObjectIdentifier(0x00000001467adc40)",
+              "ObjectIdentifier(0x0000000114b109e0)",
+              "ObjectIdentifier(0x00000001159e4840)"
+            ],
+            "attached": true,
+            "contactID": "edge-20-left",
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001467ad1a0)",
+            "materialType": "PhysicallyBasedMaterial",
+            "name": "contact_edge_20_left",
+            "resolvedRGBAValid": true,
+            "rgba": [
+              0.9850000739097595,
+              0.2749999761581421,
+              0.10499999672174454,
+              0.6000000238418579
+            ],
+            "transform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "underRegisteredRoot": true
+          },
+          {
+            "ancestors": [
+              "ObjectIdentifier(0x00000001467ad3a0)",
+              "ObjectIdentifier(0x00000001467acee0)",
+              "ObjectIdentifier(0x00000001467adc40)",
+              "ObjectIdentifier(0x0000000114b109e0)",
+              "ObjectIdentifier(0x00000001159e4840)"
+            ],
+            "attached": true,
+            "contactID": "edge-20-right",
+            "enabled": true,
+            "entityID": "ObjectIdentifier(0x00000001467ad3a0)",
+            "materialType": "PhysicallyBasedMaterial",
+            "name": "contact_edge_20_right",
+            "resolvedRGBAValid": true,
+            "rgba": [
+              0.9850000739097595,
+              0.2749999761581421,
+              0.10499999672174454,
+              0.6000000238418579
+            ],
+            "transform": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1
+            ],
+            "underRegisteredRoot": true
+          }
+        ],
+        "syncDeliveryCounters": {
+          "firstUptime": {
+            "applySyncCompletions": 92559.892911,
+            "applySyncEntries": 92559.88938383335,
+            "baselineMaterialWrites": 92559.81301991668,
+            "cameraComponentWrites": 92559.88953554168,
+            "cameraLookAtWrites": 92559.81582179168,
+            "cameraPositionWrites": 92559.81581875001,
+            "cameraTransformEntries": 92559.81580325,
+            "clearMaterialWrites": 92559.89116075,
+            "frameCalls": 92559.88953983334,
+            "highlightEntries": 92559.889581875,
+            "highlightMaterialWrites": 92562.09939458333,
+            "highlightUpdatePasses": 92559.891088125,
+            "realityMakeEntries": 92559.88878066668,
+            "realityUpdateEntries": 92559.89550825,
+            "unchangedHighlightRequests": 92559.89581325001
+          },
+          "latestUptime": {
+            "applySyncCompletions": 92562.106697375,
+            "applySyncEntries": 92562.08518358335,
+            "baselineMaterialWrites": 92559.81317304168,
+            "cameraComponentWrites": 92562.08536270834,
+            "cameraLookAtWrites": 92562.08540020834,
+            "cameraPositionWrites": 92562.08538933334,
+            "cameraTransformEntries": 92562.08536895835,
+            "clearMaterialWrites": 92562.10126720835,
+            "frameCalls": 92562.08536495834,
+            "highlightEntries": 92562.08540379167,
+            "highlightMaterialWrites": 92562.1011825,
+            "highlightUpdatePasses": 92562.09497925,
+            "realityMakeEntries": 92559.88878066668,
+            "realityUpdateEntries": 92562.08499170834,
+            "unchangedHighlightRequests": 92559.90914420834
+          },
+          "sceneToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+          "sceneTotals": {
+            "applySyncCompletions": 4,
+            "applySyncEntries": 4,
+            "baselineMaterialWrites": 22,
+            "cameraComponentWrites": 4,
+            "cameraLookAtWrites": 6,
+            "cameraPositionWrites": 6,
+            "cameraTransformEntries": 6,
+            "clearMaterialWrites": 40,
+            "frameCalls": 4,
+            "highlightEntries": 4,
+            "highlightMaterialWrites": 2,
+            "highlightUpdatePasses": 2,
+            "realityMakeEntries": 1,
+            "realityUpdateEntries": 3,
+            "unchangedHighlightRequests": 2
+          },
+          "scopeMismatches": 0,
+          "semanticRevision": 2,
+          "synchronousScopeDepth": 0,
+          "version": 2,
+          "views": [
+            {
+              "counts": {
+                "applySyncCompletions": 4,
+                "applySyncEntries": 4,
+                "baselineMaterialWrites": 0,
+                "cameraComponentWrites": 4,
+                "cameraLookAtWrites": 5,
+                "cameraPositionWrites": 5,
+                "cameraTransformEntries": 5,
+                "clearMaterialWrites": 40,
+                "frameCalls": 4,
+                "highlightEntries": 4,
+                "highlightMaterialWrites": 2,
+                "highlightUpdatePasses": 2,
+                "realityMakeEntries": 1,
+                "realityUpdateEntries": 3,
+                "unchangedHighlightRequests": 2
+              },
+              "firstUptime": {
+                "applySyncCompletions": 92559.892911,
+                "applySyncEntries": 92559.88938383335,
+                "cameraComponentWrites": 92559.88953554168,
+                "cameraLookAtWrites": 92559.88956804168,
+                "cameraPositionWrites": 92559.88955870834,
+                "cameraTransformEntries": 92559.88954425,
+                "clearMaterialWrites": 92559.89116075,
+                "frameCalls": 92559.88953983334,
+                "highlightEntries": 92559.889581875,
+                "highlightMaterialWrites": 92562.09939458333,
+                "highlightUpdatePasses": 92559.891088125,
+                "realityMakeEntries": 92559.88878066668,
+                "realityUpdateEntries": 92559.89550825,
+                "unchangedHighlightRequests": 92559.89581325001
+              },
+              "latestUptime": {
+                "applySyncCompletions": 92562.106697375,
+                "applySyncEntries": 92562.08518358335,
+                "cameraComponentWrites": 92562.08536270834,
+                "cameraLookAtWrites": 92562.08540020834,
+                "cameraPositionWrites": 92562.08538933334,
+                "cameraTransformEntries": 92562.08536895835,
+                "clearMaterialWrites": 92562.10126720835,
+                "frameCalls": 92562.08536495834,
+                "highlightEntries": 92562.08540379167,
+                "highlightMaterialWrites": 92562.1011825,
+                "highlightUpdatePasses": 92562.09497925,
+                "realityMakeEntries": 92559.88878066668,
+                "realityUpdateEntries": 92562.08499170834,
+                "unchangedHighlightRequests": 92559.90914420834
+              },
+              "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+            }
+          ]
+        },
+        "uptime": 92562.10709625001,
+        "viewportPoints": [
+          210,
+          36
+        ],
+        "viewToken": "50D62EC8-E8C1-456C-99B5-00A16E2B035A"
+      },
+      "constructor": {
+        "complete": true,
+        "epoch": 1791020999.109729,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 1,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "handRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "lifecycleEvent": "constructor-entry",
+        "sequence": 46,
+        "uptime": 92562.109963625
+      },
+      "make": {
+        "complete": true,
+        "epoch": 1791020999.12178,
+        "event": "hand-lifecycle",
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 2,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "handRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "lifecycleEvent": "make-entry",
+        "sequence": 48,
+        "uptime": 92562.12201658334,
+        "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+      },
+      "fit": {
+        "allDepthsFinite": true,
+        "allDepthsInsideUnchangedClips": true,
+        "cameraEvent": "reset-fitted",
+        "cameraTransform": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.959770917892456,
+          -0.28078407049179077,
+          0,
+          0,
+          0.28078407049179077,
+          0.959770917892456,
+          0,
+          0,
+          3.961261034011841,
+          9.515283584594727,
+          1
+        ],
+        "complete": true,
+        "epoch": 1791020999.176251,
+        "event": "hand-camera",
+        "far": 100,
+        "framingVertexCount": 37284,
+        "handCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "handKind": "pair",
+        "handLifecycleCounts": {
+          "pair.constructor-entry": 2,
+          "pair.make-entry": 2,
+          "single.constructor-entry": 0,
+          "single.make-entry": 0
+        },
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "maximumDepth": 10.936546325683594,
+        "minimumDepth": 8.617655754089355,
+        "near": 0.10000000149011612,
+        "orthographicPresent": true,
+        "orthographicScale": 1.7647740840911865,
+        "perspectivePresent": false,
+        "sequence": 49,
+        "uptime": 92562.17648979167
+      },
+      "captureStartBound": 1791020999.378722,
+      "requiresFullTraceFirstAfterAndRemaining23": true,
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 1,
+    "targetEpoch": 1791021000.105864,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-1.png",
+    "sha256": "72e963701d75be031d8c6f119c8f0ec96df29f3fc2229d39639b33f6a99e872f",
+    "startEpoch": 1791021000.1197,
+    "endEpoch": 1791021000.605242,
+    "startDelayFromTarget": 0.013835906982421875,
+    "traceReadBefore": {
+      "observedEpoch": 1791021000.1178088,
+      "lastSequence": 50
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021000.607849,
+      "lastSequence": 50
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 50,
+      "censusEpoch": 1791021000.003827,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 50,
+      "censusEpoch": 1791021000.003827,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 3,
+    "targetEpoch": 1791021002.105864,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-3.png",
+    "sha256": "986bd7d21750958289d894bb9404e7f807e750bda9b65b3baa4052a4ce9588bd",
+    "startEpoch": 1791021002.138518,
+    "endEpoch": 1791021002.626574,
+    "startDelayFromTarget": 0.0326540470123291,
+    "traceReadBefore": {
+      "observedEpoch": 1791021002.136569,
+      "lastSequence": 52
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021002.628624,
+      "lastSequence": 52
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 52,
+      "censusEpoch": 1791021002.053366,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 52,
+      "censusEpoch": 1791021002.053366,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 0,
+    "mode": "active",
+    "offset": 5,
+    "targetEpoch": 1791021004.105864,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-5.png",
+    "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+    "startEpoch": 1791021004.13822,
+    "endEpoch": 1791021004.6007922,
+    "startDelayFromTarget": 0.03235602378845215,
+    "traceReadBefore": {
+      "observedEpoch": 1791021004.1363242,
+      "lastSequence": 53
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021004.6058052,
+      "lastSequence": 54
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 53,
+      "censusEpoch": 1791021003.120657,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 54,
+      "censusEpoch": 1791021004.1707911,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 0.25,
+    "targetEpoch": 1791021006.268213,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-0.25.png",
+    "sha256": "6eb7cf125c35a3f0dd283c6968c05a39058030aaa5440f42c9941c8db92e46c0",
+    "startEpoch": 1791021006.311469,
+    "endEpoch": 1791021006.781025,
+    "startDelayFromTarget": 0.04325604438781738,
+    "traceReadBefore": {
+      "observedEpoch": 1791021006.306908,
+      "lastSequence": 60
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021006.7839649,
+      "lastSequence": 60
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 60,
+      "censusEpoch": 1791021006.275934,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 60,
+      "censusEpoch": 1791021006.275934,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 1,
+    "targetEpoch": 1791021007.018213,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-1.png",
+    "sha256": "f6ed36980e7d9f75eea6a4220854660d6ca76f21bbca62f5c8555302aa073e01",
+    "startEpoch": 1791021007.027285,
+    "endEpoch": 1791021007.49096,
+    "startDelayFromTarget": 0.009072065353393555,
+    "traceReadBefore": {
+      "observedEpoch": 1791021007.024321,
+      "lastSequence": 60
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021007.494891,
+      "lastSequence": 61
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 60,
+      "censusEpoch": 1791021006.275934,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 61,
+      "censusEpoch": 1791021007.323621,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 3,
+    "targetEpoch": 1791021009.018213,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-3.png",
+    "sha256": "b882fa169ddf3f273eb5aa0b48f1a686c4e693705549dda975cd17d81589335c",
+    "startEpoch": 1791021009.0373912,
+    "endEpoch": 1791021009.5098088,
+    "startDelayFromTarget": 0.019178152084350586,
+    "traceReadBefore": {
+      "observedEpoch": 1791021009.034635,
+      "lastSequence": 62
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021009.514225,
+      "lastSequence": 63
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 62,
+      "censusEpoch": 1791021008.35746,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 63,
+      "censusEpoch": 1791021009.386973,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 1,
+    "mode": "preview",
+    "offset": 5,
+    "targetEpoch": 1791021011.018213,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-5.png",
+    "sha256": "b73cc92a2620918a189e9ea44c99def3deb3ef05c297d671e4dc220fbfa6fe61",
+    "startEpoch": 1791021011.0542269,
+    "endEpoch": 1791021011.5592241,
+    "startDelayFromTarget": 0.03601384162902832,
+    "traceReadBefore": {
+      "observedEpoch": 1791021011.049082,
+      "lastSequence": 64
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021011.563814,
+      "lastSequence": 65
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 64,
+      "censusEpoch": 1791021010.4275331,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 65,
+      "censusEpoch": 1791021011.492515,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 0.25,
+    "targetEpoch": 1791021186.114052,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-0.25.png",
+    "sha256": "b827d23aa836a993728d05830baa19f4ea8dafc3ed26e7d2bfe7357f8e86838f",
+    "startEpoch": 1791021186.188201,
+    "endEpoch": 1791021186.691831,
+    "startDelayFromTarget": 0.07414889335632324,
+    "traceReadBefore": {
+      "observedEpoch": 1791021186.17045,
+      "lastSequence": 176
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021186.706381,
+      "lastSequence": 176
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 1,
+    "targetEpoch": 1791021186.864052,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-1.png",
+    "sha256": "29645b5e10e947984fbc436efea0292214af911d5d1724db49ee6153a31c09e5",
+    "startEpoch": 1791021186.9073,
+    "endEpoch": 1791021187.387297,
+    "startDelayFromTarget": 0.04324793815612793,
+    "traceReadBefore": {
+      "observedEpoch": 1791021186.892929,
+      "lastSequence": 176
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021187.4013178,
+      "lastSequence": 176
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 3,
+    "targetEpoch": 1791021188.864052,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-3.png",
+    "sha256": "36495dd2cab1c7046df7421b2bd0fea5b0f408780ffef917e52c0bb8ab4fb613",
+    "startEpoch": 1791021188.927071,
+    "endEpoch": 1791021189.394728,
+    "startDelayFromTarget": 0.0630190372467041,
+    "traceReadBefore": {
+      "observedEpoch": 1791021188.9135182,
+      "lastSequence": 176
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021189.409475,
+      "lastSequence": 176
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  },
+  {
+    "phaseIndex": 2,
+    "mode": "active",
+    "offset": 5,
+    "targetEpoch": 1791021190.864052,
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-5.png",
+    "sha256": "1a1db0c856c2f8a0d8839fb03c6ed688a8c63fd465e3d933842d5dabf06091a9",
+    "startEpoch": 1791021190.933451,
+    "endEpoch": 1791021191.394603,
+    "startDelayFromTarget": 0.06939888000488281,
+    "traceReadBefore": {
+      "observedEpoch": 1791021190.919905,
+      "lastSequence": 176
+    },
+    "traceReadAfter": {
+      "observedEpoch": 1791021191.4092958,
+      "lastSequence": 176
+    },
+    "branchBefore": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    },
+    "branchBeforeError": null,
+    "branchAfter": {
+      "role": "live",
+      "censusSequence": 175,
+      "censusEpoch": 1791021185.865048,
+      "hand": {
+        "camera": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b3404e0)",
+          "isActive": true,
+          "orthographicComponent": true,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341be0)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "configuredObserved": true,
+        "constructedCameraID": "ObjectIdentifier(0x000000014b3404e0)",
+        "constructedRootID": "ObjectIdentifier(0x000000014b341be0)",
+        "handLifetimeToken": "43E3633D-8D05-44F7-9CBB-27ACADF1AACD",
+        "kind": "pair",
+        "registrationIssue": "nil",
+        "root": {
+          "alive": true,
+          "enabled": true,
+          "entityID": "ObjectIdentifier(0x000000014b341be0)",
+          "isActive": true,
+          "orthographicComponent": false,
+          "parentEntityID": "ObjectIdentifier(0x000000014b341920)",
+          "perspectiveComponent": false,
+          "realitySceneID": "ObjectIdentifier(0x0000000105ba7300)"
+        },
+        "viewObservations": [
+          {
+            "allAssociatedLifetimeTokens": [
+              "43E3633D-8D05-44F7-9CBB-27ACADF1AACD"
+            ],
+            "lastSwiftUIEvent": "appeared",
+            "lastSwiftUIEventSequence": 45,
+            "lastSwiftUIEventUptime": 92562.109834,
+            "viewToken": "025662F7-1741-4F0A-B3A0-86E52AA927B8"
+          }
+        ]
+      },
+      "limits": [
+        "No pose/finger/side identity emitted by image events. Revision is not semantic proof; fixed half-crimp source and whole screenshots require review.",
+        "Publication/callback/census are sampled CPU evidence, not proof of presenting pixels or GPU inactivity.",
+        "Current LIVE hand attachment uses sparse recorded checkpoints; final before/after brackets remain separately required."
+      ]
+    }
+  }
+]

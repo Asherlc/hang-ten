@@ -1,0 +1,19 @@
+{
+  "arm": "control-a",
+  "runtimeValid": true,
+  "allWholeImagesReviewed": true,
+  "visualResult": "FAIL",
+  "nextArmAuthorized": "on-demand",
+  "binarySHA256": "f84f9209fb3ed36af2304cf8aa8a402b19ce19a8265ff87d1d8736892c39471e",
+  "sourceReferenceSHA256": "215f1efa079436ce812bd3132aa6e0450bb7845e38e8291ff49cce186bf2ea2a",
+  "reviews": {
+    "control-ready-first-independent.json": "e10b34d2036961cb5ad2ddd00bdf64673b86a31139133077f3d0f25e688fb815",
+    "control-ready-tail-independent.json": "3480b28e406acc6f77ef47c94c40c0f3e35ae1c3d1891357b8852aa2e82b1f19",
+    "control-ready-root-review.json": "0ae1e2918cfbde44717173ea3c2b60442400b7c45980da45c8ad4f589fe401c3",
+    "control-ready-offline.json": "546b92f3610d86c0ddfb7bbdf66d0f610095374e31afa561b6eee28ae9b74c18"
+  },
+  "wholeImageCount": 45,
+  "CPUBracketsAvailable": false,
+  "actualAppPhaseBoundariesMeasured": false,
+  "summary": "Rest010\u2013018 red wrong; next Hang190\u2013196 blue wrong; no touch/AX during measurement."
+}

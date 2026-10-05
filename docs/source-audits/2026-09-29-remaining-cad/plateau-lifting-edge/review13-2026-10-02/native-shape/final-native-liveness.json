@@ -1,0 +1,157 @@
+{
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/native-shape-2026-10-02/final/Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "sourceBytesUnchanged": true,
+  "configurations": {
+    "18": {
+      "editedFeature": "Depth18OakRail",
+      "property": "Length",
+      "incrementMM": 0.25,
+      "initial": {
+        "bodyVolumeMM3": 69509.73355292325,
+        "contactAreaMM2": 1971.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          0.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "changed": {
+        "bodyVolumeMM3": 69599.2506987909,
+        "contactAreaMM2": 1976.1669952835648,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.25,
+          0.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "restored": {
+        "bodyVolumeMM3": 69509.73355292325,
+        "contactAreaMM2": 1971.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          0.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "bodyAndContactChanged": true,
+      "exactMetricRestore": true,
+      "saved": false
+    },
+    "15": {
+      "editedFeature": "Depth15OakRail",
+      "property": "Length",
+      "incrementMM": 0.25,
+      "initial": {
+        "bodyVolumeMM3": 86009.73355292324,
+        "contactAreaMM2": 1671.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          -3.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "changed": {
+        "bodyVolumeMM3": 86099.25069879089,
+        "contactAreaMM2": 1676.1669952835648,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.25,
+          0.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "restored": {
+        "bodyVolumeMM3": 86009.73355292324,
+        "contactAreaMM2": 1671.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          -3.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "bodyAndContactChanged": true,
+      "exactMetricRestore": true,
+      "saved": false
+    },
+    "10": {
+      "editedFeature": "Depth10OakRail",
+      "property": "Length",
+      "incrementMM": 0.25,
+      "initial": {
+        "bodyVolumeMM3": 86009.73355292324,
+        "contactAreaMM2": 1171.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          -8.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "changed": {
+        "bodyVolumeMM3": 86099.25069879091,
+        "contactAreaMM2": 1176.1669952835648,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.25,
+          0.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "restored": {
+        "bodyVolumeMM3": 86009.73355292324,
+        "contactAreaMM2": 1171.238898038469,
+        "contactBoundsMM": [
+          -50.0,
+          -18.0,
+          20.0,
+          50.0,
+          -8.0,
+          23.0
+        ],
+        "bodyValid": true,
+        "contactValid": true
+      },
+      "bodyAndContactChanged": true,
+      "exactMetricRestore": true,
+      "saved": false
+    }
+  }
+}

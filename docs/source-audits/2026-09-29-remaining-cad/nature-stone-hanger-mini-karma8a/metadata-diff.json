@@ -1,0 +1,36 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "f9d0d4434d66967cee64141a04897186bbd8985e4b49c7fc12825b08732a887a",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "nature-stone-hanger-mini-karma8a",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "granite-edge-15"
+      ],
+      "id": "granite-front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "wood-edge-15"
+      ],
+      "id": "wood-inverted",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "pinch-60"
+      ],
+      "id": "pinch-side",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "nature-stone-hanger-mini-karma8a/native-authoring.md",
+  "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4"
+}

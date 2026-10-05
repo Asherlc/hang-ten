@@ -1,0 +1,30 @@
+{
+  "owner": "placid-badger",
+  "resources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-reimport2-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-reimport2-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/placid-badger-reimport2-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 87308,
+      "pgid": 87308,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-jug-wrap-2026-10-02/native-author/verify-reimport.py",
+        "--repo",
+        ".",
+        "--package",
+        ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/compile1",
+        "--report",
+        ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/reimport-proof.json",
+        "--mesh-output",
+        ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/actual-reimport-meshes.json",
+        "--native-report",
+        ".context/placid-badger/mini-jug-wrap-2026-10-02/native-author/native-reopen-proof.json"
+      ]
+    }
+  ]
+}

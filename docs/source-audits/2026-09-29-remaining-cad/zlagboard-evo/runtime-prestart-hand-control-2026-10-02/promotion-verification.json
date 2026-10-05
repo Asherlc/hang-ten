@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "rawFiles": 163,
+  "rawBytes": 10597851,
+  "originalFrozenFilesVerified": 152,
+  "previousPacketFilesUnchanged": 9066,
+  "wholePhaseImages": 12,
+  "parentDirectVisualScope": 3,
+  "retentionManifestSHA256": "06a323158f30f923e6e95854cd3a34d2924e887de837e9d7005f66b1a4109b17",
+  "editorialTrailingWhitespaceCheck": [
+    "README.md",
+    "index.md"
+  ],
+  "rawWhitespace": "Exact bytes retained, not claimed clean",
+  "sourceOrRuntimeChanged": false,
+  "stagedOrCommitted": false
+}

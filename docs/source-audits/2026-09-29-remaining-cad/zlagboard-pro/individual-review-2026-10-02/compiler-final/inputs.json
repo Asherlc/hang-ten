@@ -1,0 +1,18 @@
+{
+  "timestampUTC": "2026-10-02T13:37:38.801503+00:00",
+  "sourceSHA256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+  "previousAssets": {
+    "primary.usdz": {
+      "sha256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+      "bytes": 912805
+    },
+    "primary.model.json": {
+      "sha256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82",
+      "bytes": 13435
+    }
+  },
+  "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+  "usdDependencyPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311",
+  "canonicalScope": "zlagboard-pro assets only; no global records or other packages",
+  "sourcePromotionAuthorized": true
+}

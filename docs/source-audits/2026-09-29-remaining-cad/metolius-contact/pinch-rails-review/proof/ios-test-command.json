@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulator": "48059B24-A469-4B02-A47A-A303FB8D978E",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=48059B24-A469-4B02-A47A-A303FB8D978E",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-pinch-rails/ios/placid-badger-contact-pinch-rails-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 900,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-contact-pinch-rails/ios/placid-badger-contact-pinch-rails-tests.xcresult",
+  "exitCode": 0,
+  "elapsedSeconds": 39.25251995801227
+}

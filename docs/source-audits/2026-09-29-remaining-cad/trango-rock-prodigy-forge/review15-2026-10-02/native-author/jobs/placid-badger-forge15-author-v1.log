@@ -1,0 +1,15 @@
+OuterWingMouthRounds: BRep_API: command not done
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/placid-badger-forge15-author-v1-tmp/hangten-freecad-1vym6b_4/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/author-wing-recess.py", line 61, in <module>
+    assert roll.Shape.isValid() and len(roll.Shape.Solids)==1
+           ^^^^^^^^^^^^^^^^^^^^
+Part.OCCError: 19Standard_NullObject BRepCheck_Analyzer::Init() - NULL shape
+
+
+								
+								
+								
+								
+								

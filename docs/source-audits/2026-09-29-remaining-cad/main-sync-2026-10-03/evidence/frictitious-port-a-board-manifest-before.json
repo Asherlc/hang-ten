@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 3,
+  "id": "frictitious.port-a-board",
+  "manufacturer": "Frictitious Climbing",
+  "name": "Port-A-Board",
+  "subtitle": "Portable single-object board with edges, pocket, jug, and pinch contacts.",
+  "productURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+  "dimensions": "128 \u00d7 140 \u00d7 48 mm",
+  "aspectRatio": 1.0,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "3D model",
+      "aspectRatio": 1.0,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.12
+          }
+        }
+      }
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-30",
+      "equipmentObjectID": "primary",
+      "name": "30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25",
+      "equipmentObjectID": "primary",
+      "name": "25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20",
+      "equipmentObjectID": "primary",
+      "name": "20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15",
+      "equipmentObjectID": "primary",
+      "name": "15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12",
+      "equipmentObjectID": "primary",
+      "name": "12 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10",
+      "equipmentObjectID": "primary",
+      "name": "10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8",
+      "equipmentObjectID": "primary",
+      "name": "8 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "jug-outer-rim",
+      "equipmentObjectID": "primary",
+      "name": "Outer rim jug contact",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "pinch-body",
+      "equipmentObjectID": "primary",
+      "name": "Board body pinch contact",
+      "kind": "pinch",
+      "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "front-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "reverse-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-12",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "reverse-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-15",
+        "edge-8"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-outer-rim"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-body"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "reviewNumber": 7,
+  "acceptedBoardsUnchanged": 6,
+  "remainingQueueRowsAndScopeUnchanged": true,
+  "contactManifestBytesUnchanged": true,
+  "contactFactsUnchanged": 33,
+  "changedPackageFiles": [
+    "Hangboards/metolius-contact/assets/primary.model.json",
+    "Hangboards/metolius-contact/assets/primary.usdz",
+    "Hangboards/metolius-contact/metolius-contact.FCStd"
+  ],
+  "otherPackageFilesUnchanged": 203,
+  "currentSourceSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+  "currentModelSHA256": "d313a7162db78c57650e91b1b35338eba38290a83d4209a640afa04504e16f07",
+  "currentDescriptorSHA256": "c1ed94c1a777d7bd0d349e213e75fe907574fd61d25eff7c3e5adec142213d0f",
+  "deliveryManifestSHA256": "b29f9f55f97072e8e709db56b72ae01fc391e6f927af0f6b9a50a59a30b4ded9",
+  "lockedFilesVerified": 135,
+  "originalRawCopiesVerified": 82,
+  "historicalReviewHashClosureVerified": true,
+  "retainedManufacturerEvidenceUnchanged": true,
+  "relativeLinksVerified": 58,
+  "exactOwnedSimulatorDeletionRechecked": true,
+  "humanAcceptance": "pending revised review #7"
+}

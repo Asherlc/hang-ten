@@ -1,0 +1,5 @@
+{
+  "process": "  PID ELAPSED COMMAND\n29024   02:36 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl install 6969EFC0-48DE-459D-8186-057E71B7A95B /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-review/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app\n",
+  "action": "SIGTERM stalled direct-install process; exact build products preserved under owned recovery lifecycle before original EXIT cleanup",
+  "timeUTC": "2026-10-02T03:08:46.711340+00:00"
+}

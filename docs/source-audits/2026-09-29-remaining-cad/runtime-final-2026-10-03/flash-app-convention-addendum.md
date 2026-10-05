@@ -1,0 +1,9 @@
+# Flash current app convention addendum
+
+The completed [intrinsic-side audit](flash-hand-convention.md), with its [exact mappings and pose algebra](flash-hand-convention.json), provides the source context missing from the initial [whole-frame app audit](14-visual-audit.md). It confirms stable low-model-X `left` and high-model-X `right` associations, no descriptor/contact-ID swap, and no retained manufacturer requirement for fixed screen-side or hand labels. **No native ID swap or source-backed blocker is established.** Both source-convention reports remain unchanged.
+
+The visual observation remains: left-named contacts highlight viewer-right in both supplied front faces. The two-edge view agrees with intrinsic left projected through the stored `two-edge-upright` +Z camera convention. The three-edge view agrees with the stored `three-edge-inverted` convention, but the capture receipt omits active pose ID/world camera direction. Its actual runtime presentation is therefore not completely explained. This addendum makes no semantic screen-side pass, all-saved-pose pass, or runtime camera-correctness claim.
+
+Retain the immutable contacts and factual labels. The existing contact/material/cord, one physical mesh pick, and outer-well restoration observations remain scoped to their supplied frames. The source mapping review provides no justification for geometry or descriptor changes. `appWorkflowPassed=false`; root reports the #14 workout workflow was not executed, and current app human acceptance remains pending.
+
+Only this scratch report pair was added. No new images were captured or altered, no app/Simulator/resource operation was performed, and no production, native, or source-convention report was modified. The [JSON addendum](flash-app-convention-addendum.json) records the claim boundaries explicitly.

@@ -1,0 +1,118 @@
+{
+  "nativeSource": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "RightBackEntryCut",
+  "attachmentNodeID": "nug_body",
+  "evidencedGraph": "Paired exterior leads visible at front and reverse entrances. Hidden connectivity unproven; only mouth wells modeled.",
+  "nativeFeatures": {
+    "mouthWells": [
+      {
+        "center": [
+          -53,
+          -20,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          -1,
+          0
+        ],
+        "radiusMM": 4,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          -53,
+          20,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "radiusMM": 4,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          53,
+          -20,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          -1,
+          0
+        ],
+        "radiusMM": 4,
+        "depthMM": 4
+      },
+      {
+        "center": [
+          53,
+          20,
+          0
+        ],
+        "outwardAxis": [
+          0,
+          1,
+          0
+        ],
+        "radiusMM": 4,
+        "depthMM": 4
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "front-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-25"
+      ]
+    },
+    {
+      "id": "front-inverted-20",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "reverse-13",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-13"
+      ]
+    },
+    {
+      "id": "reverse-inverted-8",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-8"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-40"
+      ]
+    },
+    {
+      "id": "outer-lower",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "notes": "Front-25 upright; front-inverted-20 flips upright board in its face plane; reverse-13 exposes back; reverse-inverted-8 reverses then inverts. No invisible joins. Body outer40mm jug and60mm pinch are distinct source facts.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/sources.json",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "modelSHA256ByPresentation": {
+    "primary": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+  }
+}

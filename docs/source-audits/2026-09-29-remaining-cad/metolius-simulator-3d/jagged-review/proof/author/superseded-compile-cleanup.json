@@ -1,0 +1,8 @@
+{
+  "removedEmptyOwnedStagingDirectories": [
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/candidate/assets/.hangten-build-tlpg44pa",
+    ".context/placid-badger/metolius-simulator-3d-jagged/native-author/export-run/assets/.hangten-build-q4_te6gh"
+  ],
+  "remainingOwnedNativeJobs": [],
+  "nativeTMPDirectories": []
+}

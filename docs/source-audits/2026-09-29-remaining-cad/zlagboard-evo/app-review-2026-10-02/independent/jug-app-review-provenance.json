@@ -1,0 +1,8 @@
+{
+  "method": "Whole screenshot scaling and side-by-side layout only; no cropping, masks, source registration or geometry measurement. Raw source bytes unchanged.",
+  "inputs": {
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs-gentle/left-elevated.png": "6ad1e8b8ad7623e62feede4256b0dbe91de662383cd08e3feb001e72ebe5af26",
+    ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/elevated-jugs-gentle/right-elevated.png": "d5863529c336496c61fd89caaed5244e6f105e1c3316822c86c2ccabef66fa9e"
+  },
+  "outputSHA256": "a78134e76215f762a9a1253e5e3041b78d1afb0926becf117b2a665abfda14b6"
+}

@@ -1,0 +1,29 @@
+{
+  "status": "PROSPECTIVE_SUPPLEMENT_READY_NOT_EXECUTED",
+  "files": {
+    "capture-release-gate.patch": "73501384dd77fc2236381f4e1be32776e2821de6f8ba548701b9f8f2c6a94d55",
+    "original-action-check-prestart-hands.py": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+    "capture-action.py": "54e3e6a5f06e5ce8f61108d56e3997e0f6f1c88ef1adcf471fc3603c384bcfca",
+    "original-action-capture.py": "38af1958b95229f33e5c77715b076153585b990b44a048ca5e011f3899466353",
+    "check-supplemental-timing.py": "cd6e98044a0afb60116cf58b592476c7780f6d941f302bef9f350338b5090c1c"
+  },
+  "scope": "Action capture differs only in root release schema; original action checker retained exact and must run first with its status preserved. New supplemental checker is identical for control/action via argument, no trace/source/capture/flag changes.",
+  "gateSchema": {
+    "originalProspectiveCheckPassed": false,
+    "supplementalTimingCheckPassed": true,
+    "incompleteFirstOwnershipBracket": true,
+    "remainingEvidencePassed": true,
+    "visualResult": "FAIL",
+    "startupFirstHandHistoryReproduced": true,
+    "binarySHA256": "f98a07f4383af14396d8442581a330f4d3523d0c9854436420b67bf14b681d97",
+    "actionAuthorized": true
+  },
+  "supplement": "Ctor/make after last positive countdown and before actual screenshot START; preserve actual timing margins. All24 current-lifetime points attached unless first-before is strictly preconstructor and absentcurrent; in that case flag incompleteFirstOwnershipBracket and require all remaining23. Unknown original errors reject. Original report unchanged.",
+  "limitation": "An incomplete first ownership bracket is not converted into complete screenshot-time ownership evidence; visible hands, constructor timing and later attached state are distinct.",
+  "independentControlSupplement": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/prestart-control-bracket-audit/report.json",
+    "sha256": "2691fc62321d15c8a33ed7be7383f589694959893c8add8232bec776c4f245b7"
+  },
+  "ASTPassed": true,
+  "noRuntimeExecuted": true
+}

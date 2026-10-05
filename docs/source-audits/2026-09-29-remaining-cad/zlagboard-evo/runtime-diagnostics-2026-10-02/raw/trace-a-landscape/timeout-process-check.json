@@ -1,0 +1,4 @@
+{
+  "matchingExactOwnedAXCommands": [],
+  "note": "Read-only ps search; subprocess.run TimeoutExpired killed and reaped direct child; no retained exception output fields in original harness."
+}

@@ -1,0 +1,46 @@
+{
+  "owner": "placid-badger",
+  "number": 11,
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "sourceSHA256": "f43f517e6bca51a7a4eab9a7285ea684a614b7a33099fce67ae9e5f21f56942f",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "17b8d3b689f453a155f5f993fc329111e807c83fb750e94d406ab44628fe2460",
+      "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de"
+    }
+  },
+  "sourcePlanID": "research.abrahangs",
+  "workStep": 17,
+  "naturalRestStep": 18,
+  "routineDurationsOrTasksChanged": false,
+  "technicalCapturedWorkflowPassed": true,
+  "automationResult": "Physical-driver sequence completed with expected Hang and natural Rest frames.",
+  "frames": [
+    {
+      "image": "screenshots/11-landscape-hang.png",
+      "sourceArtifact": "app-captures/11-workout-landscape-natural-work-highlight.png",
+      "sha256": "129676f307575435e75435f52ce93544a2107974092c104919702f741ddc49e4",
+      "orientation": "landscape",
+      "observedHighlight": "red",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    },
+    {
+      "image": "screenshots/11-landscape-rest.png",
+      "sourceArtifact": "app-captures/11-workout-landscape-natural-rest-live.png",
+      "sha256": "c2d930cd1fce2d4ac1ffde27d06480b15071c1137853a75a815dd10b891db435",
+      "orientation": "landscape",
+      "observedHighlight": "blue",
+      "wholeFrameInspected": true,
+      "boardAndCordsVisible": true,
+      "handPreviewVisible": true
+    }
+  ],
+  "geometryAndSuspensionUnchanged": true,
+  "bodyHumanApprovalUnchanged": true,
+  "currentAppHumanAcceptance": "pending",
+  "limits": "Scope is the selected source-task Hang/Rest and supplied whole frames, not all contacts. No continuous or hardware GPU timing claim.",
+  "priorTouchAndContactCoverage": "All 3 logical contacts: wood edge, granite edge and pinch.",
+  "priorTouchRecord": "runtime-final-2026-10-03/boards/11.json"
+}

@@ -1,0 +1,51 @@
+{
+  "timestampUTC": "2026-10-02T13:54:03.887531+00:00",
+  "purpose": "Remove exact generated staging copies after successful retained parity report; canonical assets and generated manifest proof remain.",
+  "paths": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/staging-input",
+      "fileCount": 18,
+      "filesBeforeDeletion": {
+        "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "Hangboards/zlagboard-pro/zlagboard-pro.FCStd": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+        "Tools/HangboardPackages/src/hangboard_packages/__pycache__/board_catalog.cpython-312.pyc": "bf0375d02b6aa1147d12e0ee8cb45bd92c4c1badc6b386b7bbb8f9d190d93980",
+        "Tools/HangboardPackages/src/hangboard_packages/__pycache__/board_geometry_schema.cpython-312.pyc": "a59f0c73ab4f498755b47ce54d00f60325034190cb783936c90cbdc843ba2e81",
+        "Tools/HangboardPackages/src/hangboard_packages/__pycache__/cad_source.cpython-312.pyc": "501b801e4434b00c7ff0c9930d376263a26cf2dbf9073bc0d20d80afa7b84c9c",
+        "Tools/HangboardPackages/src/hangboard_packages/__pycache__/cord_paths.cpython-312.pyc": "d5e1c0b3a755f85040d6e74e6c197b81823b8083d2068c2b318d1f70e05d3321",
+        "Tools/HangboardPackages/src/hangboard_packages/board_catalog.py": "54af5c45627f76128e7629c601822d37903c57f4260ee81fdc668bf922140172",
+        "Tools/HangboardPackages/src/hangboard_packages/board_geometry.py": "e1dbb6738094e8c0faa63b24bfe68253020b11b36029d150bdb12057d0620a09",
+        "Tools/HangboardPackages/src/hangboard_packages/board_geometry_schema.py": "254d46bfc24a2da427f6fd3f0a4cdd4f6c829f6baab00920e4cb484e8a363582",
+        "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "1c0865f177fd9f50ee2a59f656126f67a6d6b1aa85c70ef3b791003f8de7ad09",
+        "Tools/HangboardPackages/src/hangboard_packages/cli.py": "70630ea53b766457b3ffd66f0e08075f676d34c1afce36bad45f8575db24e2d6",
+        "Tools/HangboardPackages/src/hangboard_packages/cord_audit.py": "c84365ff292584467a0df31c827c6c73dc787358319014492e294004ed32b189",
+        "Tools/HangboardPackages/src/hangboard_packages/cord_paths.py": "d0c6dcacc8e1ad129e8d03580a43e9e20b547879a127bb912582b19c7a683250",
+        "Tools/HangboardPackages/src/hangboard_packages/geometry_cleanup.py": "ca4245827b502a163b13d05f940c26b7300558b4124ea38a8d4a41e35c506671",
+        "Tools/HangboardPackages/src/hangboard_packages/metadata_audit.py": "feed34d015aa2fdab44767198ceab0a1c45a78ff2af8416ed2f2ec01a0792501",
+        "Tools/HangboardPackages/src/hangboard_packages/presentation_remediation_audit.py": "716d55aa68e1c91ebdb7d267e9f2df2bfb1d901ba40bad3fb2bfcba04997661a",
+        "Tools/HangboardPackages/src/hangboard_packages/usd_mesh_chain.py": "ebf68d38861dcd289e4a81f2d2db5ced2c660739aa3a9a3bd8ec5e92337eb736"
+      },
+      "deletedVerified": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/ios",
+      "fileCount": 3,
+      "filesBeforeDeletion": {
+        "HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "HangTen.app/Hangboards/zlagboard-pro/board.json": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+        "derived/HangTenModelODR/zlagboard-pro/Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+      },
+      "deletedVerified": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-pro/package-checks/final/android",
+      "fileCount": 3,
+      "filesBeforeDeletion": {
+        "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "Hangboards/zlagboard-pro/board.json": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8"
+      },
+      "deletedVerified": true
+    }
+  ]
+}

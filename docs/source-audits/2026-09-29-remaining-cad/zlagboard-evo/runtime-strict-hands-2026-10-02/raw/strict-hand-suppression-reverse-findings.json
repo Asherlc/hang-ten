@@ -1,0 +1,909 @@
+{
+  "scope": "Authorized reverse confirmation OFF-B then ON-B, unchanged binary and source; exactly two launches, no build/install or production fix. Initial pair retained unchanged.",
+  "binarySHA256": "839e18a7f159f993256e3e751cc5408ff7132a9ae5e6e9e0077d465d0c052610",
+  "sourcePatchSHA256": "1d8812e4674980d8fd954d99d198417b55b083b4abafc9233553f30b601c5f9d",
+  "runs": [
+    {
+      "arm": "off",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape",
+      "records": 143,
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "handChecks": {
+        "completeOpeningStream": true,
+        "instrumentationVersion": true,
+        "suppressionFlagCorrect": true,
+        "allFourCountsOnEveryRecord": true,
+        "openingCountsZero": true,
+        "countsMonotonic": true,
+        "finalMarkerAfterLastCapture": true,
+        "noRecorderErrorOrCap": true,
+        "strictOFFZeroAllFourLifetimeCounts": true
+      },
+      "finalHandCounts": {
+        "pair.constructor-entry": 0,
+        "pair.make-entry": 0,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "actualPhaseIntervals": [
+        6.964580059051514,
+        180.07173705101013
+      ],
+      "visualFailureReproduced": false,
+      "visualReviewSHA256": "341eee73f4a9921fe24e1ebd2ffdd7575d6e6426baf6b8079bdea05c051dbfb8",
+      "observedBoardColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red",
+        "red",
+        "red"
+      ],
+      "actualBoardFrameSet": [
+        [
+          232,
+          143.33333333333331,
+          410,
+          70
+        ],
+        [
+          257,
+          182.66666666666666,
+          360,
+          61.66666666666666
+        ]
+      ],
+      "cameraTransformSet": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ]
+      ],
+      "rootTransformSet": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "captureWindows": [
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 0.25,
+          "targetEpoch": 1790982587.6597838,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-0-active-plus-0.25.png",
+          "sha256": "6be00b9ab2511f5b47173d9f497e6caf6b419029a80ba854760ddfe7a6c49685",
+          "startEpoch": 1790982587.679229,
+          "endEpoch": 1790982588.156887,
+          "startDelayFromTarget": 0.019445180892944336,
+          "traceReadBefore": {
+            "observedEpoch": 1790982587.6792278,
+            "lastSequence": 12
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982588.157614,
+            "lastSequence": 12
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 1,
+          "targetEpoch": 1790982588.4097838,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-0-active-plus-1.png",
+          "sha256": "2cba7ec73d81a2ef6407e7cc6dfe04cf61d0d11dcecb2ebf089afbce4969d94a",
+          "startEpoch": 1790982588.4325829,
+          "endEpoch": 1790982588.899803,
+          "startDelayFromTarget": 0.022799015045166016,
+          "traceReadBefore": {
+            "observedEpoch": 1790982588.4325829,
+            "lastSequence": 13
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982588.9006028,
+            "lastSequence": 13
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 3,
+          "targetEpoch": 1790982590.4097838,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-0-active-plus-3.png",
+          "sha256": "1dc789f7dcf1ddb4fd61907f6bae6131cceb52484b8622b2c808730bd85ef3a2",
+          "startEpoch": 1790982590.4517288,
+          "endEpoch": 1790982590.92132,
+          "startDelayFromTarget": 0.04194498062133789,
+          "traceReadBefore": {
+            "observedEpoch": 1790982590.4517279,
+            "lastSequence": 15
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982590.922035,
+            "lastSequence": 15
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 5,
+          "targetEpoch": 1790982592.4097838,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-0-active-plus-5.png",
+          "sha256": "f15b08ce45c16d9b5059e3216dfb2246ce98910b1df5feadaa24613ad0e7b92f",
+          "startEpoch": 1790982592.443914,
+          "endEpoch": 1790982592.9395251,
+          "startDelayFromTarget": 0.034130096435546875,
+          "traceReadBefore": {
+            "observedEpoch": 1790982592.443913,
+            "lastSequence": 17
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982592.9406831,
+            "lastSequence": 17
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 0.25,
+          "targetEpoch": 1790982594.624364,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-1-preview-plus-0.25.png",
+          "sha256": "341da243ceba89837cb2b45f45a199ee65791e65b3f93f0c56dc669a630660d8",
+          "startEpoch": 1790982594.649536,
+          "endEpoch": 1790982595.121869,
+          "startDelayFromTarget": 0.025171995162963867,
+          "traceReadBefore": {
+            "observedEpoch": 1790982594.649536,
+            "lastSequence": 23
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982595.1231182,
+            "lastSequence": 23
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 1,
+          "targetEpoch": 1790982595.374364,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-1-preview-plus-1.png",
+          "sha256": "7f6708b1bd99eed2238253a8d6638fe9659831fe2a28b5fecfea89749e9a4b6c",
+          "startEpoch": 1790982595.377314,
+          "endEpoch": 1790982595.881858,
+          "startDelayFromTarget": 0.0029501914978027344,
+          "traceReadBefore": {
+            "observedEpoch": 1790982595.3773131,
+            "lastSequence": 23
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982595.88375,
+            "lastSequence": 24
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 3,
+          "targetEpoch": 1790982597.374364,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-1-preview-plus-3.png",
+          "sha256": "78de6ffbf559f59d76edcc0cc98e73129083cb6cf7f6955cdb016844bffdc43f",
+          "startEpoch": 1790982597.4209092,
+          "endEpoch": 1790982597.924513,
+          "startDelayFromTarget": 0.04654526710510254,
+          "traceReadBefore": {
+            "observedEpoch": 1790982597.4209092,
+            "lastSequence": 26
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982597.926581,
+            "lastSequence": 26
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 5,
+          "targetEpoch": 1790982599.374364,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-1-preview-plus-5.png",
+          "sha256": "e9a5300d59ac1c2c8cf0075099e67862d6dd8fe0cf86c7c99dece1af5e05c4c9",
+          "startEpoch": 1790982599.383952,
+          "endEpoch": 1790982599.885885,
+          "startDelayFromTarget": 0.009588003158569336,
+          "traceReadBefore": {
+            "observedEpoch": 1790982599.383952,
+            "lastSequence": 27
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982599.887537,
+            "lastSequence": 28
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 0.25,
+          "targetEpoch": 1790982774.696101,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-2-active-plus-0.25.png",
+          "sha256": "48ef79e4b629eb536c3a27d12e8247d8022fdf83f266f81b6e70ab9990e44860",
+          "startEpoch": 1790982774.720295,
+          "endEpoch": 1790982775.211682,
+          "startDelayFromTarget": 0.024194002151489258,
+          "traceReadBefore": {
+            "observedEpoch": 1790982774.720295,
+            "lastSequence": 139
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982775.218774,
+            "lastSequence": 139
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 1,
+          "targetEpoch": 1790982775.446101,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-2-active-plus-1.png",
+          "sha256": "3e36aa9fb496e465892442c81106880893e4a745d3f02446c1bacc5d4871a260",
+          "startEpoch": 1790982775.475534,
+          "endEpoch": 1790982775.958961,
+          "startDelayFromTarget": 0.029433012008666992,
+          "traceReadBefore": {
+            "observedEpoch": 1790982775.475534,
+            "lastSequence": 139
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982775.9682088,
+            "lastSequence": 139
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 3,
+          "targetEpoch": 1790982777.446101,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-2-active-plus-3.png",
+          "sha256": "ef5870afce7ec2ae72429f893d4bc77c8491b39c6975dcb937bb626e28b4dc8d",
+          "startEpoch": 1790982777.487638,
+          "endEpoch": 1790982777.947545,
+          "startDelayFromTarget": 0.04153704643249512,
+          "traceReadBefore": {
+            "observedEpoch": 1790982777.487638,
+            "lastSequence": 139
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982777.95389,
+            "lastSequence": 139
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 5,
+          "targetEpoch": 1790982779.446101,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-off-b-landscape/phase-2-active-plus-5.png",
+          "sha256": "40c4a0ae4e6993ea6040ae8eb34b96bb956649f7ba60f42bf74fdbae825879a6",
+          "startEpoch": 1790982779.5042481,
+          "endEpoch": 1790982779.980597,
+          "startDelayFromTarget": 0.05814719200134277,
+          "traceReadBefore": {
+            "observedEpoch": 1790982779.5042481,
+            "lastSequence": 139
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982779.989015,
+            "lastSequence": 139
+          }
+        }
+      ]
+    },
+    {
+      "arm": "on",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape",
+      "records": 147,
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "handChecks": {
+        "completeOpeningStream": true,
+        "instrumentationVersion": true,
+        "suppressionFlagCorrect": true,
+        "allFourCountsOnEveryRecord": true,
+        "openingCountsZero": true,
+        "countsMonotonic": true,
+        "finalMarkerAfterLastCapture": true,
+        "noRecorderErrorOrCap": true,
+        "ONUsedPathPositiveConstructorAndMake": true
+      },
+      "finalHandCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 2,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "actualPhaseIntervals": [
+        7.20742392539978,
+        180.62626791000366
+      ],
+      "visualFailureReproduced": true,
+      "visualReviewSHA256": "359c37fe67428313644501edb1314419b8fc8f2bdb9a91c8988cc77fc5237eec",
+      "observedBoardColors": [
+        "red",
+        "red",
+        "red",
+        "red",
+        "red",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "blue",
+        "red",
+        "red"
+      ],
+      "actualBoardFrameSet": [
+        [
+          232,
+          143.33333333333331,
+          410,
+          70
+        ],
+        [
+          257,
+          182.66666666666666,
+          360,
+          61.66666666666666
+        ]
+      ],
+      "cameraTransformSet": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0.9438583850860596,
+          -0.33035042881965637,
+          0,
+          0,
+          0.33035042881965637,
+          0.9438583850860596,
+          0,
+          0,
+          0.10610384494066238,
+          0.3241538405418396,
+          1
+        ]
+      ],
+      "rootTransformSet": [
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ]
+      ],
+      "captureWindows": [
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 0.25,
+          "targetEpoch": 1790982862.15784,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-0-active-plus-0.25.png",
+          "sha256": "df5e49b73db5da9a46e9f89f9d9e1db2fe1904ea7869f70768787273311f9cc7",
+          "startEpoch": 1790982862.1785002,
+          "endEpoch": 1790982862.6612191,
+          "startDelayFromTarget": 0.0206601619720459,
+          "traceReadBefore": {
+            "observedEpoch": 1790982862.1785002,
+            "lastSequence": 15
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982862.66182,
+            "lastSequence": 16
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 1,
+          "targetEpoch": 1790982862.90784,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-0-active-plus-1.png",
+          "sha256": "1bbca3425bc3355fed1fbb28bda85fc0ce885b325d843490d86445094bf45c3e",
+          "startEpoch": 1790982862.943823,
+          "endEpoch": 1790982863.431925,
+          "startDelayFromTarget": 0.03598308563232422,
+          "traceReadBefore": {
+            "observedEpoch": 1790982862.9438221,
+            "lastSequence": 16
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982863.4327521,
+            "lastSequence": 17
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 3,
+          "targetEpoch": 1790982864.90784,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-0-active-plus-3.png",
+          "sha256": "52ef2840b9b20740d8ae3ec1b361455628e0a3d79485d335b7e123e8dd5e0c62",
+          "startEpoch": 1790982864.935715,
+          "endEpoch": 1790982865.428253,
+          "startDelayFromTarget": 0.02787494659423828,
+          "traceReadBefore": {
+            "observedEpoch": 1790982864.935713,
+            "lastSequence": 18
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982865.42908,
+            "lastSequence": 19
+          }
+        },
+        {
+          "phaseIndex": 0,
+          "mode": "active",
+          "offset": 5,
+          "targetEpoch": 1790982866.90784,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-0-active-plus-5.png",
+          "sha256": "b25341fc09aade23e63254bde1d1835c96f1d5185a9e0448d2c40736ed1ef566",
+          "startEpoch": 1790982866.946306,
+          "endEpoch": 1790982867.4232168,
+          "startDelayFromTarget": 0.03846597671508789,
+          "traceReadBefore": {
+            "observedEpoch": 1790982866.946305,
+            "lastSequence": 20
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982867.42413,
+            "lastSequence": 21
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 0.25,
+          "targetEpoch": 1790982869.365264,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-1-preview-plus-0.25.png",
+          "sha256": "dbff600e90f909bee2fb444d3462afdcc126907505564cfe5563c9d329218350",
+          "startEpoch": 1790982869.38184,
+          "endEpoch": 1790982869.892221,
+          "startDelayFromTarget": 0.016576051712036133,
+          "traceReadBefore": {
+            "observedEpoch": 1790982869.381839,
+            "lastSequence": 26
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982869.8941681,
+            "lastSequence": 26
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 1,
+          "targetEpoch": 1790982870.115264,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-1-preview-plus-1.png",
+          "sha256": "1badf4ef59fd18febf9d05eaab4b9a021c3c6510e4834a54bffb62b7eb0c3035",
+          "startEpoch": 1790982870.123426,
+          "endEpoch": 1790982870.603723,
+          "startDelayFromTarget": 0.00816202163696289,
+          "traceReadBefore": {
+            "observedEpoch": 1790982870.123426,
+            "lastSequence": 27
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982870.60512,
+            "lastSequence": 27
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 3,
+          "targetEpoch": 1790982872.115264,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-1-preview-plus-3.png",
+          "sha256": "1921c5b5cff9057336b932a63acf3844d9885cad862c2857fca3a7a781d1e41f",
+          "startEpoch": 1790982872.1390562,
+          "endEpoch": 1790982872.630553,
+          "startDelayFromTarget": 0.023792266845703125,
+          "traceReadBefore": {
+            "observedEpoch": 1790982872.139055,
+            "lastSequence": 28
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982872.63216,
+            "lastSequence": 29
+          }
+        },
+        {
+          "phaseIndex": 1,
+          "mode": "preview",
+          "offset": 5,
+          "targetEpoch": 1790982874.115264,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-1-preview-plus-5.png",
+          "sha256": "4465cc1d25191f2bfac1a5194e605f2fa45da206392f3b8bc93e9be54c1b7cd0",
+          "startEpoch": 1790982874.124494,
+          "endEpoch": 1790982874.610647,
+          "startDelayFromTarget": 0.00923013687133789,
+          "traceReadBefore": {
+            "observedEpoch": 1790982874.124494,
+            "lastSequence": 30
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790982874.61284,
+            "lastSequence": 31
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 0.25,
+          "targetEpoch": 1790983049.9915318,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-0.25.png",
+          "sha256": "51d328aaf6680ca062822fdf65e94562b58703711b3cdc341682af2ffd049fc3",
+          "startEpoch": 1790983050.0396612,
+          "endEpoch": 1790983050.5636768,
+          "startDelayFromTarget": 0.04812932014465332,
+          "traceReadBefore": {
+            "observedEpoch": 1790983050.0396612,
+            "lastSequence": 143
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790983050.572392,
+            "lastSequence": 143
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 1,
+          "targetEpoch": 1790983050.7415318,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-1.png",
+          "sha256": "bbdd05483422b501a8b7b58bf89ff8f2ef203ba06d4df17f85e528342fd3ec8f",
+          "startEpoch": 1790983050.7742999,
+          "endEpoch": 1790983051.280229,
+          "startDelayFromTarget": 0.03276801109313965,
+          "traceReadBefore": {
+            "observedEpoch": 1790983050.774299,
+            "lastSequence": 143
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790983051.294104,
+            "lastSequence": 143
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 3,
+          "targetEpoch": 1790983052.7415318,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-3.png",
+          "sha256": "9116951084e41da86f8a85fd9c198834de64785f6e777dd472c1d9c3ffae011b",
+          "startEpoch": 1790983052.783276,
+          "endEpoch": 1790983053.953353,
+          "startDelayFromTarget": 0.041744232177734375,
+          "traceReadBefore": {
+            "observedEpoch": 1790983052.783276,
+            "lastSequence": 143
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790983053.966461,
+            "lastSequence": 143
+          }
+        },
+        {
+          "phaseIndex": 2,
+          "mode": "active",
+          "offset": 5,
+          "targetEpoch": 1790983054.7415318,
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/strict-hands-on-b-landscape/phase-2-active-plus-5.png",
+          "sha256": "80dc6847e65b8827b387be34cf4127646acbbdde0c48662a2529a6f7fccf9ec4",
+          "startEpoch": 1790983054.776007,
+          "endEpoch": 1790983055.2822242,
+          "startDelayFromTarget": 0.034475088119506836,
+          "traceReadBefore": {
+            "observedEpoch": 1790983054.776007,
+            "lastSequence": 143
+          },
+          "traceReadAfter": {
+            "observedEpoch": 1790983055.295434,
+            "lastSequence": 143
+          }
+        }
+      ]
+    }
+  ],
+  "validBoth": true,
+  "sameActualFrameSet": true,
+  "sameCameraTransformSet": true,
+  "sameRootTransformSet": true,
+  "allFourRunsSameObservedFrameCameraRootSets": true,
+  "environmentDifferences": {
+    "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS": {
+      "off": "1",
+      "on": null
+    },
+    "HANGTEN_REVIEW_DIAGNOSTIC_RUN": {
+      "off": "placid-badger-cad-second-half-strict-hands-b-off",
+      "on": "placid-badger-cad-second-half-strict-hands-b-on"
+    }
+  },
+  "onlyStrictFlagAndRunID": true,
+  "finalParity": {
+    "allEqual": true,
+    "checks": [
+      {
+        "category": "source",
+        "path": "HangTen/Models/BoardModelRealityTypes.swift",
+        "sha256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+        "expected": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25",
+        "equal": true
+      },
+      {
+        "category": "source",
+        "path": "HangTen/Views/BoardModelView.swift",
+        "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+        "expected": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+        "equal": true
+      },
+      {
+        "category": "source",
+        "path": "HangTen/Views/RootView.swift",
+        "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+        "expected": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221",
+        "equal": true
+      },
+      {
+        "category": "source",
+        "path": "HangTen/Views/GripHandModelView.swift",
+        "sha256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+        "expected": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15",
+        "equal": true
+      },
+      {
+        "category": "builtMachO",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/__preview.dylib",
+        "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+        "expected": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+        "equal": true
+      },
+      {
+        "category": "builtMachO",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen",
+        "sha256": "4c3510f1ec8733ddc8f528c3a4468b60a7929fdcb3dbd3bd2eb901a2905ff423",
+        "expected": "4c3510f1ec8733ddc8f528c3a4468b60a7929fdcb3dbd3bd2eb901a2905ff423",
+        "equal": true
+      },
+      {
+        "category": "builtMachO",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen.debug.dylib",
+        "sha256": "839e18a7f159f993256e3e751cc5408ff7132a9ae5e6e9e0077d465d0c052610",
+        "expected": "839e18a7f159f993256e3e751cc5408ff7132a9ae5e6e9e0077d465d0c052610",
+        "equal": true
+      },
+      {
+        "category": "builtMachO",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/Sentry.framework/Sentry",
+        "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+        "expected": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+        "equal": true
+      },
+      {
+        "category": "builtMachO",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+        "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+        "expected": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+        "equal": true
+      },
+      {
+        "category": "installedMachO",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/__preview.dylib",
+        "sha256": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+        "expected": "254d4ef7cedc39921cfb64b8e075a931a74105fad56bdcf540ce3e5fc2401ee1",
+        "equal": true
+      },
+      {
+        "category": "installedMachO",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/HangTen",
+        "sha256": "4c3510f1ec8733ddc8f528c3a4468b60a7929fdcb3dbd3bd2eb901a2905ff423",
+        "expected": "4c3510f1ec8733ddc8f528c3a4468b60a7929fdcb3dbd3bd2eb901a2905ff423",
+        "equal": true
+      },
+      {
+        "category": "installedMachO",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/HangTen.debug.dylib",
+        "sha256": "839e18a7f159f993256e3e751cc5408ff7132a9ae5e6e9e0077d465d0c052610",
+        "expected": "839e18a7f159f993256e3e751cc5408ff7132a9ae5e6e9e0077d465d0c052610",
+        "equal": true
+      },
+      {
+        "category": "installedMachO",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Frameworks/Sentry.framework/Sentry",
+        "sha256": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+        "expected": "776d4072e1107c3984e04636ac79c64aa40e2ed01ce2d419d2abee2bdfac46b7",
+        "equal": true
+      },
+      {
+        "category": "installedMachO",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Frameworks/AmplitudeCore.framework/AmplitudeCore",
+        "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+        "expected": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/board.json",
+        "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+        "expected": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+        "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+        "expected": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+        "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "expected": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Hangboards/zlagboard-evo/board.json",
+        "sha256": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+        "expected": "59d01ac47d22a053ccc1e42f388dd316379d83baa5522696e6512d5c4b658f9f",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Hangboards/zlagboard-evo/assets/primary.model.json",
+        "sha256": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+        "expected": "946988dbe671ffb1edb78a3bc29ec35a09ff19a250d467150eb7e1369251debe",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+        "sha256": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "expected": "9492a6d5a033bf1f11e0d6ac111711f8ea63d5d26226b6b638e72a288ae13eee",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/board.json",
+        "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+        "expected": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+        "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "expected": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/ios-diagnosis/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+        "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "expected": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Hangboards/zlagboard-pro/board.json",
+        "sha256": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+        "expected": "df18f3b65c4011d5753701d333b0b30917cb41838f8178aa79694cfae1bacbc8",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/Hangboards/zlagboard-pro/assets/primary.model.json",
+        "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "expected": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f",
+        "equal": true
+      },
+      {
+        "category": "package",
+        "path": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Bundle/Application/FC2F1294-E69F-48B3-A058-9641988D9312/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+        "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "expected": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+        "equal": true
+      }
+    ]
+  },
+  "initial134FilesAndAggregateUnchanged": true,
+  "interpretation": "The reverse pair repeats the initial contrast: zero hand construction/make entries and all measured colors correct with strict suppression; positive paired hand entries and delayed next-Hang color with hands enabled. ON-B also has a wrong early Rest frame. This supports a hand-path-dependent interaction in these four direct-root runs, without identifying whether projection, content, lifecycle or framework scheduling causes it. Suppression is diagnostic, not a production solution.",
+  "workoutIssueResolved": false,
+  "productionFix": false,
+  "limitations": [
+    "All24 reverse measured screenshots directly viewed whole; no pixel measurement or crops.",
+    "Sparse frames do not establish exact recovery time or unobserved middle-rest behavior.",
+    "1Hz sampler ends after120s; late evidence is semantic-boundary census and following-preview CPU tail, not continuous late census.",
+    "Counters cover the two app scene constructors and two make entries through retained tail; no claim of framework GPU activity census.",
+    "Requested +3 next-Hang filename in ON-B visibly reads00:03; actual command windows retained.",
+    "No frame compensation; observed frame/root/camera sets are equal, not identical launch scheduling.",
+    "No general causal necessity/sufficiency or production fix claim."
+  ],
+  "handoff": {
+    "sourceRuntimeDD": "Returned to root after evidence freeze",
+    "uuid": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "controller": 90373,
+    "resources": "Registered resources remain live. No new external resources or cleanup."
+  }
+}

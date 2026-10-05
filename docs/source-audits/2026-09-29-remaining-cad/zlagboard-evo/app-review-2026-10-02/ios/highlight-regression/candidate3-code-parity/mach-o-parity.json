@@ -1,0 +1,58 @@
+{
+  "builtApp": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app",
+  "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/1684856E-FC2D-4407-8063-9B343B99CAD6/data/Containers/Bundle/Application/3F48DDEB-6C03-4DFD-B227-7A67C7832202/HangTen.app",
+  "builtMachO": {
+    "__preview.dylib": {
+      "sha256": "4b70d70369efcc069f93a9aa643143c8a5e897cf88ea024069f2d7151eecab5d",
+      "bytes": 16800
+    },
+    "HangTen": {
+      "sha256": "ad9923b48829aa479dcfb69d86bf9c080cf06a29da26afc3706da68d626f7ecb",
+      "bytes": 40496
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "d4e2ae6e1abfe17770dee73ce53498f1649604dcaa3f07b28f0021255b88a816",
+      "bytes": 25285584
+    },
+    "PlugIns/HangTenTests.xctest/HangTenTests": {
+      "sha256": "e71f0d9827c8b208a21a46a58781cc84648417aa250ecbb7a5793c981a9436d0",
+      "bytes": 10053008
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "a582d66c06d6eea8bb3fa29e6adba9c98e4a82fc1a646833a646266b6ae1ec6a",
+      "bytes": 33184
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "installedMachO": {
+    "__preview.dylib": {
+      "sha256": "4b70d70369efcc069f93a9aa643143c8a5e897cf88ea024069f2d7151eecab5d",
+      "bytes": 16800
+    },
+    "HangTen": {
+      "sha256": "ad9923b48829aa479dcfb69d86bf9c080cf06a29da26afc3706da68d626f7ecb",
+      "bytes": 40496
+    },
+    "HangTen.debug.dylib": {
+      "sha256": "d4e2ae6e1abfe17770dee73ce53498f1649604dcaa3f07b28f0021255b88a816",
+      "bytes": 25285584
+    },
+    "PlugIns/HangTenTests.xctest/HangTenTests": {
+      "sha256": "e71f0d9827c8b208a21a46a58781cc84648417aa250ecbb7a5793c981a9436d0",
+      "bytes": 10053008
+    },
+    "Frameworks/Sentry.framework/Sentry": {
+      "sha256": "a582d66c06d6eea8bb3fa29e6adba9c98e4a82fc1a646833a646266b6ae1ec6a",
+      "bytes": 33184
+    },
+    "Frameworks/AmplitudeCore.framework/AmplitudeCore": {
+      "sha256": "57e8d0b1888b752941aaa1be722b7b364b7457a56aba7d899f5aa5375f04c503",
+      "bytes": 1687328
+    }
+  },
+  "allCodeEqual": true,
+  "different": []
+}

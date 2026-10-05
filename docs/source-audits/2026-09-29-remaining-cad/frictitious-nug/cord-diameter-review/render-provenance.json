@@ -1,0 +1,737 @@
+{
+  "owner": "placid-badger",
+  "beforeSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "afterSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "afterPath": "Hangboards/frictitious-nug/suspension.json",
+  "immutablePackageFiles": {
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d"
+  },
+  "rendererSourceSHA256": "ca8a28c2316e6d12409bfc1d979ff7d98d4eb85d60bc7f6a0e7b251c94e0b45c",
+  "nativeZBufferHelperSHA256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+  "canonicalPoseComparisons": [
+    {
+      "poseID": "front-25",
+      "view": "front",
+      "mode": "detail",
+      "image": "front-25-front-detail.png",
+      "sha256": "908b47dc9e1ffa7fe29cb44ad74be67873ac51aaea2fb28f1f21f0188d5d4e6d",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "front",
+      "mode": "full",
+      "image": "front-25-front-full.png",
+      "sha256": "147032930585ba832e7bde4da81ca1b5dc9aab6eab68824e8760e56c8779c052",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "side",
+      "mode": "detail",
+      "image": "front-25-side-detail.png",
+      "sha256": "4399f2d029649992dc84facce76de06342dbe1971cb33e16ec4a421c60babb92",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "side",
+      "mode": "full",
+      "image": "front-25-side-full.png",
+      "sha256": "93e2dc836e575584121efd456dc58a1c838ca58d7dcda8df50d8f15fcccf9bc2",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "top",
+      "mode": "detail",
+      "image": "front-25-top-detail.png",
+      "sha256": "9bb368de6c475a6e7db5222d0b4452426d8a16e3ce68aa286cf327515905118e",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "top",
+      "mode": "full",
+      "image": "front-25-top-full.png",
+      "sha256": "b8bc3494ed9d40bd94a7136a6ff9f29e649acd579842c0a344c45333b85eb0f9",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-25",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "front-25-canonical-camera-detail.png",
+      "sha256": "0bc27dad2102c6b1a048d514370e3bbf83704b8b8b08e780e24b27901b53bcdb",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977246,
+        48.74620994977246
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "front-25",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "front-25-canonical-camera-full.png",
+      "sha256": "eb346a0f35a25ab2f8026e1dc0f72b93bcc97a8000d12bd14348a9c3779ae008",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977246,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "front",
+      "mode": "detail",
+      "image": "front-inverted-20-front-detail.png",
+      "sha256": "29f57ec4703d7fab4e1d0ba20c63120c7821ef5ed917ef37b9a6bce609098ca1",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "front",
+      "mode": "full",
+      "image": "front-inverted-20-front-full.png",
+      "sha256": "3ba062d26c8cce7281e4efad086ee142f11644cd3a8b9cdb2674555523d06605",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "side",
+      "mode": "detail",
+      "image": "front-inverted-20-side-detail.png",
+      "sha256": "5f3d168c029fb76112b112ca61fde29f7e4ad9514ba64ea4eb38c68caa134c97",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "side",
+      "mode": "full",
+      "image": "front-inverted-20-side-full.png",
+      "sha256": "9c45bdd183e6136fbb798cfd8de3e9bc05de9aa7e1ca892e1c76012bb3087ac6",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "top",
+      "mode": "detail",
+      "image": "front-inverted-20-top-detail.png",
+      "sha256": "a0bfbfeeeacb4b8bae14cf1385bdef8ac345f5f0851e0f469eb8588390724561",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "top",
+      "mode": "full",
+      "image": "front-inverted-20-top-full.png",
+      "sha256": "94958828089e630e28adde2a0eb3b6be7a38ad94fa07db030d25924e0f867c45",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "front-inverted-20-canonical-camera-detail.png",
+      "sha256": "011a51621fd4ea37cbb7468fb1d2bb1549c5c012d60e867d26ebe0d99bc5710b",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977245,
+        48.74620994977245
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "front-inverted-20",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "front-inverted-20-canonical-camera-full.png",
+      "sha256": "0774ada4345293ab95608e30ce108695f1b374e17abe05facc17b1e42425b8a2",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977245,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "front",
+      "mode": "detail",
+      "image": "reverse-13-front-detail.png",
+      "sha256": "421ce96877c3dffff582ce531bbdb3c871aeac00ae8fe1c22ddc86461dc1db65",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "front",
+      "mode": "full",
+      "image": "reverse-13-front-full.png",
+      "sha256": "bcb364beca713b5d1478e2c422a6c06030b0406869812d5399c02bae0759d365",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "side",
+      "mode": "detail",
+      "image": "reverse-13-side-detail.png",
+      "sha256": "2160cee3ec465cfaf000240a59800db38b6bb3c4fcb3139db92f70d50770b36e",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "side",
+      "mode": "full",
+      "image": "reverse-13-side-full.png",
+      "sha256": "7496a1002256e6ff9a8294046d693c235954e38951568b074bed400e6024d2f1",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "top",
+      "mode": "detail",
+      "image": "reverse-13-top-detail.png",
+      "sha256": "d1398c7d7aec1618c01e47984a86669601bd45fd25face00b1ab17fdfecd8c5e",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "top",
+      "mode": "full",
+      "image": "reverse-13-top-full.png",
+      "sha256": "f70b0e87fb7c354540608dcf03bdc4b32fa2e967ab4f5ba39839436be96117c0",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "reverse-13-canonical-camera-detail.png",
+      "sha256": "b04f715089989ed2c19ee39a858aeeaff8715d8fb3d1fee61e347d1d28bc97e8",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977245,
+        48.74620994977245
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "reverse-13",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "reverse-13-canonical-camera-full.png",
+      "sha256": "95cb412beb8576828d1e65287101e098601463937e447d45ac607b360c4aa14c",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977245,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "front",
+      "mode": "detail",
+      "image": "reverse-inverted-8-front-detail.png",
+      "sha256": "1f9d697764f9da829ec0d241709f1ad823830934b3da2559719e24f820f35cde",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "front",
+      "mode": "full",
+      "image": "reverse-inverted-8-front-full.png",
+      "sha256": "cb88c511a3c034568b66fb5dca026345e64f4ca391b1e8d7648966e6cb837d51",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "side",
+      "mode": "detail",
+      "image": "reverse-inverted-8-side-detail.png",
+      "sha256": "b890608ba4067d2008ad2f12ead7faeba07cfe9fc12d9c907bacdc5f01c2f6e7",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "side",
+      "mode": "full",
+      "image": "reverse-inverted-8-side-full.png",
+      "sha256": "049f9ed9422a783cdf55f53bb5af7a6e0eaccf7953c513c464d51b72ea387f7d",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "top",
+      "mode": "detail",
+      "image": "reverse-inverted-8-top-detail.png",
+      "sha256": "10cb694f2c6f59034a0fade43ad98197a1d0688c4500e833ae997701e8f51456",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "top",
+      "mode": "full",
+      "image": "reverse-inverted-8-top-full.png",
+      "sha256": "7ff7ee751c22c3cbb2a52206a697b3d9bc64c7687d1f71d1a207ffc5c4ca1661",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "reverse-inverted-8-canonical-camera-detail.png",
+      "sha256": "a1578e774dabc6aa1d92e35ef31f8a7fc2a49775c25293622db4f39103b046e4",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977246,
+        48.74620994977246
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "reverse-inverted-8",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "reverse-inverted-8-canonical-camera-full.png",
+      "sha256": "efb56ffb5af84ed328b2dd7e22efd89a414b6f624405378f8847db5a7ef5ae4d",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977246,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "front",
+      "mode": "detail",
+      "image": "outer-upper-front-detail.png",
+      "sha256": "6b81ee1cf1079d85160868e8542811b785c0b856bd9ab56047bda6b9c8e043ad",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "front",
+      "mode": "full",
+      "image": "outer-upper-front-full.png",
+      "sha256": "31ee94bb57969f691e9bad93c8c82443276a89b8d7266afc885ce73567f48333",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "side",
+      "mode": "detail",
+      "image": "outer-upper-side-detail.png",
+      "sha256": "36ab0eb28469d5402ced64dc955767b4961748754389cf948390614497fdabc2",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "side",
+      "mode": "full",
+      "image": "outer-upper-side-full.png",
+      "sha256": "4059ca31caf675117869ea4a92ffa486734bd671fc8b4c410558bcbc64cc13d9",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "top",
+      "mode": "detail",
+      "image": "outer-upper-top-detail.png",
+      "sha256": "d6663a75e23ed7ea6bf23e625c702ce77f3ecbbe83d3a5814acfcd7c9dd08765",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "top",
+      "mode": "full",
+      "image": "outer-upper-top-full.png",
+      "sha256": "2347c5b680d4736de20991899d06e2a68b94378f55b85aafe0ecebdf797b9a78",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "outer-upper-canonical-camera-detail.png",
+      "sha256": "569baf7f7ac6d7f658f8c1feab934b64c3d38c58bb580a01f1a5b2a2a0c88661",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977246,
+        48.74620994977246
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "outer-upper",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "outer-upper-canonical-camera-full.png",
+      "sha256": "8ad070e325b88ea54fdc45f3df38cdd87b1bb8cc6d50fd98dd4577c33ea78147",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977246,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "front",
+      "mode": "detail",
+      "image": "outer-lower-front-detail.png",
+      "sha256": "84acb8b93077f173e4b08772108a4bcc4c12a68a8a9fd2bd0a0ccd6d61ebe6ed",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "front",
+      "mode": "full",
+      "image": "outer-lower-front-full.png",
+      "sha256": "4514971c1a26b2f4957548aaa58e2191919af253732d89e07027c499861a21e2",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "side",
+      "mode": "detail",
+      "image": "outer-lower-side-detail.png",
+      "sha256": "75ef54988569bb55cab805eec2952380a2b05f9fb5d220c4bdecd2e341212ee9",
+      "commonViewportLimitsMM": [
+        -34.99999955296517,
+        34.99999955296517,
+        -44.999999329447746,
+        44.999999329447746
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "side",
+      "mode": "full",
+      "image": "outer-lower-side-full.png",
+      "sha256": "bf085874b9a563aa3b21df436873b168493e941118f0f209870f4ecb2496318c",
+      "commonViewportLimitsMM": [
+        -26.2,
+        26.2,
+        -29.99999932944775,
+        293.88467682768305
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "top",
+      "mode": "detail",
+      "image": "outer-lower-top-detail.png",
+      "sha256": "3b32705199d84a430b6e3ff7dce2863993562f63c0d2996ef07927b59964aef4",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -34.99999955296517,
+        34.99999955296517
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "top",
+      "mode": "full",
+      "image": "outer-lower-top-full.png",
+      "sha256": "ea0e560ad37edfce11ee20d4c1fc7444ae0931e787b4fd97dced106f7d7399bb",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -26.2,
+        26.2
+      ],
+      "canonicalCameraWorldDirection": null
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "canonical-camera",
+      "mode": "detail",
+      "image": "outer-lower-canonical-camera-detail.png",
+      "sha256": "86f232bed35f57713c43e8741c76c74922bf401a56af554ff5f7f9a09829cf87",
+      "commonViewportLimitsMM": [
+        -79.99999761581421,
+        79.99999761581421,
+        -48.74620994977246,
+        48.74620994977246
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    },
+    {
+      "poseID": "outer-lower",
+      "view": "canonical-camera",
+      "mode": "full",
+      "image": "outer-lower-canonical-camera-full.png",
+      "sha256": "6a00b3059f72de849347b16fd9b8c8ecaf5c1f1412f301d958711f8dae5a1477",
+      "commonViewportLimitsMM": [
+        -64.99999761581421,
+        64.99999761581421,
+        -33.74620994977246,
+        281.7967219573487
+      ],
+      "canonicalCameraWorldDirection": [
+        0.0,
+        -0.2873478855663454,
+        -0.9578262852211513
+      ]
+    }
+  ],
+  "method": "Actual unchanged USDZ triangles and exact cached cord paths, including fixed world support. Numeric native z-buffer projections, body-centered identical paired scales. Analytic constant-radius spheres close interior tube joints and disks cap segment ends in the preview mesh only. No reference-image tracing, processing or registration.",
+  "humanApproval": "Native candidate authorized for rendering; final user visual acceptance is separate."
+}

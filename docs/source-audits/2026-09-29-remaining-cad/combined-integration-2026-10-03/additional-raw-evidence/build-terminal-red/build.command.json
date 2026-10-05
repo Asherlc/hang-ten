@@ -1,0 +1,25 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790",
+    "-derivedDataPath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/build-placid-badger-cad-second-half-terminal-red.xcresult",
+    "SWIFT_OPTIMIZATION_LEVEL=-O",
+    "OTHER_SWIFT_FLAGS=$(inherited) -assert-config Debug",
+    "build-for-testing"
+  ],
+  "pid": 17610,
+  "boundSeconds": 900,
+  "startedEpoch": 1791069065.265588
+}

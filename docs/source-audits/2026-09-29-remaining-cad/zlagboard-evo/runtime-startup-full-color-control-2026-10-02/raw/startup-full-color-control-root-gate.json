@@ -1,0 +1,20 @@
+{
+  "epoch": 1791003414.46107,
+  "binarySHA256": "09310b53114826e1e9c39a499846b2e57a6b464e576aa7bf879b56709d267854",
+  "validCompleteControl": true,
+  "visualResult": "FAIL",
+  "actionAuthorized": true,
+  "originalValidatorStatusRetained": true,
+  "originalValidatorPassed": true,
+  "supplementalTimingCriterionPassed": true,
+  "incompleteFirstOwnershipBracket": false,
+  "all24AttachedHandPoints": true,
+  "controlFindingsPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-findings.json",
+  "controlFindingsSHA256": "befd78726c75bd6b7de9b7b7917894ff91b3619ced6f583eb741ffe06ab673b9",
+  "limits": [
+    "CPU brackets are sparse; nextHang bracket spans7.018s.",
+    "No production or generic renderer cause established."
+  ],
+  "oneActionOnly": true,
+  "noRepeatOrReversalAuthorized": true
+}

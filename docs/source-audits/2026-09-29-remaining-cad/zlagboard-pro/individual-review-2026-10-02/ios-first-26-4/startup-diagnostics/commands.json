@@ -1,0 +1,41 @@
+[
+  {
+    "name": "springboard-launchctl",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "spawn",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "launchctl",
+      "print",
+      "system/com.apple.SpringBoard"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 0.4261469841003418
+  },
+  {
+    "name": "startup-errors",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "spawn",
+      "9B0B559E-0E57-4C3F-9685-E5892BC41E30",
+      "log",
+      "show",
+      "--last",
+      "5m",
+      "--style",
+      "compact",
+      "--predicate",
+      "(process == \"SpringBoard\" OR process == \"backboardd\" OR process == \"launchd_sim\") AND (messageType == error OR messageType == fault)"
+    ],
+    "exitStatus": 0,
+    "timedOut": false,
+    "elapsedSeconds": 1.6671948432922363
+  }
+]

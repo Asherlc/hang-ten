@@ -1,0 +1,8 @@
+{
+  "name": "placid-badger-mini-android-staging",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/completion/root/check_android_staging.py"
+  ],
+  "timeoutSeconds": 600
+}

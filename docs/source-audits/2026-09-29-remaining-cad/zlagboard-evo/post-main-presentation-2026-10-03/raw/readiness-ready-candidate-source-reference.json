@@ -1,0 +1,52 @@
+{
+  "approvedByRoot": true,
+  "baselineOnly": false,
+  "commit": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "files": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "da10025d54029f3efac9ce2200470a12de0fc064f97337af7a626b18532d7f85"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "10e4fe7d6d945cc0ad22623113e51c4bccc280a949c7408c3fbeaf9a25861747"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "sha256": "417a4b27d7ae0ce1d1fa7f4dee440fadcea12d7a8c1b7a33a285edac61709e8f"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "6d4439ffa97e0a93c25fc2b253710c2711186bbbc1515f830d33dd11a36a8b89"
+    },
+    {
+      "path": "HangTen/Views/BoardMapView.swift",
+      "sha256": "738908c478aa2303f8b399d94292ae7aa6b2179de2a26e68a58c3b41af176aca"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "bed8376fda7f90000ffa95510ca6cb34b45f980e4a487ff94e8472a2a4365011"
+    },
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "b8720ac7c42252f22dceecb8a58f96a1de297068bbb7a3972bddac8c7072fccf"
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "2c2ecd7ae62de57928c9434029a812dfae4043fa17b071408b6ee22c5aa481d1"
+    },
+    {
+      "path": "HangTen/Models/WorkoutTimeline.swift",
+      "sha256": "d5e570e784a48019552ab6c792208d490377682f01e40e75c900a76832e449a3"
+    },
+    {
+      "path": "HangTen/Models/WorkoutActivityRecording.swift",
+      "sha256": "85b99c73ee4fb02cd4e3746cf38c8cfdb3549641a0c8112ffa37ee4b25b1e0ac"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTenTests/WorkoutTimelineTests.swift",
+      "sha256": "a40079d67a1e4486eb13b91d8c7d2e2eb0ec10e3f986911cbd64fcdccdd3f4c5"
+    }
+  ],
+  "uncommittedCandidate": true
+}

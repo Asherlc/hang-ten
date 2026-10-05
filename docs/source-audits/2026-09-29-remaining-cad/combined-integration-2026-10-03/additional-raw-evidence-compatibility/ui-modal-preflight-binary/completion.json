@@ -1,0 +1,10 @@
+{
+  "setupOnly": true,
+  "newURLCount": 0,
+  "physicalCancelCount": 0,
+  "failure": null,
+  "cleanup": {
+    "appPIDAbsent": true
+  },
+  "requiresWholeImageReview": true
+}

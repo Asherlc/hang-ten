@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "completeContiguous": true,
+    "captures12": true,
+    "allCPUBrackets": true,
+    "sameScene": true,
+    "naturalFirstHang": true,
+    "naturalRest": true,
+    "freshSession": true,
+    "boundaryAppActive": true,
+    "boundaryWindowActive": true,
+    "boundaryLandscape": true,
+    "lateBoundaryCensus": true,
+    "noAXOrTouch": true
+  },
+  "records": 154,
+  "intervals": [
+    7.0512659549713135,
+    180.0737340450287
+  ]
+}

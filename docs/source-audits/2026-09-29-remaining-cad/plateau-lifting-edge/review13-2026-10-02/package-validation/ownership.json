@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "lane": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/package-validation-2026-10-02",
+  "registeredUTC": "2026-10-02T19:05:32.534218+00:00",
+  "scope": "Prepared final eight-file frozen validation only; no execution before root promotion+manifest SHA.",
+  "resourcesAllocated": [],
+  "testsRun": 0,
+  "buildsRun": 0,
+  "guestOperations": 0,
+  "HTTPResources": 0
+}

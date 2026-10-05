@@ -1,0 +1,19 @@
+{
+  "owner": "placid-badger",
+  "trackedPath": "HangTenUITests/GripCueSnapshotUITests.swift",
+  "sourceSHA256": "df14a5bf7fbfe84840ab3f5653c877a279cdcda406886b6f4880ece05e9de3cb",
+  "proposedSHA256": "b38299844b11c49b387c4bb94c851a02aa4aaa89d5c1743f24c2486ff217ae75",
+  "patchSHA256": "be1dad9cc54a1c375b658ca0c6fd4f1392be3dfc47cb97a7fd99024074ba9e6f",
+  "trackedFileMutated": false,
+  "scope": [
+    "GripCueDiagnosticScreenshotUITests.testContactOffsetTaskCanAdvanceWithoutSkippingMinute",
+    "GripCueDiagnosticScreenshotUITests.testOneArmTaskLetsAthleteChooseSide",
+    "GripCueDiagnosticScreenshotUITests.testWorkoutPauseSurvivesRotationAndResumes"
+  ],
+  "testFilters": [
+    "HangTenUITests/GripCueDiagnosticScreenshotUITests/testContactOffsetTaskCanAdvanceWithoutSkippingMinute",
+    "HangTenUITests/GripCueDiagnosticScreenshotUITests/testOneArmTaskLetsAthleteChooseSide",
+    "HangTenUITests/GripCueDiagnosticScreenshotUITests/testWorkoutPauseSurvivesRotationAndResumes"
+  ],
+  "validationPerformedByAgent": "Read-only CI artifact/source comparison and git apply --check only; no test run"
+}

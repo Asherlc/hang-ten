@@ -1,0 +1,13 @@
+{
+  "candidateRestLengthMM": 110,
+  "unchangedAnchorOffsetMM": [
+    0,
+    100,
+    0
+  ],
+  "status": "rejected by retained solver before cache write",
+  "error": "front-25: declared visible cord is too short at the base pose",
+  "cause": "native_cord_routes.settle fixes maximum translation height to zero; requested display gap requires positive board translation with fixed support at runtimeY130mm",
+  "livePackageMutated": false,
+  "notClaimed": "This is not evidence of physical impossibility or collision."
+}

@@ -1,0 +1,84 @@
+{
+  "owner": "placid-badger",
+  "simulator": "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "mammut.diamond-finger",
+  "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+  "descriptorSHA256": "3129a1de3753f36df977336fc2979cd3a579981d5a8938f76c5415704bdd1099",
+  "modelSHA256": "736b9390c36ba8dfadbc8d272db42a3c79a8f61d64d9142167fc67faa2eddd12",
+  "builtBinarySHA256": "db97d82b316e68750a8d70726fc48df6e6fffa4523a903399508732cfcb78315",
+  "checks": [
+    {
+      "contactID": "mam-jug-l",
+      "image": "jug-left.png",
+      "selectionVisible": true,
+      "availableContactAXIDs": [
+        "boardModel.contact.mam-jug-l",
+        "boardModel.contact.mam-jug-r",
+        "boardModel.contact.mam-lateral-ledge-l",
+        "boardModel.contact.mam-lateral-ledge-r",
+        "boardModel.contact.mam-lower-edge-c",
+        "boardModel.contact.mam-mid-edge-c",
+        "boardModel.contact.mam-mono-l",
+        "boardModel.contact.mam-mono-r",
+        "boardModel.contact.mam-sloper-c",
+        "boardModel.contact.mam-upper-inset-l",
+        "boardModel.contact.mam-upper-inset-r",
+        "boardModel.contact.mam-upper-open-bay-l",
+        "boardModel.contact.mam-upper-open-bay-r",
+        "boardModel.contact.mam-upper-pocket-c",
+        "boardModel.contact.mam-upper-pocket-l",
+        "boardModel.contact.mam-upper-pocket-r"
+      ]
+    },
+    {
+      "contactID": "mam-upper-inset-r",
+      "image": "inset-right.png",
+      "selectionVisible": true,
+      "availableContactAXIDs": [
+        "boardModel.contact.mam-jug-l",
+        "boardModel.contact.mam-jug-r",
+        "boardModel.contact.mam-lateral-ledge-l",
+        "boardModel.contact.mam-lateral-ledge-r",
+        "boardModel.contact.mam-lower-edge-c",
+        "boardModel.contact.mam-mid-edge-c",
+        "boardModel.contact.mam-mono-l",
+        "boardModel.contact.mam-mono-r",
+        "boardModel.contact.mam-sloper-c",
+        "boardModel.contact.mam-upper-inset-l",
+        "boardModel.contact.mam-upper-inset-r",
+        "boardModel.contact.mam-upper-open-bay-l",
+        "boardModel.contact.mam-upper-open-bay-r",
+        "boardModel.contact.mam-upper-pocket-c",
+        "boardModel.contact.mam-upper-pocket-l",
+        "boardModel.contact.mam-upper-pocket-r"
+      ]
+    },
+    {
+      "contactID": "mam-lower-edge-c",
+      "image": "center-tray.png",
+      "selectionVisible": true,
+      "availableContactAXIDs": [
+        "boardModel.contact.mam-jug-l",
+        "boardModel.contact.mam-jug-r",
+        "boardModel.contact.mam-lateral-ledge-l",
+        "boardModel.contact.mam-lateral-ledge-r",
+        "boardModel.contact.mam-lower-edge-c",
+        "boardModel.contact.mam-mid-edge-c",
+        "boardModel.contact.mam-mono-l",
+        "boardModel.contact.mam-mono-r",
+        "boardModel.contact.mam-sloper-c",
+        "boardModel.contact.mam-upper-inset-l",
+        "boardModel.contact.mam-upper-inset-r",
+        "boardModel.contact.mam-upper-open-bay-l",
+        "boardModel.contact.mam-upper-open-bay-r",
+        "boardModel.contact.mam-upper-pocket-c",
+        "boardModel.contact.mam-upper-pocket-l",
+        "boardModel.contact.mam-upper-pocket-r"
+      ]
+    }
+  ],
+  "humanAcceptance": "pending individual Mammut review",
+  "limits": "Exact installed build and package rendering/selection; unverified factory dimensions remain display estimates."
+}

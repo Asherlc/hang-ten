@@ -1,0 +1,84 @@
+{
+  "commonProperties": [
+    "Base",
+    "ExpressionEngine",
+    "History",
+    "Label",
+    "Label2",
+    "Placement",
+    "Refine",
+    "Shape",
+    "ShapeMaterial",
+    "Tool",
+    "Visibility",
+    "_ElementMapVersion"
+  ],
+  "cutProperties": [
+    "Base",
+    "ContactID",
+    "ExpressionEngine",
+    "History",
+    "Label",
+    "Label2",
+    "NodeID",
+    "NodeRole",
+    "Placement",
+    "Refine",
+    "Shape",
+    "ShapeMaterial",
+    "Tool",
+    "Visibility",
+    "_ElementMapVersion"
+  ],
+  "rows": [
+    {
+      "face": 12,
+      "bounds": [
+        45.4999999,
+        61.0000001,
+        -94.0000001,
+        1.0000004095335182e-07,
+        169.59848321736493,
+        193.45095999244867
+      ],
+      "clips": [
+        {
+          "tol": 0,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        },
+        {
+          "tol": 1e-07,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        },
+        {
+          "tol": 1e-06,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        },
+        {
+          "tol": 1e-05,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        },
+        {
+          "tol": 0.0001,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        },
+        {
+          "tol": 0.001,
+          "faces": 0,
+          "area": 0.0,
+          "bounds": "None"
+        }
+      ]
+    }
+  ]
+}

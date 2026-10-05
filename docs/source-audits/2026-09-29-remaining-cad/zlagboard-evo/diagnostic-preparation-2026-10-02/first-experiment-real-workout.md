@@ -1,0 +1,7 @@
+This supersedes the held-screen proposal as the first experiment. Use the existing real workout and unchanged timer. Apply only the two-file temporary DEBUG observation patch after root freezes the Pro baseline. No RootView/HangTenApp/test changes.
+
+The 1Hz sampler runs off-body for at most120seconds, reads weak scenes and records cached selection and material state. Semantic highlight changes record before/after; cached-noop calls create no repeated events. Distinct scene UUIDs supplement recyclable pointers; make/update records include actual RealityView content-root membership. Direct FileHandle JSONL writes avoid stdio buffering. Every record is complete JSON with sequence, wallclock and uptime. The final sample-end/disappearance record bounds a complete lifetime.
+
+Collect unperturbed active/rest/active screenshots with timestamps first. Require a sample before and after each capture in the same scene lifecycle with no unexplained later write or root replacement. Existing Pause can hold an already reached phase; capture before pausing, because pause itself changes SwiftUI state and may hide the issue. HANGTEN_REVIEW_STEP seeds a new session and is not a same-scene seek.
+
+Transform/hide probes are deliberately absent from this first patch. Only after complete observation reproduces a mismatch should root gate a separate controlled probe. The scratch held-screen design remains a fallback minimal reproducer, not the first experiment and not evidence of a fix.

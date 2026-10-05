@@ -1,0 +1,15 @@
+{
+  "status": "PROSPECTIVE_V7_ADAPTER_NOT_RUN",
+  "sourceSchemaPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v4-orientation-boundary/event-schema.json",
+  "sourceSchemaSHA256": "a982a44b8cc2b7bf6c2302e50b39f2cc678600d9c531551da4773e4b0aad5f91",
+  "pythonASTPass": true,
+  "captureByteIdenticalToV6": true,
+  "scope": "Only schema binding, explicit orientation metadata and lighting Bool/finite scalar validation changed. No expected lighting value, no gamma tuning, no capture protocol changes.",
+  "files": {
+    "capture.py": "3351ba3cc9e05f360779f766e17f9bbf62dd4a102cfdf6e2711f79ce663ee6e4",
+    "event-schema.json": "a982a44b8cc2b7bf6c2302e50b39f2cc678600d9c531551da4773e4b0aad5f91",
+    "protocol.md": "6d2ea91491d8fca0ef1377665fadd2ded86148ee762fb7ec17e5c38e5ef6e0c0",
+    "prototype_schema.py": "34676548ffcc1c1602bc78ecfe6b61af1629234cf294c6c6bf707b2661f3dec1",
+    "v6-to-v7-adapter.patch": "0d066928e9503fa8bb1c51a16963338857c1d347a7a28c099801633f2df0e0f7"
+  }
+}

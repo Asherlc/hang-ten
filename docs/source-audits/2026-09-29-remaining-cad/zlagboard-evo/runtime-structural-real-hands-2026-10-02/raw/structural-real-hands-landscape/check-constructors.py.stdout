@@ -1,0 +1,16 @@
+{
+  "checks": {
+    "completeContiguous": true,
+    "openingBeforeConstructors": true,
+    "uniqueConstructorTokens": true,
+    "exactlyOneWorkoutConstructor": true,
+    "exactlyOneWorkoutMake": true,
+    "allSceneRecordsHaveConstructor": true,
+    "markerGateMatches": true,
+    "realHandsNotSuppressed": true,
+    "observedPredecessorConstruction": true
+  },
+  "constructors": 2,
+  "makes": 2,
+  "otherConstructors": 1
+}

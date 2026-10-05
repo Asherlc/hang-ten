@@ -1,0 +1,21 @@
+2026-10-03 16:58:06.211 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:58:06.211 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:58:17.151 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:58:17.151 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:58:25.639 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:58:25.639 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:58:34.104 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:58:34.104 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:58:42.802 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:58:42.802 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:59:37.350 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 16:59:37.350 xcodebuild[30110:7763571] [MT] IDELaunchParametersSnapshot: no debugger version
+2026-10-03 16:59:55.118 xcodebuild[30110:7763571] [MT] IDETestOperationsObserverDebug: 110.730 elapsed -- Testing started completed.
+2026-10-03 16:59:55.118 xcodebuild[30110:7763571] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-03 16:59:55.118 xcodebuild[30110:7763571] [MT] IDETestOperationsObserverDebug: 110.730 sec, +110.730 sec -- end
+Failing tests:
+	OwlClimbPokerBoardMapInteractionUITests.testLandscapeMultiPresentationBoardDetailKeepsMapInViewport()
+	OwlClimbPokerBoardMapInteractionUITests.testLandscapeSquareBoardDetailKeepsMapInViewport()
+
+** TEST EXECUTE FAILED **
+

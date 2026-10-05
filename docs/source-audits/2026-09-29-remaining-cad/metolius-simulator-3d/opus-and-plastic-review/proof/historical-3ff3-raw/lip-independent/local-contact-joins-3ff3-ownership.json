@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "name": "local-contact-joins-3ff3",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/check_local_contact_and_joins.py",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/candidate/metolius-simulator-3d.FCStd",
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/local-contact-joins-3ff3.json"
+  ],
+  "ownedProcessGroup": 66668,
+  "exitCode": 0,
+  "elapsedSeconds": 22.70782779098954,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

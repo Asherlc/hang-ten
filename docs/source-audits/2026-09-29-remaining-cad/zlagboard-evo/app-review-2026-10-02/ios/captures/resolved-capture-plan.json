@@ -1,0 +1,32 @@
+{
+  "resolvedPositionByContact": {
+    "top-jug-left": "fixed-primary",
+    "top-sloper-32-left": "fixed-primary",
+    "top-sloper-20-left": "fixed-primary",
+    "top-sloper-jug-center": "fixed-primary",
+    "top-sloper-20-right": "fixed-primary",
+    "top-sloper-32-right": "fixed-primary",
+    "top-jug-right": "fixed-primary",
+    "edge-30-left": "fixed-primary",
+    "sloper-edge-30-left": "fixed-primary",
+    "sloper-edge-25-left": "fixed-primary",
+    "edge-35-center": "fixed-primary",
+    "sloper-edge-25-right": "fixed-primary",
+    "sloper-edge-30-right": "fixed-primary",
+    "edge-30-right": "fixed-primary",
+    "edge-20-left": "fixed-primary",
+    "sloper-edge-25-lower-left": "fixed-primary",
+    "edge-30-inner-left": "fixed-primary",
+    "sloper-edge-30-center": "fixed-primary",
+    "edge-30-inner-right": "fixed-primary",
+    "sloper-edge-25-lower-right": "fixed-primary",
+    "edge-20-right": "fixed-primary"
+  },
+  "orbitRepresentatives": {
+    "top-jug-left": "left-jug-top-oblique",
+    "top-jug-right": "right-jug-top-oblique",
+    "top-sloper-32-left": "top-sloper-oblique",
+    "edge-20-left": "lower-pocket-oblique",
+    "edge-35-center": "upper-pocket-oblique"
+  }
+}

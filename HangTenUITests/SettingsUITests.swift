@@ -175,6 +175,7 @@ final class WorkoutChooserUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "metolius.wood-grips-compact-ii"
+        app.launchEnvironment["HANGTEN_REVIEW_ISOLATED_CUSTOM_ROUTINES"] = "1"
         if accessibilityTextSize {
             app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL"]
         }

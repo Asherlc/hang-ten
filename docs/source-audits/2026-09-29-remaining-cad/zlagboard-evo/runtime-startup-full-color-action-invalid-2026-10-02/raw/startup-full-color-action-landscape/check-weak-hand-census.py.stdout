@@ -1,0 +1,14 @@
+{
+  "checks": {
+    "completeContiguous": true,
+    "censusGateEnabled": true,
+    "realHandsEnabled": true,
+    "actualConstructorsObserved": false,
+    "allConstructedCamerasConfigured": true,
+    "allSchemaIdentityTombstoneAssociationsValid": true,
+    "all12HaveExistingCensusBrackets": false
+  },
+  "errors": [],
+  "constructors": 0,
+  "snapshots": 6
+}

@@ -1,0 +1,162 @@
+{
+  "arm": "orthographic",
+  "binarySHA256": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+  "allRequiredGatesPassed": true,
+  "visualFailureConfirmed": true,
+  "earlierHandAbsentAtAllCaptureBrackets": true,
+  "checks": {
+    "mechanicalProofs": true,
+    "comparison": true,
+    "packageAndCodeParity": true,
+    "wholeImageVisualFailure": true,
+    "weakLifetimeBrackets": true
+  },
+  "findings": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-findings.json",
+    "sha256": "64438a3a7b6074c411cdff174ef878b6e6f57ec10cef6bf98fa3696e2989090f"
+  },
+  "frozenManifest": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+    "sha256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9"
+  },
+  "proofs": {
+    "structural-correspondence.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-correspondence.json",
+      "sha256": "64e85ee5e750586326c109cc36dbff320d3f50d882acb88362d30b8b712e7347",
+      "checks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      }
+    },
+    "normal-host-frame-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/normal-host-frame-validation.json",
+      "sha256": "d70e7eeb3d9b9826e089e18242f87787403260ff377b22853cf8205cd25c3c94",
+      "checks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    },
+    "train-constructor-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/train-constructor-validation.json",
+      "sha256": "32e582c5b0b9763564a397f3bdc7a2e5b05c786b468a4bdb187e1a24ed998488",
+      "checks": {
+        "completeContiguous": true,
+        "openingBeforeConstructors": true,
+        "uniqueConstructorTokens": true,
+        "exactlyOneWorkoutConstructor": true,
+        "exactlyOneWorkoutMake": true,
+        "allSceneRecordsHaveConstructor": true,
+        "markerGateMatches": true,
+        "realHandsNotSuppressed": true,
+        "observedPredecessorConstruction": true
+      }
+    },
+    "structural-dependency-ownership.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-dependency-ownership.json",
+      "sha256": "32d8f46612826c1d6efbf4a9ba5ae96bb792d12b1cac912a118ff78d15f34399",
+      "checks": {
+        "completeStream": true,
+        "exactEnvironmentKeys": true,
+        "exactCommonValues": true,
+        "releaseModeMatches": true,
+        "exactRunID": true,
+        "canonicalModelSHA": true,
+        "exactTwoConstructorsAndMakes": true,
+        "oneBeforeAfterTrainOnly": true,
+        "actionFlagCorrect": true,
+        "retentionModeCorrect": true,
+        "allHostsCurrentValid": true,
+        "tagMatchesPredecessor": true,
+        "oneStableOwnerPerHost": true,
+        "exactInitialReadiness": true,
+        "beforeOwnershipObservedOrOrdinaryNaturalLoss": true,
+        "disappearBeforeFirstHang": true,
+        "postEveryTrialKeepsPredecessorRecord": true,
+        "bothRecordsFromFirstHang": true,
+        "workoutAliveAttachedUnchanged": true,
+        "weakCensusRecordAtEveryPostPoint": true,
+        "weakIdentityForEveryLivingEntity": true,
+        "predecessorDisappearedThroughout": true,
+        "zeroExplicitDetachesEntireStream": true,
+        "zeroIntentionalRetentionEntireStream": true,
+        "noUnexpectedOrdinaryOwnershipTransfer": true,
+        "deadEntitiesHaveNoInventedOwnership": true,
+        "throughTail": true
+      }
+    },
+    "structural-dependency-navigation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-dependency-navigation.json",
+      "sha256": "c049bb4502c47956dbc08a71d84587dfa7043a586b0e6527b8a17dc11bc30493",
+      "checks": {
+        "readinessPassedWithinBound": true,
+        "readinessEvidenceInCompleteTrace": true,
+        "readinessBeforeOpenURL": true,
+        "initialTrainConstructorAndMakeBeforeOpenURL": true,
+        "exactlyInitialFalseThenTrue": true,
+        "initialBoardMapBeforeOpenURL": true,
+        "navigationTrueAfterOpenURLBeforeFirstHang": true,
+        "requestedBranchMatchesAction": true,
+        "expectedBoardPlanPresentation": true,
+        "navFlagsCorrect": true,
+        "sameReadyPredecessorOwnershipValid": true,
+        "distinctWorkoutExactlyOne": true
+      }
+    },
+    "real-hand-lifetime-camera-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/real-hand-lifetime-camera-validation.json",
+      "sha256": "688ab9a3a34e67d37a302094f71ec4e1368eca8338cba883d79a14a6894f1eeb",
+      "checks": {
+        "completeStream": true,
+        "handSuppressionAbsent": true,
+        "perspectiveExperimentAbsent": true,
+        "instrumentationVersion": true,
+        "exactCountsMatchEventsAtEveryRecord": true,
+        "actualCreatedAndMadePath": true,
+        "allMakeRecordsHaveEarlierActualConstructor": true,
+        "oneConfigurationPerCreatedCamera": true,
+        "allFitsHaveEarlierSameCameraConfiguration": true,
+        "everyActuallyMadePathHasFit": true,
+        "actualCameraComponentsOrthographic": true,
+        "actualClipsUnchanged": true,
+        "finitePositiveOrthographicScale": true,
+        "fitGeometryInsideClips": true,
+        "noUnknownLifecycleOrCameraEvent": true,
+        "completeTailAfterAllCaptures": true
+      }
+    },
+    "weak-hand-census-validation.json": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/weak-hand-census-validation.json",
+      "sha256": "e3ed0182dda85c508533c8318f0f663e195001ef3e12ab01286412ce30fdad15",
+      "checks": {
+        "completeContiguous": true,
+        "censusGateEnabled": true,
+        "realHandsEnabled": true,
+        "actualConstructorsObserved": true,
+        "allConstructedCamerasConfigured": true,
+        "allSchemaIdentityTombstoneAssociationsValid": true,
+        "all12HaveExistingCensusBrackets": true
+      }
+    }
+  },
+  "limits": [
+    "Sparse checkpoint lifetime only; next Hang brackets span7.041s. No continuous absence, GPU or hardware claim.",
+    "Root directly viewed only three whole images; worker all12."
+  ]
+}

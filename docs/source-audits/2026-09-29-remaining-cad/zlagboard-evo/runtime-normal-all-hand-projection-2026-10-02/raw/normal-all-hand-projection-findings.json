@@ -1,0 +1,336 @@
+{
+  "status": "STOPPED_AFTER_P1_VISUAL_FAILURE_AND_CONSTRUCTION_HISTORY_MISMATCH",
+  "binarySHA256": "eef5a676aac05b09fbff374204347109caabd9842a1da7e8c6a64e7953914d15",
+  "runs": [
+    {
+      "arm": "o1",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape",
+      "traceRecords": 162,
+      "actualIntervals": [
+        6.956331014633179,
+        180.82916378974915
+      ],
+      "all12WholeImagesDirectlyViewed": true,
+      "visualFailureReproduced": true,
+      "colorsByPhase": [
+        [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        [
+          "red",
+          "red",
+          "red",
+          "blue"
+        ],
+        [
+          "blue",
+          "blue",
+          "blue",
+          "blue"
+        ]
+      ],
+      "handsAbsentCaptureIndices": [
+        0,
+        1
+      ],
+      "allHandsVisible": false,
+      "structuralChecks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "cameraChecks": {
+        "openingFlag": true,
+        "suppressionAbsent": true,
+        "cameraEvidencePresent": true,
+        "everyConfiguredCameraHasReset": true,
+        "oneConfiguredCameraPerConstructedScene": true,
+        "componentMatchesFlag": true,
+        "noFitRejected": true,
+        "unchangedClips": true,
+        "finiteDepthsInsideClips": true,
+        "validFOVorScale": true
+      },
+      "lifecycleChecks": {
+        "completeOpeningStream": true,
+        "instrumentationVersion": true,
+        "suppressionFlagCorrect": true,
+        "allFourCountsOnEveryRecord": true,
+        "openingCountsZero": true,
+        "countsMonotonic": true,
+        "finalMarkerAfterLastCapture": true,
+        "noRecorderErrorOrCap": true,
+        "ONUsedPathPositiveConstructorAndMake": true
+      },
+      "hostFrameChecks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      },
+      "postAttachmentCensuses": 128,
+      "normalEndpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "priorOtherSceneTokens": [
+        "07390C08-3B51-4C34-9C1A-6DCD5D808DFD",
+        "208DF2E0-6DC4-42A0-AAB2-7D7989BF49A2"
+      ],
+      "actualPairedCameraCount": 2,
+      "singleHandPathConstructed": false,
+      "finalHandCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 2,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "allCameraFitsBeforeFailingRest": true,
+      "evidence": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/visual-review.json",
+          "sha256": "4f0471717d7f34df6380094fb0a6a8307a3f3b57d81eb53d81a1a94f3e216e3a"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/structural-correspondence.json",
+          "sha256": "aa8b6b401e28411ee1032e0209d90c4d8f8820b573a7eee92ab7867631284988"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/hand-camera-validation.json",
+          "sha256": "ccd59d7508090adc8db609e6d378aba52fc5b6d0ec739527e296fe20ad50aa23"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/hand-lifetime-validation.json",
+          "sha256": "e62b49e68525cc5baeff0daf6f57885685ecfd17239542e559deb7919001063b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/normal-host-frame-validation.json",
+          "sha256": "1d5bde033c0fabea26ac3a8735c0834618ed7db3d82f76037e1855c8e2534ccf"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/captures.json",
+          "sha256": "ce3946f2205fa2ce3d86dc5cd34146d1b78f9f28824fb284ff408e1fdfc5edb0"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/trace-copy.json",
+          "sha256": "79bafc00bb4b2d9859e8316bb32e122a16c746076045938613c2f6d54aa15e21"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-o1-landscape/capture-process-status.json",
+          "sha256": "1a9d83740d176a53c61cc118f9be2fc2aa450c1d03480615ba29154f88afa654"
+        }
+      ]
+    },
+    {
+      "arm": "p1",
+      "directory": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape",
+      "traceRecords": 156,
+      "actualIntervals": [
+        6.915164947509766,
+        180.48374605178833
+      ],
+      "all12WholeImagesDirectlyViewed": true,
+      "visualFailureReproduced": true,
+      "colorsByPhase": [
+        [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        [
+          "red",
+          "red",
+          "blue",
+          "blue"
+        ],
+        [
+          "blue",
+          "blue",
+          "blue",
+          "blue"
+        ]
+      ],
+      "handsAbsentCaptureIndices": [
+        0,
+        1
+      ],
+      "allHandsVisible": false,
+      "structuralChecks": {
+        "completeContiguous": true,
+        "captures12": true,
+        "allCPUBrackets": true,
+        "sameScene": true,
+        "naturalFirstHang": true,
+        "naturalRest": true,
+        "freshSession": true,
+        "boundaryAppActive": true,
+        "boundaryWindowActive": true,
+        "boundaryLandscape": true,
+        "lateBoundaryCensus": true,
+        "noAXOrTouch": true
+      },
+      "cameraChecks": {
+        "openingFlag": true,
+        "suppressionAbsent": true,
+        "cameraEvidencePresent": true,
+        "everyConfiguredCameraHasReset": true,
+        "oneConfiguredCameraPerConstructedScene": true,
+        "componentMatchesFlag": true,
+        "noFitRejected": true,
+        "unchangedClips": true,
+        "finiteDepthsInsideClips": true,
+        "validFOVorScale": true
+      },
+      "lifecycleChecks": {
+        "completeOpeningStream": true,
+        "instrumentationVersion": true,
+        "suppressionFlagCorrect": true,
+        "allFourCountsOnEveryRecord": true,
+        "openingCountsZero": true,
+        "countsMonotonic": true,
+        "finalMarkerAfterLastCapture": true,
+        "noRecorderErrorOrCap": true,
+        "ONUsedPathPositiveConstructorAndMake": true
+      },
+      "hostFrameChecks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      },
+      "postAttachmentCensuses": 128,
+      "normalEndpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "priorOtherSceneTokens": [
+        "3573D079-3BDD-4F77-8DA7-911AF2A19F37"
+      ],
+      "actualPairedCameraCount": 2,
+      "singleHandPathConstructed": false,
+      "finalHandCounts": {
+        "pair.constructor-entry": 2,
+        "pair.make-entry": 2,
+        "single.constructor-entry": 0,
+        "single.make-entry": 0
+      },
+      "allCameraFitsBeforeFailingRest": true,
+      "evidence": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/visual-review.json",
+          "sha256": "18c4085a4eaffc09f1cf7fb57430f504b791bbc76d324d9078661e2966359d63"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/structural-correspondence.json",
+          "sha256": "98ffbad1242dc66fe3218dd3c162b532b10b0bb2865df1eef5db61116ce68312"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/hand-camera-validation.json",
+          "sha256": "45cfe503add22cd4094466c1533878a0d696c6e6fb4fe682bfb7de08e9bc7f7b"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/hand-lifetime-validation.json",
+          "sha256": "23f70dc523205e76251d7d43df019951a02f0c1f5e84f96e6f2af99b1c925439"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/normal-host-frame-validation.json",
+          "sha256": "7909e7a3ca0069c4eb47d2c7b949165d6a80164fe86bae609b2f088d891f5bfa"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/captures.json",
+          "sha256": "9b861a69e38bb3807aa4a64bffd69733594a639dfc81dd5135f77e4a1194428c"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/trace-copy.json",
+          "sha256": "1afa91198ee13da245ade503292c3caa522eda39ae9856efdccdeb5351ec026e"
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/capture-process-status.json",
+          "sha256": "ff6233069bbdbe5113793e913ce7b164f47435650f4f7180f5f87ef0dc57af71"
+        }
+      ]
+    }
+  ],
+  "O2Launched": false,
+  "conclusion": "Orthographic O1 and perspective P1 both fail real normal-route board-color transitions. Perspective is not sufficient to resolve the observed workflow. No production fix is established; the planned reversal was not run because P1 failed.",
+  "normalProjectionComparison": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-p1-landscape/normal-control-correspondence.json",
+    "sha256": "02f047abbaf52d1955edd0988cced083f4d28d353027580e3d8088fffc5fb3ce"
+  },
+  "comparisonPassed": false,
+  "constructionHistoryDifference": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-order-difference.json",
+    "sha256": "de415f9672102edc608774eea173f3995b18d6b6cd7e7173283c5c4181ffaddf"
+  },
+  "sourceCodePackage26Parity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-final-parity.json",
+    "sha256": "2cdce7495c095ea0ccc85fefa3a6dc6530d856f1d26ea06c87f45464dec59fe2"
+  },
+  "all26Equal": true,
+  "prior283FrozenFilesStillExact": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/normal-all-hand-projection-prior-freeze-check.json",
+    "sha256": "55ed85a6a5972caa2131b42d30d64a7d87a62bde51ddac03f67c3124f9b46ef1"
+  },
+  "limits": [
+    "Initial hands absent at +0.25/+1 in both arms, visible from +3 onward. This is a separate observed presentation defect, not an all-hand-visibility pass.",
+    "Actual paired hand camera component/reset records precede failing Rest, and rendered hands are visible there; direct hand Entity.isActive was not instrumented.",
+    "Only two paired hand scenes constructed per run; single-hand path and orbit not exercised.",
+    "O1 creates two pre-workout board scenes and P1 one. Complete history retained; no claim projection alone controlled all construction timing/history.",
+    "Normal endpoints/path were measured from runtime metadata, no frame compensation or pixel measurements. Only sampled frames are tested; initial screenshot settlement not asserted.",
+    "Existing sampler ends after120iterations; late app/window census is at semantic boundaries, not every screenshot instant.",
+    "No unobserved middle-rest or later-session outcome claimed."
+  ],
+  "handoff": {
+    "epoch": 1790985963.245853,
+    "exclusiveRuntimeReturnedTo": "root",
+    "sourceRuntimeDDFrozen": true,
+    "resourcesRemainLive": true,
+    "ownedSimulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "controllerSession": 90373,
+    "noSourceBuildInstallChanges": true,
+    "noNewResources": true
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "schemaVersion": 3,
+  "manufacturer": "YY Vertical",
+  "name": "Baguette Evo",
+  "productURL": "https://www.yyvertical.com/en/products/baguette-evo",
+  "subtitle": "Portable rotating bar with twelve documented grip types",
+  "dimensions": "52 \u00d7 5 \u00d7 5 cm",
+  "aspectRatio": 2.0,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary",
+      "aspectRatio": 10.4,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          },
+          "surfaceFinish": "wood"
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "central-20-6": [
+              0.707106781,
+              0,
+              0,
+              0.707106781
+            ],
+            "central-25": [
+              0.0,
+              0,
+              0,
+              1.0
+            ],
+            "central-30-25": [
+              1.0,
+              0,
+              0,
+              0.0
+            ],
+            "central-6": [
+              -0.707106781,
+              0,
+              0,
+              0.707106781
+            ],
+            "paired-10-15": [
+              0.0,
+              0,
+              0,
+              1.0
+            ],
+            "paired-12-8-6": [
+              0.707106781,
+              0,
+              0,
+              0.707106781
+            ],
+            "paired-25-20-15-10": [
+              1.0,
+              0,
+              0,
+              0.0
+            ],
+            "paired-8-6": [
+              -0.707106781,
+              0,
+              0,
+              0.707106781
+            ],
+            "rounded-tray": [
+              1.0,
+              0,
+              0,
+              0.0
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "paired-25-20-15-10",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20-left",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-right"
+      ]
+    },
+    {
+      "id": "paired-10-15",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-10-left",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-10-right"
+      ]
+    },
+    {
+      "id": "paired-12-8-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-12-left",
+        "edge-12-right"
+      ]
+    },
+    {
+      "id": "paired-8-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-8-left",
+        "edge-8-right",
+        "edge-6-upper",
+        "edge-6-lower"
+      ]
+    },
+    {
+      "id": "central-30-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-30"
+      ]
+    },
+    {
+      "id": "central-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-25"
+      ]
+    },
+    {
+      "id": "central-20-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-20"
+      ]
+    },
+    {
+      "id": "central-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-6"
+      ]
+    },
+    {
+      "id": "rounded-tray",
+      "presentationID": "primary",
+      "contactIDs": [
+        "rounded-tray"
+      ]
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "edge-20-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-15-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-25-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-10-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 10 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-20-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 12 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-12-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 12 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-left",
+      "equipmentObjectID": "primary",
+      "name": "Left 8 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-8-right",
+      "equipmentObjectID": "primary",
+      "name": "Right 8 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-6-upper",
+      "equipmentObjectID": "primary",
+      "name": "Upper 6 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-6-lower",
+      "equipmentObjectID": "primary",
+      "name": "Lower 6 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-central-30",
+      "equipmentObjectID": "primary",
+      "name": "Central 30 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-central-25",
+      "equipmentObjectID": "primary",
+      "name": "Central 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-central-20",
+      "equipmentObjectID": "primary",
+      "name": "Central 20 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-central-6",
+      "equipmentObjectID": "primary",
+      "name": "Central 6 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "rounded-tray",
+      "equipmentObjectID": "primary",
+      "name": "Rounded tray",
+      "kind": "jug",
+      "gripTypes": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "resourceName": "placid-badger-cad-second-half-combined-pro-passive-route-idle-sleep-assertion",
+  "pid": 35037,
+  "parentPID": 35031,
+  "command": [
+    "rtk",
+    "proxy",
+    "caffeinate",
+    "-i",
+    "-w",
+    "35031",
+    "-t",
+    "420"
+  ],
+  "executable": "rtk proxy caffeinate",
+  "registeredImmediately": true
+}

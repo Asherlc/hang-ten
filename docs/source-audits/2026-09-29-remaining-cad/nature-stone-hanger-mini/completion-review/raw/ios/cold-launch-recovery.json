@@ -1,0 +1,37 @@
+{
+  "initialLaunch": {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+      "com.hangten.training"
+    ],
+    "timeoutSeconds": 120,
+    "result": "TimeoutExpired",
+    "receipt": "failed-launch-captures/command-records.json"
+  },
+  "boundedBootstatus": {
+    "timeoutSeconds": 40,
+    "exitCode": 142
+  },
+  "diagnosis": "Exact UUID remained on the Apple boot progress screen despite launchctl readiness. No Hang Ten process or AX translation was available. Opening its exact owned window released the pending diagnostic screenshot, but AX remained unavailable at that instant.",
+  "recoveryCommand": [
+    "rtk",
+    "proxy",
+    "open",
+    "-a",
+    "Simulator",
+    "--args",
+    "-CurrentDeviceUDID",
+    "E9D3D8B4-1440-4417-862B-3023AF3841FA"
+  ],
+  "recoveryExitCode": 0,
+  "afterOpenAXExitCode": 1,
+  "canonicalBytesChanged": false,
+  "onlyOwnedDeviceTargeted": true,
+  "recoveryStatus": "Focused test-first current-source path on the same exact UUID; no app retry or final captures yet"
+}

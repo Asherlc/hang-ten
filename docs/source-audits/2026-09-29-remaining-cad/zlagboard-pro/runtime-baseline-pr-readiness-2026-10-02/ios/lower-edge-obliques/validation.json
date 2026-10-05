@@ -1,0 +1,33 @@
+{
+  "checks": [
+    {
+      "contactID": "edge-incut-10-center",
+      "image": "edge-incut-10-center-elevated.png",
+      "gestureDelta": [
+        20,
+        -24
+      ],
+      "selectedConfirmed": true
+    },
+    {
+      "contactID": "edge-15-left",
+      "image": "edge-15-left-elevated.png",
+      "gestureDelta": [
+        20,
+        -24
+      ],
+      "selectedConfirmed": true
+    },
+    {
+      "contactID": "edge-incut-15-left",
+      "image": "edge-incut-15-left-elevated.png",
+      "gestureDelta": [
+        20,
+        -24
+      ],
+      "selectedConfirmed": true
+    }
+  ],
+  "purpose": "Actual UI orbit to show lower incut bearing surfaces and distinct neighboring flat edge; no package/camera modification, no source image measurement.",
+  "visualReview": "pending Astra inspection"
+}

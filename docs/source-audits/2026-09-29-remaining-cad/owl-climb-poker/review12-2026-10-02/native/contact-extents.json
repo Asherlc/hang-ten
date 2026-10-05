@@ -1,0 +1,22 @@
+{
+  "modelSHA256": "1ee84de3f5054d55bd1078e466499cbc508decd11826bd5e626b349a75ba3675",
+  "descriptorSHA256": "b2fd8b5ff18c57b38d48daaa93e613c00061bb3e61e444d741871e8fe10a3032",
+  "contactColorsRGB": {
+    "face-b-left-deep-sloper": [
+      50,
+      200,
+      230
+    ],
+    "face-b-right-deep-sloper": [
+      240,
+      150,
+      50
+    ]
+  },
+  "views": [
+    "contact-extents-a.png",
+    "contact-extents-b.png",
+    "contact-extents-ab-oblique.png"
+  ],
+  "method": "Whole actual USDZ; transient CPU diagnostic colors by exact descriptor-owned node identity. No USDZ materials changed. This is contact extent evidence, not runtime picking/highlight validation."
+}

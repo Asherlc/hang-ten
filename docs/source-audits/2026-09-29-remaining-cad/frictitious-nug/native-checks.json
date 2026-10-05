@@ -1,0 +1,17 @@
+{
+  "package": "frictitious-nug",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "editedFeature": "FrontDeepCavity",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "edge_25"
+  ],
+  "bodyVolumeBeforeMM3": 206802.37471556885,
+  "bodyVolumeAfterMM3": 205415.40569555588,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

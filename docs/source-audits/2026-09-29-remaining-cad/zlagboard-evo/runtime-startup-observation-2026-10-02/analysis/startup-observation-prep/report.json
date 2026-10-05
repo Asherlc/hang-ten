@@ -1,0 +1,169 @@
+{
+  "status": "CONDITIONAL_SCRATCH_DESIGN_ONLY",
+  "gate": "Only after unchanged repeat final audit and root authorization. No runtime source application, build or observation run authorized by this design.",
+  "sourceHashes": {
+    "HangTen/Views/RootView.swift": "5b862eea99aedfd3c9914c73068ce41d56992c7c42b8cebac35ff984d1cb0926",
+    "HangTen/Views/BoardModelView.swift": "d74f4fbb2bd260cdd777e3fd15c0d0fc92f9b7b2a9f9b5cd9daa9bdf54748426",
+    "HangTen/Models/BoardModelRealityTypes.swift": "72ffe2a766a128688510fa02c2c1a1cbcc56c0aa28b6202f74f59a567ed42f67"
+  },
+  "launchFlag": "HANGTEN_REVIEW_STARTUP_OBSERVATION=1, also requiring existing HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC=1",
+  "existingMarkersPreserved": [
+    "recorder-open",
+    "workout-probe-appear-before-autostart",
+    "workout-prestart-hand-state",
+    "board-scene-constructed",
+    "surface-inputs",
+    "view-make",
+    "hand-lifecycle",
+    "hand-camera"
+  ],
+  "sourceFacts": [
+    {
+      "ref": "HangTen/Views/RootView.swift:3175",
+      "fact": "requestCountdownStart optionally calls prepareCountdownAudio, then can set pendingCountdownStart and return. No visible countdown mutation occurs in that deferred branch."
+    },
+    {
+      "ref": "HangTen/Views/RootView.swift:2268",
+      "fact": "Existing audio preparation onChange consumes pending countdown and routes to beginVisibleCountdown or requestCountdownStart. A delayed observer can delay application action; source does not identify why it is delayed."
+    },
+    {
+      "ref": "HangTen/Views/RootView.swift:3191",
+      "fact": "No-ready/disabled-audio branch calls beginVisibleCountdown immediately using captured now."
+    },
+    {
+      "ref": "HangTen/Views/RootView.swift:3197",
+      "fact": "Ready-audio branch computes armUptime from captured now plus policy lead; calls startCountdown, then creates MainActor Task."
+    },
+    {
+      "ref": "HangTen/Views/RootView.swift:3217",
+      "fact": "Arm Task sleeps until max(0, armUptime-currentMonotonicTime), handles cancellation, clears countdownArmTask and calls beginVisibleCountdown with original armUptime. Task closure entry and continuation can occur later than creation/intended deadline."
+    },
+    {
+      "ref": "HangTen/Views/RootView.swift:3229",
+      "fact": "beginVisibleCountdown synchronously mutates session state. Initial activeStartUptime is based on supplied armUptime+3seconds, while routineStartedAt uses Date() sampled when mutation executes. Therefore delayed Task execution can produce an already-expired monotonic countdown; this is a possible source path, not observed cause."
+    },
+    {
+      "ref": "HangTen/Views/BoardModelView.swift:109",
+      "fact": "Surface task begins after SwiftUI schedules it, sets loading, awaits BoardModelRealityLoader.load, then cancellation-checks and publishes ready. Appearance does not guarantee load task immediately ran."
+    },
+    {
+      "ref": "HangTen/Models/BoardModelRealityTypes.swift:223",
+      "fact": "Existing board-scene constructor marker executes in initializer; load asynchronously imports Entity, binds material/contact geometry and sets framing before loader can return. Existing constructor marker plus load-call/return spans distinguish delay before vs after construction without new entity reads."
+    },
+    {
+      "ref": "HangTen/Views/BoardModelView.swift:236",
+      "fact": "RealityView make occurs only after ready scene is supplied to that view. Existing view-make logs after content.add and applySync; it is not precise callback-entry time, although existing counter make timestamp provides that if enabled."
+    }
+  ],
+  "proposedSparseSites": [
+    {
+      "event": "startup-request-entry",
+      "ref": "HangTen/Views/RootView.swift:3175",
+      "when": "First statement of existing requestCountdownStart",
+      "fields": [
+        "initialOrSkip",
+        "audioEnabled",
+        "preparationState",
+        "pendingRequestPresent",
+        "armTaskPresent",
+        "routineStartedIsNil",
+        "activeStartUptime"
+      ]
+    },
+    {
+      "event": "startup-audio-prepare-return",
+      "ref": "HangTen/Views/RootView.swift:3180",
+      "when": "Immediately after existing prepareCountdownAudio call, only if that branch runs",
+      "fields": [
+        "preparationState"
+      ]
+    },
+    {
+      "event": "startup-request-deferred",
+      "ref": "HangTen/Views/RootView.swift:3187",
+      "when": "After existing pendingCountdownStart assignment and before existing return",
+      "fields": [
+        "initialOrSkip",
+        "preparationState"
+      ]
+    },
+    {
+      "event": "startup-audio-preparation-change",
+      "ref": "HangTen/Views/RootView.swift:2268",
+      "when": "First statement inside existing onChange, before original guard/consume",
+      "fields": [
+        "newPreparationState",
+        "pendingRequestPresent"
+      ]
+    },
+    {
+      "event": "startup-audio-arm-planned / startup-audio-arm-return",
+      "ref": "HangTen/Views/RootView.swift:3215",
+      "when": "Immediately before/after existing startCountdown call; no new call to audio APIs",
+      "fields": [
+        "armUptime",
+        "initialOrSkip"
+      ]
+    },
+    {
+      "event": "startup-arm-task-enter / startup-arm-task-resumed / startup-arm-task-cancelled",
+      "ref": "HangTen/Views/RootView.swift:3217",
+      "when": "Existing Task closure entry, after existing sleep returns, or in existing catch respectively; cancellation flag recorded before original guard",
+      "fields": [
+        "armUptime",
+        "Task.isCancelled"
+      ]
+    },
+    {
+      "event": "startup-visible-countdown-before / startup-visible-countdown-after",
+      "ref": "HangTen/Views/RootView.swift:3229",
+      "when": "Before/after existing synchronous switch mutation",
+      "fields": [
+        "armUptime",
+        "initialOrSkip",
+        "routineStartedIsNil",
+        "activeStartUptime",
+        "countdownKind",
+        "pausedElapsed"
+      ]
+    },
+    {
+      "event": "startup-board-load-call / startup-board-load-return / startup-board-ready-published / startup-board-load-error",
+      "ref": "HangTen/Views/BoardModelView.swift:115",
+      "when": "After original loading assignment before await; immediately after await before original cancellation guard; after original ready assignment; inside original catch before its cancellation guard",
+      "fields": [
+        "localLoadAttemptUUID",
+        "boardID",
+        "presentationID",
+        "Task.isCancelled",
+        "returnedSceneLifecycleToken only after actual loader return",
+        "errorType only on failure"
+      ]
+    }
+  ],
+  "recorderContract": {
+    "existingHarnessLimitation": "HangTen/Models/BoardModelRealityTypes.swift:2044 harnessEvent always calls applicationCensus(), which walks UIKit/window/renderer placements. Avoid that extra observation for startup timing.",
+    "proposedMethod": "DEBUG startupObservation(event:String, fields:[String:Any]) gated by immutable launch flag, forwarding scalar-only fields through existing emit. emit already appends sequence/epoch/uptime and existing hand counters. No applicationCensus, scene traversal or forced lazy access.",
+    "scalarData": "Booleans, strings, finite monotonic numeric times; nil explicitly NSNull or string nil. No object descriptions that could force work. Local load UUID identifies overlapping await attempts; it is local to the already-existing Task, not State/Observable.",
+    "ordering": "Capture call placement is the ordering evidence. Existing emit time is not the exact start of an audio/loader API; each before/after span contains logging overhead. Avoid a new Task solely to emit. No awaits added or moved.",
+    "limits": "Log allocation and synchronous file writes can perturb MainActor scheduling. Same observation flag/source would be common to any compared startup paths. No body/per-frame logs, new callbacks, subscriptions, timers, sleeps, SceneEvents or forced redraw."
+  },
+  "boundedObservation": {
+    "suggestedBoundSecondsAfterAppear": 30,
+    "basis": "Parent reports approximately20second construction gap. Thirty seconds is a reasonable bounded chance to bracket that observed scale, not a guarantee. Existing recorder-open and appearance epoch identify anchors.",
+    "method": "External owner helper reads complete JSONL only with a fixed30second post-appearance deadline and separately bounded startup-to-appearance wait. Keep original app recipe/flags/audio; do not wait for a color phase, tap, skip, restart or alter countdown. Stop observation/terminate exact owned app through existing owner lifecycle afterward.",
+    "noFirstHangRequirement": "Missing first Hang/countdown or load-return is an outcome in this startup-only observation; preserve partial spans at deadline instead of starting another long color capture.",
+    "noAutomaticExtension": "If marker pair does not close by30seconds, report right-censored interval and exact last marker. Do not claim cause or silently extend.",
+    "noInternalTimer": "Bound belongs to external helper; app has no new sampling task or timer."
+  },
+  "interpretationExamples": [
+    "Long request\u2192deferred\u2192audio-state-change interval localizes waiting before resuming countdown; no attribution to audio framework internals without further evidence.",
+    "arm planned vs task-entry/resumed vs actual mutation distinguishes scheduling latency from recorded planned deadline.",
+    "Visible countdown mutation before Surface load-call distinguishes session timing from delayed view/task scheduling; load-call\u2192constructor vs constructor\u2192return separates preconstruction and import/setup spans.",
+    "load-return/ready-published\u2192view-make separates published scene from later host construction; no inference of presented frame or GPU availability.",
+    "Multiple local load UUIDs/cancellations must remain separate; never combine a cancelled attempt start with another successful attempt return."
+  ],
+  "optionalPatchPrepared": false,
+  "reasonDesignOnly": "Exact hook sites and scalar schema provided; no need to change source while final repeat gate is pending. Root may select the minimum markers from this reviewed design.",
+  "noCauseOrFixClaim": true
+}

@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "name": "root-classification-diagnosis-v2",
+  "timeoutSeconds": 180,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/independent-validation/diagnose_root_classification.py"
+  ],
+  "ownedProcessGroup": 24154,
+  "exitCode": 0,
+  "elapsedSeconds": 6.52709520899225,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

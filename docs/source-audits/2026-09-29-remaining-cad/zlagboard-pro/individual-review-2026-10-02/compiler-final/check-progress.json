@@ -1,0 +1,14 @@
+{
+  "timestampUTC": "2026-10-02T13:41:31.334018+00:00",
+  "command": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-p",
+    "77810",
+    "-o",
+    "pid=,etime=,time=,pcpu=,stat=,comm="
+  ],
+  "exitStatus": 0,
+  "captureScope": "Exact owned compiler PID only; no unrelated host process arguments"
+}

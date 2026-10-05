@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "refine-bop-probe",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/probe_refine_bop.py",
+  "timeoutSeconds": 180,
+  "startedUTC": "2026-10-01T17:18:20.211461+00:00",
+  "ownedProcessGroup": 52567,
+  "elapsedSeconds": 27.52277070900891,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

@@ -1,0 +1,18 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "xcresulttool",
+    "export",
+    "attachments",
+    "--path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/placid-badger-cad-second-half-readonly-ui-failure.xcresult",
+    "--output-path",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ui-failure-attachments/export",
+    "--only-failures"
+  ],
+  "pid": 41291,
+  "boundSeconds": 60,
+  "startedEpoch": 1791072123.8405619
+}

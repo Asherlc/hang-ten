@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/final-author-check-v2-tmp/hangten-freecad-77k8h4o7/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/extract_final_native.py", line 34, in <module>
+    r={'status':'pass','sourceSHA256':sha,'beforeSourceSHA256':hashlib.sha256((w/'frozen-3ff3/metolius-simulator-3d.FCStd').read_bytes()).hexdigest(),'rawManifestExact':raw,'surfaceFinish':metadata['surfaceFinish'],'bodyValid':body.isValid(),'bodySolidCount':len(body.Solids),'contactCount':len(contacts),'depthFactCount':len(facts),'depthFacts':facts,'normalFlags':{'analytic':d.HangTenSurfaceNormals,'uvNative':d.HangTenUVNodeSurfaceNormals},'fullyConstrainedSketchCount':len([o for o in d.Objects if o.TypeId=='Sketcher::SketchObject' and o.FullyConstrained]),'measuredEnvelopeXYZMM':list((body.optimalBoundingBox().XLength,body.optimalBoundingBox().YLength,body.optimalBoundingBox().ZLength)),'upperProtectedZMinimumMM':135,'upperBodyBidirectionalDifferenceVolumesMM3':diff,'nativeLowerTangentJoins':joins,'profiles':profiles,'sections':sections,'sourceUnchanged':hashlib.sha256(p.read_bytes()).hexdigest()==sha}
+                                                                                                                                                                                             ~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'surfaceFinish'
+
+
+								
+								
+								
+								
+								
+								

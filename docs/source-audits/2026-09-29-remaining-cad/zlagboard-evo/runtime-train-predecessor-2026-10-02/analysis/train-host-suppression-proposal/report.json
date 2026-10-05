@@ -1,0 +1,81 @@
+{
+  "scope": "Scratch proposal and preapplication audit only. Root subsequently applied the two exact patches; runtime worker now owns tracked source and build. No source or runtime mutation by this auditor.",
+  "status": "Proposal complete; runtime evidence required; no fix claim",
+  "patches": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-host-suppression-proposal/train-slot-gate.patch",
+      "sha256": "a29f89a2dff704a3184d2eb339ce3a124b5f37e410304c02621610e7e07328a9",
+      "preapplicationGitApplyCheck": "passed"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-host-suppression-proposal/board-constructor-marker.patch",
+      "sha256": "79f93b8cf295c120f1c8f98749502f33c2cb510098edc33097aa958406cd224b",
+      "preapplicationGitApplyCheck": "passed"
+    }
+  ],
+  "inputSHA256": {
+    "HangTen/Views/TrainView.swift": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99",
+    "HangTen/Models/BoardModelRealityTypes.swift": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+  },
+  "startupSelectionProof": {
+    "source": "HangTen/Models/AppStore.swift:57-64",
+    "finding": "During synchronous AppStore initialization, a valid HANGTEN_REVIEW_BOARD_ID overrides persisted/default selectedBoard before the initialized store can be consumed by TrainView. The experiment must launch with exact zlagboard.evo. Missing or invalid ID falls back, so launch environment and constructor model SHA must be validated.",
+    "appEntry": "HangTen/HangTenApp.swift:63 constructs AppStore; RootView at87/90 receives store via environmentObject at93."
+  },
+  "trainGate": {
+    "source": "HangTen/Views/TrainView.swift:selectedBoardCard (original139-177)",
+    "conditions": [
+      "DEBUG",
+      "BoardHighlightDiagnostic.isEnabled",
+      "HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST == 1",
+      "selectedBoard.id == zlagboard.evo",
+      "exactly one presentation"
+    ],
+    "behavior": "Replace only the BoardMapView expression before construction with a clear aspect-fit slot. Leave surrounding card, controls and normal navigation untouched. All unmet conditions use original BoardMapView/cardPreviewStyle.",
+    "slotSource": [
+      "BoardMapView.swift:607 outer VStack spacing8",
+      "BoardMapView.swift:608-623 picker absent for one presentation",
+      "BoardMapView.swift:668 presentation aspectRatio for selectedPositionID",
+      "BoardMapPresentationSelection.resolvePositionID metadata-only default selection",
+      "TrainView.swift:624-633 model cardPreviewStyle has no extra raster clipping"
+    ],
+    "launchValidation": [
+      "Evo catalog entry exists",
+      "one default model presentation",
+      "exact Evo model SHA",
+      "original routine, phase durations and launch flags retained except designated Train suppression arm"
+    ]
+  },
+  "constructorProof": {
+    "source": [
+      "BoardModelRealityTypes.swift:BoardModelRealityScene.init end",
+      "BoardModelRealityTypes.swift:BoardModelRealityScene.load sole app constructor call site",
+      "BoardHighlightDiagnostic.boardSceneConstructed"
+    ],
+    "opening": "Force existing diagnostic singleton initialization immediately before the sole app scene constructor call; its existing opening event precedes constructor marker. No new timer, observable state, body logging or polling.",
+    "event": "board-scene-constructed",
+    "identity": "Unique diagnosticLifecycleToken plus scene/root/camera identities and modelSHA256. ObjectIdentifier alone may be reused.",
+    "meaning": "A completed constructor is not proof of active renderer, attachment, retained host or lifetime.",
+    "requiredEvidence": [
+      "Complete process stream from opening/first sequence through normal terminal observation; no sequence gaps or truncation",
+      "Exactly one constructor event for each unique scene lifecycle token; every later scene token must have a preceding constructor marker",
+      "Suppressed arm exactly one unique constructor, linked to the actual workout scene and canonical Evo model SHA",
+      "Any unexplained additional or non-Evo constructor invalidates the history-free gate; do not discard it",
+      "Unsuppressed control records actual predecessor/workout construction, without assuming a fixed constructor count"
+    ]
+  },
+  "runtimeGates": [
+    "Same binary and faithful normal route in both arms",
+    "Train placeholder measured actual layout and surrounding controls; intended aspect ratio is not sufficient evidence",
+    "Actual workout board viewport/frame/camera and phase/selection semantics match; no compensating frames",
+    "Full natural active/rest/next-active captures and CPU brackets; retain all failures",
+    "No old hand-suppression or unrelated diagnostic flags inherited"
+  ],
+  "limits": [
+    "Lexical removal of this Train BoardMap plus complete observed constructor stream supports absence of a constructed predecessor board scene in that launch, not absence of every possible retained renderer object.",
+    "Removing the Train host also removes its loading/rendering work and board hit target. A contrast cannot alone distinguish history from startup workload.",
+    "One-presentation Evo-specific diagnostic adaptation, not a production design or generic BoardMap replacement.",
+    "Apply-check is not Swift typechecking or runtime validation; build/runtime delegated to owning worker."
+  ],
+  "parentCoordination": "Root confirmed TrainView reservation and input hash, applied exact patches with guards and retained root-application.json. Initial proposal revisions remain separately preserved."
+}

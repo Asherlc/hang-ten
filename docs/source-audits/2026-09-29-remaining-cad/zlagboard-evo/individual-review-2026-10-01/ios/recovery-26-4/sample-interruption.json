@@ -1,0 +1,6 @@
+{
+  "processes": [
+    "42057       01:53 /usr/bin/sample 39838 2 -file .context/placid-badger-cad-second-half/zlagboard-evo/ios-runtime/migration-sample.txt"
+  ],
+  "reason": "Read-only sample stalled and target simulator already deleted; exact owned sample process terminated."
+}

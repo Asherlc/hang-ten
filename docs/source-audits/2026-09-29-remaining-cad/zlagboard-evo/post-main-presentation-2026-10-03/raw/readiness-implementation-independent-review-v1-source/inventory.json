@@ -1,0 +1,25 @@
+{
+  "createdUTC": "2026-10-03T19:00:27.610237+00:00",
+  "files": [
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/BoardModelView.swift",
+      "sha256": "32e0e1c689028e8030125e0ed2a5b5527cdf05d860860934629e4f04558faaeb"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/GripHandModelView.swift",
+      "sha256": "df9cf7cf00936f26927a5818d17301db570a344958a06e233c2867f561a6212b"
+    },
+    {
+      "path": "HangTen/Views/WorkoutView.swift",
+      "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/WorkoutView.swift",
+      "sha256": "6e0ad3360cefc260b32fd72cf29e8ec96a0de01291d1903ec0f6a6ccc594f752"
+    },
+    {
+      "path": "HangTenTests/WorkoutTimelineTests.swift",
+      "snapshot": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/readiness-implementation-independent-review-v1-source/WorkoutTimelineTests.swift",
+      "sha256": "69496f3a72b870d5977bef60c2daafa9eaaa71ca30ee09e28fd5c0f1e46564b1"
+    }
+  ]
+}

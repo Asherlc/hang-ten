@@ -33,8 +33,14 @@ enum WorkoutStepFormatting {
         return "+\(number) \(unitLabel)"
     }
 
-    static func labels(for step: WorkoutStep) -> [String] {
-        WorkoutTimeline.labels(for: step) + (step.externalLoadKGF.map {
+    static func labels(
+        for step: WorkoutStep,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [String] {
+        WorkoutTimeline.labels(
+            for: step, taskIndex: taskIndex, selectedHandSide: selectedHandSide
+        ) + (step.externalLoadKGF.map {
             [externalLoadText($0, unit: .kilograms)]
         } ?? [])
     }
@@ -81,34 +87,36 @@ struct WorkoutStepPickerView: View {
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 Text("\(step.number)")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .font(.system(.footnote, design: .rounded, weight: .bold))
                     .foregroundStyle(step.phase.textTint)
-                    .frame(width: 28, height: 28)
+                    .fixedSize()
+                    .frame(minWidth: 28, minHeight: 28)
+                    .padding(2)
                     .background(step.phase.tint.opacity(0.17), in: Circle())
 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(step.title)
-                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .font(.system(.callout, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangInk)
                         Spacer(minLength: 8)
                         Text(step.durationLabel)
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(.system(.caption, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangMuted)
                     }
 
                     Text(step.instruction)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
 
                     Text(step.accessory)
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .font(.system(.caption2, design: .rounded, weight: .bold))
                         .foregroundStyle(step.phase.textTint)
 
                     if !step.isRestStep {
                         Text(WorkoutStepFormatting.labels(for: step).joined(separator: " • "))
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
+                            .font(.system(.caption2, design: .rounded, weight: .bold))
                             .foregroundStyle(step.phase.textTint)
                     }
                 }

@@ -1,0 +1,9 @@
+{
+  "actualRenderingBranchMatched": true,
+  "secondRasterBranch": true,
+  "earlierBoardDetailBranchExcluded": true,
+  "outerFrameAndPerHoldFrameRetained": true,
+  "sourceSHA256": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a",
+  "testSHA256": "6a4ae7a63ee9488186b4548196ff6be3c30b83b62367e86d9d4028e8edc5b295",
+  "scope": "Literal validation of intended test scope only; not a substitute for XCTest."
+}

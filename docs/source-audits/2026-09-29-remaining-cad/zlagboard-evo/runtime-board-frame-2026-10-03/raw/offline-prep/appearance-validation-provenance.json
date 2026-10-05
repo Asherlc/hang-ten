@@ -1,0 +1,11 @@
+{
+  "originalValidatorSHA256": "d5cfda9041c02419edf17eb7f0e32364fcd1acda7286645323b8a6ff736a5519",
+  "newValidatorSHA256": "6edc52ac54e148fa1a394291c570037cd3e26941777ed2c8395e0cf234f7214c",
+  "run": "appearance-lit",
+  "reportSHA256": "5f47864ea4b42dec017264296027d8a0ca28c439de3b239e05a73d136822945c",
+  "exitCode": 0,
+  "passed": true,
+  "checks": 16,
+  "rawFilesNotRewritten": true,
+  "sourceAndRuntimeUntouched": true
+}

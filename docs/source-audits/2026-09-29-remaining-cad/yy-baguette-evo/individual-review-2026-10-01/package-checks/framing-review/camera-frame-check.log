@@ -1,0 +1,318 @@
+{
+  "source": "Frozen final/staging-input package used by failing tests",
+  "anchorIncludesBoundsMaximumY": [
+    0.0,
+    0.225,
+    0.0
+  ],
+  "rows": [
+    {
+      "positionID": "paired-25-20-15-10",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        0.342020143,
+        -0.939692621
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          0.34202014296928834,
+          -0.9396926209156204
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          0.9396926209156204
+        ]
+      }
+    },
+    {
+      "positionID": "paired-10-15",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          -0.9396926209156204
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          -0.9396926209156204
+        ]
+      }
+    },
+    {
+      "positionID": "paired-12-8-6",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.9396926210000001,
+        0.3420201430000003
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 80.76959828816076,
+        "projectedHeight": 0.12574907034266958,
+        "projectedBodyHeight": 0.06408563819424547,
+        "worldDirection": [
+          0.0,
+          0.9396926209156203,
+          -0.342020142969288
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 185.94720331676925,
+        "projectedHeight": 0.28949862875980825,
+        "projectedBodyHeight": 0.06408563819424545,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928823,
+          -0.9396926209156202
+        ]
+      }
+    },
+    {
+      "positionID": "paired-8-6",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.9396926210000001,
+        -0.3420201430000003
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 97.3005489952619,
+        "projectedHeight": 0.15148587883690184,
+        "projectedBodyHeight": 0.06408563819424545,
+        "worldDirection": [
+          0.0,
+          0.9396926209156203,
+          0.342020142969288
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 231.3656171602419,
+        "projectedHeight": 0.3602099290299804,
+        "projectedBodyHeight": 0.06408563819424543,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928823,
+          0.9396926209156202
+        ]
+      }
+    },
+    {
+      "positionID": "central-30-25",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        0.342020143,
+        0.939692621
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          0.34202014296928834,
+          0.9396926209156204
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          -0.9396926209156204
+        ]
+      }
+    },
+    {
+      "positionID": "central-25",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.342020143,
+        0.939692621
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          0.9396926209156204
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 214.0552817222555,
+        "projectedHeight": 0.33325970722894377,
+        "projectedBodyHeight": 0.06408563819424541,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928834,
+          0.9396926209156204
+        ]
+      }
+    },
+    {
+      "positionID": "central-20-6",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        -0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.9396926210000001,
+        0.3420201430000003
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 80.76959828816076,
+        "projectedHeight": 0.12574907034266958,
+        "projectedBodyHeight": 0.06408563819424547,
+        "worldDirection": [
+          0.0,
+          0.9396926209156203,
+          -0.342020142969288
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 185.94720331676925,
+        "projectedHeight": 0.28949862875980825,
+        "projectedBodyHeight": 0.06408563819424545,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928823,
+          -0.9396926209156202
+        ]
+      }
+    },
+    {
+      "positionID": "central-6",
+      "existingStoredLocal": [
+        0,
+        -0.342020143,
+        0.939692621
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        -0.9396926210000001,
+        -0.3420201430000003
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 97.3005489952619,
+        "projectedHeight": 0.15148587883690184,
+        "projectedBodyHeight": 0.06408563819424545,
+        "worldDirection": [
+          0.0,
+          0.9396926209156203,
+          0.342020142969288
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 231.3656171602419,
+        "projectedHeight": 0.3602099290299804,
+        "projectedBodyHeight": 0.06408563819424543,
+        "worldDirection": [
+          0.0,
+          -0.34202014296928823,
+          0.9396926209156202
+        ]
+      }
+    },
+    {
+      "positionID": "rounded-tray",
+      "existingStoredLocal": [
+        0,
+        -0.5,
+        -0.866025404
+      ],
+      "correctedStoredLocal": [
+        0.0,
+        0.5,
+        0.866025404
+      ],
+      "worldDirectionRestored": true,
+      "before": {
+        "mapHeightAt334pt": 200.24175642903734,
+        "projectedHeight": 0.3117536207732464,
+        "projectedBodyHeight": 0.06830127018724941,
+        "worldDirection": [
+          0.0,
+          0.4999999999066592,
+          0.866025403838329
+        ]
+      },
+      "after": {
+        "mapHeightAt334pt": 200.24175642903734,
+        "projectedHeight": 0.3117536207732464,
+        "projectedBodyHeight": 0.06830127018724941,
+        "worldDirection": [
+          0.0,
+          -0.4999999999066592,
+          -0.866025403838329
+        ]
+      }
+    }
+  ],
+  "allCorrectedOver100": true,
+  "diagnosis": "Camera values intended as world directions were stored in the local-model camera field. Runtime rotates that field with pose. Inverse-pose transform fixes data; do not weaken original viewport regression."
+}

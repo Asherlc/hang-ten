@@ -1,0 +1,26 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "Tools/HangboardModels/test_contact_model_descriptor.py",
+    "Tools/HangboardModels/test_contact_model_package.py",
+    "Tools/HangboardModels/test_import_contact_model_source.py",
+    "Tools/HangboardModels/test_verify_yy_baguette_evo.py",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-model-tool-tests-tmp/pytest"
+  ],
+  "startedUTC": "2026-10-02T03:37:32.085113+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-model-tool-tests-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 76253,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.532366750005167
+}

@@ -1,0 +1,14 @@
+{
+  "owner": "placid-badger",
+  "pass": true,
+  "commandReceiptsChecked": [
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-apply-venv-command.json",
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-apply-command.json",
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-continuous-cert-command.json",
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-check-command.json",
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-clearance06-command.json",
+    ".context/placid-badger/nature-stone-mini-review10/completion/placid-badger-mini-solve-vertical-axis-command.json"
+  ],
+  "noHTTPServersStarted": true,
+  "canonicalWritesRestrictedToFourOwnedFiles": true
+}

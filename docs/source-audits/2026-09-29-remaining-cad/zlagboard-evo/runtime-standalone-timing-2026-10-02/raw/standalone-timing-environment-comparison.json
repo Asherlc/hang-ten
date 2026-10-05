@@ -1,0 +1,14 @@
+{
+  "differences": {
+    "HANGTEN_REVIEW_STANDALONE_TIMING_PROFILE": {
+      "short": "short",
+      "long": "long"
+    },
+    "HANGTEN_REVIEW_DIAGNOSTIC_RUN": {
+      "short": "placid-badger-cad-second-half-standalone-timing-short",
+      "long": "placid-badger-cad-second-half-standalone-timing-long"
+    }
+  },
+  "onlyProfileAndRunID": true,
+  "sameBinary": "ce12fbe8421055009a35b9960f98258a0c0c7e8f69d70eb5c2b15bc9ba472da6"
+}

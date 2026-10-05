@@ -1,0 +1,94 @@
+{
+  "checks": {
+    "endpoints": true,
+    "surfaceInputs": true,
+    "rootTransforms": true,
+    "cameraTransforms": true,
+    "cameraProjection": true
+  },
+  "arms": {
+    "train-host-present-a-landscape": {
+      "endpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "surfaceInputs": [
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+      ],
+      "rootTransforms": [
+        "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+      ],
+      "cameraTransforms": [
+        "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+      ],
+      "cameraProjection": [
+        "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+      ],
+      "ownFrameChecks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    },
+    "train-host-present-b-landscape": {
+      "endpoints": [
+        [
+          232,
+          182.33333333333331,
+          410,
+          70
+        ],
+        [
+          332,
+          240,
+          210,
+          36
+        ]
+      ],
+      "surfaceInputs": [
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [\"edge-20-left\", \"edge-20-right\"], \"isDisplayOnly\": false, \"mode\": \"preview\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}",
+        "{\"boardID\": \"zlagboard.evo\", \"ids\": [], \"isDisplayOnly\": false, \"mode\": \"active\", \"positionID\": \"primary\", \"presentationID\": \"primary\"}"
+      ],
+      "rootTransforms": [
+        "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]"
+      ],
+      "cameraTransforms": [
+        "[1, 0, 0, 0, 0, 0.9438583850860596, -0.33035042881965637, 0, 0, 0.33035042881965637, 0.9438583850860596, 0, 0, 0.10610384494066238, 0.3241538405418396, 1]"
+      ],
+      "cameraProjection": [
+        "{\"far\": 1000, \"near\": 0.0010000000474974513, \"orthographic\": false, \"perspective\": true, \"verticalFOVDegrees\": 30}"
+      ],
+      "ownFrameChecks": {
+        "workoutSceneFromCountdown": true,
+        "hostObserved": true,
+        "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+        "sameHost": true,
+        "sameActualScene": true,
+        "rootCameraActiveSameScene": true,
+        "hostVisible": true,
+        "sampledFramesOnMonotoneOwnEndpointPath": true,
+        "allPostFirstCaptureCensusesFinal": true
+      }
+    }
+  },
+  "limitation": "Actual workout metadata correspondence only. Clear Train placeholder slot unmeasured; its layout preservation is source-derived. Train subtree removal is the intervention bundle. Intermediate animation sample times need not coincide; each run retains its own monotone endpoint-path validation. No constructor-count inference of overlapping lifetime."
+}

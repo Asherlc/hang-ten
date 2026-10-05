@@ -1,0 +1,25 @@
+{
+  "scope": "Read-only final clean readiness source review; no build/runtime execution",
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "9ffdb0e7c38254b10da4dec42bc3116be9f32cb8f8efeaad4588633a0464014f",
+    "HangTen/Views/BoardMapView.swift": "4a023bf0e3ce4115fcb69862b2373bf7bedfebece9b4f856298c18f57874602a",
+    "HangTen/Views/GripHandModelView.swift": "4e5f858f149e57f350344a6ef009adfff7a40d73c73ab1a3f8912cdf4777d2fc",
+    "HangTen/Views/WorkoutView.swift": "668f7b0d7433d81de39ebaccc5b6c6ab92732df58d6ae6232e16a28a7ab082bf",
+    "HangTenTests/BoardModelRealityTests.swift": "9a8d150975a18b0d6b69f1ebd13998414c9332be57f3e16d1124eaebc806e9af",
+    "HangTenTests/WorkoutTimelineTests.swift": "1c18ff421376441e4f740ff730416332375b05f05892fba0f76f81ec4cf4c6e5"
+  },
+  "blockingFindings": [],
+  "findings": [
+    "finishPreparation clears the token and pending intent at initial visible-countdown start; retained released state permits that already-consumed start but subsequent preference callbacks cannot consume again. Cancel resets released state and demands a fresh request.",
+    "Board and hand currentPreparation return nil without the environment token; preparation state is therefore not written for subsequent mode/viewport changes. Already queued preparation assignments can finish once but cannot release a retired request. This is not a GPU-presentation guarantee.",
+    "Hidden initial countdown hands remain in the same structural branches using mountedCueCountdown; opacity, hit testing and accessibility suppression do not introduce a new host identity. Initial cancellation and resume/Skip retain separate existing control flow.",
+    "Audio preparation/deferred arm remains after renderer gate. Pending cue/layout renewal still cancels the task and audio; finish occurs only when actual initial countdown starts. No audio timing constants or routine prescriptions changed.",
+    "BoardModelRealityTests diff removes only four BoardFrame cache experiment tests. No parent-protected existing methods or Models geometric helper were edited in this reviewed diff.",
+    "Disabled BoardFrame prototype and its opt-in controls are absent. Existing Main diagnostic launch hooks remain; temporary unconditional layer receipts/control switches are removed."
+  ],
+  "limits": [
+    "Focused tests are parent-owned and their live results were not inferred here.",
+    "CPU make/sync readiness does not prove a presented frame; clean Evo/Pro full runtime review is still required.",
+    "The earlier 58-frame success belongs to the earlier continuing-preparation binary and is not transferred to this clean source."
+  ]
+}

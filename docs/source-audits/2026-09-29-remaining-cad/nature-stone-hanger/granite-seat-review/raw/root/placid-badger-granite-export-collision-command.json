@@ -1,0 +1,19 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "Tools/HangboardCAD/run_freecad.py",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-review9/granite-seat-correction/export_collision.py"
+  ],
+  "startedUTC": "2026-10-02T01:45:33.089736+00:00",
+  "timeoutSeconds": 300,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-review9/granite-seat-correction/placid-badger-granite-export-collision-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 93984,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.8312219999497756
+}

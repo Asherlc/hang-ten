@@ -1,0 +1,19 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_submicron_display_shortening_is_not_chased_as_visible_improvement ____
+
+    def test_submicron_display_shortening_is_not_chased_as_visible_improvement():
+        mesh=trimesh.creation.box(extents=[.02,.02,.02]);mesh.apply_translation([0,0,-.1])
+        path=np.array([[0,.1,.01],[.00015,.05,.005],[0,0,0]])
+        gain=length(path)-np.linalg.norm(path[0]-path[-1])
+        assert 1e-7<gain<1e-6
+        paths,report=tighten(mesh,{"lead":path},{"lead":.002},{"lead":[0,0,1]})
+>       assert np.array_equal(paths["lead"],path)
+E       assert False
+E        +  where False = <function array_equal at 0x108857570>(array([[0.  , 0.1 , 0.01],\n       [0.  , 0.  , 0.  ]]), array([[0.     , 0.1    , 0.01   ],\n       [0.00015, 0.05   , 0.005  ],\n       [0.     , 0.     , 0.     ]]))
+E        +    where <function array_equal at 0x108857570> = np.array_equal
+
+Tools/HangboardCAD/tests/test_native_cord_tightening.py:219: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_tightening.py::test_submicron_display_shortening_is_not_chased_as_visible_improvement
+1 failed, 20 deselected in 0.51s

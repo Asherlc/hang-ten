@@ -1,0 +1,24 @@
+{
+  "reviewNumber": 14,
+  "boardID": "tension.flash-board",
+  "status": "pending",
+  "question": "Does the shape and cord look right?",
+  "answer": null,
+  "scope": "Shown CAD shape and compact cord only; current app appearance unverified",
+  "canonicalSHA256": {
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "shownWholeImages": [
+    {
+      "path": "current-views/placid-badger-flash14-current-three-well-whole.png",
+      "sha256": "fd2659b2b0b8715c1c9377275e1ec5efd8e0bbfb9ba092e64aed51a12de257a1"
+    },
+    {
+      "path": "current-views/placid-badger-flash14-current-two-well-crimp-whole.png",
+      "sha256": "30f3fd98e35f0bd737d73696f63483a195318fbdf70f8599d36b439fed457604"
+    }
+  ]
+}

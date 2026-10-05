@@ -1,0 +1,58 @@
+Showing 2 of 65 activities (limited to 2)
+
+[Shell] rtk proxy cat /Users/asherlc/.codex/plugins/cache/openai-curated-remote/superpowers/6.4.2/skills/systematic-debugging/SKILL.md
+---
+
+**Yes—the same-binary orthographic-versus-perspective plain-box comparison should precede the broader consolidation experiment I proposed.** It is smaller and directly tests a confounder that remains in every failing two-host variant.
+
+The present evidence supports “failure with a second host using the hand camera configuration,” not yet “failure with any second renderer.” Changing only the board to ARView did not remove that configuration.
+
+**Bounded discriminator**
+
+Use the existing [plain-box probe](/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/HangTen/Views/RootView.swift:3649), with launch-time selection between:
+
+| Arm | Second host |
+|---|---|
+| O | Existing box, orthographic camera |
+| P | Same box, perspective camera |
+| OFF | Existing clear-slot control |
+
+Keep the binary, board host, board camera, box mesh/material, lights, host dimensions, attachment hierarchy, update triggers, and workout sequence identical. Select the camera component before attachment; do not switch projection or remount hosts during a run.
+
+For P:
+
+- Use the same camera entity and transform, with exactly one camera component.
+- Preserve clipping distances where valid.
+- Choose a fixed perspective fit giving approximately the same box coverage. Exact image equivalence is impossible for a volumetric box under different projections; record that residual difference.
+- Keep camera writes on the same existing update conditions. A new continuous camera writer would confound the result.
+- Confirm the box actually renders throughout. An invisible or inactive second host would effectively repeat OFF.
+
+A reasonable hard bound is **six cold launches: O, P, OFF, OFF, P, O**. Each should capture initial Hang, Rest preview, and next Hang at predetermined settled points, without gestures. Keep diagnostics sparse and identical, including camera-component type, actual scene membership, and host lifecycle.
+
+| Result | Interpretation |
+|---|---|
+| O fails, P passes, OFF passes repeatedly | Supports dependence on the second host’s orthographic/projection configuration. Generic second-host presence is insufficient to explain these runs. |
+| O and P fail, OFF passes | Orthographic projection is unnecessary for the failure. Shared rendering, camera coexistence, and lifecycle remain candidates. |
+| OFF fails | The control did not reproduce the earlier isolation; architectural inference is unsafe. |
+| All pass or outcomes vary | Inconclusive. Do not promote a change or extend into indefinite camera tuning. |
+
+Even the first outcome would **not prove a global active-camera bug**. Projection changes can affect culling, workload, and internal scheduling. It would nevertheless identify a useful, narrower boundary.
+
+If P passes consistently, the next bounded step is the **actual hand scene using perspective**, preserving its pose, exact finger highlights, lights, and host layout. That establishes whether the result survives real content. It is still a diagnostic candidate: hand appearance, fit, orbit, and zoom need review before perspective becomes a production choice. A separate successful visibility-restoration trial would strengthen the result beyond material updates alone.
+
+**On-demand hand rendering is the preferable renderer-replacement fallback**
+
+Your distinction is correct: rendering hands to images avoids the unresolved RealityRenderer collision-picking requirement. The live board can retain its existing RealityView, contact collisions, targeted gestures, projection, and accessibility implementation.
+
+That makes it a substantially narrower candidate than replacing the board renderer:
+
+- Retain the existing hand geometry, pose logic, selected-finger coloring, orthographic camera, and lighting.
+- Render when pose, fingers, viewport, orbit, or zoom changes; coalesce gesture updates rather than add a perpetual redraw loop.
+- Present only completed output for the current revision, rejecting late frames from older requests.
+- Preserve hand exploration controls, labels, and interaction through those event-driven renders.
+
+Two gates remain. First, a correct offscreen image must actually replace the displayed image. Second, RealityRenderer still shares RealityKit’s backend: removing a persistent second onscreen host does not prove that concurrent offscreen hand rendering is harmless. The feasibility test must exercise hand updates while the board changes red → blue → red, and verify that board interaction remains live.
+
+Inspector presentation also needs explicit coverage; opening a separate hand RealityView over a retained workout could recreate the problematic arrangement.
+
+**Revised ordering:** camera discriminator first; actual-hand perspective validation if supported; otherwise choose between a shared host and on-demand hand rendering based on their respective projection and concurrency gates. No production change is justified yet. No files were changed.

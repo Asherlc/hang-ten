@@ -1,0 +1,26 @@
+[
+  {
+    "name": "metal-srgb",
+    "url": "https://developer.apple.com/tutorials/data/documentation/metal/mtlpixelformat/bgra8unorm_srgb.json",
+    "sha256": "698a3b9a98233df2d970d37e86a1b284c3cab13e0e968909d9c4de54388e5ba7",
+    "text": "Ordinary format with four 8-bit normalized unsigned integer components in BGRA order with conversion between sRGB and linear space."
+  },
+  {
+    "name": "ci-metal",
+    "url": "https://developer.apple.com/tutorials/data/documentation/coreimage/ciimage/init(mtltexture:options:)-67uvj.json",
+    "sha256": "3eb6f665935ca1e7e9461e8519de420195fd1355cc74c26bbfa42f175ac547b6",
+    "text": "Initializes an image object with data supplied by a Metal texture.\nThe Metal texture from which to use image data.\nA dictionary specifying image options. (See \n.)\nThe initialized image object, or \n if the image could not be initialized.\nTo render the image using Metal, use this image with a Metal-based \n object created with the \n method, and call the \n method to create an output image in another Metal texture object."
+  },
+  {
+    "name": "ci-color",
+    "url": "https://developer.apple.com/tutorials/data/documentation/coreimage/ciimageoption/colorspace.json",
+    "sha256": "82c62fe8a719d167184a19048a312a95aa8471a79957037d082af6f7b3b19883",
+    "text": "The key for a color space.\nFor more information on this data type see \n. Typically you use this option when you need to load an elevation, mask, normal vector, or RAW sensor data directly from a file without color correcting it. This constant specifies to override Core Image, which, by default, assumes that data is in GenericRGB.\nThe value you supply for this dictionary key must be a \n data type. If a value for this key isn\u2019t supplied, the image\u2019s \n dictionary are populated automatically by calling \n. To request that Core Image perform no color management, specify the \n object as the value for this key. Use this option for images that don\u2019t contain color data (such as elevation maps, normal vector maps, and sampled function tables)."
+  },
+  {
+    "name": "ci-working",
+    "url": "https://developer.apple.com/tutorials/data/documentation/coreimage/cicontextoption/workingcolorspace.json",
+    "sha256": "8a651962d455cd693ee53dff52f19513b42b6abc5c2b58c7c4e29425199d3c70",
+    "text": "A Core Image context option key to specify the working color space for rendering.\nContexts support automatic color management by performing all processing operations\n \nin a working color space. This means that unless told otherwise:\nAll input images are color matched from the input\u2019s color space to the working space.\nAll renders are color matched from the working space to the destination\u2019s color space.\nThe default working space is the extended sRGB color space with linear gamma.\n \nOn macOS before 10.10, the default is extended Generic RGB with linear gamma.\nThe value of this option can be either:\nA \n instance with an RGB color model that supports output.\nAn \n instance to request that Core Image perform no color management.\nIf this option is not specified, then the default working space is used."
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "nativeSource": "Hangboards/nature-stone-hanger-mini/nature-stone-hanger-mini.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "FinalSolid",
+  "attachmentNodeID": "nature_body",
+  "evidencedGraph": "Exterior side wraps follow visible cross grooves. No closed internal passages supported.",
+  "nativeFeatures": {
+    "openSideGrooves": [
+      {
+        "sideX": -50.0,
+        "verticalTrackY": [
+          -6.25,
+          6.25
+        ],
+        "verticalTrackZ": [
+          -30,
+          30
+        ],
+        "crossTrackZ": 0,
+        "crossTrackY": [
+          -12.5,
+          12.5
+        ],
+        "cutterRadiusMM": 1.7
+      },
+      {
+        "sideX": 50.0,
+        "verticalTrackY": [
+          -6.25,
+          6.25
+        ],
+        "verticalTrackZ": [
+          -30,
+          30
+        ],
+        "crossTrackZ": 0,
+        "crossTrackY": [
+          -12.5,
+          12.5
+        ],
+        "cutterRadiusMM": 1.7
+      }
+    ]
+  },
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug",
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "notes": "Granite-front upright at lower granite shelf; wood-inverted flips in face plane. Groove radius is display estimate; source governs external route. Pinch orientation source-specific, do not infer hidden return.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/sources.json",
+  "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "modelSHA256ByPresentation": {
+    "primary": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30"
+  }
+}

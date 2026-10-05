@@ -328,8 +328,21 @@ final class AppStore: ObservableObject {
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let candidates = handResolutionCandidates(for: step, on: board)
-        return Set(candidates.flatMap {
-            (try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)) ?? []
+        return Set(candidates.flatMap { candidate in
+            let tasks = candidate.segments.lazy.compactMap { $0.target?.planTasks }.first
+            let firstHand = tasks?.first?.first
+            if tasks?.first?.count == 1, firstHand?.side == nil {
+                // Plan previews have no athlete-selected side yet. Show the
+                // hold that either hand could use for an unsided one-arm task.
+                return [WorkoutSide.left, .right].flatMap { side in
+                    WorkoutHighlightResolver.contactIDs(
+                        for: candidate,
+                        on: board,
+                        selectedHandSide: side
+                    )
+                }
+            }
+            return WorkoutHighlightResolver.contactIDs(for: candidate, on: board)
         })
     }
 
@@ -366,8 +379,18 @@ final class AppStore: ObservableObject {
                 )) ?? []).isEmpty
                 return !(sidesResolve || bothResolves)
             }
-            return step.workRequirements.contains { target in
-                (try? ContactResolver.resolve(target, step: step, board: board)) == nil
+            return step.segments.contains { segment in
+                guard segment.kind == .work, let target = segment.target else { return false }
+                switch target {
+                case .selfSelected:
+                    return false
+                case .requirements(let requirements):
+                    return requirements.contains {
+                        (try? ContactResolver.resolve($0, step: step, board: board)) == nil
+                    }
+                case .tasks(let tasks):
+                    return (try? ContactResolver.resolve(tasks, step: step, board: board)) == nil
+                }
             }
         }
     }
@@ -434,6 +457,8 @@ final class AppStore: ObservableObject {
         selectedHandSide: WorkoutSide? = nil,
         handPreference: WorkoutSessionHandPreference? = nil,
         sessionSteps: [WorkoutStep]? = nil,
+        performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
+        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         if let session {
@@ -462,6 +487,8 @@ final class AppStore: ObservableObject {
                 selectedHandSide: selectedHandSide,
                 handPreference: handPreference,
                 sessionSteps: sessionSteps,
+                performedTaskIndicesByStepID: performedTaskIndicesByStepID,
+                selectedTaskSidesByStepID: selectedTaskSidesByStepID,
                 stepMeasurements: session?.steps ?? []
             )
             activityContext = PendingWorkoutActivityContext(

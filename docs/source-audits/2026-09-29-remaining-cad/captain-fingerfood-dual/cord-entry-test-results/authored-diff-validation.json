@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "scope": "All staged authored source, metadata and reports; one unchanged raw failure log is excluded from whitespace style checks.",
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "--",
+    ".",
+    ":(exclude)docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/front-mouth-review/occupied-integration.log"
+  ],
+  "preservedRawArtifact": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/front-mouth-review/occupied-integration.log",
+  "rawSHA256": "36819534009af0a9cbeb2ba31bef29ecc14f2b404589bd5cf32537a9d4a8bc13",
+  "exclusionReason": "Retained unmodified pytest traceback contains four trailing-whitespace lines; preserve exact evidence bytes."
+}

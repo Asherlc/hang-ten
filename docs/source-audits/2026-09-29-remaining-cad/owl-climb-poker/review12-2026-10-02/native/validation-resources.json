@@ -1,0 +1,22 @@
+{
+  "owner": "placid-badger",
+  "externalResources": [],
+  "processes": [
+    {
+      "name": "placid-badger-validate-native",
+      "pid": 8451,
+      "processGroup": 8451,
+      "state": "exited",
+      "exitCode": 0
+    }
+  ],
+  "temporaryDirectories": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/poker-review12/native-correction-2026-10-02/placid-badger-tmp-validate-native",
+      "state": "deleted",
+      "deletionVerified": true
+    }
+  ],
+  "cleanupVerified": true,
+  "allProcessGroupsAbsent": true
+}

@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 3,
+  "id": "tension.flash-board",
+  "manufacturer": "Tension Climbing",
+  "name": "Flash Board",
+  "subtitle": "Compact cylindrical portable board with small crimps and 8, 10, 15, and 20 mm edges.",
+  "productURL": "https://tensionclimbing.com/products/flash-board-2",
+  "aspectRatio": 1.5,
+  "equipmentObjects": [
+    {
+      "id": "primary"
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Primary suspended model",
+      "aspectRatio": 1.5,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        }
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "three-edge-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ]
+    },
+    {
+      "id": "three-edge-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "three-edge-left",
+        "three-edge-center",
+        "three-edge-right"
+      ]
+    },
+    {
+      "id": "two-edge-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    },
+    {
+      "id": "two-edge-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "two-edge-left",
+        "two-edge-right",
+        "small-crimp-left",
+        "small-crimp-right"
+      ]
+    }
+  ],
+  "positionTransitions": [
+    {
+      "fromPositionID": "three-edge-upright",
+      "toPositionID": "three-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "three-edge-upright",
+      "toPositionID": "two-edge-upright",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "three-edge-upright",
+      "toPositionID": "two-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "three-edge-inverted",
+      "toPositionID": "three-edge-upright",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "three-edge-inverted",
+      "toPositionID": "two-edge-upright",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "three-edge-inverted",
+      "toPositionID": "two-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-upright",
+      "toPositionID": "three-edge-upright",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-upright",
+      "toPositionID": "three-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-upright",
+      "toPositionID": "two-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-inverted",
+      "toPositionID": "three-edge-upright",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-inverted",
+      "toPositionID": "three-edge-inverted",
+      "kind": "setupRequired"
+    },
+    {
+      "fromPositionID": "two-edge-inverted",
+      "toPositionID": "two-edge-upright",
+      "kind": "setupRequired"
+    }
+  ],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    {
+      "id": "three-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "three-edge-center",
+      "equipmentObjectID": "primary",
+      "name": "Center edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "three-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right edge on three-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "two-edge-left",
+      "equipmentObjectID": "primary",
+      "name": "Left edge on two-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "two-edge-right",
+      "equipmentObjectID": "primary",
+      "name": "Right edge on two-edge surface",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "small-crimp-left",
+      "equipmentObjectID": "primary",
+      "name": "Left small crimp",
+      "kind": "edge",
+      "gripTypes": []
+    },
+    {
+      "id": "small-crimp-right",
+      "equipmentObjectID": "primary",
+      "name": "Right small crimp",
+      "kind": "edge",
+      "gripTypes": []
+    }
+  ]
+}

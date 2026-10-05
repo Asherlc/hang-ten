@@ -1,0 +1,114 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "e400f061e15445d02a60823ac665f12db597ed86db0d4351d6b502bc3bdd573d",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "yy-baguette-evo",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-20-left",
+        "edge-10-left",
+        "edge-25-left",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-25-right",
+        "edge-10-right",
+        "edge-20-right"
+      ],
+      "id": "paired-25-20-15-10",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-12-left",
+        "edge-12-right",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-6-upper",
+        "edge-6-lower"
+      ],
+      "id": "paired-12-8-6",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-central-30",
+        "edge-central-25"
+      ],
+      "id": "central-30-25",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-central-20",
+        "edge-central-6"
+      ],
+      "id": "central-20-6",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "rounded-tray"
+      ],
+      "id": "rounded-tray",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "edge-20-left",
+        "edge-10-left",
+        "edge-25-left",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-25-right",
+        "edge-10-right",
+        "edge-20-right"
+      ],
+      "id": "paired-25-20-15-10",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-12-left",
+        "edge-12-right",
+        "edge-8-left",
+        "edge-8-right",
+        "edge-6-upper",
+        "edge-6-lower"
+      ],
+      "id": "paired-12-8-6",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-central-30",
+        "edge-central-25"
+      ],
+      "id": "central-30-25",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-central-20",
+        "edge-central-6"
+      ],
+      "id": "central-20-6",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "rounded-tray"
+      ],
+      "id": "rounded-tray",
+      "presentationID": "primary"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "yy-baguette-evo/README.md",
+  "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8"
+}

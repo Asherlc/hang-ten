@@ -1,0 +1,16 @@
+[
+  {
+    "evidencePath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/individual-review-2026-10-01/finish/before-manifest.json",
+    "mainBlobID": "9d8d2f8c7a8c91a765f1a4b921bb192d697d3346",
+    "actualMainPaths": [
+      "Hangboards/yy-baguette-evo/board.json"
+    ]
+  },
+  {
+    "evidencePath": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/metadata/final-wood-manifest.json",
+    "mainBlobID": "6d3a57d4f09796c71fdd613f266d2bee68e8a3bf",
+    "actualMainPaths": [
+      "Hangboards/trango-rock-prodigy-forge/board.json"
+    ]
+  }
+]

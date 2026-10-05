@@ -1,0 +1,362 @@
+{
+  "status": "read-only-analytical-review-complete-final-routing-still-pending",
+  "reviewScriptSHA256": "e9c97362cf1d03b4d95e9f95b096d8af7fd338687cc15a0b4dfc95391f491398",
+  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+  "inputSHA256": {
+    ".context/placid-badger/nature-stone-review9/pose-review/native-contact-orientation.json": "3d3f42711441fbdc179a680d7ac7e8afadd99e7b28d237a322831e44e05dd4bb",
+    ".context/placid-badger/nature-stone-review9/pose-review/per-contact-pose-plan.json": "e04935e33b54a5dd36b632ded41d64a4c04ee8088fcd41fd9a12e941f69c4152",
+    ".context/placid-badger/nature-stone-review9/pose-review/source-geometry-equivalence.json": "b43a77a8f215901e9d1921de725bc9ea263760ba68dd052ce5f13c4cf66ca69b",
+    ".context/placid-badger/nature-stone-review9/human-feedback.json": "247a052919759d78f238def5220b3b58b799b2cd6f117b7341118c59aa643684",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/terminal-intervals-native-v2.json": "6cb61edc9c95c2db7ae265815ab22a41e81af0da5336e7e6bf2037e8e3b637ea",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/native-guides.json": "6de18009ed48d3864f25113f82ee28df7358a7c8e8277e9d95a7cfd8ef4acadc",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/anchor-plane-failed-path.json": "d026c7d806d41a0908fb2aa410be8e38838ccfabbd170e1eb6ca48fbaba895a5",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/optimization-probe-inset.json": "0c7292a0077468a00e631e59897030279b52c56e05e4a0b64a774e28e6b1112c",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/optimization-probe-inset-pitch60.json": "e189c8bc7769a77164116a7a462eb5e842af4cc744fcea2ef7f7a99da1a8138f",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/optimization-probe-inset-pitch60-reaction-cone.json": "6ea78b95f49104fb15aa0ab1b127150040a0b2d20ca4af83920656850f87bb3b",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/reaction_cone_probe.py": "902a512e38c8f88b3f9e2039ccd970d1a6a769b8c5e18f9787459c354969221e",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/optimize_inset_pitch60.py": "5d78d9e2f65d1d55c10a9891dfa98d091f92a70c90a50e82f2abd834a80ee13d",
+    ".context/placid-badger/nature-stone-review9/notch-guide-implementation/optimize_interior_bearing.py": "941a6e6c4502405165aa231c43b9132bde4257a143497138007d053d2c996d2d",
+    "Tools/HangboardCAD/native_cord_routes.py": "71e72d2883c431c668a2f4fdbd7c000ffe44939c74186ed3753560f8b63bf976",
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108"
+  },
+  "method": "Read retained native reports/code; stdlib arithmetic on already generated path/force rows. No native query, route solve, centerline authoring or image measurement.",
+  "assumptions": [
+    "Massless, taut, frictionless display-cord segments with equal tension on both sides of an interior point.",
+    "Material contact can push along outward normals into free space, not pull through an open half-groove.",
+    "Nominal perpendicular-cylinder local section is an analytical bound; rounded broad-face exit still requires whole native-solid certification."
+  ],
+  "terminalWitness": {
+    "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
+    "bodyValid": true,
+    "cachedBoundBoxIsNotMouthEvidence": true,
+    "nominalMouthDefinition": "Center of existing bore axis at the actual native lateral planar envelope. Groove intersection produces a nonplanar rim; center is an aperture witness, not a claimed material point.",
+    "terminals": [
+      {
+        "strandID": "left-lead",
+        "nativeBoreFeature": "LeftVisibleMouth",
+        "nativeBoreAxis": [
+          -1.0,
+          0.0,
+          2.220446049250313e-16
+        ],
+        "nativeBoreRadiusMM": 2.0,
+        "nativeDisplayCutoffMM": [
+          -47.0,
+          0.0,
+          -2.4
+        ],
+        "nominalOuterMouthMM": [
+          -52.5,
+          0.0,
+          -2.4
+        ],
+        "actualLateralPlaneWitnesses": [
+          {
+            "index": 6,
+            "planeXMM": -52.5,
+            "areaMM2": 549.5500000000004
+          },
+          {
+            "index": 54,
+            "planeXMM": -52.5,
+            "areaMM2": 514.75
+          },
+          {
+            "index": 57,
+            "planeXMM": -52.5,
+            "areaMM2": 663.7729881728288
+          },
+          {
+            "index": 60,
+            "planeXMM": -52.5,
+            "areaMM2": 489.772988172829
+          }
+        ],
+        "nominalMouthToCutoffMM": 5.5,
+        "fullTubeRadiusMM": 1.5,
+        "declaredClearanceMM": 0.2,
+        "allowableDistanceFromCutoffMM": [
+          1.7,
+          3.8
+        ],
+        "selectedTerminalNativeMM": [
+          -49.75,
+          0.0,
+          -2.3999999999999995
+        ],
+        "selectedInsetFromOuterMouthMM": 2.75,
+        "nativeTerminalClearanceMM": 1.9999999999999996,
+        "policy": "Midpoint of allowable finite end-cap interval in existing native visible bore; display estimate; no hidden connection."
+      },
+      {
+        "strandID": "right-lead",
+        "nativeBoreFeature": "RightVisibleMouth",
+        "nativeBoreAxis": [
+          1.0,
+          0.0,
+          2.220446049250313e-16
+        ],
+        "nativeBoreRadiusMM": 2.0,
+        "nativeDisplayCutoffMM": [
+          47.0,
+          0.0,
+          -2.4
+        ],
+        "nominalOuterMouthMM": [
+          52.5,
+          0.0,
+          -2.4
+        ],
+        "actualLateralPlaneWitnesses": [
+          {
+            "index": 13,
+            "planeXMM": 52.5,
+            "areaMM2": 549.55
+          },
+          {
+            "index": 64,
+            "planeXMM": 52.5,
+            "areaMM2": 489.7729881728291
+          },
+          {
+            "index": 66,
+            "planeXMM": 52.5,
+            "areaMM2": 663.7729881728291
+          },
+          {
+            "index": 68,
+            "planeXMM": 52.5,
+            "areaMM2": 514.7499999999997
+          }
+        ],
+        "nominalMouthToCutoffMM": 5.5,
+        "fullTubeRadiusMM": 1.5,
+        "declaredClearanceMM": 0.2,
+        "allowableDistanceFromCutoffMM": [
+          1.7,
+          3.8
+        ],
+        "selectedTerminalNativeMM": [
+          49.75,
+          0.0,
+          -2.3999999999999995
+        ],
+        "selectedInsetFromOuterMouthMM": 2.75,
+        "nativeTerminalClearanceMM": 2.000000000000001,
+        "policy": "Midpoint of allowable finite end-cap interval in existing native visible bore; display estimate; no hidden connection."
+      }
+    ]
+  },
+  "nativeGuideNormalBounds": {
+    "LeftAdjustment1": {
+      "nativeComponentBounds": [
+        [
+          -0.9876883405951379,
+          -0.15643446504022984
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.987688340595138,
+          0.9876883405951377
+        ]
+      ],
+      "actualExposedAxialBoundsMM": [
+        -17.227178028658933,
+        17.227178028659026
+      ]
+    },
+    "RightAdjustment1": {
+      "nativeComponentBounds": [
+        [
+          0.3090169943749473,
+          1.0
+        ],
+        [
+          0.0,
+          0.0
+        ],
+        [
+          -0.9510565162951535,
+          0.9510565162951535
+        ]
+      ],
+      "actualExposedAxialBoundsMM": [
+        -17.227217406318076,
+        17.227217406318132
+      ]
+    }
+  },
+  "radiusPolicyAllowances": [
+    {
+      "policy": "actual tube",
+      "effectiveRadiusMM": 1.5,
+      "nominalGrooveCenterlineRadialAllowanceMM": 0.25,
+      "nominalBoreCenterlineRadialAllowanceMM": 0.5
+    },
+    {
+      "policy": "existing proposal policy",
+      "effectiveRadiusMM": 1.52,
+      "nominalGrooveCenterlineRadialAllowanceMM": 0.22999999999999998,
+      "nominalBoreCenterlineRadialAllowanceMM": 0.48
+    },
+    {
+      "policy": "old section-seed inflation",
+      "effectiveRadiusMM": 1.7,
+      "nominalGrooveCenterlineRadialAllowanceMM": 0.050000000000000044,
+      "nominalBoreCenterlineRadialAllowanceMM": 0.30000000000000004
+    }
+  ],
+  "forceConvention": {
+    "outgoingTangents": "a=(previous-p)/length; b=(next-p)/length",
+    "ropeTensionOnPoint": "T(a+b)",
+    "materialOnRopeReaction": "-T(a+b)",
+    "cone": "sum(lambda_j*n_material_outward_j), lambda_j>=0",
+    "existingScratchSignIsCorrect": true
+  },
+  "retainedCandidateChecks": [
+    {
+      "index": 42,
+      "turnDegrees": 2.86201620568296,
+      "distanceMM": 5.9966015661939505,
+      "reaction": [
+        -0.037498706349602395,
+        -9.990895993344795e-05,
+        0.0329921385946389
+      ],
+      "nonnegativeConeResidualRelative": 0.7507814318088917,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": false
+    },
+    {
+      "index": 43,
+      "turnDegrees": 46.54666926997415,
+      "distanceMM": 1.7000091514766362,
+      "reaction": [
+        -0.560263971543972,
+        0.4576848443218734,
+        0.31796517503010713
+      ],
+      "nonnegativeConeResidualRelative": 0.3530930301508413,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": true
+    },
+    {
+      "index": 51,
+      "turnDegrees": 2.1482212754845187,
+      "distanceMM": 1.7502997362471522,
+      "reaction": [
+        0.03747702525408015,
+        0.0002998281756800168,
+        -0.000991525738365473
+      ],
+      "nonnegativeConeResidualRelative": 1.0,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": false,
+      "leftOpeningNormalConeNecessaryCondition": "reactionX <= 0",
+      "necessaryConditionPassed": false,
+      "minimumRelativeResidualFromHalfspace": 0.9996182325169255
+    },
+    {
+      "index": 52,
+      "turnDegrees": 5.170096996369174,
+      "distanceMM": 1.7505185289198029,
+      "reaction": [
+        -0.09015464623268996,
+        0.003001702120199258,
+        1.526204667567921e-05
+      ],
+      "nonnegativeConeResidualRelative": 1.4019177663488148e-15,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": false
+    },
+    {
+      "index": 53,
+      "turnDegrees": 26.644988502436437,
+      "distanceMM": 1.7093859138856526,
+      "reaction": [
+        -0.4432340413204216,
+        -0.00036433151863463016,
+        -0.12624851694295947
+      ],
+      "nonnegativeConeResidualRelative": 2.8818672791509056e-17,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": true
+    },
+    {
+      "index": 54,
+      "turnDegrees": 29.33094987179552,
+      "distanceMM": 1.709515324942383,
+      "reaction": [
+        -0.36493216480747953,
+        -0.00011080422089793225,
+        -0.3510198268407866
+      ],
+      "nonnegativeConeResidualRelative": 1.955277028872503e-16,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": true
+    },
+    {
+      "index": 55,
+      "turnDegrees": 17.538419553095597,
+      "distanceMM": 1.7106003038145068,
+      "reaction": [
+        -0.11756105931043581,
+        0.00032163744393051816,
+        -0.28133449192004495
+      ],
+      "nonnegativeConeResidualRelative": 3.304072868421938e-16,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": false
+    },
+    {
+      "index": 56,
+      "turnDegrees": 4.922840600703854,
+      "distanceMM": 1.9994809770288602,
+      "reaction": [
+        -0.016092323369278905,
+        -0.025845984392710297,
+        -0.08031618769462667
+      ],
+      "nonnegativeConeResidualRelative": 5.882590009164824e-14,
+      "materialContactAtActualRadiusWithin10um": false,
+      "materialContactAtOldInflatedRadiusWithin10um": false
+    }
+  ],
+  "retainedCandidateRadiusCertificate": {
+    "status": "fail",
+    "error": "native CAD cord collision: clearance 0.001311624 m < radius 0.001500000 m"
+  },
+  "localFeasibility": {
+    "nominalCylinderIntersectionIsNotProvenImpossible": true,
+    "reason": "Groove1.75mm and bore2mm both exceed tube1.5mm and proposal envelope1.52mm. In a local material-side corner, outward groove/bore wall normals can jointly balance a right-angle turn; one nearest normal is insufficient.",
+    "broadFaceExitFinalTautPathProven": false,
+    "uniformConcaveBarrelLimit": "A frictionless cord following nonzero circumferential curvature of an inner cylindrical wall would require a reaction opposite the cavity-facing wall normal. Only straight/zero-normal-curvature passage is supported there; convex rims/junctions can supply other normal cones.",
+    "fullLengthTraversalLimit": "Do not interpret user notch guidance as a sourced fixed full axial traverse at arbitrary stations. Such equalities or a full cylindrical disk constraint in the open half can create virtual reactions. This review rejects the retained probes, not every possible3D path."
+  },
+  "findings": [
+    "The terminal-v2 witness\u00b149.75mm is a valid finite endpoint inside the existing side bore; cached bounding-box extrema are not mouth evidence.",
+    "Pitch60 retained node51 requires+X reaction on the left open side; every available groove-wall outward normal has X<=0. Nonnegative support is impossible at that point.",
+    "NNLS zero residual at nodes52/56 is not support: material distances1.7505/1.9995mm leave the actual1.5mm tube off the wall. Active-contact filtering/complementarity is mandatory.",
+    "Retained pitch60 candidate also fails the unchanged whole-segment tube certificate at1.311624mm. Optimizer success and nearly zero sample constraints cannot waive that failure.",
+    "The0.2mm section/seed clearance and0.02mm tightening proposal margin are not the physical radius gate. Aligning proposal policy preserves the1.5mm radius and10um final certificate; it does not rehabilitate older failed candidates.",
+    "A positive cone of equally near active material walls is needed at groove/bore/rim junctions. Inactive walls and an authoring station's constraint gradient cannot act as a peg."
+  ],
+  "smallestChange": [
+    "Keep native geometry, real bore endpoint, contact facts and tube gates. Replace arbitrary full-length fixed guide stations with evidence-compatible groove traversal/contact windows using only real native surfaces.",
+    "Treat required groove membership as topology, not a force-bearing virtual constraint. Reject any meaningful interior turn off all active material walls or outside their nonnegative cone.",
+    "Allow only a deliberately selected, labeled display-pose pitch/departure side that points toward support and preserves the selected native bearing-up witness; choose the smallest passing change, then regenerate and certify all16 routes.",
+    "If no such pose/topology passes, retain infeasibility rather than close the open groove, add a support, shrink the radius or relax gates. A new geometric adaptation would need source review and fresh native/export/app comparisons."
+  ],
+  "limits": [
+    "No final route, global equilibrium, friction coefficient, bending stiffness, real-use loading or factory dimensions are certified.",
+    "Ongoing interior-bearing/margin-aligned solves are excluded. Existing scratch code may change after the recorded input hashes.",
+    "Force-cone checks on an inflated clearance surface must identify that approximation; they do not by themselves prove contact of the actual-radius tube."
+  ],
+  "resourceCreated": false,
+  "sharedOrCanonicalMutation": false,
+  "packetFinalReady": false,
+  "packetConfigUnchanged": true
+}

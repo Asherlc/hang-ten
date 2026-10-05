@@ -1,0 +1,99 @@
+{
+  "status": "PRIMARY_SOURCE_CONTRACT_AUDIT_COMPLETE_NO_RUNTIME_OR_COLOR_TUNING",
+  "pipelineUnderReview": "RealityRenderer output .bgra8Unorm_srgb \u2192 CIImage(mtlTexture:options:[.colorSpace:sRGB]) \u2192 CIContext createCGImage(format:RGBA8,colorSpace:sRGB,deferred:false) \u2192 UIImage.up",
+  "documentedFacts": [
+    {
+      "fact": "bgra8Unorm_srgb is an8-bit BGRA normalized format with conversion between sRGB and linear space. Pixel format is not a promise about scene lighting or tone mapping.",
+      "source": "https://developer.apple.com/documentation/metal/mtlpixelformat/bgra8unorm_srgb"
+    },
+    {
+      "fact": "CIImage colorSpace option declares the image source color space and overrides an implicit color space. Supplying NSNull disables image color management; it is not documented as a brightness-correction mechanism.",
+      "source": "https://developer.apple.com/documentation/coreimage/ciimageoption/colorspace",
+      "sdk": "CIImage.h:97\u2013100"
+    },
+    {
+      "fact": "CIContext color-manages source into its working space, then working into destination space. Default working space is extended linear sRGB. The explicit createCGImage destination colorSpace parameter controls output encoding.",
+      "source": "https://developer.apple.com/documentation/coreimage/cicontextoption/workingcolorspace",
+      "sdk": "CIContext.h:89\u2013105,509\u2013537"
+    },
+    {
+      "fact": "CIImage(mtlTexture:) accepts supported2D textures and exposes image options. Its public page and local header do not specify that sRGB texture sampling plus an sRGB colorSpace option performs two independent gamma decodes.",
+      "source": "https://developer.apple.com/documentation/coreimage/ciimage/init(mtltexture:options:)-67uvj",
+      "sdk": "CIImage.h:338\u2013342,424\u2013426"
+    },
+    {
+      "fact": "The Core Image texture initializer does not expose a flipped Boolean; image transforms/orientation APIs are separate. Vertical orientation and color transfer are independent operations.",
+      "source": "https://developer.apple.com/documentation/coreimage/ciimage/init(mtltexture:options:)-67uvj",
+      "sdk": "CIImage.h:456\u2013478"
+    }
+  ],
+  "assessment": {
+    "sourceEncoding": "For an image whose stored RGB data is sRGB encoded, declaring the CI source sRGB and requesting sRGB output is consistent with the documented source\u2192linear-working\u2192destination color-management model. Two appearances of the word sRGB do not themselves prove duplicate gamma decoding.",
+    "missingBridgeContract": "These retrieved primary contracts do not reveal how Core Image internally handles the Metal texture view/sampler relative to its source color-space conversion. Therefore I cannot assert either a double-decode bug or complete end-to-end correctness from signatures alone.",
+    "darkness": "Darker output remains an observation reported by root. No pixel sampling was done. Source texture interpretation, RealityRenderer/RealityView lighting/environment, exposure/tone mapping and compositing can affect appearance; no one cause is established here.",
+    "orientation": "Reported vertical inversion is a separate presentation/coordinate mismatch and provides no evidence for gamma duplication. No transform implemented by this audit.",
+    "notRecommended": "No arbitrary brightness/gamma filter, disabling color management, linear relabeling or light-intensity compensation is justified by this documentation alone."
+  },
+  "scopeLimits": [
+    "No code/source changes, runtime/build/device access, image measurement or image transformation.",
+    "Retained source text/API metadata and local SDK excerpts only; no third-party claims used.",
+    "Attempted Apple Metal language-specification URL exceeded web tool size limit; local pdftotext unavailable. This is retained as a failed source retrieval, not a supporting claim.",
+    "No further experiment or architecture matrix proposed."
+  ],
+  "sourceURLs": {
+    "metal": "https://developer.apple.com/documentation/metal/mtlpixelformat/bgra8unorm_srgb",
+    "ciSource": "https://developer.apple.com/documentation/coreimage/ciimageoption/colorspace",
+    "ciWorking": "https://developer.apple.com/documentation/coreimage/cicontextoption/workingcolorspace",
+    "ciTexture": "https://developer.apple.com/documentation/coreimage/ciimage/init(mtltexture:options:)-67uvj"
+  },
+  "retainedFiles": [
+    {
+      "name": "ci-color.json",
+      "sha256": "82c62fe8a719d167184a19048a312a95aa8471a79957037d082af6f7b3b19883"
+    },
+    {
+      "name": "ci-color.txt",
+      "sha256": "de8cbdd4d153affc2cea29b950fd9a32667238f25ccb77a9a3eecfa2f419a10b"
+    },
+    {
+      "name": "ci-metal.json",
+      "sha256": "3eb6f665935ca1e7e9461e8519de420195fd1355cc74c26bbfa42f175ac547b6"
+    },
+    {
+      "name": "ci-metal.txt",
+      "sha256": "8bb986c99765e3d25f3a94b654aabbf64ee338bd041108663cb6b0a1534008f3"
+    },
+    {
+      "name": "ci-working.json",
+      "sha256": "8a651962d455cd693ee53dff52f19513b42b6abc5c2b58c7c4e29425199d3c70"
+    },
+    {
+      "name": "ci-working.txt",
+      "sha256": "92fe21c3d2b7e201b681397ee4402178e3f16441362892e3f454ea12a6f72fdc"
+    },
+    {
+      "name": "metal-language-retrieval.json",
+      "sha256": "9723ebfc9ea5b6d08752772280bebbdf6784ec3a9c65dfdf8695624f355e5f9d"
+    },
+    {
+      "name": "metal-srgb.json",
+      "sha256": "698a3b9a98233df2d970d37e86a1b284c3cab13e0e968909d9c4de54388e5ba7"
+    },
+    {
+      "name": "metal-srgb.txt",
+      "sha256": "f5b00cbc5ac0ff1dabb05e72f0cfeab4ea7b9b4012edf0939928be711e7d1c3d"
+    },
+    {
+      "name": "retrieval.json",
+      "sha256": "f681a84f788df5f449c4cf68dfb848773a58fa59458d86472d132282e7a34991"
+    },
+    {
+      "name": "sdk-color-excerpts.txt",
+      "sha256": "bb32c253e02586ebd8dbfd7f341522168a54ee1f4b7e45afc479a58778e2d587"
+    },
+    {
+      "name": "sdk-sources.json",
+      "sha256": "d9613a662995077d2db1f75fad3e10e5034392e85e6d98375bf6037b2b3cad31"
+    }
+  ]
+}

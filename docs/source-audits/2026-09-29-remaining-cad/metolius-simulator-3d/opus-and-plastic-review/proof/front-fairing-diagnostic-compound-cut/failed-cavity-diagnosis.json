@@ -1,0 +1,101 @@
+{
+  "cid": "pocket-13-left",
+  "bodyValid": true,
+  "bodySolids": 1,
+  "cutterBounds": "BoundBox (-89.1158, -44.9931, 30.9277, -46.8842, -29.7701, 57.0723)",
+  "floorPlacement": "Placement [Pos=(-68,-29.7701,44), Yaw-Pitch-Roll=(0,-3,90)]",
+  "previousCorrections": [
+    {
+      "contactID": "edge-5-left",
+      "floorTranslationMm": -0.6478224701150026
+    },
+    {
+      "contactID": "edge-6-left",
+      "floorTranslationMm": -0.3622775284857269
+    },
+    {
+      "contactID": "pocket-8-left",
+      "floorTranslationMm": -0.03204756584677426
+    },
+    {
+      "contactID": "pocket-9-left",
+      "floorTranslationMm": -0.5224864001332037
+    },
+    {
+      "contactID": "pocket-10-left",
+      "floorTranslationMm": -1.3097484798844548
+    },
+    {
+      "contactID": "edge-11-left",
+      "floorTranslationMm": -0.6335740051944789
+    },
+    {
+      "contactID": "pocket-12-left",
+      "floorTranslationMm": 1.1263213904570435
+    }
+  ],
+  "cutterValid": true,
+  "cutterVolume": 11658.765487472974,
+  "bodyCutterCommonVolume": 6163.141960280374,
+  "baseCutterCommonVolume": 6163.144781401847,
+  "cutterGeometry": [
+    [
+      "ArcOfCircle (Radius : 10, Position : (11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (11,12.5,0) (-11,12.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (-11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-21,2.5,0) (-21,-2.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (-11, -2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-11,-12.5,0) (11,-12.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (11, -2.5, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (21,-2.5,0) (21,2.5,0) >"
+    ],
+    [
+      "ArcOfCircle (Radius : 10, Position : (11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (11,12.5,0) (-11,12.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (-11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-21,2.5,0) (-21,-2.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (-11, -2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-11,-12.5,0) (11,-12.5,0) >",
+      "ArcOfCircle (Radius : 10, Position : (11, -2.5, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (21,-2.5,0) (21,2.5,0) >"
+    ],
+    [
+      "ArcOfCircle (Radius : 8.586, Position : (11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (11,11.086,0) (-11,11.086,0) >",
+      "ArcOfCircle (Radius : 8.586, Position : (-11, 2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-19.586,2.5,0) (-19.586,-2.5,0) >",
+      "ArcOfCircle (Radius : 8.586, Position : (-11, -2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-11,-11.086,0) (11,-11.086,0) >",
+      "ArcOfCircle (Radius : 8.586, Position : (11, -2.5, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (19.586,-2.5,0) (19.586,2.5,0) >"
+    ],
+    [
+      "ArcOfCircle (Radius : 8, Position : (11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (11,10.5,0) (-11,10.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (-11, 2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-19,2.5,0) (-19,-2.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (-11, -2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-11,-10.5,0) (11,-10.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (11, -2.5, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (19,-2.5,0) (19,2.5,0) >"
+    ],
+    [
+      "ArcOfCircle (Radius : 8, Position : (11, 2.5, 0), Direction : (0, -0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (11,10.5,0) (-11,10.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (-11, 2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-19,2.5,0) (-19,-2.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (-11, -2.5, 0), Direction : (0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (-11,-10.5,0) (11,-10.5,0) >",
+      "ArcOfCircle (Radius : 8, Position : (11, -2.5, 0), Direction : (-0, 0, 1), Parameter : (0, 1.5708))",
+      "<Line segment (19,-2.5,0) (19,2.5,0) >"
+    ]
+  ],
+  "matches": [
+    {
+      "face": 83,
+      "area": 14108.621007625601,
+      "overlap": 803.4983817359574,
+      "bounds": "BoundBox (-320.564, -44, 29, 320.564, -32, 59)"
+    }
+  ]
+}

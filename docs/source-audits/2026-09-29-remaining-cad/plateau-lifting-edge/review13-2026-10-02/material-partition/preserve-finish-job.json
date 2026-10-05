@@ -1,0 +1,8 @@
+{
+  "name": "placid-badger-plateau13-preserve-finish",
+  "timeoutSeconds": 60,
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-preserve-and-set-finish.py"
+  ]
+}

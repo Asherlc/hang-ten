@@ -1,0 +1,27 @@
+{
+  "boardID": "zlagboard.pro",
+  "baselineCommit": "92cc4ca4fd497e1e41f0efb0a4025bb4b0113684",
+  "nativeGeometryPreviouslyAccepted": true,
+  "nativeAcceptanceRecord": "../human-review.json",
+  "freshAppReviewStatus": "blocked-before-build",
+  "appVisualReviewPassed": false,
+  "appWorkflowPassed": false,
+  "contactCoverage": {
+    "required": 28,
+    "captured": 0
+  },
+  "newBuildAttempted": false,
+  "newInstallAttempted": false,
+  "testsRun": 0,
+  "uninterruptedBootSeconds": 900.0147610409986,
+  "homeChecks": 29,
+  "homeChecksPassed": 0,
+  "rebootsPerformed": 0,
+  "geometryChanged": false,
+  "appSourceChanged": false,
+  "priorProofsRewritten": false,
+  "temporaryResourcesDeleted": true,
+  "knownCause": null,
+  "nextRequirement": "A working isolated Simulator environment; then fresh app selection/interaction/workout captures",
+  "rawWorkerAcceptanceFieldScope": "Unmet fresh-app review gate only; previously accepted native geometry remains accepted"
+}

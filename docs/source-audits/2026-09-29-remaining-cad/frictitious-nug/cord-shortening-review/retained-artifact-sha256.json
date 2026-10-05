@@ -1,0 +1,200 @@
+{
+  "owner": "placid-badger",
+  "files": {
+    "native-cord/authored-shortcord-report.md": {
+      "source": ".context/placid-badger/nug-cord-shortening/authored-shortcord-report.md",
+      "sha256": "db68c6649cfcfef1df8136bd4074fe4a9a87e60a4d468118a063f2ea205d7a33",
+      "bytes": 1998
+    },
+    "native-cord/base-pose-lengths.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/base-pose-lengths.json",
+      "sha256": "f75cefcb93d9689fb56ecd55e0a6b59fa18485f7f679ebb1ddffe769ab0bab2d",
+      "bytes": 1294
+    },
+    "native-cord/mutation-proof.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/mutation-proof.json",
+      "sha256": "e782aec90928dbd233392eef6310c514b743e5b1e6dddf1f70c8b65b339bb4f3",
+      "bytes": 3130
+    },
+    "native-cord/trial-110-rejection.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/trial-110-rejection.json",
+      "sha256": "28eb46bdbd9f979c46c2fd4ae8f5988b975f6e00ed202b374df58edc64b22cea",
+      "bytes": 518
+    },
+    "native-cord/solve-short-apply.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/solve-short-apply.json",
+      "sha256": "955ad975eca980f3224810ad3aabebd1a40256e995af06b1b6f6f685fb111176",
+      "bytes": 74685
+    },
+    "native-cord/solve-short-check.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/solve-short-check.json",
+      "sha256": "955ad975eca980f3224810ad3aabebd1a40256e995af06b1b6f6f685fb111176",
+      "bytes": 74685
+    },
+    "native-cord/24-route-certificates.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/24-route-certificates.json",
+      "sha256": "776c8109e09c5a9c88da2981f06c1f243a427558655d6abad8924da04f985fd0",
+      "bytes": 11248
+    },
+    "native-cord/root-native-check-command.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/root-native-check-command.json",
+      "sha256": "55d440a6e3cfe05cc0ee123a152b7499c9a57a93f4086942a398cd638d0949f7",
+      "bytes": 795
+    },
+    "native-cord/root-native-check.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/root-native-check.log",
+      "sha256": "125e5335418ab4b7b908c3800fcddbaa51744b84ffc82d2b8453507ae7e260bc",
+      "bytes": 34
+    },
+    "native-cord/root-native-check-report.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/root-native-check-report.json",
+      "sha256": "955ad975eca980f3224810ad3aabebd1a40256e995af06b1b6f6f685fb111176",
+      "bytes": 74685
+    },
+    "native-cord/root-24-route-certificates.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/root-24-route-certificates.json",
+      "sha256": "fede9a31453382e4985f724de8fd16ced524516d4a87ca30bcfcf28b3eb68674",
+      "bytes": 8709
+    },
+    "native-cord/promotion.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/promotion.json",
+      "sha256": "caf314b54e81454e67bff2f9d08bcbe7bc44eabfb9d67042c7fc2360f7534852",
+      "bytes": 321
+    },
+    "native-cord/solid-primary.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/solid-primary.json",
+      "sha256": "645fd4ec9124c7bcb32d305da42cd56df6eb7d5f660425fa79b9467f28e00780",
+      "bytes": 2060665
+    },
+    "integration/ios-build-command.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/ios-build-command.json",
+      "sha256": "f47cb8a93564ead621602fbc54213288393d461531d24fdbe9e2a831c31a4e33",
+      "bytes": 477
+    },
+    "integration/ios-build.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/ios-build.log",
+      "sha256": "1871192b41d67da2b03cbd2a6706408ce6ae6ea36a9b00d3d545e8e0efb6ad9c",
+      "bytes": 196028
+    },
+    "integration/ios-test-command.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/ios-test-command.json",
+      "sha256": "13dda2886f8a0bb30e8599ba6fae31442890007c1fa902eb0f92f312ef477034",
+      "bytes": 942
+    },
+    "integration/ios-tests.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/ios-tests.log",
+      "sha256": "c35eadfe9a531e0481e48d8d11ca45d25db5fa594343a722e2c31ab164741ba1",
+      "bytes": 462608
+    },
+    "integration/ios-summary.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/ios-summary.json",
+      "sha256": "3a46575fed412a6540babdcf41a52e5878a50e1553928acc10ac8f08dbd67592",
+      "bytes": 1988
+    },
+    "integration/installed-app-provenance.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/installed-app-provenance.json",
+      "sha256": "3c85cece895cdd0bf374c5a6c419844f12415fcd028a6650f953718b9fe8a291",
+      "bytes": 729
+    },
+    "integration/package-validation-command.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/package-validation-command.json",
+      "sha256": "e4cf253676a0be5de31c191ba9860c907dae28faf903d0ef715da7b8188511e9",
+      "bytes": 316
+    },
+    "integration/package-validation.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/package-validation.log",
+      "sha256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc",
+      "bytes": 5583
+    },
+    "integration/package-test-report.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/package-test-report.json",
+      "sha256": "277f9573c3db83a7567dbb0c8f82e6f5afdac19b01692b9dc295db18b426d530",
+      "bytes": 468
+    },
+    "integration/package-tests.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/package-tests.log",
+      "sha256": "5f5081bec28612b4943f1815b146c509953a62a11cc2c53ea4fd3a7cc840b912",
+      "bytes": 581
+    },
+    "integration/delivery-parity.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/delivery-parity.json",
+      "sha256": "d8ac7b965159aec3a53995fae93b038952f58470191dc86e663349784ad0ba31",
+      "bytes": 26447
+    },
+    "integration/staging-command.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/staging-command.json",
+      "sha256": "1b9d4a3478a8a474199006af4a01148331d432f954ed2d3d2c304f58cc74762e",
+      "bytes": 739
+    },
+    "integration/staging.log": {
+      "source": ".context/placid-badger/nug-cord-shortening/staging.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "integration/installed-delivery-validation.json": {
+      "source": "docs/source-audits/2026-09-29-remaining-cad/installed-delivery-validation.json",
+      "sha256": "fdcb45f1f4c6c7c40aced1429ab4bc07816277e8d0fcb929715ed432e3e21f35",
+      "bytes": 31816
+    },
+    "app-review/front-25-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/front-25-front-accessibility.json",
+      "sha256": "f799f0f8d47617968c11889db094e6eaa856ea51850590a4f304f77951c0afad",
+      "bytes": 12635
+    },
+    "app-review/front-25-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/front-25-front.png",
+      "sha256": "e0513d3eab6de41b1e829d7060b8d3c3d16411bbb3641d73e08d3e6347524d9e",
+      "bytes": 644670
+    },
+    "app-review/front-inverted-20-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/front-inverted-20-front-accessibility.json",
+      "sha256": "ae99da08cc9aef7a4d67869378effc24e91b6661d126328f501e67d0431d54f3",
+      "bytes": 12572
+    },
+    "app-review/front-inverted-20-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/front-inverted-20-front.png",
+      "sha256": "e05966dc06cb642583df20d5e58abcf2c3ff5af605be35b0d50eda711e2bf9e5",
+      "bytes": 646075
+    },
+    "app-review/outer-lower-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/outer-lower-front-accessibility.json",
+      "sha256": "e0088b06b56c2c8b9f23aec0b99ffffcca2022a8da8d61e256bb8a0a8ca3a123",
+      "bytes": 12689
+    },
+    "app-review/outer-lower-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/outer-lower-front.png",
+      "sha256": "1946e6f0a9467cf8c381aaadfae041c2a393277e3c00feadf74f1976fc8dc9c7",
+      "bytes": 646990
+    },
+    "app-review/outer-upper-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/outer-upper-front-accessibility.json",
+      "sha256": "fd28dbc9f44030dc19069b99b3c73f71ec45c375cb66e55552ac77d9d165a542",
+      "bytes": 12632
+    },
+    "app-review/outer-upper-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/outer-upper-front.png",
+      "sha256": "e098c15ac27a68c191b75a43c733ec8088bba0bcb9947583a90f2f4fce1691f3",
+      "bytes": 631543
+    },
+    "app-review/reverse-13-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/reverse-13-front-accessibility.json",
+      "sha256": "062b9bde788ccc0e88bd1ce25cd3eac95fced72b5eed8f6afc7dabf6e0dcb7ea",
+      "bytes": 12560
+    },
+    "app-review/reverse-13-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/reverse-13-front.png",
+      "sha256": "d86b34fb86f26ee0f7442aef5d8c30841b790a850651c36225ef5daa0f445b52",
+      "bytes": 629690
+    },
+    "app-review/reverse-inverted-8-front-accessibility.json": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/reverse-inverted-8-front-accessibility.json",
+      "sha256": "2a50e3e07b0c210d41ab7895cae75afb8b89e3c7c4eff712a24d1c1dc191730b",
+      "bytes": 12607
+    },
+    "app-review/reverse-inverted-8-front.png": {
+      "source": ".context/placid-badger/nug-cord-shortening/after-app/reverse-inverted-8-front.png",
+      "sha256": "3952db6c82701644df79a3a3610cdad6ea68df5da36ea82a0c5a7a9795534fe0",
+      "bytes": 629683
+    }
+  }
+}

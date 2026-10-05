@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/prep/capture-3.py", line 45, in <module>
+    launch(contact); before=capture(contact,contact)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/prep/capture-3.py", line 30, in capture
+    rows=ready(contact); (out/(name+'-accessibility.json')).write_text(json.dumps(rows,indent=2)+'\n')
+         ^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/prep/capture-3.py", line 21, in ready
+    rows=flat(json.loads(run('/opt/homebrew/bin/axe','describe-ui','--udid',uid))); ids={r['AXUniqueId'] for r in rows if r['AXUniqueId']}
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/yy-baguette-evo/prep/capture-3.py", line 12, in run
+    r.check_returncode(); return r.stdout.decode()
+    ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/subprocess.py", line 502, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['rtk', 'proxy', '/opt/homebrew/bin/axe', 'describe-ui', '--udid', 'A485CF9E-D65D-47BD-A5AE-882791CCCE5F']' returned non-zero exit status 139.

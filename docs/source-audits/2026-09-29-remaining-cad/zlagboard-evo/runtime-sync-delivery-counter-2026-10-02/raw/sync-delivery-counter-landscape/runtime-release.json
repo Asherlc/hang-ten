@@ -1,0 +1,20 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "sync-delivery-counter",
+  "helperSHA256": "0d48cc0edae3141616f577fc000dac1aef39f6abbf3fc55f84a579fb9261147b",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousEvidenceFrozen": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "956e0bc100afabc27b101658d99766ecf49f9739861acd07ee61e50f1c778338",
+  "codePackageParityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sync-delivery-counter-prelaunch-parity.json",
+  "codePackageParitySHA256": "f7f34c89184ae193463e2ffe6a6250f2b45050715a69dbaed6689d11fedf3c34",
+  "priorFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+  "priorFrozenManifestSHA256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9",
+  "authorization": "Root approved exact capture0d48/validatorf55f/report4737 and one new956e orthographic observational counter run, no subsequent arm/source change.",
+  "perspectiveFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-frozen-manifest.json",
+  "perspectiveFrozenManifestSHA256": "c28f39a336000fb76156af64e5d5af9fef7c196ccb004b93af645abaa984a113"
+}

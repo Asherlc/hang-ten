@@ -1,0 +1,91 @@
+[
+  {
+    "name": "shutdown",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "shutdown",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6"
+    ],
+    "timeoutSeconds": 45,
+    "exitStatus": 0,
+    "elapsedSeconds": 3.249001916999987
+  },
+  {
+    "name": "boot",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "boot",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6"
+    ],
+    "timeoutSeconds": 45,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.8466673339999033
+  },
+  {
+    "name": "bootstatus",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "bootstatus",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6",
+      "-b"
+    ],
+    "timeoutSeconds": 480,
+    "exitStatus": 0,
+    "elapsedSeconds": 242.26521270800004
+  },
+  {
+    "name": "frontend",
+    "command": [
+      "rtk",
+      "proxy",
+      "open",
+      "-a",
+      "Simulator",
+      "--args",
+      "-CurrentDeviceUDID",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6"
+    ],
+    "timeoutSeconds": 15,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.14984962499988796
+  },
+  {
+    "name": "screen",
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/ui-reboot/view.png"
+    ],
+    "timeoutSeconds": 20,
+    "exitStatus": 0,
+    "elapsedSeconds": 0.7188926669998636
+  },
+  {
+    "name": "accessibility",
+    "command": [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "1684856E-FC2D-4407-8063-9B343B99CAD6"
+    ],
+    "timeoutSeconds": 20,
+    "exitStatus": 0,
+    "elapsedSeconds": 2.534217291999994
+  }
+]

@@ -1,0 +1,80 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "a8a443352528f136a39068089db7a09928d30abdab2a4efecc3c8a5bde670445",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "yy-penta-evo",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-25-left",
+        "edge-20-left",
+        "mono-left",
+        "duo-left",
+        "edge-15-left",
+        "tray-left",
+        "edge-20-right",
+        "edge-25-right",
+        "edge-15-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ],
+      "id": "primary",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "mono-left",
+        "duo-left",
+        "edge-10-left",
+        "tray-left",
+        "edge-10-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ],
+      "id": "reverse",
+      "presentationID": "front-pair"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "edge-25-left",
+        "edge-20-left",
+        "mono-left",
+        "duo-left",
+        "edge-15-left",
+        "tray-left",
+        "edge-20-right",
+        "edge-25-right",
+        "edge-15-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ],
+      "id": "primary",
+      "presentationID": "front-pair"
+    },
+    {
+      "contactIDs": [
+        "mono-left",
+        "duo-left",
+        "edge-10-left",
+        "tray-left",
+        "edge-10-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ],
+      "id": "reverse",
+      "presentationID": "front-pair"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "yy-penta-evo/README.md",
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9"
+}

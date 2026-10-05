@@ -1,0 +1,11 @@
+# Pristine Evo muted/awake runtime: visual failure
+
+The restored production renderer source, without the temporary diagnostic mutations or Train-unmount gate, was rebuilt and installed as binary `0ae1b0601daaf3964f1482b482cbdae3ee85d66c821c38a65bc6474c9fcd69b9` (full hash retained in the binary/parity reports). The completed Evo run captured all 44 predetermined whole images. Offline capture, deadline, hash, pristine-flag and exact app/awake-child cleanup checks pass; these mechanical checks do not imply visual success.
+
+Root's whole-image findings identify blue selected pockets throughout the following Hang at external elapsed 191–196 seconds. Earlier, hands are absent in elapsed 004/005 active-Hang images; the initial Rest shows red selected pockets at 010, changing to blue at 011. This preserves a pristine muted-workflow visual failure. External elapsed labels come from the fixed capture schedule, not exact internal phase-transition timing. The original independent report misclassified the 010 pockets as neutral; its separate correction to red and both original bytes are retained.
+
+The first attempt, Evo-a, failed before the workout URL because its Train AX predicate expected an absent child identifier. The original failure remains intact. The v2 helper corrected only that setup predicate, without changing app source. Evo-b then completed its fixed 44-image schedule with no during-workout touches, AX reads or Skip actions. Normal Train setup was inspected before opening the workout.
+
+No internal CPU material brackets are available in this pristine run, and no hardware result or causal explanation is claimed. Audio was disabled using the supported volatile preference argument; an owned idle-sleep assertion was active. This does not establish audioON behavior or prove sleep caused earlier failures. The earlier diagnostic LIVE-c pass does not override this pristine failure.
+
+Both attempts retain exact app and awake-child cleanup proof. Persistent Simulator/DerivedData ownership remains with root; deletion is not asserted here. Pro runtime is deferred and no hand-IMAGE workout trial was performed. No production repair, new board acceptance, integration, or PR readiness is established. Existing native approvals and all earlier evidence remain unchanged.

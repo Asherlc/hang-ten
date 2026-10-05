@@ -1,0 +1,84 @@
+{
+  "reason": "Preserve each original position ID for its original representative contact; add four opposing-bearing positions. All contact IDs and factual metadata preserved.",
+  "aliases": {
+    "paired-20-25": "paired-25-20-15-10",
+    "paired-12": "paired-12-8-6",
+    "central-30": "central-30-25",
+    "central-20": "central-20-6"
+  },
+  "positions": [
+    {
+      "id": "paired-25-20-15-10",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20-left",
+        "edge-25-left",
+        "edge-25-right",
+        "edge-20-right"
+      ]
+    },
+    {
+      "id": "paired-10-15",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-10-left",
+        "edge-15-left",
+        "edge-15-right",
+        "edge-10-right"
+      ]
+    },
+    {
+      "id": "paired-12-8-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-12-left",
+        "edge-12-right"
+      ]
+    },
+    {
+      "id": "paired-8-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-8-left",
+        "edge-8-right",
+        "edge-6-upper",
+        "edge-6-lower"
+      ]
+    },
+    {
+      "id": "central-30-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-30"
+      ]
+    },
+    {
+      "id": "central-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-25"
+      ]
+    },
+    {
+      "id": "central-20-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-20"
+      ]
+    },
+    {
+      "id": "central-6",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-central-6"
+      ]
+    },
+    {
+      "id": "rounded-tray",
+      "presentationID": "primary",
+      "contactIDs": [
+        "rounded-tray"
+      ]
+    }
+  ]
+}

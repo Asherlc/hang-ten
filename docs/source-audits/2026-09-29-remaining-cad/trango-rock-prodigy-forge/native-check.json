@@ -1,0 +1,32 @@
+{
+  "slug": "trango-rock-prodigy-forge",
+  "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+  "validSolidCount": 2,
+  "fullyConstrainedSketchCount": 29,
+  "contactCount": 20,
+  "publishedDepthsMm": {
+    "closed-crimp-left": 7.500000200000009,
+    "closed-crimp-right": 7.500000200000009,
+    "mr-deep-left": 25.000000200000006,
+    "mr-deep-right": 25.000000200000006,
+    "mr-shallow-left": 15.000000200000006,
+    "mr-shallow-right": 15.000000200000006
+  },
+  "nativeEdit": {
+    "parameter": "Depth_closed_crimp_right",
+    "before": 7.5,
+    "after": 9.5,
+    "changedContacts": [
+      "closed-crimp-right",
+      "closed-crimp-left"
+    ],
+    "bodyVolumeChanged": true,
+    "restored": true
+  },
+  "allContactsOnBody": true,
+  "noRearContactFaces": true,
+  "noContactSurfaceOverlap": true,
+  "potentialOverlapPairsChecked": 2,
+  "allObjectsRecomputed": true,
+  "savedSourceUnchanged": true
+}

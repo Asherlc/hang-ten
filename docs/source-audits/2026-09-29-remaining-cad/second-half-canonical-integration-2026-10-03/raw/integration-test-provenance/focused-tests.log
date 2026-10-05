@@ -1,0 +1,40 @@
+
+==================================== ERRORS ====================================
+____ ERROR collecting Tools/HangboardCAD/tests/test_integration_dispatch.py ____
+ImportError while importing test module '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test-overlay/Tools/HangboardCAD/tests/test_integration_dispatch.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardCAD/tests/test_integration_dispatch.py:8: in <module>
+    import native_cord_routes as routes
+Tools/HangboardCAD/native_cord_routes.py:10: in <module>
+    import numpy as np
+E   ModuleNotFoundError: No module named 'numpy'
+___ ERROR collecting Tools/HangboardCAD/tests/test_native_pose_terminals.py ____
+ImportError while importing test module '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test-overlay/Tools/HangboardCAD/tests/test_native_pose_terminals.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardCAD/tests/test_native_pose_terminals.py:7: in <module>
+    import numpy as np
+E   ModuleNotFoundError: No module named 'numpy'
+_____ ERROR collecting Tools/HangboardCAD/tests/test_native_cord_guides.py _____
+ImportError while importing test module '/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/integration/test-overlay/Tools/HangboardCAD/tests/test_native_cord_guides.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardCAD/tests/test_native_cord_guides.py:4: in <module>
+    import numpy as np
+E   ModuleNotFoundError: No module named 'numpy'
+=========================== short test summary info ============================
+ERROR Tools/HangboardCAD/tests/test_integration_dispatch.py
+ERROR Tools/HangboardCAD/tests/test_native_pose_terminals.py
+ERROR Tools/HangboardCAD/tests/test_native_cord_guides.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!!
+3 errors in 0.13s

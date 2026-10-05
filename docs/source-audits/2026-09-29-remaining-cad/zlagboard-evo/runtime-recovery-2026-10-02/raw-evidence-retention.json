@@ -1,0 +1,25 @@
+{
+  "exactCopiedFiles": {
+    "service-restart/restart.json": "d1206298005e7d5b835c32a4e4fe6326374a91f8d9e23a843ca6044771c7f9b7",
+    "service-restart/diagnosis/system-log-snapshot.log": "f33af7dc9b53c4f29222a83c604f14f9f4e73cf05044797599397ea2a5cc6cae",
+    "service-restart/diagnosis/runningboard-unified.log": "0bd192f936f9ad55dbf2b7a8538fe39031ecaf6a262c4a6a15da0e18fbff4b35",
+    "service-restart/diagnosis/runningboard-unified.stderr.log": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36",
+    "service-restart/diagnosis/migration-unified.stderr.log": "01562c2fa7aa7c8f4aa278ea839a127c3959b336c823fd752343aa15fa57ca36",
+    "service-restart/diagnosis/owned-process-selected.txt": "8641bcaeee1a2630f5d41a37acb873b0a8730f5443b4124440ffd3e88ab42b0c",
+    "service-restart/diagnosis/migration-unified.log": "252571c4976f5e12d0bbaf7a41394af4b6c6f02a2da01ee01ba110299df7f037",
+    "service-restart/diagnosis/migration-evidence-selected.txt": "f87f841d628e72d627e7697fd466784998432030a8c58291726015cb6059c3f5",
+    "service-restart/diagnosis/system-log-selected.txt": "acdcad4abe9dbb2d19c7c625cc0e7cbd4e65297c5720611950b91db4a60ad6d0",
+    "service-restart/diagnosis/migration-unified-command.json": "ab424290eac28fbae0f08245f032bf0da7b29d04f8bd0f8434094a69b6de04ea",
+    "service-restart/diagnosis/diagnosis-summary.json": "16814750c5ab01c9c7ccfd29131e022fd042f65be7def6cad8ec1de2392b8c77",
+    "service-restart/diagnosis/sample-timeout.json": "b7276ac194c344ee4a95c1fc747cfeb7a6e3d3999a9eb3ec6b1457bc8632d382",
+    "service-restart/diagnosis/runningboard-unified-command.json": "d1950b26b0694782f67747a7e2d96851e1bcde892f5e29f09d1db52b6a52323f"
+  },
+  "locallyRetainedUnmodified": [
+    {
+      "path": ".context/placid-badger-cad-second-half/zlagboard-evo/service-restart-2026-10-02/diagnosis/process-snapshot.log",
+      "bytes": 313489,
+      "sha256": "e6e74bbb5c276de4311bff2808a1b6e216cd223616ad0f9156356e2d4f8d1b9e",
+      "reason": "Full host process command arguments include unrelated data; scoped exact owned-process subset is committed instead. No raw bytes rewritten."
+    }
+  ]
+}

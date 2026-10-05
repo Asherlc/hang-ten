@@ -1,0 +1,104 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "boardID": "yy.penta-evo",
+  "status": "Runtime validation passed after narrow reusable-instance bilateral resolver correction; human acceptance pending.",
+  "simulator": "B404FE03-AE3E-4295-88F7-D63D384E3E58",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS26.5",
+  "packageSHA256": {
+    "Hangboards/yy-penta-evo/yy-penta-evo.FCStd": "5cc490f971ed4c8de0606ba7216e804ca91bf2a442da827d820af53ac00038ef",
+    "Hangboards/yy-penta-evo/assets/primary.usdz": "63fc29966e1c863cb9e8582d6507ba6d5ceefb6ac0fdb92eab40a9609ff758ab",
+    "Hangboards/yy-penta-evo/assets/primary.model.json": "77d6cd58639e9875f4f9516e1e07974534cf42c0f9ab7719385f8649923509b9",
+    "Hangboards/yy-penta-evo/suspension.json": "354dc293f9d5a76e39224a3105d9cbedd2dbf30bc9072eb4588e0c6a2ee9fa97"
+  },
+  "packageUnchangedAcrossRuns": true,
+  "surfaceFinish": "wood",
+  "directBoardReview": {
+    "passed": true,
+    "contacts": 14,
+    "poses": 7,
+    "instances": 2,
+    "instancePoseOrbitCount": 14,
+    "coverage": "capture-coverage.json",
+    "rawCaptures": "captures/validation.json",
+    "physicalProbes": "physical-probes/validation.json",
+    "originalTwoTests": "test-results-summary.json",
+    "montageSheets": [
+      "review-montages/selections-1.png",
+      "review-montages/selections-2.png",
+      "review-montages/selections-3.png",
+      "review-montages/selections-4.png",
+      "review-montages/orbits-1.png",
+      "review-montages/orbits-2.png",
+      "review-montages/orbits-3.png",
+      "review-montages/orbits-4.png"
+    ],
+    "appReview": "app-review.png",
+    "interpretation": "All selections and gentle orbits retain both complete units and cords. Physical contact taps select the correct instance and restore canonical pose after orbit; cord taps change neither selection nor contact frames and expose no cord accessibility element. No separate public clear-selection/reset control exists. Package geometry/renderer unchanged by later resolver fix, so direct views were retained without repeat."
+  },
+  "originalFailurePreserved": {
+    "aggregate": "runtime-before-fix.json",
+    "workoutFailure": "workout-visual-failure.json",
+    "workoutRaw": "workout-settled/validation.json",
+    "redRegression": "red-regression/test-results-summary.json",
+    "redResult": "22 passed, 3 failed of 25; Penta pair rejected and two invalid pair cases accepted before source fix."
+  },
+  "finalAppRetry": {
+    "directory": "../ios-runtime-retry",
+    "freshBuildLog": "../ios-runtime-retry/build.log",
+    "sourceReadiness": "../ios-runtime-retry/source-readiness.json",
+    "tests": {
+      "passed": 93,
+      "failed": 0,
+      "rawSummary": "../ios-runtime-retry/test-results-summary.json",
+      "rawLog": "../ios-runtime-retry/tests.log",
+      "suites": [
+        "ContactResolverTests",
+        "WorkoutActivityRecordingTests",
+        "BoardModelTests/testPentaEvoSelectedBearingsFaceUp",
+        "SuspendedBoardPresentationTests/testNativeCADPentaInstancesKeepTheirAuthoredPoseAndInextensibleLoop"
+      ]
+    },
+    "workout": {
+      "passed": true,
+      "routineUnchanged": true,
+      "runtimeOnly": true,
+      "planID": "research.max-hangs",
+      "route": "hangten://plan/research.max-hangs/workout",
+      "rawReport": "../ios-runtime-retry/workout-settled/validation.json",
+      "activeImage": "../ios-runtime-retry/workout-settled/active-settled.png",
+      "boundaryRestImage": "../ios-runtime-retry/workout-settled/following-rest.png",
+      "settledRestImage": "../ios-runtime-retry/workout-rest-settled/view.png",
+      "visualInterpretation": "Active: both 20 mm contacts red in edge-20 pose. Settled rest: both 20 mm contacts blue as next-hold preview in same pose. Wood and both cords visible; entire pair stays in frame. Boundary rest image retains transient red highlights before blue. This validates runtime display, not manufacturer routine attribution.",
+      "reviewedBy": [
+        "baguette_review_prep",
+        "root"
+      ]
+    }
+  },
+  "parity": {
+    "passed": true,
+    "originalPackage": "captures/package-parity.json",
+    "originalBinary": "captures/binary-parity.json",
+    "retryPackage": "../ios-runtime-retry/captures/package-parity.json",
+    "retryBinary": "../ios-runtime-retry/captures/binary-parity.json",
+    "scope": "Each build generated manifest/descriptor/ODR USDZ matches installed bytes; respective built/installed app binaries match. Package hashes remain identical across source-only app fix."
+  },
+  "cleanup": {
+    "status": "passed",
+    "original": "cleanup-verification.json",
+    "retry": "../ios-runtime-retry/cleanup-verification.json",
+    "redBundle": "red-regression/cleanup-verification.json",
+    "verifiedSimulator": "B404FE03-AE3E-4295-88F7-D63D384E3E58"
+  },
+  "retainedHashes": [
+    "retained-sha256.json",
+    "../ios-runtime-retry/retained-sha256.json"
+  ],
+  "humanAcceptance": "pending user reply",
+  "limits": [
+    "Full-frame app review and runtime tests do not certify manufacturing or ergonomic accuracy.",
+    "Original failing workout screenshots and test reports remain unchanged.",
+    "Geometry and source-specific CAD/solver validation are retained separately by workspace coordinator."
+  ]
+}

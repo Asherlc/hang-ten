@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "nature_body",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.11,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Visible lead length shortened to 110 mm as an operator-selected display estimate for the source-visible compact loop; not a manufacturer measurement."
+      },
+      {
+        "id": "left-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.11,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving. Visible lead length shortened to 110 mm as an operator-selected display estimate for the source-visible compact loop; not a manufacturer measurement."
+      },
+      {
+        "id": "right-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.015,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height. Starting offset shortened coherently with 110 mm leads; final height remains solver-generated."
+    },
+    "canonicalPoses": {
+      "front-upright": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "wood-inverted": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "pinch-side": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "jug-open-up": {
+        "rotation": [
+          -0.7071067811865476,
+          0,
+          0,
+          0.7071067811865476
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.55,
+            -1
+          ],
+          "fitPadding": 0.12
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "left-cross-return": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            -0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "right-cross-return": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "supportDirection": 1,
+    "sectionPlane": "anchor"
+  }
+}

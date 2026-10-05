@@ -1,0 +1,17 @@
+{
+  "timestampUTC": "2026-10-02T04:09:27.962722+00:00",
+  "authorization": {
+    "question": "May I restart the shared Simulator service to try to unblock app validation?",
+    "reply": "Lgtm",
+    "scope": "One exact current-user shared CoreSimulatorService restart; no board acceptance or global purge."
+  },
+  "service": {
+    "pid": 23795,
+    "uid": 502,
+    "executable": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/XPCServices/com.apple.CoreSimulator.CoreSimulatorService.xpc/Contents/MacOS/com.apple.CoreSimulator.CoreSimulatorService"
+  },
+  "signal": "SIGTERM",
+  "state": "restart verified; simctl responsive",
+  "replacementPID": 10939,
+  "verifiedAtUTC": "2026-10-02T04:09:41.683890+00:00"
+}

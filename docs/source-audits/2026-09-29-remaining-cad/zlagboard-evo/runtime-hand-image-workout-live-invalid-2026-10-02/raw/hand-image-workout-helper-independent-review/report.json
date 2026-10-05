@@ -1,0 +1,69 @@
+{
+  "result": "PASS_SCOPED_STATIC_REVIEW",
+  "blockingIssues": [],
+  "scope": "Read-only prospective helper/source review; no runtime, build, device or source action.",
+  "inputs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/capture.py",
+      "sha256": "d582299ee0fe605c4d2f0febbad63137ab477aa39770f6518f9e36231cbfd24e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/branch_schema.py",
+      "sha256": "87eb845d31e1dda2a23b5df847dab02454b2057e625d9ead35d0135cd9585aea"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/event-schema.json",
+      "sha256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/fixed-routine-reference.json",
+      "sha256": "c5f4f4bae33049e2a0100af2c052a74c31946be453a004c5b3dc4a9bddb48d22"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-runtime-prep/README.md",
+      "sha256": "0d18c72d274fff129ddd68bddac10e6d0165cdaf88debd050dd6dd2b76f0877e"
+    },
+    {
+      "path": "HangTen/Resources/PlanLibrary.json",
+      "sha256": "b203917f19e792e2d39abf15bbac96a6119ca0a7aa5384618fd1bb3978de2c6b"
+    },
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d"
+    },
+    {
+      "path": "HangTen/Views/GripHandModelView.swift",
+      "sha256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542"
+    }
+  ],
+  "checks": {
+    "exactReviewedHelperHashes": true,
+    "pythonAST": true,
+    "routineReferenceExactCatalogObjects": true,
+    "allFiveStepsSameHalfCrimpFourFingerPair": true,
+    "preAndPost27ProofHashGuards": true,
+    "exactOwnedControllerAndSimulatorGuards": true,
+    "boundedOwnedChildCommandsAndAppCleanup": true,
+    "cleanupFailureNonzero": true,
+    "sameNatural7_180_7ProtocolAnd12MandatoryCaptureOffsets": true,
+    "noCaptureDelayForMissingPublication": true,
+    "allPublishedPNGBytesRetainedOnFailure": true,
+    "perSessionEnvironmentAndRevisionStateValidation": true,
+    "imageRequiresCurrentUniquePairPublicationBeforeAndAfterCapture": true,
+    "noLiveHandMakeInImageArm": true,
+    "boardARViewPermitted": true,
+    "overallAndCommonValidationRemainPending": true
+  },
+  "sourceFacts": [
+    "RootView landscapeSession passes existing holdCue.gripType and fingerConfiguration to GripHandPairModelView; same fixed 68-point caller slot.",
+    "Existing canonical research.max-hangs five steps all halfCrimp/index,middle,ring,pinky/double/both; first four use7-second work and180-second rest, final7-second work. No routine mutation."
+  ],
+  "limits": [
+    "Image event revision does not identify posture/fingers/side; this fixed-cue trial additionally requires frozen source and separate whole-image review of every required image. No dynamic semantic invalidation claim.",
+    "CPU publication and sampled weak attachment do not prove presented pixels or continuous ownership.",
+    "Neutral white IBL is a diagnostic appearance adaptation; no live/image photometric equivalence.",
+    "Capture success is not common-validator or visual success. Complete-contiguous raw trace gate is in required independent validators; helper retains raw and reports status.",
+    "IMAGE must not claim passed LIVE attachment/prestart validators or static zero-ARView rule."
+  ],
+  "validatorDependency": "LIVE supplemental timing depends on original prestart report; preserve original failure and exact two prospective temporal qualifications. IMAGE needs publication-specific validation instead."
+}

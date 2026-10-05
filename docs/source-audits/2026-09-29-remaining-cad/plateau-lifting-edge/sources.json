@@ -1,0 +1,113 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "PL-1",
+      "publisher": "Plateau Climbing \u2014 product page",
+      "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+      "snapshotSHA256": "4c63ca9c62f1dbd686e823ceb2af3366a5f8381daaafe92b024ad7743a8a74b3",
+      "supportClaim": "Exact identity, one physical oak edge, 18 mm base, reversible 15/10 mm blocker configurations, loading use, and gallery provenance.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/product-page.html",
+      "actualSHA256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "PL-2",
+      "publisher": "Plateau Climbing \u2014 front visual",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1171.png?v=1773212075&width=3840",
+      "snapshotSHA256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+      "supportClaim": "Front assembly, one oak edge, metal body, lower curled section, and cord loop emerging from both open ends.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/front.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/front.png",
+      "actualSHA256": "7a854f73c876dffdff07251e4ab4cd5128014c3f51a3d31e14ecf00ac36fe7a7",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/front.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PL-3",
+      "publisher": "Plateau Climbing \u2014 oblique visual",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1166.png?v=1773212075&width=3840",
+      "snapshotSHA256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+      "supportClaim": "Oak edge/metal backing side profile and cord route through the lower curled extrusion.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/oblique.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/oblique.png",
+      "actualSHA256": "bb12d65453f77a917e048eb7ed09582c0ee4d96d6cf265973748f99cfc39191d",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oblique.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PL-4",
+      "publisher": "Plateau Climbing \u2014 15 mm blocker visual",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1168.png?v=1773212075&width=3840",
+      "snapshotSHA256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+      "supportClaim": "Reversible blocker installed for 15 mm effective depth on the same board/cord assembly.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/blocker-15.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/blocker-15.png",
+      "actualSHA256": "4e666f921ffebdb287f383eb1330d5eb8aafab591cea5cfc488667368ee312b0",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-15.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PL-5",
+      "publisher": "Plateau Climbing \u2014 10 mm blocker visual",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/IMG_1161.png?v=1773212075&width=3840",
+      "snapshotSHA256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+      "supportClaim": "Blocker reversed for 10 mm effective depth while preserving one physical oak contact.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/blocker-10.png",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/blocker-10.png",
+      "actualSHA256": "b2a474441847de209fa85307383d0822f462801650f1f188bd0b1d8d8d49e243",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/blocker-10.png",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "PL-6",
+      "publisher": "Plateau Climbing \u2014 oak/blocker in-use visual",
+      "url": "https://www.plateauclimbing.com/cdn/shop/files/45_edited.jpg?v=1773212075&width=3840",
+      "snapshotSHA256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+      "supportClaim": "Scale in hand, oak edge/blocker as one configurable grip, paired lead-cord loading setup, and outdoor use context.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/plateau-lifting-edge/oak-blocker-in-use.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/plateau-lifting-edge/oak-blocker-in-use.jpg",
+      "actualSHA256": "a4a037eccdd1de212333f3f4482fab309ff385720768bb60c61606a9fb209e75",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/oak-blocker-in-use.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ]
+}

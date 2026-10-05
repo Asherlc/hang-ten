@@ -1,0 +1,20 @@
+{
+  "timestampUTC": "2026-10-02T13:49:27.246082+00:00",
+  "authorizedByParent": true,
+  "packageSHA256": {
+    "Hangboards/zlagboard-pro/zlagboard-pro.FCStd": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a",
+    "Hangboards/zlagboard-pro/assets/primary.usdz": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684",
+    "Hangboards/zlagboard-pro/assets/primary.model.json": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+  },
+  "publicationPassed": true,
+  "nativeCheckPassed": true,
+  "sourceUnchanged": true,
+  "contacts": 28,
+  "nodes": 29,
+  "triangles": 44738,
+  "remainingReadOnlyChecks": [
+    "Independent descriptor reconstruction",
+    "Actual USD package and narrow iOS/Android staging parity",
+    "Scoped final preservation and realLFS audit"
+  ]
+}

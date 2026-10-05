@@ -1,0 +1,62 @@
+[1/10] validating yy-baguette.FCStd
+[2/10] reopening and recomputing the source document
+[3/10] extracting bound components and semantic regions
+[4/10] tessellating with pinned quality
+[5/10] partitioning the surface and preserving normals and materials
+      yy_body: 76224 triangles, role=body
+      yy_tray: 130 triangles, role=contact
+      yy_edge_20: 784 triangles, role=contact
+      yy_edge_25: 1316 triangles, role=contact
+      yy_edge_10: 652 triangles, role=contact
+      yy_edge_15: 1040 triangles, role=contact
+      yy_edge_30: 650 triangles, role=contact
+[6/10] writing the USDZ directly
+[7/10] reopening the exported asset
+[8/10] deriving the descriptor from the exported bytes
+[9/10] validating the staged package
+[10/10] check-only run; nothing published
+{
+  "assetBytes": 1552947,
+  "board": "Hangboards/yy-baguette/yy-baguette.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-10",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "edge-30",
+    "tray"
+  ],
+  "measuredRegionDepthsMM": {
+    "edge-10": 10.0,
+    "edge-15": 15.0,
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "edge-30": 30.0,
+    "tray": 40.0
+  },
+  "modelSHA256": "77dda14d42001d07125e87c43223e7b600c1bff3b7e877215ee98a379708c2ea",
+  "nodes": [
+    "yy_body",
+    "yy_edge_10",
+    "yy_edge_15",
+    "yy_edge_20",
+    "yy_edge_25",
+    "yy_edge_30",
+    "yy_tray"
+  ],
+  "package": "yy-baguette",
+  "presentationID": "primary",
+  "published": false,
+  "schemaVersion": 1,
+  "source": "Hangboards/yy-baguette/yy-baguette.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "49702d84d43a8c41c1de212545eef1aeba6265d241930d5b1a943777e64ce689",
+  "sourceUnchanged": true,
+  "staging": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/Hangboards/yy-baguette/assets/.hangten-build-tu4k09vn",
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 80796
+}
+
+								
+								
+								

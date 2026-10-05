@@ -1,0 +1,14 @@
+{
+  "runtimeExecuted": false,
+  "syntaxCheck": "ast.parse only; both Python files valid",
+  "files": {
+    "baseline-source-reference.json": "516355903567747006804ed1ee8b98319ce54d3bff609917c97a38411f5c1108",
+    "capture.patch": "88dadbcbeaf98a76e1ba57223bd60d427e521b2f5c3dc0fe1392d1ea85625e3e",
+    "release-template.json": "3627048704ebaa05b82714b8dcd8098acf71c76b3a531b04fcf57c17d112a285",
+    "README.md": "4fcf026b5f5bce3c76639777c912f672a51723800316cb43d9756d0a53320da1",
+    "validate-completed.py": "bd95d351f41c4557418ab387a7389a26b6e8e15c888ff35983e8b4ff9cf7bb06",
+    "capture.py": "3fc04051847e945614905aa5cd76b04246c069410c3dccb369cda895a737dfde",
+    "schedule.json": "a1ddc84211b458b6a0e188bb110e83f64350290119de6b586050e8accf510701",
+    "source-reference-template.json": "c5c92495b371a5942f60cf73770444c250290e46a92833d7fea42720c529443d"
+  }
+}

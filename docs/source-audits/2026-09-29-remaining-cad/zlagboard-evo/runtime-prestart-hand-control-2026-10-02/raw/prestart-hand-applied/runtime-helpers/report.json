@@ -1,0 +1,47 @@
+{
+  "status": "PROSPECTIVE_READY_FOR_ROOT_REVIEW_NO_RUN",
+  "arms": [
+    "control",
+    "action"
+  ],
+  "files": {
+    "draft-before-expiry-audit/control-check-prestart-hands.py": "68e54833cecd01679f1579cfea260b833a6071beb3314f575d1fc971bb894b4a",
+    "draft-before-expiry-audit/action-check-prestart-hands.py": "15cc584585afd9a0d2c9f1da1ef0123e333be16274341eccf0b517a263784f8e",
+    "action/check-real-hands.py": "c2d6a88a244290229a24d262d3b710d03bf0d649125d5749bbca0126b389c1f1",
+    "action/check-cpu-semantics.py": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "action/check-navigation.py": "0ee28cbbd99bb81457ee776337925f802cee1a404cb6522a1c434aaf39101c22",
+    "action/capture-vs-counter.patch": "7e8fc6482008849a76fdf99972711325de29a62454e9a23f43eab080e015f90b",
+    "action/capture.py": "38af1958b95229f33e5c77715b076153585b990b44a048ca5e011f3899466353",
+    "action/check-sync-counters.py": "feab2da3f76303f00d4e4f96a998eca8a4d7bcd10ec292065fae31a23e477ba8",
+    "action/check-weak-hand-census.py": "08692559d22fa395a9451a901793d04381ab9c0b10a88af560696973cdee501a",
+    "action/check-frames.py": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "action/check-ownership.py": "0a0e562903606f406d229483ed8b4475b8e4186525fe542ec6e3239a32658d1d",
+    "action/check-prestart-hands.py": "8f780e261d5fe843676805afb4c42968fdf2f211842fb8a55dba1c9447742f40",
+    "action/compare.py": "b5858d64deba556c9a1a86b20c0cdc2ad02d9c98717739ed9dc051154fad2556",
+    "action/check-constructors.py": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+    "control/check-real-hands.py": "11c09feed0bc8bb805e873bb739ab4c51de86eef0226cf32e4d1371b2629454a",
+    "control/check-cpu-semantics.py": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+    "control/check-navigation.py": "f9b58b2543c458f054aa631132a4599e95994dc828dfaeb41238ecd86aa57e1c",
+    "control/capture-vs-counter.patch": "749ac2a5aaf4c3af26664f04923b6e7405fb886cf30db15dc773ba2813cdd6d5",
+    "control/capture.py": "bb309ac22e36e15c142078c78245a7f47a8e2667f84df45ae4593e9208321f50",
+    "control/check-sync-counters.py": "ab7d331b27814b9bd743ee8adb115d130a5bff8f0aa4ad981f8bc8345f67158d",
+    "control/check-weak-hand-census.py": "f19b318e67d09fcf34028c820976e955bec635326d3b9bc65cd03896f849ba55",
+    "control/check-frames.py": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+    "control/check-ownership.py": "807d63dc37cf4c99edd1e4e4277fe35d597bc77a4c6e18332bc83e791a88a2a4",
+    "control/check-prestart-hands.py": "327ccf1d2252fe5260393705c72f50d596a7c1d3a7c091d927dc1e72553f1f4a",
+    "control/compare.py": "813f0fb323e4e114e6dcac239a436012bb9c94a4e4c85a15a4f4874330db7608",
+    "control/check-constructors.py": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+  },
+  "protocol": "One flag-off control after new build/parity. Control must reproduce earlier hand constructor/make/disappearance/dead lifetime and visual failure. Root hash gate required before action. Action adds only prestart flag/runID. No reversal authorized.",
+  "checks": "Nine existing validators/comparison retained plus prestart-specific checker. Control2 actual pair lives; action1 later pair, zero constructor/make counts at observed suppressed-prestart markers; existing weak tombstones and actual cameras checked without imposing2 on action. Current pair ctor/make must follow final observed positive countdown and precede first active capture bracket; retain relative timing to firstHang/zero callback without requiring afterzero. Exact callback sequences0,3,2,1,0 or3,2,1,0 only; no silent duplicate allowance.",
+  "permissionEdgeLimit": "Source predicate and complete stream combined; callback may follow newly allowed constructor. No strict constructor-after-false callback assertion.",
+  "layoutLimit": "Same source clear slots; no new prestart slot measurements. Actual normal workout board frame endpoints/path, transforms and resolved inputs checked unchanged. Whole12 hands visibility/board color judgments separate.",
+  "actionRootGateSchema": {
+    "allEvidencePassed": true,
+    "visualResult": "FAIL",
+    "startupFirstHandHistoryReproduced": true,
+    "binarySHA256": "exact current new binary hash",
+    "actionAuthorized": true
+  },
+  "ASTPassed": true
+}

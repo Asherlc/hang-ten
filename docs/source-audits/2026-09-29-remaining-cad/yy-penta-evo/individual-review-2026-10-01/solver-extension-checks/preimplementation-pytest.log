@@ -1,0 +1,107 @@
+F................FF.                                                     [100%]
+=================================== FAILURES ===================================
+___ test_pose_terminals_are_authoring_only_and_merge_without_input_mutation ____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-455/test_pose_terminals_are_author0')
+
+    def test_pose_terminals_are_authoring_only_and_merge_without_input_mutation(tmp_path):
+        _, data, _ = loop_fixture()
+        before = copy.deepcopy(data)
+>       merged = merge_fixture(tmp_path, data)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+.context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py:47: in merge_fixture
+    return cad_source.merge_suspension_sidecar(board, tmp_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/cad_source.py:387: in merge_suspension_sidecar
+    return _merge_suspension_entry(board, package_root, document)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+board = {'presentations': [{'id': 'main', 'media': {'type': 'model', 'descriptorPath': 'assets/primary.model.json'}}]}
+package_root = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-455/test_pose_terminals_are_author0')
+document = {'schemaVersion': 1, 'presentationID': 'main', 'modelSHA256': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...slation': [0, 0, 0], 'rotation': [0, 0, 0, 1]}, 'shifted': {'translation': [0, 0, 0], 'rotation': [0, 0, 0, 1]}}}, ...}
+
+    def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
+        required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
+        if not isinstance(document, dict) or not required <= set(document) \
+                or set(document) - required - {"ropeSolver", "equipmentObjectID"} or document["schemaVersion"] != 1:
+            raise ManifestError("suspension.json has invalid schema or members")
+        # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+        # never merged into board.json.
+        solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+        if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+            if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                    or isinstance(solver["clearance"], bool) \
+                    or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                    or not 0 < solver["clearance"] <= .01 \
+                    or not isinstance(solver["terminalsByStrandID"], dict) or not solver["terminalsByStrandID"] \
+                    or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
+                    or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
+>               raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+E               hangboard_packages.cad_source.ManifestError: suspension.json nativeRoutes solver settings are invalid
+
+Tools/HangboardPackages/src/hangboard_packages/cad_source.py:406: ManifestError
+_ test_same_frame_distinct_stations_solve_closed_solid_loops_independently[dijkstra] _
+
+accelerated = False
+
+    @pytest.mark.parametrize("accelerated", [False, True], ids=["dijkstra", "astar"])
+    def test_same_frame_distinct_stations_solve_closed_solid_loops_independently(accelerated):
+        mesh, data, descriptor = loop_fixture(accelerated)
+        before = copy.deepcopy(data)
+        expected = {}
+        # Baseline oracle uses existing one-pose/global-station behavior, without
+        # the extension, so this tests isolation independently of its implementation.
+        for pose_id, pose in data["suspension"]["canonicalPoses"].items():
+            single = copy.deepcopy(data)
+            overrides = single["ropeSolver"].pop("terminalsByPoseID")
+            single["ropeSolver"]["terminalsByStrandID"] = overrides.get(
+                pose_id, single["ropeSolver"]["terminalsByStrandID"])
+            single["suspension"]["canonicalPoses"] = {pose_id: pose}
+            expected.update(solve_native_routes(mesh, single, descriptor))
+        actual = solve_native_routes(mesh, data, descriptor)
+>       assert actual == expected
+E       AssertionError: assert {'default': {...11409529948}}} == {'default': {...97564000536}}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'shifted': {'height': -0.070588026, 'routes': {'loop': [[0.0, 0.030429199, -0.032157728], [0.0, 0.03, -0.0322], [0.0,....03, 0.0322], ...]}, 'lengthRatios': {'loop': 0.9999999963857514}, 'minimumClearance': {'loop': 0.001994511409529948}}} != {'shifted': {'height': -0.069643322, 'routes': {'loop': [[0.014162449, 0.030429851, -0.03215758], [0.014202267, 0.0300....032199778], ...]}, 'lengthRatios': {'loop': 0.9999999867033211}, 'minimumClearance': {'loop': 0.0019932497564000536}}}
+E         Use -v to get more diff
+
+.context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py:106: AssertionError
+_ test_same_frame_distinct_stations_solve_closed_solid_loops_independently[astar] _
+
+accelerated = True
+
+    @pytest.mark.parametrize("accelerated", [False, True], ids=["dijkstra", "astar"])
+    def test_same_frame_distinct_stations_solve_closed_solid_loops_independently(accelerated):
+        mesh, data, descriptor = loop_fixture(accelerated)
+        before = copy.deepcopy(data)
+        expected = {}
+        # Baseline oracle uses existing one-pose/global-station behavior, without
+        # the extension, so this tests isolation independently of its implementation.
+        for pose_id, pose in data["suspension"]["canonicalPoses"].items():
+            single = copy.deepcopy(data)
+            overrides = single["ropeSolver"].pop("terminalsByPoseID")
+            single["ropeSolver"]["terminalsByStrandID"] = overrides.get(
+                pose_id, single["ropeSolver"]["terminalsByStrandID"])
+            single["suspension"]["canonicalPoses"] = {pose_id: pose}
+            expected.update(solve_native_routes(mesh, single, descriptor))
+        actual = solve_native_routes(mesh, data, descriptor)
+>       assert actual == expected
+E       AssertionError: assert {'default': {...11409529948}}} == {'default': {...97564000536}}}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'shifted': {'height': -0.070588026, 'routes': {'loop': [[0.0, 0.030429199, -0.032157728], [0.0, 0.03, -0.0322], [0.0,....03, 0.0322], ...]}, 'lengthRatios': {'loop': 0.9999999963857514}, 'minimumClearance': {'loop': 0.001994511409529948}}} != {'shifted': {'height': -0.069643322, 'routes': {'loop': [[0.014162449, 0.030429851, -0.03215758], [0.014202267, 0.0300....032199778], ...]}, 'lengthRatios': {'loop': 0.9999999867033211}, 'minimumClearance': {'loop': 0.0019932497564000536}}}
+E         Use -v to get more diff
+
+.context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py:106: AssertionError
+=========================== short test summary info ============================
+FAILED .context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py::test_pose_terminals_are_authoring_only_and_merge_without_input_mutation
+FAILED .context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py::test_same_frame_distinct_stations_solve_closed_solid_loops_independently[dijkstra]
+FAILED .context/placid-badger-cad-second-half/yy-penta-evo/solver-extension-checks/test_terminals_by_pose_proposal.py::test_same_frame_distinct_stations_solve_closed_solid_loops_independently[astar]
+3 failed, 17 passed in 2.56s

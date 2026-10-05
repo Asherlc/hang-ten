@@ -1,0 +1,41 @@
+{
+  "owner": "placid-badger",
+  "recordedUTC": "2026-10-03T01:26:14.921136+00:00",
+  "task": "forge-review15/root-integration",
+  "HEAD": "a5cfad56095b1d5fbdba8c4b2949cde8cf557063",
+  "priorRecords": [
+    {
+      "path": "docs/model-delivery-lock.json",
+      "sha256": "6cb5cd319d85b6850451c13722a72f5aa6af42626e74053a89481ca49c7c04e7",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/0-model-delivery-lock.json"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/review-queue.json",
+      "sha256": "fe8cc96364194cabaf4aa057e2d4a3ed8874d1494f4de4ccc4bf3aa343e14a0a",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/1-review-queue.json"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/batch-validation.json",
+      "sha256": "3a261fab5ed09f539b90b400e70e371d321368345793526050e3dfcd242be83d",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/2-batch-validation.json"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/delivery-checksums.txt",
+      "sha256": "b3b0b9bc93b07f3bed5df3888a3b106f30fededbad25d37743bcb37f97814bb9",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/3-delivery-checksums.txt"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/delivery-validation.json",
+      "sha256": "1a7a7e836510c301ffbe5eb5ad23afd2965c7efadfb24a129db2babc6240172a",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/4-delivery-validation.json"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
+      "sha256": "577c861f0a614af05c62ddf415a299c0ce7e273ea4a01e60608f27ce6d8bb0f4",
+      "retainedPath": ".context/placid-badger/forge-review15/root/prior-records/5-source-audit.md"
+    }
+  ],
+  "packageBaseline": ".context/placid-badger/forge-review15/preflight/baseline.json",
+  "externalResources": [],
+  "canonicalMutation": false
+}

@@ -1,0 +1,76 @@
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1392,7 +1392,7 @@
+ }
+ 
+ #if DEBUG
+-/// Temporary diagnostic recorder. No observable state and no entity mutations.
++/// Temporary recorder; an explicit DEBUG gate enables the bounded visibility experiment.
+ @MainActor
+ final class BoardHighlightDiagnostic {
+     static let isEnabled = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC"] == "1"
+@@ -1409,6 +1409,10 @@
+     private var viewSignatures: [ViewSceneKey: String] = [:]
+     private var requestedIDs: [UUID: Set<String>] = [:]
+     private var requestedModes: [UUID: String] = [:]
++    private var visibilityPending: Set<UUID> = []
++    private var visibilityStarted: Set<UUID> = []
++    private var visibilityTasks: [UUID: Task<Void, Never>] = [:]
++    private var visibilityRestores: [UUID: () -> Void] = [:]
+ 
+     private init() {
+         let env = ProcessInfo.processInfo.environment
+@@ -1529,6 +1533,41 @@
+         if let priorIDs { row["priorCachedIDs"] = priorIDs.sorted() }
+         if let priorMode { row["priorCachedMode"] = String(describing: priorMode) }
+         emit(row)
++        let env = ProcessInfo.processInfo.environment
++        if env["HANGTEN_REVIEW_ENTITY_VISIBILITY_PROBE"] == "1",
++           env["HANGTEN_REVIEW_BOARD_ARVIEW_HOST"] != "1",
++           env["HANGTEN_REVIEW_SUPPRESS_WORKOUT_HAND_HOST"] != "1" {
++            if event == "highlight-before", mode == .preview, priorMode == .active, !selected.isEmpty {
++                visibilityPending.insert(key)
++            }
++            if event == "highlight-after", visibilityPending.remove(key) != nil {
++                startVisibilityProbe(scene: scene, ids: selected)
++            }
++        }
++    }
++
++    private func startVisibilityProbe(scene: BoardModelRealityScene, ids: Set<String>) {
++        let key = scene.diagnosticLifecycleToken
++        guard visibilityStarted.insert(key).inserted else { return }
++        capture("visibility-scheduled", scene: scene)
++        visibilityTasks[key] = Task { @MainActor [weak scene] in
++            do { try await Task.sleep(for: .seconds(3)) }
++            catch { return }
++            guard !Task.isCancelled, let scene else { return }
++            let entities = Set(ids.flatMap { scene.contactEntities[$0] ?? [] })
++            let saved = entities.map { ($0, $0.isEnabled) }
++            self.visibilityRestores[key] = { saved.forEach { $0.0.isEnabled = $0.1 } }
++            defer {
++                self.visibilityRestores.removeValue(forKey: key)?()
++                self.visibilityTasks.removeValue(forKey: key)
++                self.capture("visibility-restored", scene: scene)
++            }
++            self.capture("visibility-before-disable", scene: scene)
++            entities.forEach { $0.isEnabled = false }
++            self.capture("visibility-disabled", scene: scene)
++            do { try await Task.sleep(for: .seconds(3)) }
++            catch { return }
++        }
+     }
+ 
+     func startSamples(view: UUID, scene: BoardModelRealityScene) {
+@@ -1551,6 +1590,11 @@
+         capture("view-disappear", scene: scene, view: view)
+         let key = ViewSceneKey(scene: scene.diagnosticLifecycleToken, view: view)
+         samplers.removeValue(forKey: key)?.cancel()
++        if let restore = visibilityRestores.removeValue(forKey: scene.diagnosticLifecycleToken) {
++            restore()
++            capture("visibility-teardown-restored", scene: scene, view: view)
++        }
++        visibilityTasks.removeValue(forKey: scene.diagnosticLifecycleToken)?.cancel()
+         viewSignatures.removeValue(forKey: key)
+     }
+ }

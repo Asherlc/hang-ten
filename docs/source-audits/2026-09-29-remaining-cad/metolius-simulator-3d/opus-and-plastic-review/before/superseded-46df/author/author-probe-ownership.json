@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "author-probe",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-correction/author_functional_probe.py",
+  "timeoutSeconds": 600,
+  "startedUTC": "2026-10-01T16:18:36.187115+00:00",
+  "ownedProcessGroup": 65415,
+  "elapsedSeconds": 58.30820245901123,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

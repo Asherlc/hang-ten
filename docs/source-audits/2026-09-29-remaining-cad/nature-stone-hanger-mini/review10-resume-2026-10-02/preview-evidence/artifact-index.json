@@ -1,0 +1,97 @@
+{
+  "owner": "placid-badger",
+  "status": "Two viewed current whole CAD/cache previews ready; root owns retention and human review",
+  "canonical4": {
+    "nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+    "assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+    "assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+    "suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+  },
+  "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f",
+  "images": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-upright-granite-selection.png",
+      "sha256": "d424805aee1f86a020a15c3e2a948149d6795554324c7c1e5f10f7a03d976304",
+      "pose": "front-upright",
+      "selectedContact": "granite-edge-15"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-jug-open-up-selection.png",
+      "sha256": "960ca0a83b500518cdb397dee3f27ab85beac09a9cebd1e3e7d813924dda7a94",
+      "pose": "jug-open-up",
+      "selectedContact": "pull-up-jug"
+    }
+  ],
+  "provenance": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/preview-provenance.json",
+    "sha256": "95572426fab88065873533aba08be1ece53bed435626649bc8f39a72360da029"
+  },
+  "wholeImageJudgment": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/viewed-whole-image-judgment.json",
+    "sha256": "f93c3f7ab95ccf2bd0e61a93e04abcfab16ba446d0983c06e0e36704e9ec9c46"
+  },
+  "lifecycleAndScope": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/final-lifecycle-and-scope.json",
+    "sha256": "cbeac0a6956e3de64ee178b1eb0fe46aa401ff4940fcd1e54b55eb91fada922d"
+  },
+  "artifacts": [
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/cleanup-receipt.json",
+      "sha256": "d074cc0f4cc7e32f0577168b8cd1869dc5cf14aaa74ce4e187f4a38104e3c529"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/final-lifecycle-and-scope.json",
+      "sha256": "cbeac0a6956e3de64ee178b1eb0fe46aa401ff4940fcd1e54b55eb91fada922d"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/generated-board.json",
+      "sha256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/input-identity.json",
+      "sha256": "5bf21ca9f616806f65965e05f7dc40f7c110b7ecffce6c3e39bded8600f8b10e"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-jug-open-up-selection.png",
+      "sha256": "960ca0a83b500518cdb397dee3f27ab85beac09a9cebd1e3e7d813924dda7a94"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/mini-current-upright-granite-selection.png",
+      "sha256": "d424805aee1f86a020a15c3e2a948149d6795554324c7c1e5f10f7a03d976304"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/ownership.json",
+      "sha256": "5a1febecc8776933d7fdf53d26c2c55d230c35ed35caf89a66259708c60bf137"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/preview-provenance.json",
+      "sha256": "95572426fab88065873533aba08be1ece53bed435626649bc8f39a72360da029"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render-command.json",
+      "sha256": "715587457df45607e68d3eee04b516d29e5fb1b06ac5429f1a1647f509d8d91a"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render-mini-current.py",
+      "sha256": "5b888b620413a23c4f54cdfa8aae5e22e470983526755fc5dd973ca52c0984f6"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render.stdout.log",
+      "sha256": "85238d91327e30783db75b70d16299312e8ec96047f23361f6f7a62b1f89db2b"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/run-preview.py",
+      "sha256": "49bde210c95f7a5cb7dc51a53be655d637c92da9655d650c9c93658ea923a08d"
+    },
+    {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/viewed-whole-image-judgment.json",
+      "sha256": "f93c3f7ab95ccf2bd0e61a93e04abcfab16ba446d0983c06e0e36704e9ec9c46"
+    }
+  ],
+  "runtimeVerified": false,
+  "currentAppFrames": 0
+}

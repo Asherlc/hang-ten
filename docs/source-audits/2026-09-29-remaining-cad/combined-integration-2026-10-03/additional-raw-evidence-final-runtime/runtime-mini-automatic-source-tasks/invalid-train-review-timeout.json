@@ -1,0 +1,8 @@
+{
+  "classification": "INVALID_SETUP",
+  "reason": "Root whole-image review did not arrive within the prospective 45-second setup bound across turn compaction. No route command or measurement capture occurred.",
+  "captureCount": 0,
+  "cleanupVerified": true,
+  "noRenderingOutcome": true,
+  "nextTrial": "Distinct fresh run, identical automatic source-task protocol; no gate relaxation or evidence overwrite."
+}

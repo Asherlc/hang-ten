@@ -1,0 +1,18 @@
+{
+  "workspaceOwner": "placid-badger",
+  "command": [
+    "rtk",
+    "proxy",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/completion/root/check_android_staging.py"
+  ],
+  "startedUTC": "2026-10-02T03:44:12.630706+00:00",
+  "timeoutSeconds": 600,
+  "ownedTemporaryDirectory": ".context/placid-badger/nature-stone-mini-review10/completion/root/placid-badger-mini-android-staging-tmp",
+  "status": "pass",
+  "ownedProcessGroup": 82467,
+  "ownedProcessGroupAbsent": true,
+  "ownedTemporaryDirectoryAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 2.4761281660175882
+}

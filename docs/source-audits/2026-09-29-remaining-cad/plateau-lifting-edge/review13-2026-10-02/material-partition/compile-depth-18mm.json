@@ -1,0 +1,33 @@
+{
+  "package": "plateau-lifting-edge",
+  "presentationID": "depth-18mm",
+  "source": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/plateau-lifting-edge.FCStd",
+  "board": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/plateau-lifting-edge.FCStd#HangTenBoardManifest",
+  "sourceSHA256": "b1c701af3ea5515b73e5b3641612f15953ecc3fb109332e95470bd70f9da7986",
+  "sourceUnchanged": true,
+  "schemaVersion": 1,
+  "sourceKind": "native-parametric-measured-profile",
+  "tessellationDeflectionMM": 0.15,
+  "nodes": [
+    "plateau_body",
+    "plateau_edge_18",
+    "plateau_metal_exterior"
+  ],
+  "triangles": 924,
+  "modelSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+  "assetBytes": 34044,
+  "contacts": [
+    "edge-18"
+  ],
+  "measuredRegionDepthsMM": {
+    "edge-18": 18.0
+  },
+  "published": true,
+  "asset": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-18mm-staging/primary.usdz",
+  "descriptor": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/placid-badger-plateau13-export-18mm-staging/primary.model.json",
+  "assetSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+  "assetRetainedPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/primary.usdz",
+  "assetRetainedSHA256": "9027767be981b5625b39924dfd924b9055888e01be5d81d2ef8ecd516ea6c6eb",
+  "descriptorRetainedPath": ".context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/assets/primary.model.json",
+  "descriptorRetainedSHA256": "9a973d00fd5ed67818ed796da4c8d251546f2866b4fa8bbbb21eec8c7272bc55"
+}

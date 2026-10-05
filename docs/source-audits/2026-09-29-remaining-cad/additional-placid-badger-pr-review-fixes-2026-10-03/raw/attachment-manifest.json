@@ -1,0 +1,50 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PRReviewFixes20261003",
+        "exportedFileName" : "47F4F5C0-72FA-42E2-8F87-F765D3991070.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Plateau landscape natural Rest board preview_0_DA19E96E-244A-4B5A-B261-555A6AB3DFC4.png",
+        "timestamp" : 1791085298.618
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PRReviewFixes20261003",
+        "exportedFileName" : "4A28006A-8BEE-4FDA-9480-9B27A342CCD7.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Plateau landscape workout board below configuration selector_0_FBB725ED-5E2B-4F7F-8F93-6461792FA9B8.png",
+        "timestamp" : 1791085286.712
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PRReviewFixes20261003",
+        "exportedFileName" : "F3240D62-EDFD-47B7-8264-3DDEA2EA2FAF.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Mini portrait natural Rest board and finger cues_0_2D2BB89D-7366-42FA-BD5D-24E654715864.png",
+        "timestamp" : 1791085348.102
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "7774F2CB-D5DF-45EA-A5ED-FFACBEAED21B",
+        "deviceName" : "Hang Ten Paseo placid-badger Review PRReviewFixes20261003",
+        "exportedFileName" : "758E7558-FF55-46DD-A61C-86CA7E4539CB.png",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "Mini portrait paused Hang board and finger cues_0_AF93AB41-1121-49C0-9877-B5DD96049431.png",
+        "timestamp" : 1791085335.273
+      }
+    ],
+    "testIdentifier" : "OwlClimbPokerBoardMapInteractionUITests/testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest()",
+    "testIdentifierURL" : "test://com.apple.xcode/HangTen/HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest"
+  }
+]

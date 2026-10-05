@@ -1,0 +1,15 @@
+{
+  "createdUTC": "2026-10-02T19:07:09.553824+00:00",
+  "supersedesVisualConclusionOf": [
+    "hand-host-probe-findings.json",
+    "hand-off-a-landscape/material-brackets.json"
+  ],
+  "error": "Assistant incorrectly classified OFF screenshot as blue when reviewing multiple returned images. Root independently challenged; individual full-image reinspection confirms red. No image overwrite occurred.",
+  "criticalImage": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-off-a-landscape/next-active-timed-2.png",
+  "recordedSHA256": "bf4c4b7f5f0124c5fb22b2e85f018c15481bc4ad379a380e0a9f08e331ce71dc",
+  "currentSHA256": "bf4c4b7f5f0124c5fb22b2e85f018c15481bc4ad379a380e0a9f08e331ce71dc",
+  "correctedVisibleColor": "red",
+  "correctedResult": "Hands ON-a blue during active, OFF-a red during active, ON-b blue during active. This on/off/on result supports a dependency on concurrent hand host presence in this scenario.",
+  "limitations": "Single on/off/on series; not yet a production fix. Need camera comparison with hands ON to distinguish implicit camera contract from host count. No geometry/package changes.",
+  "originalIncorrectReportsPreserved": true
+}

@@ -1,0 +1,207 @@
+{
+  "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "mouth-1-lead",
+          "kind": "lead",
+          "restLength": 0.4075,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        },
+        {
+          "id": "mouth-2-lead",
+          "kind": "lead",
+          "restLength": 0.4075,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        },
+        {
+          "id": "mouth-3-lead",
+          "kind": "lead",
+          "restLength": 0.4075,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        },
+        {
+          "id": "mouth-4-lead",
+          "kind": "lead",
+          "restLength": 0.4075,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        },
+        {
+          "id": "left-rear-return",
+          "kind": "segment",
+          "restLength": 0.03,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        },
+        {
+          "id": "right-rear-return",
+          "kind": "segment",
+          "restLength": 0.03,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Original 2 mm cord radius retained as a display estimate. Front leads use the measured native bore outward axis; the solver derives their short exterior exit segment from the native solid support plane. No authored route stations."
+        }
+      ],
+      "terminalsByStrandID": {
+        "mouth-1-lead": {
+          "points": [
+            [
+              -0.246,
+              0,
+              0.025
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "mouth-2-lead": {
+          "points": [
+            [
+              -0.231,
+              0,
+              0.025
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "mouth-3-lead": {
+          "points": [
+            [
+              0.231,
+              0,
+              0.025
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "mouth-4-lead": {
+          "points": [
+            [
+              0.246,
+              0,
+              0.025
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
+          ]
+        },
+        "left-rear-return": {
+          "points": [
+            [
+              -0.246,
+              0,
+              -0.025
+            ],
+            [
+              -0.231,
+              0,
+              -0.025
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        },
+        "right-rear-return": {
+          "points": [
+            [
+              0.231,
+              0,
+              -0.025
+            ],
+            [
+              0.246,
+              0,
+              -0.025
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      "clearanceMeters": 0.0005,
+      "poses": [
+        "central-20-6",
+        "central-30-25",
+        "paired-12-8-6",
+        "paired-25-20-15-10",
+        "rounded-tray"
+      ],
+      "routeCachePresent": true,
+      "sectionPlane": "anchor"
+    }
+  ],
+  "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification.",
+  "generatedCollarPolicy": "Outward mouthAxis [0,0,1] is the native four-through-bore direction documented in native-channel-measurements.json. Native solid support bounds determine a short exit point; only measured mouths/axis are authored. Original 2 mm cord display radius retained. Up to five deterministic generated lead-margin attempts must pass unchanged continuous 3D and self/interstrand tube gates.",
+  "mouthAxisSourceMapping": {
+    "manufacturerEvidence": [
+      "evidence/YY_BAGUETTE_EVO_03_FG.webp",
+      "evidence/YY_BAGUETTE_EVO_10_FG.webp"
+    ],
+    "nativeMeasurement": "native-channel-measurements.json",
+    "nativeOutwardAxis": [
+      0,
+      -1,
+      0
+    ],
+    "runtimeOutwardAxis": [
+      0,
+      0,
+      1
+    ],
+    "interpretation": "Front mouths lie on native Y=-25 mm; the analytic cylinders run through 50 mm to Y=+25 mm. Front visible leads exit toward negative native Y. The original source-backed four-through-bore graph and rear exterior returns are retained."
+  }
+}

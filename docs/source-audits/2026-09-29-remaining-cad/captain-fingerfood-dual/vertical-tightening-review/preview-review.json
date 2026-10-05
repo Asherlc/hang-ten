@@ -1,0 +1,26 @@
+{
+  "status": "Technical comparison render complete; user acceptance remains separate",
+  "imageCount": 24,
+  "beforeSnapshotFilesVerified": 28,
+  "beforeSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "afterSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "immutableGeometryVerified": true,
+  "previousFrontMouthReviewUnchanged": true,
+  "nativeSolvePerformedByThisLane": false,
+  "bestVertical90Views": {
+    "front": "left-pocket-vertical-front-detail.png",
+    "side": "left-pocket-vertical-side-detail.png",
+    "top": "left-pocket-vertical-top-detail.png"
+  },
+  "fullVertical90Views": {
+    "front": "left-pocket-vertical-front-full.png",
+    "side": "left-pocket-vertical-side-full.png",
+    "top": "left-pocket-vertical-top-full.png"
+  },
+  "visualInspection": [
+    "90-degree front/side/top detail and front full show a reduced lateral departure for the lower lead while preserving the existing hole entry.",
+    "Front detail reviewed for curved lip, inverted straight lip, exterior jug: unchanged body geometry and source-bound terminals.",
+    "Each before/after pair uses the same numeric viewport bounds; the two scenes are centered on the body, preserving actual solved support-to-board relations."
+  ],
+  "limits": "Material-neutral CPU z-buffer previews from unchanged USDZ triangles and actual stored cord caches. These are not app/Simulator captures or an independent clearance solve."
+}

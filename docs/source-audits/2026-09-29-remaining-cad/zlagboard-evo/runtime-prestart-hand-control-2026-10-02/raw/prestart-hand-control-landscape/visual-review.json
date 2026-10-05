@@ -1,0 +1,140 @@
+{
+  "scope": "All12 whole phase images directly viewed",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-0.25.png",
+      "sha256": "d953869139b791c9dafb4f0b0b22effad3dad3c4c040ce0693514c93ce8f8674",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "correct": true,
+      "visibleTimer": "00:07",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-1.png",
+      "sha256": "2ea289e4ed559e4f6ef52857df59eeb36e44e79219ac8a7eba9094c265a7b76f",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "correct": true,
+      "visibleTimer": "00:06",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-3.png",
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "correct": true,
+      "visibleTimer": "00:04",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-0-active-plus-5.png",
+      "sha256": "4ca1142e638464f3ad051ff6f3a51f651d72f5ba4db8a1eef21c968d0097319b",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "red",
+      "correct": true,
+      "visibleTimer": "00:02",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-0.25.png",
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "correct": false,
+      "visibleTimer": "03:00",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-1.png",
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "correct": false,
+      "visibleTimer": "02:59",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-3.png",
+      "sha256": "f6e35cd1991fb0f167ccb0f2b1b3d6688d4ccb33b823995d715921862ddbc9e2",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "correct": false,
+      "visibleTimer": "02:57",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-1-preview-plus-5.png",
+      "sha256": "1b8c132a0747c3d2957526c45e978c1ccb96da2aed37dea1d4d351171b9eaca5",
+      "observedBoardColor": "red",
+      "expectedBoardColor": "blue",
+      "correct": false,
+      "visibleTimer": "02:55",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58",
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "correct": false,
+      "visibleTimer": "00:07",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-1.png",
+      "sha256": "a67b88ab1e47eb78979e980552d42d130b78edde5681082ebb67605b8939b813",
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "correct": false,
+      "visibleTimer": "00:06",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-3.png",
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb",
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "correct": false,
+      "visibleTimer": "00:04",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-control-landscape/phase-2-active-plus-5.png",
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b",
+      "observedBoardColor": "blue",
+      "expectedBoardColor": "red",
+      "correct": false,
+      "visibleTimer": "00:02",
+      "bothHandsVisible": true,
+      "handPose": "Palmar/front pair, inward thumbs and four red fingertips; no obvious clipping; exact joint angles not established.",
+      "method": "Direct whole image view, no crops or pixel measurements"
+    }
+  ],
+  "correctBoardCaptures": 4,
+  "incorrectBoardCaptures": 8,
+  "visualResult": "FAIL"
+}

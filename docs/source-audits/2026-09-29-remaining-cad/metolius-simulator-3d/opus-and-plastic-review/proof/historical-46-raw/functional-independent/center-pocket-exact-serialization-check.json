@@ -1,0 +1,43 @@
+{
+  "status": "fail",
+  "originalSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "sourceSHA256": "46df0c88878d3f833c27c7cce12c637fba09572d9223290c850c0e866b4d1264",
+  "centerPocket15SectionAuthoring": [
+    {
+      "name": "Pocket_pocket_15_center_S0",
+      "GeometryExact": false,
+      "PlacementExact": true,
+      "ConstraintsExact": true,
+      "ExpressionEngineExact": true
+    },
+    {
+      "name": "Pocket_pocket_15_center_S1",
+      "GeometryExact": false,
+      "PlacementExact": true,
+      "ConstraintsExact": true,
+      "ExpressionEngineExact": true
+    },
+    {
+      "name": "Pocket_pocket_15_center_S2",
+      "GeometryExact": false,
+      "PlacementExact": true,
+      "ConstraintsExact": true,
+      "ExpressionEngineExact": true
+    },
+    {
+      "name": "Pocket_pocket_15_center_S3",
+      "GeometryExact": false,
+      "PlacementExact": true,
+      "ConstraintsExact": true,
+      "ExpressionEngineExact": true
+    },
+    {
+      "name": "Pocket_pocket_15_center_S4",
+      "GeometryExact": false,
+      "PlacementExact": true,
+      "ConstraintsExact": true,
+      "ExpressionEngineExact": true
+    }
+  ],
+  "scope": "Exact native sketch geometry/placement/constraints/expressions for all5 centerpocket15 loft stations;50mm final physicaldepth independently checked. Finalbody cap startsaboveZ187, so opening roof/shape preservation must also remain visually/native reviewed."
+}

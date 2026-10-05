@@ -1,0 +1,13 @@
+{
+  "owner": "placid-badger",
+  "workspace": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+  "lane": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02",
+  "simulatorUUID": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+  "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-4",
+  "deviceType": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+  "createdResources": [
+    "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/DerivedData",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/runtime-retry-2026-10-02/tmp"
+  ]
+}

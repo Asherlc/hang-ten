@@ -1,0 +1,114 @@
+{
+  "status": "P2_RAW_EVIDENCE_AND_PROSPECTIVE_RULE_PASS_WITH_GENERIC_HELPER_LIMIT_NOTED",
+  "validator": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-hand-projection-prospective-frames.py",
+    "sha256": "6e1da688cf911b1e8b21db126cb364526bf53d6aca5ad52fb2c74b772894ecef"
+  },
+  "decisionSHA256": "d7cd649799e35de17ca85f83ec73e06eb1171cdcc0f68eff9fbad24b5e89b241",
+  "rawTrace": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-p2-landscape/events-65E89C2E-CD67-4BC9-891F-7B0F9C156D05.jsonl",
+    "sha256": "fd75dd2b888620db45bee0a7239d791734f888a480112697f57f0fdacca19a7d",
+    "records": 151
+  },
+  "coverage": {
+    "qualifiedCensusRows": 131,
+    "historyRows": 131,
+    "actualFrameObservations": 128,
+    "initialNoBoardHostSequences": [
+      8,
+      9,
+      10
+    ],
+    "allEmptyRowsBeforeFirstAttachment": true,
+    "noPostAttachmentCensusDropped": true,
+    "everyMatchedHostIsExactlyOnePublicARView": true,
+    "all128RawFramesExactlyMatchValidationOutput": true,
+    "all12ActualCPUBeforeAfterRecordsMatchRawTrace": true
+  },
+  "checks": {
+    "hand-camera-validation.json": {
+      "openingFlag": true,
+      "suppressionAbsent": true,
+      "cameraEvidencePresent": true,
+      "everyConfiguredCameraHasReset": true,
+      "oneConfiguredCameraPerConstructedScene": true,
+      "componentMatchesFlag": true,
+      "noFitRejected": true,
+      "unchangedClips": true,
+      "finiteDepthsInsideClips": true,
+      "validFOVorScale": true
+    },
+    "structural-correspondence.json": {
+      "completeContiguous": true,
+      "captures12": true,
+      "allCPUBrackets": true,
+      "sameScene": true,
+      "naturalFirstHang": true,
+      "naturalRest": true,
+      "freshSession": true,
+      "boundaryAppActive": true,
+      "boundaryWindowActive": true,
+      "boundaryLandscape": true,
+      "lateBoundaryCensus": true,
+      "noAXOrTouch": true
+    },
+    "hand-lifetime-validation.json": {
+      "completeOpeningStream": true,
+      "instrumentationVersion": true,
+      "suppressionFlagCorrect": true,
+      "allFourCountsOnEveryRecord": true,
+      "openingCountsZero": true,
+      "countsMonotonic": true,
+      "finalMarkerAfterLastCapture": true,
+      "noRecorderErrorOrCap": true,
+      "ONUsedPathPositiveConstructorAndMake": true
+    },
+    "prospective-frame-correspondence.json": {
+      "observationsPresent": true,
+      "exactCommonEndpoints": true,
+      "oneMatchingBoardARView": true,
+      "sameAffineSegment": true,
+      "monotoneObservedProgress": true,
+      "intermediatesOnlyInitialActiveBeforeFirstCapture": true,
+      "firstPostCaptureCensusFinalByPlus1CaptureEnd": true,
+      "allLaterFramesFinal": true,
+      "boardRootTransformsEqual": true,
+      "boardCameraTransformsEqual": true,
+      "viewportEndpointValuesEqual": true,
+      "lifecycleCountsEqual": true,
+      "creationOrderEqual": true,
+      "handCameraTransformsEqual": true,
+      "handDepthsEqual": true
+    }
+  },
+  "unchangedHelpers": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-root-workout.py",
+      "sha256": "ac383148be165946df9281b75c0697dac4e35b51c8635884f5d33f34063b4e26",
+      "frozenOriginalExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-all-hand-camera.py",
+      "sha256": "7e622fc92d38ff4b89123bfb32cc3e2b0347698f0d554deb1c06563b8644f1f5",
+      "frozenOriginalExact": true
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/check-strict-hand-lifetime.py",
+      "sha256": "44e560b3c31c1c44b8f2bee262c3718cbd82cbfcb35c435a7448ad71f0723fb6",
+      "frozenOriginalExact": true
+    }
+  ],
+  "originalFailure": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/all-hand-projection-o1-p1-gate-report.json",
+    "sha256": "ee37e51a9a19bc27d56b769642ed2d44117f87c610389828608229b3b638ec3c",
+    "preservedExact": true,
+    "status": "Still failed exact frame-set correspondence; not reclassified."
+  },
+  "genericValidatorLimit": "Helper iterates and flattens boardHosts, so missing hosts after first attachment could be silently omitted; unique view ID alone does not independently assert class or per-record cardinality. P2 raw audit proves these facts hold. Require equivalent independent raw coverage for O2 before completion; do not treat this report as a helper edit or weaker acceptance criterion.",
+  "scopeLimits": [
+    "O2 active outputs were not read.",
+    "No source, runtime or validator edits and no original proof overwrite.",
+    "Prospective observed path correspondence does not establish identical animation timing or first-screenshot settlement.",
+    "This is not an independent visual interpretation of P2 screenshots."
+  ]
+}

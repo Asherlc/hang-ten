@@ -1,0 +1,13 @@
+{
+  "method": "Full screenshot contact sheet; no crop, tracing, or geometric edit",
+  "inputsSHA256": {
+    "front-25-front.png": "ac2e4db16e322b1ed969910dbb4bc45dfecbdbf554482a02110a47ddb8c35ae5",
+    "front-inverted-20-front.png": "c9453b8182c4e20cc1572944a9a27018a10268447d6efa43d52d9f7d6b1e498a",
+    "reverse-13-front.png": "81a09e1ed7de93de17a195c581944b5b2cc3fc83fba5f0eef8d0ad2df448ee4f",
+    "reverse-inverted-8-front.png": "c60f0095788f2dab7380fa505a8fb538b8677086019011d5d7b0b71773b62c6b",
+    "outer-upper-front.png": "f7c187a463e3e51ac32474541e8d7aa1cd472a363b16faa77c8d29addf86918c",
+    "outer-lower-front.png": "be127e9c521a61f76336a50353dcbe2e08d11400b29e1c87a8bf542ace736183"
+  },
+  "outputSHA256": "7f538bdce819e2b373144e633f8d122462eb9b982f3d3d8e34272190d88ba4be",
+  "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+}

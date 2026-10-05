@@ -1,0 +1,233 @@
+{
+  "reviewer": "baguette_review_prep",
+  "createdUTC": "2026-10-03T14:08:55.826319+00:00",
+  "binarySHA256AsProvidedByRoot": "a942935be9ee125e31bdf6809519e1516246f20dda7b845b91fd26cd308ee0c3",
+  "scope": "Direct independent whole-image review of Train and elapsed001\u2013018 only; no image processing or runtime access.",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/train-setup.png",
+      "sha256": "5fc78b5c1789a325d803dc1eef98cff2a8a746a7ee5923082fb12a7aa4a29bfd",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Train",
+      "visibleTimer": null,
+      "boardVisible": true,
+      "selectedContactColor": null,
+      "bothHandsVisible": false,
+      "observation": "Light wood board, two rows of cavities and top relief legible; whole silhouette fits."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-001s.png",
+      "sha256": "f82855749121cb1a7407330b6181ecf14c5d19d41959e51cf68ef1e362ab4762",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Get ready",
+      "visibleTimer": "00:03",
+      "boardVisible": false,
+      "selectedContactColor": null,
+      "bothHandsVisible": false,
+      "observation": "Board and hands absent in initial Get ready/navigation frame."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-002s.png",
+      "sha256": "6f4f4e520ccce5a44b05242160f9d0bb80d608c8ce875bb5fadcfb92cbdca714",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Get ready",
+      "visibleTimer": "00:01",
+      "boardVisible": true,
+      "selectedContactColor": null,
+      "bothHandsVisible": false,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-003s.png",
+      "sha256": "69c1a7f285fa25bee1f63048fbdda4dfbd07726625f4fb51407ecee57e811f90",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Get ready",
+      "visibleTimer": "00:01",
+      "boardVisible": true,
+      "selectedContactColor": null,
+      "bothHandsVisible": false,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-004s.png",
+      "sha256": "8be92ad9c556e455568007a418c28859a25017ff4eb2ec1d0de41148dce89066",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:06",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": false,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hand diagrams absent despite visible Hang phase; labeled half-crimp cards remain."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-005s.png",
+      "sha256": "62a8aa6699c59a21fc3865d715e6afca22e2f06a2a3ef45293870b0c7879886d",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:05",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": false,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hand diagrams absent despite visible Hang phase; labeled half-crimp cards remain."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-006s.png",
+      "sha256": "d4959a8cb0ec5cda953b8e4102a3a829c50d686bcaf0569e254afbbc71ae9aad",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:05",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-007s.png",
+      "sha256": "d4959a8cb0ec5cda953b8e4102a3a829c50d686bcaf0569e254afbbc71ae9aad",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:05",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-008s.png",
+      "sha256": "24dc2f8586c2c3996644d354d37b4dd914b38561cde760d659c6dab1f7117466",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:03",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-009s.png",
+      "sha256": "b4898d31314301fe8cebdc8f3aeee59a30479d00108b86615042f362d22068c9",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:02",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-010s.png",
+      "sha256": "af5264e87db35c79eff28aaed96d73efe4e9cf4daba00c77ae77e48991113854",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 1 Hang",
+      "visibleTimer": "00:01",
+      "boardVisible": true,
+      "selectedContactColor": "red",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-011s.png",
+      "sha256": "0f1458a1042fe5540b12a43ed2c9bf5ac3c71120715444db1f4bf781754c7433",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:59",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-012s.png",
+      "sha256": "d8961f3847448bbdb3ec3dc74bd31764a588fffa0531fecc957f976d646167ac",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:58",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-013s.png",
+      "sha256": "d8961f3847448bbdb3ec3dc74bd31764a588fffa0531fecc957f976d646167ac",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:58",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-014s.png",
+      "sha256": "645d9c0e5fb4197618aa0e35b7b1139ee92ec23a3ea054435e6c0143f2f1a238",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:57",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-015s.png",
+      "sha256": "d8e4e2a11d5867ca2a510d6556132169d46bd31a8f0a872856cb7d2363bfb25e",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:56",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-016s.png",
+      "sha256": "4f553caa4319e910199cb8aa502b47c18014210abf25bb4afc23833b8efe730f",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:55",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-017s.png",
+      "sha256": "4c5fd80b922f43706b543bd308188a26a48023448d70bafce348e610c6ecac5b",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:54",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-018s.png",
+      "sha256": "f666762d3a6baabcfcea34b1acdd557d40ea2f3d54c01da6cec572b3b708b1d5",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step 2 Rest",
+      "visibleTimer": "02:52",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "bothHandsVisible": true,
+      "observation": "Whole warm wood board fits; cavities and stepped/sloped top relief are legible. Both hands visible with red four-finger cues."
+    }
+  ],
+  "summary": {
+    "wholeImagesDirectlyViewed": 19,
+    "visibleActiveRestBoardFrames": 15,
+    "activeRedCorrect": 7,
+    "restBlueCorrect": 8,
+    "boardAppearance": "PASS within visible reviewed frames: warm wood, legible cavity shading and top relief; prior uniformly dark flat appearance not present. Workout rendition is warmer/more contrasty than Train.",
+    "boardBlank": "Initial elapsed001 Get ready blank; board visible002\u2013018, including all15 active/rest frames.",
+    "hands": "Absent001\u2013005, including Hang004/005; present006\u2013018. This limitation is retained, not an all-cues pass.",
+    "fullWorkflowPassed": false,
+    "fullWorkflowNotEstablishedReason": "Only initial Hang and early Rest reviewed; no following Hang/tail, portrait, other board or interaction coverage in this report."
+  },
+  "limitations": [
+    "Visible phase/timer/color judgments only; no CPU brackets or precise phase-mutation timing asserted.",
+    "No manufacturing/material-colorimetric accuracy claim.",
+    "No source/runtime changes or human acceptance."
+  ]
+}

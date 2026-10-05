@@ -1,0 +1,22 @@
+{
+  "phase": "before",
+  "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+  "byteIdenticalCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-build-command.json",
+      "retained": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-proof/ios-build-command.json",
+      "sha256": "5f7f5da936ce6f9f51b7c9ba960e12b7295162f4cfeba11813afdea925d0a10e"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/ios-build.log",
+      "retained": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-proof/ios-build.log",
+      "sha256": "868a15055adf09d9e4c392ed121a23411fa2d2fda2cec892359c7e11d7badaa3"
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-jagged/ios/installed-app-provenance.json",
+      "retained": ".context/placid-badger/metolius-simulator-3d-jagged/ios/before-proof/installed-app-provenance.json",
+      "sha256": "1162dbb2de4ac864c04add9d1900ee10018e1b0cd66ed8fae11721b61eb660e1"
+    }
+  ],
+  "completeFramesVisuallyInspected": true
+}

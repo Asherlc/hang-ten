@@ -1,0 +1,64 @@
+{
+  "source": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/build-placid-badger-cad-second-half-integration-test-corrections.xcresult",
+  "archive": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/build-integration-test-corrections/build-placid-badger-cad-second-half-integration-test-corrections.xcresult.zip",
+  "sha256": "036fbcd281533468847f57107986074c79fe666c81e3a3cbee1c120f84306fbb",
+  "members": [
+    {
+      "path": "Data/",
+      "kind": "directory",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "externalAttributes": 1106051088
+    },
+    {
+      "path": "Data/data.0~FOEf68wmhAUwqqRA0E7mtFe4YU-Pii3jP5xckQCkF4jxwIl6RfIDXa1wy8MgVu2isGd1Xjgs9LNQ1lFuBAdupg==",
+      "kind": "file",
+      "bytes": 30801,
+      "sha256": "d18eb308feee2cf162126bfcf204a019b658ec97b179b7897df546532dbe1a50",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/data.0~gXcttMXGhJD6YnbaiKwu3zVCyYF2uPuYX-O7FZNFsYTrJgG9G22IP8Hch0Gb5cLzT7OnyAg1o3t0qzf3qbL7sA==",
+      "kind": "file",
+      "bytes": 2244,
+      "sha256": "7b0bdc4115dce8e09afe4ee779fbbfa380d71535dfc2fe4f10851d21c60de4af",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/data.0~j2NrGckGxPNOh3L4R0BFsLLT4NpinqVz2mz_O2bb6pkeoqjkZ3DXwF2LH11vwjPmWNVNHwZFW6MSwSKCRKksmg==",
+      "kind": "file",
+      "bytes": 315,
+      "sha256": "a4651a70531e089fbb54a54c035b3ffb131eea7346f8e864ff18d07c94248896",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~FOEf68wmhAUwqqRA0E7mtFe4YU-Pii3jP5xckQCkF4jxwIl6RfIDXa1wy8MgVu2isGd1Xjgs9LNQ1lFuBAdupg==",
+      "kind": "file",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~gXcttMXGhJD6YnbaiKwu3zVCyYF2uPuYX-O7FZNFsYTrJgG9G22IP8Hch0Gb5cLzT7OnyAg1o3t0qzf3qbL7sA==",
+      "kind": "file",
+      "bytes": 133,
+      "sha256": "5199560aec599eeeaa3e6ba29204ff77230a15deba87c9d2cfcc12d0ebeb2854",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Data/refs.0~j2NrGckGxPNOh3L4R0BFsLLT4NpinqVz2mz_O2bb6pkeoqjkZ3DXwF2LH11vwjPmWNVNHwZFW6MSwSKCRKksmg==",
+      "kind": "file",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "externalAttributes": 2175008768
+    },
+    {
+      "path": "Info.plist",
+      "kind": "file",
+      "bytes": 776,
+      "sha256": "2126798489ba8456a3047fbd5fcc278797d1717ea070fe6d46b214698fd01005",
+      "externalAttributes": 2175008768
+    }
+  ],
+  "verified": true
+}

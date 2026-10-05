@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "package": "metolius-simulator-3d",
+  "reviewNumber": 8,
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "modelSHA256": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+  "descriptorSHA256": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d",
+  "priorHashes": {
+    "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+    "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+    "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+  },
+  "originalFeedback": "Jagged",
+  "humanAcceptance": "pending",
+  "assemblyProgramSHA256": "772292e654718130a74c7cdbafc6f16f02c8d12de6393d09b805d72f9ffa4c22",
+  "createdAtUTC": "2026-10-01T15:24:19.298915+00:00"
+}

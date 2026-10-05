@@ -1,0 +1,69 @@
+{
+  "status": "unapplied conditional fixed candidate",
+  "patchSHA256": "286a01d11af56d21310d27e7ac674ff55d173e2f8ea1f0e098f74a7582cdbcad",
+  "beforeSHA256": "ccb0ab3f261ae0b172eac238eb9f40fe0c71ffc4e6112f6b3700ee743fc7b6e5",
+  "proposedSHA256": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542",
+  "eventSchemaSHA256": "67f947eeed4bb423d6d6d10a08eb31dce2c8811dac67e50b557a27f83cf47e88",
+  "checks": [
+    {
+      "name": "apply-check",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "git",
+        "apply",
+        "--check",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v5-neutral-ibl/neutral-ibl.patch"
+      ]
+    },
+    {
+      "name": "swift-parse",
+      "exitCode": 0,
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "swiftc",
+        "-frontend",
+        "-parse",
+        "-D",
+        "DEBUG",
+        ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-prototype-prep/v5-neutral-ibl/proposed/HangTen/Views/GripHandModelView.swift"
+      ]
+    }
+  ],
+  "scope": "Image branch only; live control unchanged",
+  "fixedValues": {
+    "resourceName": "placid-badger-cad-second-half-hand-image-neutral-<sessionID>",
+    "environmentMode": "fixed-neutral-white-adaptation",
+    "sourceRGB": [
+      1,
+      1,
+      1
+    ],
+    "sourceAlpha": 1,
+    "sourceColorSpace": "sRGB",
+    "sourceWidth": 32,
+    "sourceHeight": 16,
+    "sourceBitsPerComponent": 8,
+    "intensityExponent": 0
+  },
+  "ownership": "Exactly one async environment setup task per pending setup; strong source CGImage capture until generation returns, no scene construction/mutation/GPU submission while awaiting. Latest pending input replaces prior input. Completion installs resource only while active and not failed, then drains current request. Frame retains renderer/resource through GPU and conversion as before.",
+  "publicationCancellation": "Disappear invalidates active/publication/pending; no claim that underlying resource-generation work is cancellable. Completion while inactive is recorded/discarded.",
+  "failure": "CGImage or resource generation throws -> unavailable; no retry/timer/fallback image.",
+  "limits": [
+    "Fixed neutral white is a declared appearance adaptation, not Apple default or system IBL reconstruction",
+    "One fixed candidate; no brightness/exposure search",
+    "Source image dimensions are representation choice, no reference pixels measured",
+    "Async generation latency and actual visual readability require bounded runtime evidence",
+    "No production/workout readiness claim"
+  ],
+  "primaryAPIs": [
+    "https://developer.apple.com/documentation/realitykit/environmentresource/init(equirectangular:withname:)",
+    "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/resource",
+    "https://developer.apple.com/documentation/realitykit/realityrenderer/imagebasedlight/intensityexponent"
+  ],
+  "sourceEdited": false,
+  "runtimeTouched": false
+}

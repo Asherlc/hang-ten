@@ -1,0 +1,43 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "774B34D7-CF16-4C65-99F1-D8F81A52008D",
+        "deviceName": "Hang Ten Paseo placid-badger Review CIFix20261003",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 79,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "HangTen \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 0,
+  "finishTime": 1791064256.661,
+  "passedTests": 79,
+  "result": "Passed",
+  "runtimeWarnings": [],
+  "skippedTests": 0,
+  "startTime": 1791064100.322,
+  "statistics": [],
+  "testFailures": [],
+  "title": "Test - HangTen",
+  "topInsights": [
+    {
+      "category": "Longest Test Runs",
+      "impact": "84% of duration",
+      "text": "2 longest test runs with outlier durations exceeding 0.61s (three standard deviations)"
+    }
+  ],
+  "totalTestCount": 79
+}

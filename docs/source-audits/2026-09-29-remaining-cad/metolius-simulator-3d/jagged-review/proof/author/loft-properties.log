@@ -1,0 +1,18 @@
+Closed False
+ExpressionEngine []
+Label CenterShoulderTransitionLoft
+Label2 
+Linearize False
+MaxDegree 5
+Placement Placement [Pos=(0,0,0), Yaw-Pitch-Roll=(0,0,0)]
+Ruled False
+Sections [<Sketcher::SketchObject>, <Sketcher::SketchObject>, <Sketcher::SketchObject>, <Sketcher::SketchObject>]
+Shape <Solid object at 0x7867a38be0>
+ShapeMaterial <Material at 0x7863392400>
+Solid True
+Visibility True
+_ElementMapVersion 15.70200.5
+makeLoft(list of wires,[solid=False,ruled=False,closed=False,maxDegree=5]) -- Create a loft shape.
+
+								
+								

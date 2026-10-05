@@ -1,0 +1,31 @@
+{
+  "files": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "a75b0fe069f6f8d03f0ecd21bf18f001d83e5d4c7ac173abd4809d3fba910b9b",
+      "trackedPath": "HangTen/Models/BoardModelRealityTypes.swift"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/source/HangTen/Views/BoardModelView.swift",
+      "sha256": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+      "trackedPath": "HangTen/Views/BoardModelView.swift"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/source/HangTen/Views/RootView.swift",
+      "sha256": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+      "trackedPath": "HangTen/Views/RootView.swift"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/source/HangTen/Views/GripHandModelView.swift",
+      "sha256": "78398b0253e6bca1184a9c24c5c938a3dd1cc0afce807b0226b0f4605e6824a1",
+      "trackedPath": "HangTen/Views/GripHandModelView.swift"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-applied/source/HangTen/Views/TrainView.swift",
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+      "trackedPath": "HangTen/Views/TrainView.swift"
+    }
+  ],
+  "fullPatchSHA256": "0f3e9ff0a08d90e847152cc82ffc5a1c30d62cba9ef55269069b046bc898c885",
+  "head": "d31b501d681dd40ab4a91460f100986fc6293bb8"
+}

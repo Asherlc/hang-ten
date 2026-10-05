@@ -1,0 +1,363 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -xcconfig .context/placid-badger/combined-runtime-final-2026-10-03/ci-debug-optimized.xcconfig -destination "platform=iOS Simulator,id=FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1" -derivedDataPath .context/DerivedData -parallel-testing-enabled NO -collect-test-diagnostics never -resultBundlePath .context/placid-badger/combined-runtime-final-2026-10-03/tmp/final-natural-workflows.xcresult "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector" "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest" test-without-building
+
+Build settings from configuration file '.context/placid-badger/combined-runtime-final-2026-10-03/ci-debug-optimized.xcconfig':
+    OTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug
+    SWIFT_OPTIMIZATION_LEVEL = -O
+
+Resolve Package Graph
+
+
+Resolved source packages:
+  Sentry: https://github.com/getsentry/sentry-cocoa.git @ 8.58.4
+  analytics-connector-ios: https://github.com/amplitude/analytics-connector-ios.git @ 1.3.2
+  AmplitudeCore: https://github.com/amplitude/AmplitudeCore-Swift.git @ 1.5.0
+  Amplitude-Swift: https://github.com/amplitude/Amplitude-Swift @ 1.18.8
+
+Writing result bundle at path:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/combined-runtime-final-2026-10-03/tmp/final-natural-workflows.xcresult
+
+2026-10-03 19:43:06.654669-0700 HangTenUITests-Runner[84020:8745618] [Default] Running tests...
+    t =      nans Interface orientation changed to Landscape Right
+Test Suite 'Selected tests' started at 2026-10-03 19:43:07.367.
+Test Suite 'HangTenUITests.xctest' started at 2026-10-03 19:43:07.368.
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' started at 2026-10-03 19:43:07.368.
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector]' started.
+    t =     0.00s Start Test at 2026-10-03 19:43:07.369
+    t =     0.03s Set Up
+    t =     0.04s Open com.hangten.training
+    t =     0.04s     Launch com.hangten.training
+    t =     0.04s         Terminate com.hangten.training:66926
+    t =     0.21s             Interface orientation changed to Portrait
+objc[84020]: Class UIAccessibilityLoaderWebShared is implemented in both /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebCore.axbundle/WebCore (0x107b14310) and /Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/AccessibilityBundles/WebKit.axbundle/WebKit (0x107bb0398). This may cause spurious casting failures and mysterious crashes. One of the duplicates must be removed or renamed.
+2026-10-03 19:43:08.527 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 19:43:08.528 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     2.71s         Setting up automation session
+    t =     3.65s         Wait for com.hangten.training to idle
+    t =     4.75s             Interface orientation changed to Landscape Right
+    t =     6.06s Waiting 30.0s for "train.board" Other to exist
+    t =     7.10s     Checking `Expect predicate `existsNoRetry == 1` for object "train.board" Other`
+    t =     7.10s         Checking existence of `"train.board" Other`
+    t =     7.20s Open com.hangten.training with URL hangten://plan/research.abrahangs/workout
+    t =     7.20s     Launch com.hangten.training
+2026-10-03 19:43:14.572 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 19:43:14.572 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     7.35s         Interface orientation changed to Portrait
+    t =     7.62s         Setting up automation session
+    t =     8.48s         Wait for com.hangten.training to idle
+    t =     9.58s             Interface orientation changed to Landscape Right
+<unknown>:0: warning: -[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions
+    t =    12.16s Waiting 30.0s for "Pause" Button to exist
+    t =    13.20s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    13.20s         Checking existence of `"Pause" Button`
+    t =    13.29s         Capturing element debug description
+    t =    14.16s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    14.16s         Checking existence of `"Pause" Button`
+    t =    14.21s         Capturing element debug description
+    t =    15.25s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    15.25s         Checking existence of `"Pause" Button`
+    t =    15.29s Tap "Pause" Button
+    t =    15.29s     Wait for com.hangten.training to idle
+    t =    15.30s     Find the "Pause" Button
+    t =    15.34s     Check for interrupting elements affecting "Pause" Button
+    t =    15.38s     Synthesize event
+    t =    15.69s     Wait for com.hangten.training to idle
+    t =    15.70s Waiting 5.0s for "Resume" Button to exist
+    t =    16.75s     Checking `Expect predicate `existsNoRetry == 1` for object "Resume" Button`
+    t =    16.75s         Checking existence of `"Resume" Button`
+    t =    16.79s Waiting 5.0s for "boardMap.presentationSelector" SegmentedControl to exist
+    t =    17.84s     Checking `Expect predicate `existsNoRetry == 1` for object "boardMap.presentationSelector" SegmentedControl`
+    t =    17.84s         Checking existence of `"boardMap.presentationSelector" SegmentedControl`
+    t =    17.88s Find the "boardMap.presentationSelector" SegmentedControl
+    t =    17.94s Waiting 5.0s for "boardModel.3d" Other to exist
+    t =    18.98s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.3d" Other`
+    t =    18.98s         Checking existence of `"boardModel.3d" Other`
+    t =    19.02s Find the "boardModel.3d" Other
+    t =    19.07s Find the "boardModel.3d" Other
+    t =    19.12s Find the "boardModel.3d" Other
+    t =    19.17s Find the "boardMap.presentationSelector" SegmentedControl
+    t =    19.21s Find the "boardModel.3d" Other
+    t =    19.25s Find the Target Application 'com.hangten.training'
+    t =    19.39s Added attachment named 'Plateau landscape workout board below configuration selector'
+    t =    19.39s Tap "Resume" Button
+    t =    19.39s     Wait for com.hangten.training to idle
+    t =    19.40s     Find the "Resume" Button
+    t =    19.44s     Check for interrupting elements affecting "Resume" Button
+    t =    19.48s     Synthesize event
+    t =    19.79s     Wait for com.hangten.training to idle
+    t =    20.83s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    20.83s     Find the "workout.routinePicker" Button
+    t =    20.88s     Capturing element debug description
+    t =    21.05s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    21.11s         Find: Descendants matching type Button
+    t =    21.11s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    21.12s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    21.18s         Find: Descendants matching type Button
+    t =    21.18s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    21.83s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    21.83s     Find the "workout.routinePicker" Button
+    t =    21.87s     Capturing element debug description
+    t =    22.04s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    22.10s         Find: Descendants matching type Button
+    t =    22.10s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    22.10s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    22.16s         Find: Descendants matching type Button
+    t =    22.17s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    22.80s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    22.80s     Find the "workout.routinePicker" Button
+    t =    22.84s     Capturing element debug description
+    t =    23.02s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    23.07s         Find: Descendants matching type Button
+    t =    23.08s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    23.08s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    23.14s         Find: Descendants matching type Button
+    t =    23.14s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    23.88s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    23.88s     Find the "workout.routinePicker" Button
+    t =    23.93s     Capturing element debug description
+    t =    24.10s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    24.16s         Find: Descendants matching type Button
+    t =    24.16s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    24.16s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    24.22s         Find: Descendants matching type Button
+    t =    24.22s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    24.86s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    24.86s     Find the "workout.routinePicker" Button
+    t =    24.90s     Capturing element debug description
+    t =    25.08s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    25.14s         Find: Descendants matching type Button
+    t =    25.14s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    25.14s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    25.23s         Find: Descendants matching type Button
+    t =    25.23s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    25.86s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    25.86s     Find the "workout.routinePicker" Button
+    t =    25.91s     Capturing element debug description
+    t =    26.16s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    26.22s         Find: Descendants matching type Button
+    t =    26.22s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    26.22s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    26.29s         Find: Descendants matching type Button
+    t =    26.29s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    26.83s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    26.83s     Find the "workout.routinePicker" Button
+    t =    26.87s     Capturing element debug description
+    t =    27.04s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    27.10s         Find: Descendants matching type Button
+    t =    27.10s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    27.10s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    27.16s         Find: Descendants matching type Button
+    t =    27.16s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    27.80s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    27.80s     Find the "workout.routinePicker" Button
+    t =    27.84s     Capturing element debug description
+    t =    28.02s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    28.08s         Find: Descendants matching type Button
+    t =    28.08s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    28.08s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    28.14s         Find: Descendants matching type Button
+    t =    28.14s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    28.89s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    28.89s     Find the "workout.routinePicker" Button
+    t =    28.94s     Capturing element debug description
+    t =    29.17s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    29.23s         Find: Descendants matching type Button
+    t =    29.23s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    29.24s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    29.30s         Find: Descendants matching type Button
+    t =    29.30s         Requesting snapshot of accessibility hierarchy for app with pid 84048
+    t =    29.84s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    29.84s     Find the "workout.routinePicker" Button
+    t =    29.89s Tap "Pause" Button
+    t =    29.89s     Wait for com.hangten.training to idle
+    t =    29.89s     Find the "Pause" Button
+    t =    29.93s     Check for interrupting elements affecting "Pause" Button
+    t =    29.98s     Synthesize event
+    t =    30.39s     Wait for com.hangten.training to idle
+    t =    30.40s Waiting 5.0s for "Resume" Button to exist
+    t =    31.58s     Checking `Expect predicate `existsNoRetry == 1` for object "Resume" Button`
+    t =    31.59s         Checking existence of `"Resume" Button`
+    t =    31.78s Find the "boardModel.3d" Other
+    t =    31.83s Find the "boardModel.3d" Other
+    t =    32.00s Find the "boardMap.presentationSelector" SegmentedControl
+    t =    32.20s Added attachment named 'Plateau landscape natural Rest board preview'
+    t =    32.20s Tear Down
+    t =    32.20s     Setting device orientation to Portrait
+    t =    32.20s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector]' passed (32.931 seconds).
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest]' started.
+    t =     0.00s Start Test at 2026-10-03 19:43:40.300
+    t =     0.02s Set Up
+    t =     0.02s Open com.hangten.training
+    t =     0.03s     Launch com.hangten.training
+    t =     0.03s         Terminate com.hangten.training:84048
+    t =     0.17s             Interface orientation changed to Portrait
+2026-10-03 19:43:41.401 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 19:43:41.401 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     1.34s         Setting up automation session
+    t =     2.39s         Wait for com.hangten.training to idle
+    t =     4.66s Waiting 30.0s for "train.board" Other to exist
+    t =     5.70s     Checking `Expect predicate `existsNoRetry == 1` for object "train.board" Other`
+    t =     5.70s         Checking existence of `"train.board" Other`
+    t =     5.79s Open com.hangten.training with URL hangten://plan/research.abrahangs/workout
+    t =     5.80s     Launch com.hangten.training
+2026-10-03 19:43:46.098 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: debugger version lookup failed for path '<nil>': noURL
+2026-10-03 19:43:46.098 xcodebuild[84003:8745262] [MT] IDELaunchParametersSnapshot: no debugger version
+    t =     6.21s         Setting up automation session
+    t =     7.05s         Wait for com.hangten.training to idle
+<unknown>:0: warning: -[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions
+    t =    10.44s Waiting 30.0s for "Pause" Button to exist
+    t =    11.47s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    11.47s         Checking existence of `"Pause" Button`
+    t =    11.58s         Capturing element debug description
+    t =    12.51s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    12.51s         Checking existence of `"Pause" Button`
+    t =    12.54s         Capturing element debug description
+    t =    13.46s     Checking `Expect predicate `existsNoRetry == 1` for object "Pause" Button`
+    t =    13.46s         Checking existence of `"Pause" Button`
+    t =    13.51s Tap "Pause" Button
+    t =    13.51s     Wait for com.hangten.training to idle
+    t =    13.52s     Find the "Pause" Button
+    t =    13.57s     Check for interrupting elements affecting "Pause" Button
+    t =    13.62s     Synthesize event
+    t =    13.93s     Wait for com.hangten.training to idle
+    t =    13.94s Waiting 5.0s for "Resume" Button to exist
+    t =    14.97s     Checking `Expect predicate `existsNoRetry == 1` for object "Resume" Button`
+    t =    14.97s         Checking existence of `"Resume" Button`
+    t =    15.02s Waiting 5.0s for "boardModel.3d" Other to exist
+    t =    16.05s     Checking `Expect predicate `existsNoRetry == 1` for object "boardModel.3d" Other`
+    t =    16.05s         Checking existence of `"boardModel.3d" Other`
+    t =    16.10s Swipe up "boardModel.3d" Other
+    t =    16.10s     Wait for com.hangten.training to idle
+    t =    16.10s     Find the "boardModel.3d" Other
+    t =    16.14s     Check for interrupting elements affecting "boardModel.3d" Other
+    t =    16.19s     Synthesize event
+    t =    16.69s     Wait for com.hangten.training to idle
+    t =    16.70s Find the "boardModel.3d" Other
+    t =    16.86s Added attachment named 'Mini portrait paused Hang board and finger cues'
+    t =    16.86s Tap "Resume" Button
+    t =    16.86s     Wait for com.hangten.training to idle
+    t =    16.87s     Find the "Resume" Button
+    t =    16.92s     Check for interrupting elements affecting "Resume" Button
+    t =    16.97s     Synthesize event
+    t =    17.27s     Wait for com.hangten.training to idle
+    t =    18.31s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    18.31s     Find the "workout.routinePicker" Button
+    t =    18.36s     Capturing element debug description
+    t =    18.56s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    18.63s         Find: Descendants matching type Button
+    t =    18.63s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    18.63s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    18.71s         Find: Descendants matching type Button
+    t =    18.71s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    19.35s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    19.35s     Find the "workout.routinePicker" Button
+    t =    19.39s     Capturing element debug description
+    t =    19.57s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    19.64s         Find: Descendants matching type Button
+    t =    19.64s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    19.65s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    19.71s         Find: Descendants matching type Button
+    t =    19.72s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    20.33s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    20.33s     Find the "workout.routinePicker" Button
+    t =    20.38s     Capturing element debug description
+    t =    20.54s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    20.61s         Find: Descendants matching type Button
+    t =    20.61s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    20.61s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    20.67s         Find: Descendants matching type Button
+    t =    20.67s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    21.30s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    21.30s     Find the "workout.routinePicker" Button
+    t =    21.35s     Capturing element debug description
+    t =    21.57s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    21.63s         Find: Descendants matching type Button
+    t =    21.63s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    21.63s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    21.70s         Find: Descendants matching type Button
+    t =    21.70s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    22.32s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    22.32s     Find the "workout.routinePicker" Button
+    t =    22.39s     Capturing element debug description
+    t =    22.57s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    22.63s         Find: Descendants matching type Button
+    t =    22.63s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    22.63s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    22.70s         Find: Descendants matching type Button
+    t =    22.70s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    23.32s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    23.32s     Find the "workout.routinePicker" Button
+    t =    23.36s     Capturing element debug description
+    t =    23.54s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    23.60s         Find: Descendants matching type Button
+    t =    23.60s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    23.61s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    23.68s         Find: Descendants matching type Button
+    t =    23.68s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    24.30s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    24.30s     Find the "workout.routinePicker" Button
+    t =    24.34s     Capturing element debug description
+    t =    24.58s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    24.64s         Find: Descendants matching type Button
+    t =    24.64s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    24.65s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    24.71s         Find: Descendants matching type Button
+    t =    24.71s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    25.36s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    25.36s     Find the "workout.routinePicker" Button
+    t =    25.41s     Capturing element debug description
+    t =    25.63s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    25.69s         Find: Descendants matching type Button
+    t =    25.69s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    25.69s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    25.75s         Find: Descendants matching type Button
+    t =    25.75s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    26.37s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    26.37s     Find the "workout.routinePicker" Button
+    t =    26.45s     Capturing element debug description
+    t =    26.66s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    26.72s         Find: Descendants matching type Button
+    t =    26.72s         Find: Elements matching predicate '"workout.routinePicker" IN identifiers'
+    t =    26.73s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    26.79s         Find: Descendants matching type Button
+    t =    26.79s         Requesting snapshot of accessibility hierarchy for app with pid 84374
+    t =    27.33s Checking `Expect predicate `label CONTAINS "current step 18: Rest"` for object "workout.routinePicker" Button`
+    t =    27.33s     Find the "workout.routinePicker" Button
+    t =    27.38s Tap "Pause" Button
+    t =    27.38s     Wait for com.hangten.training to idle
+    t =    27.38s     Find the "Pause" Button
+    t =    27.43s     Check for interrupting elements affecting "Pause" Button
+    t =    27.47s     Synthesize event
+    t =    27.77s     Wait for com.hangten.training to idle
+    t =    27.78s Waiting 5.0s for "Resume" Button to exist
+    t =    28.82s     Checking `Expect predicate `existsNoRetry == 1` for object "Resume" Button`
+    t =    28.82s         Checking existence of `"Resume" Button`
+    t =    28.86s Swipe up "boardModel.3d" Other
+    t =    28.86s     Wait for com.hangten.training to idle
+    t =    28.86s     Find the "boardModel.3d" Other
+    t =    28.90s     Check for interrupting elements affecting "boardModel.3d" Other
+    t =    28.94s     Synthesize event
+    t =    29.44s     Wait for com.hangten.training to idle
+    t =    29.44s Find the "boardModel.3d" Other
+    t =    29.59s Added attachment named 'Mini portrait natural Rest board and finger cues'
+    t =    29.59s Tear Down
+    t =    29.59s     Setting device orientation to Portrait
+    t =    29.60s         Wait for com.hangten.training to idle
+Test Case '-[HangTenUITests.OwlClimbPokerBoardMapInteractionUITests testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest]' passed (29.990 seconds).
+Test Suite 'OwlClimbPokerBoardMapInteractionUITests' passed at 2026-10-03 19:44:10.290.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 62.920 (62.922) seconds
+Test Suite 'HangTenUITests.xctest' passed at 2026-10-03 19:44:10.290.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 62.920 (62.922) seconds
+Test Suite 'Selected tests' passed at 2026-10-03 19:44:10.290.
+	 Executed 2 tests, with 0 failures (0 unexpected) in 62.920 (62.923) seconds
+2026-10-03 19:44:10.654 xcodebuild[84003:8745262] [MT] IDETestOperationsObserverDebug: 65.464 elapsed -- Testing started completed.
+2026-10-03 19:44:10.654 xcodebuild[84003:8745262] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-03 19:44:10.654 xcodebuild[84003:8745262] [MT] IDETestOperationsObserverDebug: 65.464 sec, +65.464 sec -- end
+
+Test session results, code coverage, and logs:
+	/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/combined-runtime-final-2026-10-03/tmp/final-natural-workflows.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

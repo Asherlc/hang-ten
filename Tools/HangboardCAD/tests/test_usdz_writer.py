@@ -151,6 +151,23 @@ def test_normals_round_trip_as_unit_vectors(tmp_path):
     assert normals[0] == pytest.approx((0.0, 0.8, -0.6), rel=0, abs=1e-6)
 
 
+def test_normal_transform_reads_components_without_exhausting_a_native_vector():
+    from pxr import Gf
+    from usdz_writer import _normal_to_world
+
+    class NativeVector:
+        def __getitem__(self, index):
+            return (0.0, 0.6, 0.8)[index]
+
+        def __iter__(self):
+            raise AssertionError("native vector iteration invokes an expensive end-index exception")
+
+    matrix = Gf.Matrix4d().SetScale(Gf.Vec3d(1, 2, 1))
+    result = _normal_to_world(matrix, NativeVector())
+    magnitude = (0.3**2 + 0.8**2)**0.5
+    assert result == pytest.approx((0, 0.3/magnitude, 0.8/magnitude))
+
+
 def test_repeat_write_is_reproducible(tmp_path):
     first = tmp_path / "one.usdz"
     second = tmp_path / "two.usdz"

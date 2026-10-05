@@ -1,0 +1,116 @@
+[1/10] validating trango-rock-prodigy-forge.FCStd
+[2/10] reopening and recomputing the source document
+[3/10] extracting bound components and semantic regions
+[4/10] tessellating with pinned quality
+[5/10] partitioning the surface and preserving normals and materials
+      body_board_001: 8784 triangles, role=body
+      contact_variable_edge_rail_right: 1194 triangles, role=contact
+      contact_closed_crimp_right: 1363 triangles, role=contact
+      contact_mr_deep_right: 1162 triangles, role=contact
+      contact_mr_shallow_right: 1158 triangles, role=contact
+      contact_im_shallow_right: 337 triangles, role=contact
+      contact_im_deep_right: 590 triangles, role=contact
+      contact_sloper_30_right: 98 triangles, role=contact
+      contact_sloper_40_right: 27 triangles, role=contact
+      contact_large_flat_edge_right: 2 triangles, role=contact
+      contact_slopey_crimper_right: 51 triangles, role=contact
+      contact_variable_edge_rail_left: 1194 triangles, role=contact
+      contact_closed_crimp_left: 1363 triangles, role=contact
+      contact_mr_deep_left: 1162 triangles, role=contact
+      contact_mr_shallow_left: 1158 triangles, role=contact
+      contact_im_shallow_left: 337 triangles, role=contact
+      contact_im_deep_left: 590 triangles, role=contact
+      contact_sloper_30_left: 98 triangles, role=contact
+      contact_sloper_40_left: 27 triangles, role=contact
+      contact_large_flat_edge_left: 2 triangles, role=contact
+      contact_slopey_crimper_left: 51 triangles, role=contact
+[6/10] writing the USDZ directly
+[7/10] reopening the exported asset
+[8/10] deriving the descriptor from the exported bytes
+[9/10] validating the staged package
+[10/10] publishing the asset and descriptor set
+{
+  "asset": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-build-2/assets/primary.usdz",
+  "assetBytes": 645855,
+  "assetSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "board": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "closed-crimp-left",
+    "closed-crimp-right",
+    "im-deep-left",
+    "im-deep-right",
+    "im-shallow-left",
+    "im-shallow-right",
+    "large-flat-edge-left",
+    "large-flat-edge-right",
+    "mr-deep-left",
+    "mr-deep-right",
+    "mr-shallow-left",
+    "mr-shallow-right",
+    "sloper-30-left",
+    "sloper-30-right",
+    "sloper-40-left",
+    "sloper-40-right",
+    "slopey-crimper-left",
+    "slopey-crimper-right",
+    "variable-edge-rail-left",
+    "variable-edge-rail-right"
+  ],
+  "descriptor": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-build-2/assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "closed-crimp-left": 7.5,
+    "closed-crimp-right": 7.5,
+    "im-deep-left": 30.911,
+    "im-deep-right": 30.911,
+    "im-shallow-left": 25.0,
+    "im-shallow-right": 25.0,
+    "large-flat-edge-left": 8.0,
+    "large-flat-edge-right": 8.0,
+    "mr-deep-left": 25.0,
+    "mr-deep-right": 25.0,
+    "mr-shallow-left": 15.0,
+    "mr-shallow-right": 15.0,
+    "sloper-30-left": 89.0,
+    "sloper-30-right": 89.0,
+    "sloper-40-left": 21.2,
+    "sloper-40-right": 21.2,
+    "slopey-crimper-left": 4.0,
+    "slopey-crimper-right": 4.0,
+    "variable-edge-rail-left": 19.97,
+    "variable-edge-rail-right": 19.97
+  },
+  "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+  "nodes": [
+    "body_board_001",
+    "contact_closed_crimp_left",
+    "contact_closed_crimp_right",
+    "contact_im_deep_left",
+    "contact_im_deep_right",
+    "contact_im_shallow_left",
+    "contact_im_shallow_right",
+    "contact_large_flat_edge_left",
+    "contact_large_flat_edge_right",
+    "contact_mr_deep_left",
+    "contact_mr_deep_right",
+    "contact_mr_shallow_left",
+    "contact_mr_shallow_right",
+    "contact_sloper_30_left",
+    "contact_sloper_30_right",
+    "contact_sloper_40_left",
+    "contact_sloper_40_right",
+    "contact_slopey_crimper_left",
+    "contact_slopey_crimper_right",
+    "contact_variable_edge_rail_left",
+    "contact_variable_edge_rail_right"
+  ],
+  "package": "trango-rock-prodigy-forge",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/placid-badger-final-package/Hangboards/trango-rock-prodigy-forge/trango-rock-prodigy-forge.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.28,
+  "triangles": 20748
+}

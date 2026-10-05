@@ -1,0 +1,836 @@
+{
+  "scope": "Single weak-hand observation; visual failure",
+  "originalFrozenFileCount": 137,
+  "rawFiles": 138,
+  "rawBytes": 8683455,
+  "entries": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-app-termination-verification.json",
+      "retained": "raw/weak-hand-census-app-termination-verification.json",
+      "bytes": 301,
+      "sha256": "6c9f5a8a762dffb1267c4392cdd4d023f7536bf465808ad637ce10ff88ae790d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/check-parity.py",
+      "retained": "raw/weak-hand-census-applied/check-parity.py",
+      "bytes": 1204,
+      "sha256": "9509af0bdc483320deb3e6e2684c54840f80c1546c8e27932b4005237f4b1eb6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/design.md",
+      "retained": "raw/weak-hand-census-applied/design.md",
+      "bytes": 2960,
+      "sha256": "b21c87fadd314a3e3910bcba0771874c02f8dc7af68268914a3695ffe574a2ad"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/report.json",
+      "retained": "raw/weak-hand-census-applied/report.json",
+      "bytes": 1931,
+      "sha256": "da47cdd07e3136c63adcc5a39f33399f175602334ff55790faba7e339bd7db79"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/root-application.json",
+      "retained": "raw/weak-hand-census-applied/root-application.json",
+      "bytes": 865,
+      "sha256": "95c8f723c061c07670dc3b9451dc06604f59a28e425f7bee307932b1581966ae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/PROTOCOL.md",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/PROTOCOL.md",
+      "bytes": 2178,
+      "sha256": "5d05639c936fd3c4cc0cab0dc65a208c013cfb61ec96e61acae624e692f7f72b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/capture.patch",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/capture.patch",
+      "bytes": 7307,
+      "sha256": "42eb779039c8033bbfce6159396034cde87738f5898ccaed24f162056174964a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-constructors.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-constructors.py",
+      "bytes": 2828,
+      "sha256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-cpu-semantics.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-cpu-semantics.py",
+      "bytes": 3958,
+      "sha256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-frames.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-frames.py",
+      "bytes": 3729,
+      "sha256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-navigation.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-navigation.py",
+      "bytes": 4402,
+      "sha256": "eb2bbee21e47f0037e08353b47e4d0ca2d5f2ab09d9f8a77c6c57a9d388766ca"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-ownership.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-ownership.py",
+      "bytes": 9937,
+      "sha256": "b0dab2a1cf6e95ef7bec55d76f0b265812908c4f5237c81b1d47cb21bf8d97d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-ownership.py.before-limitation-correction",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-ownership.py.before-limitation-correction",
+      "bytes": 9876,
+      "sha256": "a6847f8b75856693ebb3067b0528623c205952d3d070bac049174f77b99dc285"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-real-hands.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-real-hands.py",
+      "bytes": 5022,
+      "sha256": "1e6f6eff3e113b183a6e7d3aad87c27ab464b8ca46153f2dfbbd18113cfe5863"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/check-weak-hand-census.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/check-weak-hand-census.py",
+      "bytes": 6585,
+      "sha256": "739b463ef6cbcf749f817c34ca1019729630ea91e1cd0d637f10397a33353223"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/compare-prior-real-hands.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/compare-prior-real-hands.py",
+      "bytes": 2939,
+      "sha256": "d4c9dd66aec50f9c3bc9213b5280ee74f83c318aa39dc58ed31c9f27ece83b8b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/report.json",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/report.json",
+      "bytes": 1683,
+      "sha256": "02a61437cf0dfc6eaa595f6882c229781c2c8b792034efab91825ebf138b5157"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/report.json.before-limitation-correction",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/report.json.before-limitation-correction",
+      "bytes": 1547,
+      "sha256": "d617b198be69db5d9ea62079bf05018158367278360722e87a7bcb9ebbceeee3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/visual-review-template.json",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/visual-review-template.json",
+      "bytes": 5440,
+      "sha256": "731fddb338b0a2dde660260796a7c9cfec5998410b6bcd9e9c703694c46bea43"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/runtime-helpers/workout-weak-hand-census.py",
+      "retained": "raw/weak-hand-census-applied/runtime-helpers/workout-weak-hand-census.py",
+      "bytes": 12581,
+      "sha256": "06f189db71461a114c8d06fd72b76b71d808067b0bdf62d8da3fa7c4fb966384"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "retained": "raw/weak-hand-census-applied/source/HangTen/Models/BoardModelRealityTypes.swift",
+      "bytes": 105888,
+      "sha256": "08aaaa6032cdf782f9d4659d3f0105655df282cc156f7c147597cd0f8aeeb0c9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source/HangTen/Views/BoardModelView.swift",
+      "retained": "raw/weak-hand-census-applied/source/HangTen/Views/BoardModelView.swift",
+      "bytes": 22888,
+      "sha256": "90f5c896efd321e31560f54e1b6aab0880bd51cfb4301a4f9db3aca9757b0292"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source/HangTen/Views/GripHandModelView.swift",
+      "retained": "raw/weak-hand-census-applied/source/HangTen/Views/GripHandModelView.swift",
+      "bytes": 49520,
+      "sha256": "3d8ffd568e1f99e33652eb77bfe4e0d2ce4c014889bfee3a166fe9601d7e136e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source/HangTen/Views/RootView.swift",
+      "retained": "raw/weak-hand-census-applied/source/HangTen/Views/RootView.swift",
+      "bytes": 149223,
+      "sha256": "51e327c3fe4357c9b4da4989e72ce4620a79469acf273668ee9d6d9b1b261221"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source/HangTen/Views/TrainView.swift",
+      "retained": "raw/weak-hand-census-applied/source/HangTen/Views/TrainView.swift",
+      "bytes": 27742,
+      "sha256": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/source-freeze.json",
+      "retained": "raw/weak-hand-census-applied/source-freeze.json",
+      "bytes": 765,
+      "sha256": "d16f44577709b03ba8369751a50109cc45514fc7f52cf49c182c759df3ea691f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-applied/weak-hand-lifetimes.patch",
+      "retained": "raw/weak-hand-census-applied/weak-hand-lifetimes.patch",
+      "bytes": 15380,
+      "sha256": "1e861e0053311233d2a79670e1a3f48f6a54bf3555b0a1eaab3bd5dd62703aa5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-before-parity.json",
+      "retained": "raw/weak-hand-census-before-parity.json",
+      "bytes": 12855,
+      "sha256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-build-command.json",
+      "retained": "raw/weak-hand-census-build-command.json",
+      "bytes": 534,
+      "sha256": "89e4a8fa38fa3244b4bd3d8995fb42d03658bc698674fbb383f45e36e653759b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-build-command.stderr",
+      "retained": "raw/weak-hand-census-build-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-build-command.stdout",
+      "retained": "raw/weak-hand-census-build-command.stdout",
+      "bytes": 325372,
+      "sha256": "a1739e673fc93856bc85419f32a1adb02aec98b42eb3498593697cdb48d177e8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-code-parity/installed-container.txt",
+      "retained": "raw/weak-hand-census-code-parity/installed-container.txt",
+      "bytes": 176,
+      "sha256": "0ecb13a96980460ce4907658335d7387e1cec57f6363f155dd233d50d7dc8f27"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-code-parity/mach-o-parity.json",
+      "retained": "raw/weak-hand-census-code-parity/mach-o-parity.json",
+      "bytes": 2030,
+      "sha256": "27f0a638f3d66ac6fd4e029791ac271c1abad97698375c449018f7a047c35984"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-comparison.json",
+      "retained": "raw/weak-hand-census-comparison.json",
+      "bytes": 5137,
+      "sha256": "5c38e18a794464417a4554e16f52d9b35872f5ed8294c96e5d5c03c3440cd422"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-final-parity.json",
+      "retained": "raw/weak-hand-census-final-parity.json",
+      "bytes": 12855,
+      "sha256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-final-parity.stderr",
+      "retained": "raw/weak-hand-census-final-parity.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-final-parity.stdout",
+      "retained": "raw/weak-hand-census-final-parity.stdout",
+      "bytes": 32,
+      "sha256": "4e4a2d1eb8b1835aa4cef37309d0d8016bf1f05e01855b5f48594f8cf5972e41"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-findings.json",
+      "retained": "raw/weak-hand-census-findings.json",
+      "bytes": 9948,
+      "sha256": "64438a3a7b6074c411cdff174ef878b6e6f57ec10cef6bf98fa3696e2989090f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+      "retained": "raw/weak-hand-census-frozen-manifest.json",
+      "bytes": 35476,
+      "sha256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-install-command.json",
+      "retained": "raw/weak-hand-census-install-command.json",
+      "bytes": 447,
+      "sha256": "2c8ebed12d25084b8e5d0aff0ae971a87a35d49a18279b4c68ed793998853cb2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-install-command.stderr",
+      "retained": "raw/weak-hand-census-install-command.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-install-command.stdout",
+      "retained": "raw/weak-hand-census-install-command.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/000-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/000-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/000-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/000-stdout.txt",
+      "bytes": 176,
+      "sha256": "0ecb13a96980460ce4907658335d7387e1cec57f6363f155dd233d50d7dc8f27"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/001-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/001-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/001-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/001-stdout.txt",
+      "bytes": 162,
+      "sha256": "ac770b187b47dc5ec0fbf55e2b8962dd7764b403ba73bf7fd811c3278631bb4b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/002-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/002-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/002-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/002-stdout.txt",
+      "bytes": 28,
+      "sha256": "4d980589ad7720abbe0cdb55f9e8c45bdf426e2b96b20554eff4a55377f9296b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/003-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/003-stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/003-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/003-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/004-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/004-stderr.txt",
+      "bytes": 364,
+      "sha256": "b66e716574863edffde7a8d5c91229ecfaecc468a28a1f26cf1dd1220484cbaf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/004-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/004-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/005-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/005-stderr.txt",
+      "bytes": 374,
+      "sha256": "45acb1e23339fa451c2ab5079c2da25666065690a2d160c80ccdc3fff5e60162"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/005-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/005-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/006-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/006-stderr.txt",
+      "bytes": 371,
+      "sha256": "adb66dd2af9b88e59a7a2461087d8195f22e2214fe5fd4a02b4c007d705ac921"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/006-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/006-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/007-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/007-stderr.txt",
+      "bytes": 371,
+      "sha256": "d6611c2b43124c077e26d076683a2cbe7b856cee773291f1881820bc4163e50b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/007-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/007-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/008-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/008-stderr.txt",
+      "bytes": 371,
+      "sha256": "131278c242205c211f4214f498ba9ed6dee409dc37942ac10327a3db33cff20e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/008-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/008-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/009-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/009-stderr.txt",
+      "bytes": 375,
+      "sha256": "d5e8b0293ce4cae4bae25ff23b2cc3e1dcdc4cf457ce969edd3ffb9bdcee2c95"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/009-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/009-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/010-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/010-stderr.txt",
+      "bytes": 372,
+      "sha256": "43634ad34963add65a955ddc4d3e2bfc97e2ce8fc4a4ec134c9cf54aed0ed0a7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/010-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/010-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/011-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/011-stderr.txt",
+      "bytes": 372,
+      "sha256": "22a1b7d6bbdeef1cf91d92845fdea8b5485962e4c9c4fec37811e1548fd3aee8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/011-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/011-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/012-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/012-stderr.txt",
+      "bytes": 372,
+      "sha256": "075d34c81a9192d6ad02aad1f79aeefad11b9c23220a7057eade7bdbc87ce14e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/012-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/012-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/013-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/013-stderr.txt",
+      "bytes": 374,
+      "sha256": "e729bbbc2bff2f9572eaa2f46c37a1a9132a034be267366e21a0865b45c4a779"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/013-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/013-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/014-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/014-stderr.txt",
+      "bytes": 371,
+      "sha256": "207b014bade8b99affcadb53f86037a401ce812d9acd12cc1812a61b7276c5aa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/014-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/014-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/015-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/015-stderr.txt",
+      "bytes": 371,
+      "sha256": "05bb53ae9673b2a2fb7e507a0e67cd59bef0434cf87f677b65fec825c9c9d5e5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/015-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/015-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/016-stderr.txt",
+      "retained": "raw/weak-hand-census-landscape/016-stderr.txt",
+      "bytes": 371,
+      "sha256": "1974aed2c7e113ff19f8c674c18ba0fcf7a2dc6e96f13b773f979180624100fc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/016-stdout.txt",
+      "retained": "raw/weak-hand-census-landscape/016-stdout.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/capture-process-status.json",
+      "retained": "raw/weak-hand-census-landscape/capture-process-status.json",
+      "bytes": 117,
+      "sha256": "d188af8a525eb46ba4b0ffa3f84b54086883f56b2e0f254d86a8eb2a43ec03f2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/captures.json",
+      "retained": "raw/weak-hand-census-landscape/captures.json",
+      "bytes": 7833,
+      "sha256": "ee009e70457581202c12eb0079f3664b69edf5dd74172fdbe86e414b1a7dd9eb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-constructors.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-constructors.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-constructors.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-constructors.py.stdout",
+      "bytes": 423,
+      "sha256": "ead9b3d7bb8fc863e0258fef33269be5cd16591ed1e0e899394036056c0df326"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-cpu-semantics.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-cpu-semantics.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-cpu-semantics.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-cpu-semantics.py.stdout",
+      "bytes": 447,
+      "sha256": "65da54ecdecfd6b790ac9ef63c5cfdec356986f677cf77edf0a73e938045bf89"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-frames.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-frames.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-frames.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-frames.py.stdout",
+      "bytes": 594,
+      "sha256": "3c36444ada96dc843fdbfca6746187acf39dce8c7164cc5ce68bb33fdde11e91"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-navigation.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-navigation.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-navigation.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-navigation.py.stdout",
+      "bytes": 627,
+      "sha256": "024b507109b6d9f74081ddb4294db78b2ba8c70b31cd881572b1154800a9a82a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-ownership.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-ownership.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-ownership.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-ownership.py.stdout",
+      "bytes": 998,
+      "sha256": "71c06012c25073345b627590c6cf52bc7b5445dfdbbd17f029d9270d32ce0a90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-real-hands.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-real-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-real-hands.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-real-hands.py.stdout",
+      "bytes": 847,
+      "sha256": "8665c7f2710359e57ee71b52635111571497737cce9194032229c338848f6376"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-weak-hand-census.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/check-weak-hand-census.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/check-weak-hand-census.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/check-weak-hand-census.py.stdout",
+      "bytes": 358,
+      "sha256": "5c38e2d4c5eef59160d0ce86c977fc3e479d186c936f1b360d6dca6f76883400"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/commands.json",
+      "retained": "raw/weak-hand-census-landscape/commands.json",
+      "bytes": 6381,
+      "sha256": "fab0b1100e26895805996d1d7f7ee44f0048044b310fd9a66bd289923fbf7398"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/compare-prior-real-hands.py.stderr",
+      "retained": "raw/weak-hand-census-landscape/compare-prior-real-hands.py.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/compare-prior-real-hands.py.stdout",
+      "retained": "raw/weak-hand-census-landscape/compare-prior-real-hands.py.stdout",
+      "bytes": 243,
+      "sha256": "b7f428fcfe15d95b26e9ff91e17f42ca3a19f68d585157001935c44fd67b09c6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/events-4E12E5B9-C2D3-45BA-9602-F03DC760A42C.jsonl",
+      "retained": "raw/weak-hand-census-landscape/events-4E12E5B9-C2D3-45BA-9602-F03DC760A42C.jsonl",
+      "bytes": 1227007,
+      "sha256": "418fde301bd446ccc5100b2e67297497b03ac17f652ed0aaa1c9321fcd36c208"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/first-eight-visual-review.json",
+      "retained": "raw/weak-hand-census-landscape/first-eight-visual-review.json",
+      "bytes": 6639,
+      "sha256": "cbf68691a310cfd1fdbfad657244b7e2363da90d4c1a51c5632b8f6267305d2e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/following-preview-tail.json",
+      "retained": "raw/weak-hand-census-landscape/following-preview-tail.json",
+      "bytes": 14344,
+      "sha256": "8abf9cac7a826c06010ee1a404f45d3104d9911554039eca0db08fcb54ad72e2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/installed-binary-gate.json",
+      "retained": "raw/weak-hand-census-landscape/installed-binary-gate.json",
+      "bytes": 374,
+      "sha256": "02c1599f157340b036be2d66b27755035256a97c621d6978510ab1d0cf8fcb5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/launch-initial-capture.json",
+      "retained": "raw/weak-hand-census-landscape/launch-initial-capture.json",
+      "bytes": 152,
+      "sha256": "c6ddf13a16b69cf206709ce246ef258df2f16dda64b47d20ff58c92b09081f0c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/launch-initial.png",
+      "retained": "raw/weak-hand-census-landscape/launch-initial.png",
+      "bytes": 721071,
+      "sha256": "3dbb4e2e3d7e42bfc5c478a29a5ea1196c41bd47ebd658f4a42f0baf644ea580"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/launch-review-environment.json",
+      "retained": "raw/weak-hand-census-landscape/launch-review-environment.json",
+      "bytes": 514,
+      "sha256": "391dfd79dd0b77e4b5c9fbe8f5946cd57a604f570848c15dcb5e18ffe9973cd3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/normal-host-frame-validation.json",
+      "retained": "raw/weak-hand-census-landscape/normal-host-frame-validation.json",
+      "bytes": 358543,
+      "sha256": "d70e7eeb3d9b9826e089e18242f87787403260ff377b22853cf8205cd25c3c94"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-0-active-plus-0.25.png",
+      "retained": "raw/weak-hand-census-landscape/phase-0-active-plus-0.25.png",
+      "bytes": 332536,
+      "sha256": "d953869139b791c9dafb4f0b0b22effad3dad3c4c040ce0693514c93ce8f8674"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-0-active-plus-1.png",
+      "retained": "raw/weak-hand-census-landscape/phase-0-active-plus-1.png",
+      "bytes": 336187,
+      "sha256": "2ea289e4ed559e4f6ef52857df59eeb36e44e79219ac8a7eba9094c265a7b76f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-0-active-plus-3.png",
+      "retained": "raw/weak-hand-census-landscape/phase-0-active-plus-3.png",
+      "bytes": 334652,
+      "sha256": "3cf6319961f2d3a47ff3c85b408ea6b350113ead48fbbf7190a6092b4bfbf584"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-0-active-plus-5.png",
+      "retained": "raw/weak-hand-census-landscape/phase-0-active-plus-5.png",
+      "bytes": 335905,
+      "sha256": "6c6961f43337ad74c8a9bfee273da80496a6af2c0540de4009ba02f66e770b54"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-0.25.png",
+      "retained": "raw/weak-hand-census-landscape/phase-1-preview-plus-0.25.png",
+      "bytes": 300960,
+      "sha256": "14e7a4f09ecc7870155e58747f5784d8d99fac8e84d40fcd911c255532b6a523"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-1.png",
+      "retained": "raw/weak-hand-census-landscape/phase-1-preview-plus-1.png",
+      "bytes": 305282,
+      "sha256": "2bd6044efa35979b49ce1013cd2bdc2c33ee858d8202336e67b95b469ee16e26"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-3.png",
+      "retained": "raw/weak-hand-census-landscape/phase-1-preview-plus-3.png",
+      "bytes": 305520,
+      "sha256": "a3ab18b11e63afbb4c706c904b0ac69f70639f9ba6335d84b961803fef764720"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-1-preview-plus-5.png",
+      "retained": "raw/weak-hand-census-landscape/phase-1-preview-plus-5.png",
+      "bytes": 301910,
+      "sha256": "6899840cfbf4ba92984fe46c9b5a7ab5b474863d2ae704ee225d7e4301f711d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-2-active-plus-0.25.png",
+      "retained": "raw/weak-hand-census-landscape/phase-2-active-plus-0.25.png",
+      "bytes": 335590,
+      "sha256": "16bbfe5b3839e6ea2b21df7867df19b39bdde8c3c244e0821a41e55f9dc0fa58"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-2-active-plus-1.png",
+      "retained": "raw/weak-hand-census-landscape/phase-2-active-plus-1.png",
+      "bytes": 337450,
+      "sha256": "a67b88ab1e47eb78979e980552d42d130b78edde5681082ebb67605b8939b813"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-2-active-plus-3.png",
+      "retained": "raw/weak-hand-census-landscape/phase-2-active-plus-3.png",
+      "bytes": 335859,
+      "sha256": "78cc44814e9a19de371155545e687dab82f19b59ecd8b13e9d9979ca00fca0fb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/phase-2-active-plus-5.png",
+      "retained": "raw/weak-hand-census-landscape/phase-2-active-plus-5.png",
+      "bytes": 336352,
+      "sha256": "67ae3730d936cd8e150128749f9bcc743988bba99f75f7ad8b32f948bf18823b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/protocol.json",
+      "retained": "raw/weak-hand-census-landscape/protocol.json",
+      "bytes": 1327,
+      "sha256": "296e2968d77e5f0c44bf2c09ff0a6c95f2bb735a1e8a2563896e078209f10dc6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/real-hand-lifetime-camera-validation.json",
+      "retained": "raw/weak-hand-census-landscape/real-hand-lifetime-camera-validation.json",
+      "bytes": 19284,
+      "sha256": "688ab9a3a34e67d37a302094f71ec4e1368eca8338cba883d79a14a6894f1eeb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/runtime-release.json",
+      "retained": "raw/weak-hand-census-landscape/runtime-release.json",
+      "bytes": 1176,
+      "sha256": "985118bdf2a9ee84dfabfeba0a87a3307403ff4624e3be148ca03e5634129901"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-correspondence.json",
+      "retained": "raw/weak-hand-census-landscape/structural-correspondence.json",
+      "bytes": 388407,
+      "sha256": "64e85ee5e750586326c109cc36dbff320d3f50d882acb88362d30b8b712e7347"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-dependency-navigation.json",
+      "retained": "raw/weak-hand-census-landscape/structural-dependency-navigation.json",
+      "bytes": 52144,
+      "sha256": "c049bb4502c47956dbc08a71d84587dfa7043a586b0e6527b8a17dc11bc30493"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/structural-dependency-ownership.json",
+      "retained": "raw/weak-hand-census-landscape/structural-dependency-ownership.json",
+      "bytes": 227320,
+      "sha256": "32d8f46612826c1d6efbf4a9ba5ae96bb792d12b1cac912a118ff78d15f34399"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/trace-copy.json",
+      "retained": "raw/weak-hand-census-landscape/trace-copy.json",
+      "bytes": 708,
+      "sha256": "8e8767d744e9d9fe164b730accd09725af23e6f313c9e1be1cc32bb334b1f230"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/train-constructor-validation.json",
+      "retained": "raw/weak-hand-census-landscape/train-constructor-validation.json",
+      "bytes": 315310,
+      "sha256": "32e582c5b0b9763564a397f3bdc7a2e5b05c786b468a4bdb187e1a24ed998488"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/train-startup-readiness.json",
+      "retained": "raw/weak-hand-census-landscape/train-startup-readiness.json",
+      "bytes": 14242,
+      "sha256": "d6092d50c90fac6c3fbe914d50498ea0954892e28a9221e9c78a072b08c16c7e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/transition-observations.json",
+      "retained": "raw/weak-hand-census-landscape/transition-observations.json",
+      "bytes": 42784,
+      "sha256": "20e59eef6cb3887a5939323f74cee996a0dd8c45f2232eb4fba8eef81cfb8a3e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/validator-command-results.json",
+      "retained": "raw/weak-hand-census-landscape/validator-command-results.json",
+      "bytes": 545,
+      "sha256": "32d2b9a3cfd2d4827d64525da41ac5105c4c1ed4531486eb8d87b78273f786c9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/visual-review.json",
+      "retained": "raw/weak-hand-census-landscape/visual-review.json",
+      "bytes": 10032,
+      "sha256": "7e7b8c0f4fe856a8ca17f4f06d2df9faf0a0a0831b642a8a2797a6cdaa9b7de0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/weak-hand-census-validation.json",
+      "retained": "raw/weak-hand-census-landscape/weak-hand-census-validation.json",
+      "bytes": 426665,
+      "sha256": "e3ed0182dda85c508533c8318f0f663e195001ef3e12ab01286412ce30fdad15"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-landscape/workout-openurl-timing.json",
+      "retained": "raw/weak-hand-census-landscape/workout-openurl-timing.json",
+      "bytes": 151,
+      "sha256": "acfcff28893cf0cb029d3e512635024c43e87b48eea0cc552189b6106a3a83d1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-lifetime-summary.json",
+      "retained": "raw/weak-hand-census-lifetime-summary.json",
+      "bytes": 57067,
+      "sha256": "f277d96e1e5b4db1f39149af5c0435ec26f6c216bd7609d956856c68ca07c8d7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-package-parity.json",
+      "retained": "raw/weak-hand-census-package-parity.json",
+      "bytes": 7405,
+      "sha256": "b54a106ba48d4ae58a77926f476894457bb6ac166a3d7d82c7d660d23981db1e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-prior-preservation.json",
+      "retained": "raw/weak-hand-census-prior-preservation.json",
+      "bytes": 527,
+      "sha256": "94cbe1dadfd175c54d86c448e25d4969105557aba4bea0a429f5751202ca9d41"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-root-visual-corroboration.json",
+      "retained": "raw/weak-hand-census-root-visual-corroboration.json",
+      "bytes": 1444,
+      "sha256": "688867387a1d9552f4720868d3bf543bda06b9b85987cd5c87753fb0d01c6de4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-runtime-release.json",
+      "retained": "raw/weak-hand-census-runtime-release.json",
+      "bytes": 1176,
+      "sha256": "985118bdf2a9ee84dfabfeba0a87a3307403ff4624e3be148ca03e5634129901"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-terminate.json",
+      "retained": "raw/weak-hand-census-terminate.json",
+      "bytes": 264,
+      "sha256": "09697393f2975518a7bd621dd82f603b206a4f135b528cce8964450d46634406"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-terminate.stderr",
+      "retained": "raw/weak-hand-census-terminate.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-terminate.stdout",
+      "retained": "raw/weak-hand-census-terminate.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-validate.py",
+      "retained": "raw/weak-hand-census-validate.py",
+      "bytes": 1026,
+      "sha256": "208f6ac4bf80d078e0b3e9b5187472635d5889f19fce85e5a0e938a7a5f908fe"
+    }
+  ]
+}

@@ -43,6 +43,7 @@ class NodeBinding:
     node_id: str
     role: NodeRole | str
     contact_id: str | None = None
+    additional_contact_ids: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -312,7 +313,8 @@ def compile_descriptor(
     bindings = _validate_bindings(nodes)
     expected_contact_ids = _validate_logical_contact_ids(logical_contact_ids)
     vertices = _validate_bound_geometry(bindings, vertices_by_node_id)
-    actual_contact_ids = {binding.contact_id for binding in bindings if binding.role == "contact"}
+    actual_contact_ids = {contact_id for binding in bindings if binding.role == "contact"
+                          for contact_id in _contact_memberships(binding)}
     if actual_contact_ids != expected_contact_ids:
         raise ValueError("bound contact IDs must equal logical contact IDs")
 
@@ -386,6 +388,21 @@ def _compile_contact_slots(
     }
 
 
+def _contact_memberships(binding: NodeBinding) -> tuple[str, ...]:
+    assert binding.contact_id is not None
+    return (binding.contact_id, *binding.additional_contact_ids)
+
+
+def _additional_contact_ids(value: object, primary: str | None, *, allow_empty: bool = False) -> tuple[str, ...]:
+    if not isinstance(value, (list, tuple)) or (not value and not allow_empty):
+        raise ValueError("additionalContactIDs must be a non-empty sorted array")
+    if any(not isinstance(item, str) or not item for item in value):
+        raise ValueError("additionalContactIDs must contain non-empty strings")
+    if list(value) != sorted(set(value)) or primary in value:
+        raise ValueError("additionalContactIDs must be sorted, unique and exclude the primary contactID")
+    return tuple(value)
+
+
 def _validate_bindings(nodes: Sequence[NodeBinding]) -> list[NodeBinding]:
     if isinstance(nodes, (str, bytes)) or not isinstance(nodes, Sequence):
         raise ValueError("nodes must be a sequence of NodeBinding values")
@@ -404,6 +421,9 @@ def _validate_bindings(nodes: Sequence[NodeBinding]) -> list[NodeBinding]:
             raise ValueError("decoration nodes are not permitted")
         if binding.role not in {"body", "contact", "attachment"}:
             raise ValueError(f"unknown node role: {binding.role}")
+        _additional_contact_ids(binding.additional_contact_ids, binding.contact_id, allow_empty=True)
+        if binding.role != "contact" and binding.additional_contact_ids:
+            raise ValueError("non-contact node may not declare additionalContactIDs")
         if binding.role == "body":
             body_count += 1
             if binding.contact_id is not None:
@@ -543,8 +563,12 @@ def _compile_contacts(
     for binding in bindings:
         if binding.role == "contact":
             assert binding.contact_id is not None
-            node_ids_by_contact.setdefault(binding.contact_id, []).append(binding.node_id)
-            vertices_by_contact.setdefault(binding.contact_id, []).extend(vertices_by_node_id[binding.node_id])
+            for contact_id in _contact_memberships(binding):
+                node_ids_by_contact.setdefault(contact_id, []).append(binding.node_id)
+                vertices_by_contact.setdefault(contact_id, []).extend(vertices_by_node_id[binding.node_id])
+    shared_contacts = {contact_id for binding in bindings for contact_id in binding.additional_contact_ids}
+    if shared_contacts & set(outlines):
+        raise ValueError("shared contact bounds must derive from all member surfaces, not an outline")
     result: dict[str, ContactDescriptorV1] = {}
     for contact_id in sorted(node_ids_by_contact):
         raw_outline = outlines.get(contact_id)
@@ -612,11 +636,13 @@ def _bounds_to_json(bounds: ModelBounds) -> dict[str, object]:
     return {"min": list(bounds.min), "max": list(bounds.max)}
 
 
-def _node_to_json(node: NodeBinding) -> dict[str, str]:
+def _node_to_json(node: NodeBinding) -> dict[str, object]:
     value: dict[str, str] = {"nodeID": node.node_id, "role": node.role}
     if node.role == "contact":
         assert node.contact_id is not None
         value["contactID"] = node.contact_id
+        if node.additional_contact_ids:
+            value["additionalContactIDs"] = list(node.additional_contact_ids)
     return value
 
 
@@ -687,7 +713,8 @@ def _parse_nodes(value: object) -> tuple[NodeBinding, ...]:
         mapping = _mapping(raw_node, "node")
         role = mapping.get("role")
         expected = frozenset({"nodeID", "role", "contactID"}) if role == "contact" else frozenset({"nodeID", "role"})
-        _require_exact_keys(mapping, expected, "node")
+        _require_exact_keys(mapping, expected, "node",
+                            frozenset({"additionalContactIDs"}) if role == "contact" else frozenset())
         node_id = mapping["nodeID"]
         if not isinstance(node_id, str) or not node_id:
             raise ValueError("nodeID must be a non-empty string")
@@ -696,7 +723,9 @@ def _parse_nodes(value: object) -> tuple[NodeBinding, ...]:
         contact_id = mapping.get("contactID")
         if role == "contact" and (not isinstance(contact_id, str) or not contact_id):
             raise ValueError("contact node requires a non-empty contactID")
-        nodes.append(NodeBinding(node_id, role, contact_id if role == "contact" else None))
+        extra = (_additional_contact_ids(mapping["additionalContactIDs"], contact_id)
+                 if "additionalContactIDs" in mapping else ())
+        nodes.append(NodeBinding(node_id, role, contact_id if role == "contact" else None, extra))
     _validate_bindings(nodes)
     if [node.node_id for node in nodes] != sorted(node.node_id for node in nodes):
         raise ValueError("nodes must be sorted by nodeID")
@@ -711,14 +740,18 @@ def _parse_contacts(value: object, nodes: Sequence[NodeBinding]) -> dict[str, Co
     for node in nodes:
         if node.role == "contact":
             assert node.contact_id is not None
-            expected_by_contact.setdefault(node.contact_id, []).append(node.node_id)
+            for contact_id in _contact_memberships(node):
+                expected_by_contact.setdefault(contact_id, []).append(node.node_id)
     if set(contacts) != set(expected_by_contact):
         raise ValueError("contacts must equal node contact IDs")
     parsed: dict[str, ContactDescriptorV1] = {}
+    shared_contacts = {contact_id for node in nodes for contact_id in node.additional_contact_ids}
     for contact_id, raw_contact in contacts.items():
         if not isinstance(contact_id, str) or not contact_id:
             raise ValueError("contact IDs must be non-empty strings")
         mapping = _mapping(raw_contact, f"contact {contact_id}")
+        if contact_id in shared_contacts and "outline" in mapping:
+            raise ValueError("shared contact cannot replace member surfaces with an outline")
         _require_exact_keys(
             mapping,
             frozenset({"nodeIDs", "facePlaneAABB", "center"}),

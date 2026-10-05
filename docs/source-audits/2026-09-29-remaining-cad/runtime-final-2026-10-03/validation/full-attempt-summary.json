@@ -1,0 +1,1315 @@
+{
+  "owner": "placid-badger",
+  "fullSuitePassed": false,
+  "commandExitCode": 124,
+  "stopReason": "1200-second owned limit reached during unrelated opt-in Clavellium live-physics determinism test; retained raw logs.",
+  "completedTests": 326,
+  "failedCompletedTests": 5,
+  "results": [
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreFavoritesTests testBoardFavoritePersistsAcrossStoreInstancesAndCanRemoveFavorite]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreFavoritesTests testFavoritePlansUseCompatiblePlanOrderAndIgnoreUnknownIDs]' passed (0.168 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreFavoritesTests testRemovingFavoriteEmitsOneStoreChange]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreFavoritesTests testTogglePersistsAcrossStoreInstancesAndCanRemoveFavorite]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure]' passed (0.016 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testAuthorizedEmptyHealthKitHistoryHidesConnectActionAfterRefresh]' passed (1.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testAuthorizedHealthKitHidesConnectActionWithoutPersistedRequestFlag]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testAuthorizedHealthKitReconcilesSyncAndImportsHistoryWithoutPrompting]' passed (1.105 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testBackgroundPersistenceKeepsBackgroundTaskUntilAsyncFlushCompletes]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testBilateralDoubleOnOneHandedBoardIsCompatibleViaBothModeSingleHold]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCancelledAuthorizationKeepsConnectActionAvailableAfterRequestWasPersisted]' passed (0.004 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCoalescedRefreshPreservesCompletionErrorUntilIndependentRefresh]' passed (4.116 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletingSessionUpdatesHistorySnapshotAndSendsPersistedLocalIDToHealthStore]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionAfterConnectPreservesActivityContextForHealthWorkoutSaving]' passed (2.110 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionBeforeConnectPersistsLocalFallbackWithoutHealthKitSave]' passed (1.014 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionBeforeConnectPersistsResolvedActivityContextAndUploadsItAfterConnect]' passed (1.107 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionConvenienceOverloadForwardsSelectedEitherHand]' passed (1.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionExposesSessionPersistenceFailure]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionFailsClosedWhenBilateralPairMetadataIsUnknown]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionFailsClosedWhenStepGripMetadataIsUnknown]' passed (0.004 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionFailureShowsRetrySyncError]' passed (1.081 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionForwardsAlternateHandPreferenceWithoutHandSideRequired]' passed (1.102 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionForwardsBothHandPreferenceAsDoubleBoth]' passed (1.108 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionPersistsSuppliedRecordAndExposesSessionHistory]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionRecordsSingleSemanticTargetWithoutSideMetadata]' passed (1.105 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionRecordsSourceLinkedTargetlessWorkWithoutFabricatedHold]' passed (1.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testCompletionWithoutRecordPreservesExistingHistory]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testConnectEnablesHealthKitRefreshAndPendingMigration]' passed (1.100 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testEitherHandOnOneHandedBoardContactIDsIncludeBothModeSingleHold]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testFailedSessionPersistenceDoesNotConsumeCredit]' passed (0.020 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testFailingCustomRoutineSaveRecordsCategoricalPersistenceDiagnostic]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testHealthAuthorizationDeniedEmitsCategoricalResult]' passed (1.064 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testHealthAuthorizationNotDeterminedDoesNotEmitOutcome]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testHealthAuthorizationPausesReplayUntilTheAuthorizationResultIsHandled]' passed (1.095 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testInitializationHydratesPersistedLocalHistoryWithoutHealthKitRead]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testLaunchRestoresDashboardCountersFromNewestSavedHistory]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testLoadingHistoricSessionsDoesNotConsumeCredits]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testMetoliusIntermediateIsCompatibleWithWoodGripsCompactII]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testMostRecentSavedLoadAdjustmentUsesLatestLocalSessionRegardlessOfPlan]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testNotDeterminedWithoutPersistedRequestFlagKeepsConnectActionAndLocalHistory]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testPaidAccessDoesNotConsumeFreeWorkoutWhenSessionIsSaved]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testRefreshBeforeConnectUsesLocalFallbackWithoutReadingOrMigrating]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testRefreshFailureShowsHistorySyncErrorAndSuccessfulRefreshClearsIt]' passed (2.054 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testReplacingSessionWithSameIDDoesNotIncreaseCompletedCount]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSavingCompletedSessionsConsumesOnlyTheTwoFreeCredits]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSavingCustomRoutineEmitsEventAfterPersistenceSucceeds]' passed (0.049 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSelectedBoardPersistsAndRestoresByStableID]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSelectingBoardDerivesTelemetryFamilyFromBoardIDSuffix]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion]' passed (0.019 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testSynchronousAppStoreFlushUsesTerminationPath]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testTelemetryDependenciesDoNotRetainRecordingTelemetry]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testTwoHandedLatticePlanIsIncompatibleWithoutAPair]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testTwoHandedLatticePlansResolvePairedHoldsOnAtLeastOneBoard]' passed (0.079 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testUnitTestHostDetectedInHostedUnitTestRun]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testUnknownPersistedBoardFallsBackToCatalogDefault]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testUnresolvableEitherHandOnOneHandedBoardRemainsIncompatible]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testVerifiedEntitlementAllowsLaunchWhenProductPreparationFails]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.AppStoreTests testWriteOnlyHealthStoreUsesLocalFallbackWhenHistoryReadIsUnsupported]' passed (1.100 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testAutomaticPivotKeepsTheWholeBoardInsideTheViewport]' passed (2.253 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testBeastmakerTopSloperSelectionRevealsMoreOfItsSurface]' passed (0.854 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testBoardFinishCoversUnlistedMeshWhileAttachmentsStayNeutral]' passed (0.195 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testBoardPitchUsesPairedAttachmentsBoreMouthsAndIndependentInstancePivots]' failed (1.247 seconds).",
+      "passed": false
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testBothTransgressionRevisionsLoadNinePickableContacts]' passed (0.121 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testCameraOrbitAndResetUpdateRealityKitCamera]' passed (0.184 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testCatalogBoardFinishesCoverEveryImportedBodyAndHoldMesh]' passed (5.852 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testClavelliumPitchMovesBoardAroundCordPivotWhileSupportAndCameraStayFixed]' passed (0.123 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testClearingHighlightRestoresNeutralPBRBaseline]' passed (0.697 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testClearingSelectionRemovesTransientCordEntity]' passed (0.095 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testClearingSelectionRestoresDefaultCamera]' passed (0.830 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testContactEntitiesPopulatedAndMatchBoardContacts]' passed (0.182 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testCordAndCADModelShareMeterScale]' passed (0.713 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testCordedTopSelectionTiltsBoardAndClearingRestoresCanonicalPose]' passed (0.293 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testDiagonalSurfaceCalculatesBothViewingAngles]' passed (0.830 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testDistantGeometryDoesNotEncloseAnExposedSideContact]' passed (0.831 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testEveryCatalogModelKeepsSurfacesVisibleThroughHighlightAndClear]' passed (115.321 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testEvoHonestoneAndOriginalGrindstoneLoadEveryContactForPicking]' passed (0.304 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testFrontOpeningPocketsAcrossBoardMeshes]' passed (7.275 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testInstanceHierarchyFromMediaInstances]' passed (0.193 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testInstanceSourceTemplateIsNotAttachedAlongsideClones]' passed (0.191 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testLiveClavelliumHasMatchedRadiusAndNonPickableCord]' passed (46.222 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testLiveScenePausesThenPublishesAcceptedSettledFrame]' failed (76.159 seconds).",
+      "passed": false
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMiniBarOrbitKeepsBodyAndEntireCordInsideViewport]' passed (1.625 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMiniBarRealityKitCordWrapsUnderTheBodyInEveryGripPose]' passed (1.622 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMirroredBoardNormalsAgreeWithRenderedTriangleWinding]' failed (1.876 seconds).",
+      "passed": false
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMirroredTopSurfaceStillTiltsAboveTheBoard]' passed (0.841 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMixedFinishesRestoreEveryContact]' passed (2.048 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMixedInstancesPitchBothBoardsWhileCordAndCameraStayFixed]' passed (0.122 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testMultipleSelectionsExposeBothTopAndFrontSurfaces]' passed (0.831 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition]' passed (29.800 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testNativeLoadGateSerializesWaitersAndRecoversAfterCancellation]' passed (0.003 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood]' passed (0.024 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking]' failed (0.826 seconds).",
+      "passed": false
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testOpeningCalculationChangesWhenRoofIsRemoved]' passed (0.834 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testPairedLiveBoardsMatchInstanceIDsAndPreservePlacement]' passed (90.387 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testPBRNeutralMaterialsApplied]' passed (0.108 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testPerspectiveFitUsesFieldOfViewAndViewportAspect]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testPlasticContactsHighlightAndRestoreMintMaterial]' passed (4.639 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testRealityTypesCompile]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testRecessedSurfaceUsesItsFrontOpeningRatherThanFloorNormal]' passed (0.884 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testReflectedMeshInstanceStillTiltsAboveItsTopSurface]' passed (0.873 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testReflectedMeshPreservesInstancePlacementAndSourceBuffers]' passed (0.003 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testRockRingSelectionAppliesThreadedLoopPoseExactlyOnce]' passed (0.439 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testRockRingsStaySeparatedAndBothFitAfterSelectionAndClear]' passed (0.169 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingBeastmakerPocketReturnsToFrontOpening]' passed (1.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingEdgeOnSideSurfacePivotsHorizontally]' passed (0.823 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingEdgeOnTopSurfaceTiltsViewJustEnough]' passed (0.834 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingPositionAppliesReusableInstanceTransforms]' passed (0.189 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingVisibleFrontSurfaceKeepsHeadOnView]' passed (0.858 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectingVisibleFrontSurfaceResetsPriorTiltAndZoom]' passed (0.856 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectionAdjustmentPreservesManualOrbitAcrossRenderAndModeUpdates]' passed (0.859 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSelectionUsesReplacementContactMesh]' passed (0.841 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSharedContactMeshUsesPrimaryPickingAndUnionHighlight]' failed (0.722 seconds).",
+      "passed": false
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSplitPalmReflectionPreservesTheFrontThroughSelectionAndClear]' passed (3.860 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSuspendedSelectionCreatesTransientCordEntity]' passed (0.110 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testSuspensionOrientationDisplayPassedToScene]' passed (0.209 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testUndersideSurfaceTiltsBelowTheBoard]' passed (0.852 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testUSDZLoadsAndBindsDescriptor]' passed (0.192 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testVerticalBoardCADModelsLoadEveryPhysicalContactForPicking]' passed (0.308 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testViewingRaysFollowAnInstancePoseChange]' passed (0.859 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testWhetstoneNativeModelLoadsAllPickableContacts]' passed (0.075 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testWoodContactsHighlightAndRestoreGrainMaterial]' passed (1.199 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testWoodFinishHighlightsAndRestoresEveryContactWithoutChangingPicking]' passed (3.172 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelRealityTests testWoodSelectionDoesNotAlterAnotherSceneUsingTheSameResource]' passed (2.338 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testBoardMapPositionResolverDoesNotFallbackAcrossPresentationOrHold]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testBoardMapPositionResolverFollowsHighlightedHoldWhenActiveHoldIsNil]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testMapAspectRatioRetainsOrientationAndMissingPositionFallbacks]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testNativeCordMapAspectRatioIncludesCordAndSelectedPosition]' passed (0.053 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testPivotChosenRotationSurvivesActiveAndHighlightedHoldChanges]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testRotationOptionsRejectInconsistentContactsAndMissingTransforms]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testRotationOptionsUseAuthoredInstancePosesWithoutBoardIdentityChecks]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testTallNativeCordMapUsesBoundedPortraitHeight]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testTrainingBoardHoldIDsUseCanonicalHoldOrderForPositionMembership]' passed (0.000 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardModelTests testTrainingBoardPositionSelectionDoesNotBorrowMembershipOrPresentation]' passed (0.000 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testAuthoredOneHandedBoardsReportHandCapacityOne]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBendableCurveMetadataDoesNotChangeEncodedRuntimeDocument]' passed (0.003 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardDetailContentOrderPlacesSelectedHoldBeforeHoldLegend]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardDetailHoldMapNumbersOnlyTheHoldsOnTheVisiblePresentation]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardHoldSpecificationsPresentOnlyDeclaredFacts]' passed (0.002 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapPresentationSelectionUsesMatchingImageAndHoldPaths]' passed (0.022 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapSelectionAppliesCallerPresentationChangeDespiteStaleActiveHold]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapSelectionKeepsAnInvertedAliasForItsSourceHolds]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapSelectionKeepsManuallySelectedSurfaceWhileAddingAndRemovingHolds]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapSelectionMovesToNewActiveHoldWhenAnotherSurfaceIsAlreadyHighlighted]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testBoardMapSelectionPrioritizesInitialHighlightedHoldOverRequestedSurface]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testDebugSimulatorPackagedURLFindsCIModelAssetBundledBesideODR]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testDebugSimulatorPackagedURLFindsOnlyTheExpectedODRAsset]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testDeclaredRopePhysicsFailsClosed]' passed (0.040 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testDescriptorMemberOrderScannerRejectsExcessiveNestingWithoutLosingEscapes]' passed (0.002 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testDescriptorRoundingMatchesPythonAcrossDoublePrecisionTransition]' passed (0.000 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testFlashBoardExposesUprightAndInvertedConfigurationsForBothFaces]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testLazyRopePhysicsRejectsFilesMutatedAfterCatalogValidation]' passed (0.053 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testLiveRopePhysicsLoadsWithoutTheOnDemandModel]' passed (0.014 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelAppearanceRejectsConflictingSurfaceFinishes]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelBoardFinishDecodesWithoutPerMeshSelections]' passed (0.057 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelCacheKeySeparatesDistinctDescriptorHashes]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelFinishOmissionKeepsNeutralDefault]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelFinishOverridesRejectAttachmentsAndMalformedArrays]' passed (0.082 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelGraniteAppearanceRejectsConflictingOverrides]' passed (0.017 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelGraniteAppearanceRejectsUnknownAndDuplicateNodes]' passed (0.023 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelGraniteAppearanceUsesPackageAuthoredNodes]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelLoaderFailsClosedWhenValidatedPackageModelIsMissingOrCorrupt]' passed (0.039 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelPlasticAppearanceRejectsUnknownAndDuplicateNodes]' passed (0.024 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelPlasticAppearanceUsesPackageAuthoredNodes]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelPresentationContentUsesTypedMediaHoldInventory]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelWoodAppearanceRejectsUnknownAndDuplicateNodes]' passed (0.025 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testModelWoodAppearanceUsesPackageAuthoredNodes]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testMXEdgeLiftPackagesLoadTypedUnilateralResolutionPolicy]' passed (2.811 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testOmittedBoardHandCapacityDefaultsToTwoHanded]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug]' passed (0.000 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage]' passed (2.811 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testPositionResolverUsesResolvedSurfaceAndRejectsUnknownSurfaceOrHold]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testPresentationContentExcludesLogicalHoldWithoutResolvableMediaFrame]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testReusableModelDescriptorRejectsDuplicateContactSlotMember]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testReusableModelMediaDecodesTwoInstances]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testReusablePositionTransformsRejectReflection]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedContactMembershipBuildsBothContactInventories]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedContactMembershipRejectsMalformedOrUnboundDeclarations]' passed (0.116 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedContactMembershipRejectsOutlineEvenWhenEmpty]' passed (0.034 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedContactMembershipRequiresSortedKnownSecondaryContacts]' passed (0.020 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedFixtureBuilderAppliesNoncanonicalTwoBranchSuspensionMemberOrder]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testSharedFixtureBuilderUsesDeclaredBaseDocument]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsAspectRatioMatchingPresentationPixels]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsBendableCurveMetadataWithoutChangingHoldGeometry]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsCanonicalNestedAssetsWithEqualBasenames]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsCanonicalTieToEvenDescriptorCenter]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsDerivedRasterGeometryWithEquivalentFloatingExponentValues]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsDerivedRasterGeometryWithEquivalentHighPrecisionFloatingValues]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsDerivedRasterGeometryWithEquivalentSignedFloatingZeroValues]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsDerivedRasterGeometryWithEquivalentSignedIntegerZeroValues]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsDescriptorWithLeadingAndTrailingJSONWhitespace]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsExactlySupportedPhysicalHoldKinds]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsFractionalEqualBoundDepthRange]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsOffCanvasFiniteHoldGeometry]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsOmittedAndRejectsExplicitNullForOptionalContactShapeAndDepth]' passed (0.023 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsOmittedOptionalV3Metadata]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsOverlappingModelPositionHoldMemberships]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsReciprocalGastonPairs]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsReciprocalNonGastonPairs]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsShapeConstraintWithoutChangingRuntimeBoardShape]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAcceptsSharedSelfCrossingPathShapes]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreAppliesAspectRatioToleranceAtPointOnePercentBoundary]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDecodesContactSloperShapes]' passed (0.018 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDecodesForgeStyleCategoricalDepth]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDecodesModelOrientationAndExactPositionInventories]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDecodesPositionsAndDirectedTransitions]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDefaultsOmittedEquipmentObjectsToOnePrimaryObject]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreDiscoversDirectChildPackagesWithoutCatalogAndSortsThem]' passed (0.019 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreFailsClosedForMalformedCompletedPackage]' passed (0.013 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreHandlesFiniteScaleOverflowAndRejectsNonFiniteDescriptorValues]' passed (0.017 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLeavesOmittedUnilateralHandResolutionNil]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsPackageWithOmittedDimensions]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsPairedLeadCordWithDistinctPointsOnSharedBodyNode]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsPresentationAssetsAndScopedHolds]' passed (0.012 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsV3RasterGeometryFromPresentationMedia]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsValidDirectedTwoBranchSuspensionFixture]' passed (0.026 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsValidPairedLeadCordSuspensionFixture]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreLoadsValidTwoBranchSuspensionFixture]' passed (0.016 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreParsesOrientationAndSuspensionIndependently]' passed (0.018 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStorePreservesBoardHandCapacityAndRejectsInvalidOrInconsistentValues]' passed (0.022 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStorePreservesOptionalHandCapacityAndRejectsInvalidValues]' passed (0.012 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStorePreservesPoseCordContactsAndRejectsIncompleteOrTooLongRoutes]' passed (0.046 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStorePreservesPoseSpecificPairedLeadMouths]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsAspectRatioThatDoesNotMatchPresentationPixels]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsAssetEscapeMalformedPNGAndAspectMismatch]' passed (0.021 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsBendableMetadataOnLineCommand]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsContourWithMoreThan1024FlattenedSegments]' passed (0.042 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsControlPointsTooLargeToQuantize]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedPresentationChains]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryThatDiffersFromSource]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryWithAdjacentFloatingValues]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryWithDifferentIntegerValues]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryWithDifferentNumericScalarType]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryWithDifferentObjectMemberOrder]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDerivedRasterGeometryWithDifferentPieceOrder]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDescriptorContactInventoryDrift]' passed (0.013 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDuplicateDiscoveredBoardIDs]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsDuplicateOriginalRasterOwnership]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsEmptyGeometry]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsExcessiveCurvesBeforeAWorkIntensiveSuffix]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsExplicitlyEmptyDimensions]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsExplicitNullEquipmentObjectFields]' passed (0.011 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsExplicitNullOrLegacyContactMetadata]' passed (0.037 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsFormerPresentationField]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsFormerPresentationPathEscape]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsFormerPresentationPathField]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsHoldWithUnknownEquipmentObject]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsIncompleteV3RasterContactOwnership]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidCameraOverrides]' passed (0.031 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidGastonPairMetadata]' passed (0.042 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidModelCamera]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidModelOrientationAndPositionInventory]' passed (0.036 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidPositionsAndTransitions]' passed (0.108 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidShapeConstraints]' passed (0.038 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidSloperMetadataCombinations]' passed (0.031 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvalidTaggedDepthPayloads]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsInvertedFractionalDepthRange]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsLegacyContactDepthRangeKey]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsLegacyContactFeaturesKey]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsLegacyMissingHandCapacityPolicy]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMalformedDescriptorVectorsRolesAndUnknownFields]' passed (0.032 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMalformedPresentationDocuments]' passed (0.040 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMaximumSizeExactlyRetracedContourQuickly]' passed (0.026 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMissingPrimaryImage]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMissingSchemaVersion]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMissingUndeclaredAndSymlinkedAssets]' passed (0.018 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsMixedModelAndRasterPackage]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNoncanonicalInPackageAssetPaths]' passed (0.025 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNonfiniteDerivedRasterFloatingValue]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNonFiniteMillimeterMeasurementJSON]' passed (0.016 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNonFiniteShapeConstraintRotation]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNonFiniteSloperAngle]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNullAndUnsupportedUnilateralHandResolution]' passed (0.014 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsNullRequiredPresentationID]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsPathWhoseRenderedCurveEscapesDeclaredFrame]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsPathWithMatchingControlPointsButNotContourUseDeclaredFrame]' passed (0.007 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsPlausiblePNGHeaderWithoutCompleteImageData]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsRasterHoldOwnedOnlyByDerivedPresentation]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsRedundantEmptyOriginalRasterPresentation]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsRootCatalogFiles]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSharedCrossParserMalformedModelFixtureMatrix]' passed (0.709 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSharedIndexedPNGWithDuplicatePalette]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSharedMalformedPathShapes]' passed (0.013 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSidecarsAndExtraAssets]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSingleLoopWithConflictingMeshWrapBeforeIndexingPassages]' passed (0.014 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsStaleModelHashAndMissingDescriptor]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsSymlinkedPackageAndMembers]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsThroughBorePassagesForPairedLeadCord]' passed (0.010 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnknownKeysAtBoardHoldAndGeometryRoots]' passed (0.015 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnknownKeysInEquipmentObjects]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnknownMediaTagAndDerivedModel]' passed (0.013 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnknownOrientationMember]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnsortedDescriptorHoldMembers]' passed (0.009 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsUnsupportedPhysicalHoldKind]' passed (0.006 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreRejectsV2AndLoadsV3ContactsWithMultipleBodies]' passed (0.018 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testStoreUsesSharedNonASCIIOrderingContract]' passed (0.030 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testTwoBranchOrderAndDirectedRouteRegressionsUseDeclaredCategories]' passed (0.020 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testTwoBranchRejectsNonIdentifierPassageAndBranchIDs]' passed (0.019 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPackageStoreTests testWrongTwoBranchDiscriminatorUsesInvalidPackageCategory]' passed (0.016 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testDefaultFiltersReturnEveryBoardAndClearRestoresDefault]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testFilteredBoardsPutFavoritesFirstWhilePreservingCatalogOrderWithinGroups]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testManufacturerOptionsAreUniqueAndSortedCaseInsensitively]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testManufacturerSelectionMatchesOnlyThatManufacturer]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testTextSearchAndManufacturerSelectionUseAndLogic]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardPickerFiltersTests testTextSearchMatchesNameManufacturerAndSubtitleIgnoringCaseAndDiacritics]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds]' passed (0.017 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoardMapUsesOnePhysicalPathForHighlightingAndHitTesting]' passed (0.008 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsCanonicalPresentationVocabularyInGenericOwners]' passed (0.002 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsFactualPlanRequirements]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyScopedDisplayModelBindings]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditAllowsOnlyTheScopedCatalogDefaultBoardBinding]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditIgnoresUntrackedAppScratchFiles]' passed (0.005 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditPreservesQuotedSubstringMatching]' passed (0.003 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBoundaryAuditRejectsAssetLiteralsInsideDisplayModelIdentity]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testBundledBoardContentUsesSchemaVersionThree]' passed (0.031 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testCatalogContainsExactlyRegisteredPackageBoards]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testCompactUsesPackageModelNotStandaloneResource]' passed (0.001 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryBuiltInPlanTargetResolvesOnItsPackageBoard]' passed (0.181 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogBoardUsesItsDefaultPackagePresentationAsset]' passed (0.100 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testEveryCatalogPackageMatchesTypedMediaBoundary]' passed (0.506 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testHandwrittenAppSourcesAndResourcesContainNoBoardDeliveryArtifacts]' passed (12.556 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testLegacyBoardDeliveryArtifactsAreAbsent]' passed (0.025 seconds).",
+      "passed": true
+    },
+    {
+      "raw": "Test Case '-[HangTenTests.BoardSourceBoundaryTests testPackageAssetBoundaryEnumerationPreservesNestedPathsAndEqualBasenames]' passed (0.003 seconds).",
+      "passed": true
+    }
+  ],
+  "rawLogSHA256": "464a8f9881a5493b7a00831027ee6e425829c5cf48a96e0f4ed97d6448fc43c2"
+}

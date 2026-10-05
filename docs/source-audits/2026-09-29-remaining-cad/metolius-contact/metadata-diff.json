@@ -1,0 +1,14 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "metolius-contact",
+  "positionsAfter": [],
+  "positionsBefore": [],
+  "removedContacts": [],
+  "sourceAudit": "metolius-contact/source-audit.md",
+  "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62"
+}

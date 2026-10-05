@@ -1,0 +1,364 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "body_oak_mesh_001",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.12,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Manufacturer whole side photo and technical drawing plus owner clarification establish one vertical side groove guiding each visible lead into the existing middle side hole. Native Z groove selection; 1.75 mm groove radius, 1.5 mm cord radius, 120 mm visible length and 2.75 mm terminal inset are display estimates. No hidden connection is inferred. Correctly upward-facing hold orientations use the native longitudinal seat; no transverse-groove pitch or forward support offset is retained."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.12,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Manufacturer whole side photo and technical drawing plus owner clarification establish one vertical side groove guiding each visible lead into the existing middle side hole. Native Z groove selection; 1.75 mm groove radius, 1.5 mm cord radius, 120 mm visible length and 2.75 mm terminal inset are display estimates. No hidden connection is inferred. Correctly upward-facing hold orientations use the native longitudinal seat; no transverse-groove pitch or forward support offset is retained."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.025,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "Display estimate: centered support with 25 mm initial offset; final board height solves unchanged 120 mm leads against native solid."
+    },
+    "canonicalPoses": {
+      "edge-front-15mm-incut": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-15mm-flat": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-10mm-incut": {
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-10mm-flat": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-06mm-flat": {
+        "rotation": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-reverse-06mm-incut": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-20mm-wood-flat": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      },
+      "edge-front-20mm-granite": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0,
+            -1
+          ],
+          "fitPadding": 0.1
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "supportDirection": 1,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.04975,
+            -0.0024,
+            0
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          0,
+          1
+        ],
+        "mouthAxis": [
+          -1,
+          0,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.04975,
+            -0.0024,
+            0
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ],
+        "planeAxis": [
+          0,
+          0,
+          1
+        ],
+        "mouthAxis": [
+          1,
+          0,
+          0
+        ]
+      }
+    },
+    "sectionPlane": "anchor",
+    "pathSearch": "aStar",
+    "grooveGuides": {
+      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+      "byPoseID": {
+        "edge-front-15mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-front-15mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-reverse-10mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-reverse-10mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-reverse-06mm-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-reverse-06mm-incut": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        },
+        "edge-front-20mm-wood-flat": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": -1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": -1
+          }
+        },
+        "edge-front-20mm-granite": {
+          "left-lead": {
+            "feature": "LeftVerticalCordGroove",
+            "boreFeature": "LeftVisibleMouth",
+            "exitSign": 1
+          },
+          "right-lead": {
+            "feature": "RightVerticalCordGroove",
+            "boreFeature": "RightVisibleMouth",
+            "exitSign": 1
+          }
+        }
+      }
+    }
+  }
+}

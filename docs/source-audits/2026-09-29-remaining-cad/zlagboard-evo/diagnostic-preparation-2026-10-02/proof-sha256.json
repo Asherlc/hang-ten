@@ -1,0 +1,30 @@
+{
+  "algorithm": "sha256",
+  "files": {
+    "BoardHighlightDiagnostic-proposal.swift": "4a40a82514efa89a2eab003cd9b9647bba884c7f69edec7111e21ef70640758a",
+    "README.md": "7f30526b86950bf51559406dd55db13b7524756cc0bdbcca5a8964971cf8c9a2",
+    "coordination-reservation.md": "3c61c1eb7ce3f747aea19dde4899957975a54425aee594eb343479baa5f732dc",
+    "copy-inventory.json": "a816e3741951582c8bd5243a34e0e2b5f9ecb9577aff0dd25dd90d2a0d394aa0",
+    "design-source-hashes.json": "5289d910e8685fd7196f24da80bff033a98cfa34fa823c8b829be3e91db11b7b",
+    "findings.json": "6aec0aead566db748ac7477e4d4697fe812a1889f1e3de5c420c6389897ea507",
+    "first-experiment-real-workout.md": "94517423edebe4f90f93dbc603d44f0a97b8416c873addbf79e6e3692be33dec",
+    "held-phase-diagnostic-design.md": "3f94e0c30aff5cf7bee9d5f05ceba8da65f6c140b5e78ec976e2cbcc76e29acb",
+    "hook-diff-proposal.txt": "37cdcd239222ea994024447fb1acb38e1b9c1af374e586e92e81cc47b930364f",
+    "minimal-real-workout-diagnostic-inputs.json": "36c0826a0fc844dd749c4f54bfd37bb811836585926dd6f09d236f2a92dc3b66",
+    "minimal-real-workout-diagnostic.patch": "401b1084a5f8a072a5ca00f17e5f570adf3725d5140ce3875d28d2fdd76c59f6",
+    "minimal-real-workout-static-checks.json": "e49a3bfe4edfb21bccba8d0f5af5b5bc0b688216b242f6dbae94c51fa8c497bc",
+    "packaging-copy-recipe.py": "95e17f3adc2587df9102f4c3b994318340c77cd11fc36a4e4e687cb57efe67c5",
+    "proposal/HangTen/Models/BoardModelRealityTypes.swift": "e18e0a0f59139a4c19cf2e197c383698572d487eed0254dcfc28acbf373ceb39",
+    "proposal/HangTen/Views/BoardModelView.swift": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f",
+    "reservation-release.json": "bf5dd8d8478a78563dfcd5fd66b07cc04638e621be19994d0ab4fbde6f1dac0b",
+    "review.md": "76c8f5462041b8b1a27793b031883e8cc0c5ac12bffca59c5167e32338c9c55a",
+    "revision-before-scene-view-key/BoardHighlightDiagnostic-proposal.swift": "6bfbdff119495cb64ee6d6c465d228e443baec62c83d9e9baf19f6edef4442d2",
+    "revision-before-scene-view-key/minimal-real-workout-diagnostic-inputs.json": "f38d0d5b496a191e559e71417ef4627f0444b265a32b29e37b3a74ba7414633e",
+    "revision-before-scene-view-key/minimal-real-workout-diagnostic.patch": "cc404f0f861a11021a567f4b2778ec6b4567e9b1dde0c72b3732f823d42f793e",
+    "revision-before-scene-view-key/minimal-real-workout-static-checks.json": "ba98ae716839b5b8c0cb121a0fd25cc33fdc5ce8d62169e281d18dc71779032e",
+    "revision-before-scene-view-key/proposal/HangTen/Models/BoardModelRealityTypes.swift": "21b1536fe3860a7a80c928c2d4aa7d0d60d43fc0e22b98a53adc301ee73fa1fc",
+    "revision-before-scene-view-key/proposal/HangTen/Views/BoardModelView.swift": "aaf5fdaa7d24865c2bf20f5c6fd7c05db59e41cb1b4da2893fb9fbf7edec078f",
+    "root-static-review.json": "38ab310a5ce58a6d6d66b21bdc43a9ddc5c9aeb07a270f67205e710b2497b334",
+    "validation.json": "8e3efc1d6d910e03001541a2627d8151e5b76534f897122c52ca846fda9cdc24"
+  }
+}

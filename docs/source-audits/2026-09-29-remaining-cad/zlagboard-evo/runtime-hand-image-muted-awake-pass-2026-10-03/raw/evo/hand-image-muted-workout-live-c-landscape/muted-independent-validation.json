@@ -1,0 +1,1711 @@
+{
+  "checks": {
+    "audio": true,
+    "startup": true,
+    "branch": true,
+    "exact12": true,
+    "deadlines": true,
+    "noMissedSequence": true,
+    "tail": true,
+    "cleanup": true,
+    "exactMutedLaunch": true,
+    "allHelpers": true,
+    "clockStability": true,
+    "imageHash:phase-0-active-plus-0.25.png": true,
+    "imageHash:phase-0-active-plus-1.png": true,
+    "imageHash:phase-0-active-plus-3.png": true,
+    "imageHash:phase-0-active-plus-5.png": true,
+    "imageHash:phase-1-preview-plus-0.25.png": true,
+    "imageHash:phase-1-preview-plus-1.png": true,
+    "imageHash:phase-1-preview-plus-3.png": true,
+    "imageHash:phase-1-preview-plus-5.png": true,
+    "imageHash:phase-2-active-plus-0.25.png": true,
+    "imageHash:phase-2-active-plus-1.png": true,
+    "imageHash:phase-2-active-plus-3.png": true,
+    "imageHash:phase-2-active-plus-5.png": true
+  },
+  "reports": {
+    "audio": {
+      "audioMuted": true,
+      "snapshots": [
+        {
+          "sequence": 18,
+          "event": "startup-request-entry",
+          "audioEnabled": false
+        },
+        {
+          "sequence": 19,
+          "event": "startup-visible-countdown-before",
+          "audioEnabled": false
+        },
+        {
+          "sequence": 20,
+          "event": "startup-visible-countdown-after",
+          "audioEnabled": false
+        }
+      ],
+      "noPrepareEvents": true,
+      "finalRequirementsChecked": true,
+      "limitation": "Sampled scalar settings and call boundaries; not proof of all framework audio inactivity."
+    },
+    "startup": {
+      "errors": [],
+      "markers": [
+        {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791020994.498414,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+          "presentationID": "primary",
+          "sequence": 3,
+          "taskCancelled": false,
+          "uptime": 92557.498628
+        },
+        {
+          "complete": true,
+          "epoch": 1791020995.182833,
+          "event": "startup-board-load-return",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+          "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+          "sequence": 5,
+          "taskCancelled": false,
+          "uptime": 92558.18305037501
+        },
+        {
+          "complete": true,
+          "epoch": 1791020995.1830359,
+          "event": "startup-board-ready-published",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+          "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+          "sequence": 6,
+          "uptime": 92558.18325325001
+        },
+        {
+          "appearanceCount": 1,
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "epoch": 1791020995.784504,
+          "event": "startup-context-appear",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "sequence": 16,
+          "uptime": 92558.78472625
+        },
+        {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": null,
+          "associationValid": true,
+          "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791020995.794186,
+          "event": "startup-request-entry",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 18,
+          "taskCancelled": false,
+          "uptime": 92558.79440733333
+        },
+        {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": 92558.79454204167,
+          "associationValid": true,
+          "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791020995.794358,
+          "event": "startup-visible-countdown-before",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 19,
+          "taskCancelled": false,
+          "uptime": 92558.79457733333
+        },
+        {
+          "activeStartUptime": 92561.79454204167,
+          "armTaskPresent": false,
+          "armUptime": 92558.79454204167,
+          "associationValid": true,
+          "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "initial",
+          "epoch": 1791020995.797974,
+          "event": "startup-visible-countdown-after",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": false,
+          "sequence": 20,
+          "taskCancelled": false,
+          "uptime": 92558.79819520834
+        },
+        {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791020995.7981439,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+          "presentationID": "primary",
+          "sequence": 21,
+          "taskCancelled": false,
+          "uptime": 92558.79836416667
+        },
+        {
+          "complete": true,
+          "epoch": 1791020996.8156118,
+          "event": "startup-board-load-return",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 1,
+            "pair.make-entry": 1,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+          "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+          "sequence": 30,
+          "taskCancelled": false,
+          "uptime": 92559.81583650001
+        },
+        {
+          "complete": true,
+          "epoch": 1791020996.815781,
+          "event": "startup-board-ready-published",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 1,
+            "pair.make-entry": 1,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+          "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+          "sequence": 31,
+          "uptime": 92559.81600595835
+        }
+      ],
+      "contexts": {
+        "ObjectIdentifier(0x0000000104120200)|research.max-hangs": {
+          "appearanceCount": 1,
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "epoch": 1791020995.784504,
+          "event": "startup-context-appear",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "sequence": 16,
+          "uptime": 92558.78472625
+        }
+      },
+      "attempts": {
+        "A274934B-2CA4-421F-9381-F8F33D0284AA": {
+          "activeStartUptime": null,
+          "armTaskPresent": false,
+          "armUptime": null,
+          "associationValid": true,
+          "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+          "audioEnabled": false,
+          "audioPreparation": "idle",
+          "complete": true,
+          "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+          "countdown": "initial",
+          "countdownKind": "nil",
+          "epoch": 1791020995.794186,
+          "event": "startup-request-entry",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "parentAttemptID": null,
+          "pausedElapsed": 0,
+          "pendingRequestPresent": false,
+          "planID": "research.max-hangs",
+          "routineStartedIsNil": true,
+          "sequence": 18,
+          "taskCancelled": false,
+          "uptime": 92558.79440733333
+        }
+      },
+      "loads": {
+        "48E80272-8591-4817-8AE2-17BD75D116E7": {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791020994.498414,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+          "presentationID": "primary",
+          "sequence": 3,
+          "taskCancelled": false,
+          "uptime": 92557.498628
+        },
+        "EB417689-BEE4-4DE5-BE04-D0280A56DC66": {
+          "boardID": "zlagboard.evo",
+          "complete": true,
+          "epoch": 1791020995.7981439,
+          "event": "startup-board-load-call",
+          "handLifecycleCounts": {
+            "pair.constructor-entry": 0,
+            "pair.make-entry": 0,
+            "single.constructor-entry": 0,
+            "single.make-entry": 0
+          },
+          "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+          "presentationID": "primary",
+          "sequence": 21,
+          "taskCancelled": false,
+          "uptime": 92558.79836416667
+        }
+      },
+      "spans": [
+        {
+          "name": "load",
+          "identity": [
+            "48E80272-8591-4817-8AE2-17BD75D116E7"
+          ],
+          "begin": {
+            "boardID": "zlagboard.evo",
+            "complete": true,
+            "epoch": 1791020994.498414,
+            "event": "startup-board-load-call",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+            "presentationID": "primary",
+            "sequence": 3,
+            "taskCancelled": false,
+            "uptime": 92557.498628
+          },
+          "end": {
+            "complete": true,
+            "epoch": 1791020995.182833,
+            "event": "startup-board-load-return",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "48E80272-8591-4817-8AE2-17BD75D116E7",
+            "sceneLifecycleToken": "740F4580-75C0-4E2F-A3FB-E9FC5B648F5F",
+            "sequence": 5,
+            "taskCancelled": false,
+            "uptime": 92558.18305037501
+          },
+          "rightCensored": false
+        },
+        {
+          "name": "visibleCountdown",
+          "identity": [
+            "A274934B-2CA4-421F-9381-F8F33D0284AA"
+          ],
+          "begin": {
+            "activeStartUptime": null,
+            "armTaskPresent": false,
+            "armUptime": 92558.79454204167,
+            "associationValid": true,
+            "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+            "audioEnabled": false,
+            "audioPreparation": "idle",
+            "complete": true,
+            "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+            "countdown": "initial",
+            "countdownKind": "nil",
+            "epoch": 1791020995.794358,
+            "event": "startup-visible-countdown-before",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "parentAttemptID": null,
+            "pausedElapsed": 0,
+            "pendingRequestPresent": false,
+            "planID": "research.max-hangs",
+            "routineStartedIsNil": true,
+            "sequence": 19,
+            "taskCancelled": false,
+            "uptime": 92558.79457733333
+          },
+          "end": {
+            "activeStartUptime": 92561.79454204167,
+            "armTaskPresent": false,
+            "armUptime": 92558.79454204167,
+            "associationValid": true,
+            "attemptID": "A274934B-2CA4-421F-9381-F8F33D0284AA",
+            "audioEnabled": false,
+            "audioPreparation": "idle",
+            "complete": true,
+            "contextID": "ObjectIdentifier(0x0000000104120200)|research.max-hangs",
+            "countdown": "initial",
+            "countdownKind": "initial",
+            "epoch": 1791020995.797974,
+            "event": "startup-visible-countdown-after",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "parentAttemptID": null,
+            "pausedElapsed": 0,
+            "pendingRequestPresent": false,
+            "planID": "research.max-hangs",
+            "routineStartedIsNil": false,
+            "sequence": 20,
+            "taskCancelled": false,
+            "uptime": 92558.79819520834
+          },
+          "rightCensored": false
+        },
+        {
+          "name": "load",
+          "identity": [
+            "EB417689-BEE4-4DE5-BE04-D0280A56DC66"
+          ],
+          "begin": {
+            "boardID": "zlagboard.evo",
+            "complete": true,
+            "epoch": 1791020995.7981439,
+            "event": "startup-board-load-call",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 0,
+              "pair.make-entry": 0,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+            "presentationID": "primary",
+            "sequence": 21,
+            "taskCancelled": false,
+            "uptime": 92558.79836416667
+          },
+          "end": {
+            "complete": true,
+            "epoch": 1791020996.8156118,
+            "event": "startup-board-load-return",
+            "handLifecycleCounts": {
+              "pair.constructor-entry": 1,
+              "pair.make-entry": 1,
+              "single.constructor-entry": 0,
+              "single.make-entry": 0
+            },
+            "loadAttempt": "EB417689-BEE4-4DE5-BE04-D0280A56DC66",
+            "sceneLifecycleToken": "8C98E111-D2C0-4D75-87AB-3F2EBC235A06",
+            "sequence": 30,
+            "taskCancelled": false,
+            "uptime": 92559.81583650001
+          },
+          "rightCensored": false
+        }
+      ]
+    },
+    "branch": {
+      "current": [],
+      "sessions": {},
+      "events": 0
+    },
+    "clockStability": {
+      "criterion": "PROSPECTIVE_AWAKE_CONTEXT_CLOCK_STABILITY",
+      "thresholdSeconds": 0.1,
+      "passed": true,
+      "errors": [],
+      "appClock": {
+        "count": 180,
+        "minimum": 1790928436.9988472,
+        "maximum": 1790928436.9997861,
+        "spread": 0.0009388923645019531,
+        "passed": true
+      },
+      "hostClock": {
+        "count": 40,
+        "minimum": 1790928436.9988432,
+        "maximum": 1790928436.9998047,
+        "spread": 0.0009615421295166016,
+        "passed": true
+      },
+      "appOffsets": [
+        {
+          "sequence": 1,
+          "event": "recorder-open",
+          "offset": 1790928436.9997854
+        },
+        {
+          "sequence": 2,
+          "event": "train-navigation-source",
+          "offset": 1790928436.999785
+        },
+        {
+          "sequence": 3,
+          "event": "startup-board-load-call",
+          "offset": 1790928436.9997861
+        },
+        {
+          "sequence": 4,
+          "event": "board-scene-constructed",
+          "offset": 1790928436.9997847
+        },
+        {
+          "sequence": 5,
+          "event": "startup-board-load-return",
+          "offset": 1790928436.9997826
+        },
+        {
+          "sequence": 6,
+          "event": "startup-board-ready-published",
+          "offset": 1790928436.9997826
+        },
+        {
+          "sequence": 7,
+          "event": "surface-inputs",
+          "offset": 1790928436.9997783
+        },
+        {
+          "sequence": 8,
+          "event": "highlight-before",
+          "offset": 1790928436.9997797
+        },
+        {
+          "sequence": 9,
+          "event": "highlight-after",
+          "offset": 1790928436.9997807
+        },
+        {
+          "sequence": 10,
+          "event": "view-make",
+          "offset": 1790928436.9997814
+        },
+        {
+          "sequence": 11,
+          "event": "train-navigation-source",
+          "offset": 1790928436.99978
+        },
+        {
+          "sequence": 12,
+          "event": "detach-trial-before",
+          "offset": 1790928436.9997804
+        },
+        {
+          "sequence": 13,
+          "event": "detach-trial-after",
+          "offset": 1790928436.9997811
+        },
+        {
+          "sequence": 14,
+          "event": "view-disappear",
+          "offset": 1790928436.9997804
+        },
+        {
+          "sequence": 15,
+          "event": "workout-prestart-hand-state",
+          "offset": 1790928436.9997785
+        },
+        {
+          "sequence": 16,
+          "event": "startup-context-appear",
+          "offset": 1790928436.9997778
+        },
+        {
+          "sequence": 17,
+          "event": "workout-probe-appear-before-autostart",
+          "offset": 1790928436.999779
+        },
+        {
+          "sequence": 18,
+          "event": "startup-request-entry",
+          "offset": 1790928436.9997787
+        },
+        {
+          "sequence": 19,
+          "event": "startup-visible-countdown-before",
+          "offset": 1790928436.9997807
+        },
+        {
+          "sequence": 20,
+          "event": "startup-visible-countdown-after",
+          "offset": 1790928436.999779
+        },
+        {
+          "sequence": 21,
+          "event": "startup-board-load-call",
+          "offset": 1790928436.9997797
+        },
+        {
+          "sequence": 22,
+          "event": "hand-view-lifecycle",
+          "offset": 1790928436.9997797
+        },
+        {
+          "sequence": 23,
+          "event": "hand-lifecycle",
+          "offset": 1790928436.999774
+        },
+        {
+          "sequence": 24,
+          "event": "hand-camera",
+          "offset": 1790928436.9997764
+        },
+        {
+          "sequence": 25,
+          "event": "hand-lifecycle",
+          "offset": 1790928436.9997747
+        },
+        {
+          "sequence": 26,
+          "event": "hand-camera",
+          "offset": 1790928436.9997733
+        },
+        {
+          "sequence": 27,
+          "event": "workout-prestart-hand-state",
+          "offset": 1790928436.9997752
+        },
+        {
+          "sequence": 28,
+          "event": "hand-view-lifecycle",
+          "offset": 1790928436.999776
+        },
+        {
+          "sequence": 29,
+          "event": "board-scene-constructed",
+          "offset": 1790928436.9997752
+        },
+        {
+          "sequence": 30,
+          "event": "startup-board-load-return",
+          "offset": 1790928436.9997754
+        },
+        {
+          "sequence": 31,
+          "event": "startup-board-ready-published",
+          "offset": 1790928436.9997752
+        },
+        {
+          "sequence": 32,
+          "event": "surface-inputs",
+          "offset": 1790928436.999774
+        },
+        {
+          "sequence": 33,
+          "event": "highlight-before",
+          "offset": 1790928436.999774
+        },
+        {
+          "sequence": 34,
+          "event": "highlight-after",
+          "offset": 1790928436.9997725
+        },
+        {
+          "sequence": 35,
+          "event": "view-make",
+          "offset": 1790928436.999775
+        },
+        {
+          "sequence": 36,
+          "event": "workout-prestart-hand-state",
+          "offset": 1790928436.9997737
+        },
+        {
+          "sequence": 37,
+          "event": "sample",
+          "offset": 1790928436.9997697
+        },
+        {
+          "sequence": 38,
+          "event": "workout-prestart-hand-state",
+          "offset": 1790928436.999766
+        },
+        {
+          "sequence": 39,
+          "event": "sample",
+          "offset": 1790928436.9997637
+        },
+        {
+          "sequence": 40,
+          "event": "highlight-before",
+          "offset": 1790928436.999765
+        },
+        {
+          "sequence": 41,
+          "event": "highlight-after",
+          "offset": 1790928436.9997642
+        },
+        {
+          "sequence": 42,
+          "event": "view-update",
+          "offset": 1790928436.999765
+        },
+        {
+          "sequence": 43,
+          "event": "workout-prestart-hand-state",
+          "offset": 1790928436.9997647
+        },
+        {
+          "sequence": 44,
+          "event": "surface-inputs",
+          "offset": 1790928436.9997644
+        },
+        {
+          "sequence": 45,
+          "event": "hand-view-lifecycle",
+          "offset": 1790928436.999764
+        },
+        {
+          "sequence": 46,
+          "event": "hand-lifecycle",
+          "offset": 1790928436.9997654
+        },
+        {
+          "sequence": 47,
+          "event": "hand-camera",
+          "offset": 1790928436.9997647
+        },
+        {
+          "sequence": 48,
+          "event": "hand-lifecycle",
+          "offset": 1790928436.9997633
+        },
+        {
+          "sequence": 49,
+          "event": "hand-camera",
+          "offset": 1790928436.999761
+        },
+        {
+          "sequence": 50,
+          "event": "sample",
+          "offset": 1790928436.9997597
+        },
+        {
+          "sequence": 51,
+          "event": "sample",
+          "offset": 1790928436.999756
+        },
+        {
+          "sequence": 52,
+          "event": "sample",
+          "offset": 1790928436.999751
+        },
+        {
+          "sequence": 53,
+          "event": "sample",
+          "offset": 1790928436.9997454
+        },
+        {
+          "sequence": 54,
+          "event": "sample",
+          "offset": 1790928436.9997408
+        },
+        {
+          "sequence": 55,
+          "event": "sample",
+          "offset": 1790928436.9997344
+        },
+        {
+          "sequence": 56,
+          "event": "highlight-before",
+          "offset": 1790928436.9997323
+        },
+        {
+          "sequence": 57,
+          "event": "highlight-after",
+          "offset": 1790928436.9997323
+        },
+        {
+          "sequence": 58,
+          "event": "view-update",
+          "offset": 1790928436.9997325
+        },
+        {
+          "sequence": 59,
+          "event": "surface-inputs",
+          "offset": 1790928436.9997318
+        },
+        {
+          "sequence": 60,
+          "event": "sample",
+          "offset": 1790928436.9997306
+        },
+        {
+          "sequence": 61,
+          "event": "sample",
+          "offset": 1790928436.9997268
+        },
+        {
+          "sequence": 62,
+          "event": "sample",
+          "offset": 1790928436.9997206
+        },
+        {
+          "sequence": 63,
+          "event": "sample",
+          "offset": 1790928436.9997156
+        },
+        {
+          "sequence": 64,
+          "event": "sample",
+          "offset": 1790928436.999712
+        },
+        {
+          "sequence": 65,
+          "event": "sample",
+          "offset": 1790928436.999707
+        },
+        {
+          "sequence": 66,
+          "event": "sample",
+          "offset": 1790928436.9997003
+        },
+        {
+          "sequence": 67,
+          "event": "sample",
+          "offset": 1790928436.9996974
+        },
+        {
+          "sequence": 68,
+          "event": "sample",
+          "offset": 1790928436.999692
+        },
+        {
+          "sequence": 69,
+          "event": "sample",
+          "offset": 1790928436.9996853
+        },
+        {
+          "sequence": 70,
+          "event": "sample",
+          "offset": 1790928436.9996822
+        },
+        {
+          "sequence": 71,
+          "event": "sample",
+          "offset": 1790928436.9996777
+        },
+        {
+          "sequence": 72,
+          "event": "sample",
+          "offset": 1790928436.9996717
+        },
+        {
+          "sequence": 73,
+          "event": "sample",
+          "offset": 1790928436.999666
+        },
+        {
+          "sequence": 74,
+          "event": "sample",
+          "offset": 1790928436.9996622
+        },
+        {
+          "sequence": 75,
+          "event": "sample",
+          "offset": 1790928436.9996579
+        },
+        {
+          "sequence": 76,
+          "event": "sample",
+          "offset": 1790928436.999652
+        },
+        {
+          "sequence": 77,
+          "event": "sample",
+          "offset": 1790928436.9996476
+        },
+        {
+          "sequence": 78,
+          "event": "sample",
+          "offset": 1790928436.9996428
+        },
+        {
+          "sequence": 79,
+          "event": "sample",
+          "offset": 1790928436.9996378
+        },
+        {
+          "sequence": 80,
+          "event": "sample",
+          "offset": 1790928436.9996333
+        },
+        {
+          "sequence": 81,
+          "event": "sample",
+          "offset": 1790928436.9996266
+        },
+        {
+          "sequence": 82,
+          "event": "sample",
+          "offset": 1790928436.999623
+        },
+        {
+          "sequence": 83,
+          "event": "sample",
+          "offset": 1790928436.9996185
+        },
+        {
+          "sequence": 84,
+          "event": "sample",
+          "offset": 1790928436.9996133
+        },
+        {
+          "sequence": 85,
+          "event": "sample",
+          "offset": 1790928436.9996078
+        },
+        {
+          "sequence": 86,
+          "event": "sample",
+          "offset": 1790928436.9996016
+        },
+        {
+          "sequence": 87,
+          "event": "sample",
+          "offset": 1790928436.9995983
+        },
+        {
+          "sequence": 88,
+          "event": "sample",
+          "offset": 1790928436.9995923
+        },
+        {
+          "sequence": 89,
+          "event": "sample",
+          "offset": 1790928436.9995883
+        },
+        {
+          "sequence": 90,
+          "event": "sample",
+          "offset": 1790928436.9995832
+        },
+        {
+          "sequence": 91,
+          "event": "sample",
+          "offset": 1790928436.9995775
+        },
+        {
+          "sequence": 92,
+          "event": "sample",
+          "offset": 1790928436.9995737
+        },
+        {
+          "sequence": 93,
+          "event": "sample",
+          "offset": 1790928436.999568
+        },
+        {
+          "sequence": 94,
+          "event": "sample",
+          "offset": 1790928436.9995642
+        },
+        {
+          "sequence": 95,
+          "event": "sample",
+          "offset": 1790928436.9995582
+        },
+        {
+          "sequence": 96,
+          "event": "sample",
+          "offset": 1790928436.9995522
+        },
+        {
+          "sequence": 97,
+          "event": "sample",
+          "offset": 1790928436.999549
+        },
+        {
+          "sequence": 98,
+          "event": "sample",
+          "offset": 1790928436.999544
+        },
+        {
+          "sequence": 99,
+          "event": "sample",
+          "offset": 1790928436.9995394
+        },
+        {
+          "sequence": 100,
+          "event": "sample",
+          "offset": 1790928436.9995341
+        },
+        {
+          "sequence": 101,
+          "event": "sample",
+          "offset": 1790928436.9995291
+        },
+        {
+          "sequence": 102,
+          "event": "sample",
+          "offset": 1790928436.9995234
+        },
+        {
+          "sequence": 103,
+          "event": "sample",
+          "offset": 1790928436.9995182
+        },
+        {
+          "sequence": 104,
+          "event": "sample",
+          "offset": 1790928436.999514
+        },
+        {
+          "sequence": 105,
+          "event": "sample",
+          "offset": 1790928436.9995103
+        },
+        {
+          "sequence": 106,
+          "event": "sample",
+          "offset": 1790928436.9995036
+        },
+        {
+          "sequence": 107,
+          "event": "sample",
+          "offset": 1790928436.9994996
+        },
+        {
+          "sequence": 108,
+          "event": "sample",
+          "offset": 1790928436.9994943
+        },
+        {
+          "sequence": 109,
+          "event": "sample",
+          "offset": 1790928436.9994898
+        },
+        {
+          "sequence": 110,
+          "event": "sample",
+          "offset": 1790928436.9994845
+        },
+        {
+          "sequence": 111,
+          "event": "sample",
+          "offset": 1790928436.999461
+        },
+        {
+          "sequence": 112,
+          "event": "sample",
+          "offset": 1790928436.9994755
+        },
+        {
+          "sequence": 113,
+          "event": "sample",
+          "offset": 1790928436.9994707
+        },
+        {
+          "sequence": 114,
+          "event": "sample",
+          "offset": 1790928436.999464
+        },
+        {
+          "sequence": 115,
+          "event": "sample",
+          "offset": 1790928436.9994607
+        },
+        {
+          "sequence": 116,
+          "event": "sample",
+          "offset": 1790928436.9994552
+        },
+        {
+          "sequence": 117,
+          "event": "sample",
+          "offset": 1790928436.999451
+        },
+        {
+          "sequence": 118,
+          "event": "sample",
+          "offset": 1790928436.999445
+        },
+        {
+          "sequence": 119,
+          "event": "sample",
+          "offset": 1790928436.9994392
+        },
+        {
+          "sequence": 120,
+          "event": "sample",
+          "offset": 1790928436.9994345
+        },
+        {
+          "sequence": 121,
+          "event": "sample",
+          "offset": 1790928436.9994307
+        },
+        {
+          "sequence": 122,
+          "event": "sample",
+          "offset": 1790928436.999426
+        },
+        {
+          "sequence": 123,
+          "event": "sample",
+          "offset": 1790928436.9994211
+        },
+        {
+          "sequence": 124,
+          "event": "sample",
+          "offset": 1790928436.9994166
+        },
+        {
+          "sequence": 125,
+          "event": "sample",
+          "offset": 1790928436.9994097
+        },
+        {
+          "sequence": 126,
+          "event": "sample",
+          "offset": 1790928436.9994068
+        },
+        {
+          "sequence": 127,
+          "event": "sample",
+          "offset": 1790928436.9994013
+        },
+        {
+          "sequence": 128,
+          "event": "sample",
+          "offset": 1790928436.9993958
+        },
+        {
+          "sequence": 129,
+          "event": "sample",
+          "offset": 1790928436.9993908
+        },
+        {
+          "sequence": 130,
+          "event": "sample",
+          "offset": 1790928436.9993868
+        },
+        {
+          "sequence": 131,
+          "event": "sample",
+          "offset": 1790928436.9993815
+        },
+        {
+          "sequence": 132,
+          "event": "sample",
+          "offset": 1790928436.999375
+        },
+        {
+          "sequence": 133,
+          "event": "sample",
+          "offset": 1790928436.9993718
+        },
+        {
+          "sequence": 134,
+          "event": "sample",
+          "offset": 1790928436.9993665
+        },
+        {
+          "sequence": 135,
+          "event": "sample",
+          "offset": 1790928436.9993615
+        },
+        {
+          "sequence": 136,
+          "event": "sample",
+          "offset": 1790928436.9993563
+        },
+        {
+          "sequence": 137,
+          "event": "sample",
+          "offset": 1790928436.999352
+        },
+        {
+          "sequence": 138,
+          "event": "sample",
+          "offset": 1790928436.9993463
+        },
+        {
+          "sequence": 139,
+          "event": "sample",
+          "offset": 1790928436.999341
+        },
+        {
+          "sequence": 140,
+          "event": "sample",
+          "offset": 1790928436.9993362
+        },
+        {
+          "sequence": 141,
+          "event": "sample",
+          "offset": 1790928436.9993312
+        },
+        {
+          "sequence": 142,
+          "event": "sample",
+          "offset": 1790928436.9993265
+        },
+        {
+          "sequence": 143,
+          "event": "sample",
+          "offset": 1790928436.9993203
+        },
+        {
+          "sequence": 144,
+          "event": "sample",
+          "offset": 1790928436.9993167
+        },
+        {
+          "sequence": 145,
+          "event": "sample",
+          "offset": 1790928436.9993117
+        },
+        {
+          "sequence": 146,
+          "event": "sample",
+          "offset": 1790928436.999307
+        },
+        {
+          "sequence": 147,
+          "event": "sample",
+          "offset": 1790928436.9992993
+        },
+        {
+          "sequence": 148,
+          "event": "sample",
+          "offset": 1790928436.9992952
+        },
+        {
+          "sequence": 149,
+          "event": "sample",
+          "offset": 1790928436.999292
+        },
+        {
+          "sequence": 150,
+          "event": "sample",
+          "offset": 1790928436.9992864
+        },
+        {
+          "sequence": 151,
+          "event": "sample",
+          "offset": 1790928436.9992816
+        },
+        {
+          "sequence": 152,
+          "event": "sample",
+          "offset": 1790928436.9992764
+        },
+        {
+          "sequence": 153,
+          "event": "sample",
+          "offset": 1790928436.9992714
+        },
+        {
+          "sequence": 154,
+          "event": "sample",
+          "offset": 1790928436.9992664
+        },
+        {
+          "sequence": 155,
+          "event": "sample",
+          "offset": 1790928436.9992619
+        },
+        {
+          "sequence": 156,
+          "event": "sample",
+          "offset": 1790928436.9992568
+        },
+        {
+          "sequence": 157,
+          "event": "sample",
+          "offset": 1790928436.9992514
+        },
+        {
+          "sequence": 158,
+          "event": "sample",
+          "offset": 1790928436.9992468
+        },
+        {
+          "sequence": 159,
+          "event": "sample",
+          "offset": 1790928436.9992406
+        },
+        {
+          "sequence": 160,
+          "event": "sample",
+          "offset": 1790928436.9992373
+        },
+        {
+          "sequence": 161,
+          "event": "sample",
+          "offset": 1790928436.999232
+        },
+        {
+          "sequence": 162,
+          "event": "sample",
+          "offset": 1790928436.999228
+        },
+        {
+          "sequence": 163,
+          "event": "sample",
+          "offset": 1790928436.9992223
+        },
+        {
+          "sequence": 164,
+          "event": "sample",
+          "offset": 1790928436.9992163
+        },
+        {
+          "sequence": 165,
+          "event": "sample",
+          "offset": 1790928436.9992113
+        },
+        {
+          "sequence": 166,
+          "event": "sample",
+          "offset": 1790928436.9992075
+        },
+        {
+          "sequence": 167,
+          "event": "sample",
+          "offset": 1790928436.9992032
+        },
+        {
+          "sequence": 168,
+          "event": "sample",
+          "offset": 1790928436.9991977
+        },
+        {
+          "sequence": 169,
+          "event": "sample",
+          "offset": 1790928436.999192
+        },
+        {
+          "sequence": 170,
+          "event": "sample",
+          "offset": 1790928436.9991875
+        },
+        {
+          "sequence": 171,
+          "event": "sample",
+          "offset": 1790928436.999183
+        },
+        {
+          "sequence": 172,
+          "event": "sample-end",
+          "offset": 1790928436.9991837
+        },
+        {
+          "sequence": 173,
+          "event": "highlight-before",
+          "offset": 1790928436.9988809
+        },
+        {
+          "sequence": 174,
+          "event": "highlight-after",
+          "offset": 1790928436.9988813
+        },
+        {
+          "sequence": 175,
+          "event": "view-update",
+          "offset": 1790928436.9988816
+        },
+        {
+          "sequence": 176,
+          "event": "surface-inputs",
+          "offset": 1790928436.998881
+        },
+        {
+          "sequence": 177,
+          "event": "highlight-before",
+          "offset": 1790928436.9988475
+        },
+        {
+          "sequence": 178,
+          "event": "highlight-after",
+          "offset": 1790928436.9988472
+        },
+        {
+          "sequence": 179,
+          "event": "view-update",
+          "offset": 1790928436.9988477
+        },
+        {
+          "sequence": 180,
+          "event": "surface-inputs",
+          "offset": 1790928436.9988472
+        }
+      ],
+      "hostOffsets": [
+        {
+          "commandIndex": 0,
+          "boundary": "start",
+          "offset": 1790928436.999804
+        },
+        {
+          "commandIndex": 0,
+          "boundary": "end",
+          "offset": 1790928436.9998026
+        },
+        {
+          "commandIndex": 1,
+          "boundary": "start",
+          "offset": 1790928436.9998047
+        },
+        {
+          "commandIndex": 1,
+          "boundary": "end",
+          "offset": 1790928436.9998028
+        },
+        {
+          "commandIndex": 2,
+          "boundary": "start",
+          "offset": 1790928436.9998035
+        },
+        {
+          "commandIndex": 2,
+          "boundary": "end",
+          "offset": 1790928436.999802
+        },
+        {
+          "commandIndex": 3,
+          "boundary": "start",
+          "offset": 1790928436.999802
+        },
+        {
+          "commandIndex": 3,
+          "boundary": "end",
+          "offset": 1790928436.9998014
+        },
+        {
+          "commandIndex": 4,
+          "boundary": "start",
+          "offset": 1790928436.9997811
+        },
+        {
+          "commandIndex": 4,
+          "boundary": "end",
+          "offset": 1790928436.9997804
+        },
+        {
+          "commandIndex": 5,
+          "boundary": "start",
+          "offset": 1790928436.9997811
+        },
+        {
+          "commandIndex": 5,
+          "boundary": "end",
+          "offset": 1790928436.9997785
+        },
+        {
+          "commandIndex": 6,
+          "boundary": "start",
+          "offset": 1790928436.999764
+        },
+        {
+          "commandIndex": 6,
+          "boundary": "end",
+          "offset": 1790928436.999761
+        },
+        {
+          "commandIndex": 7,
+          "boundary": "start",
+          "offset": 1790928436.99976
+        },
+        {
+          "commandIndex": 7,
+          "boundary": "end",
+          "offset": 1790928436.9997573
+        },
+        {
+          "commandIndex": 8,
+          "boundary": "start",
+          "offset": 1790928436.9997509
+        },
+        {
+          "commandIndex": 8,
+          "boundary": "end",
+          "offset": 1790928436.9997485
+        },
+        {
+          "commandIndex": 9,
+          "boundary": "start",
+          "offset": 1790928436.9997416
+        },
+        {
+          "commandIndex": 9,
+          "boundary": "end",
+          "offset": 1790928436.9997396
+        },
+        {
+          "commandIndex": 10,
+          "boundary": "start",
+          "offset": 1790928436.9997313
+        },
+        {
+          "commandIndex": 10,
+          "boundary": "end",
+          "offset": 1790928436.9997282
+        },
+        {
+          "commandIndex": 11,
+          "boundary": "start",
+          "offset": 1790928436.999728
+        },
+        {
+          "commandIndex": 11,
+          "boundary": "end",
+          "offset": 1790928436.9997256
+        },
+        {
+          "commandIndex": 12,
+          "boundary": "start",
+          "offset": 1790928436.999719
+        },
+        {
+          "commandIndex": 12,
+          "boundary": "end",
+          "offset": 1790928436.9997156
+        },
+        {
+          "commandIndex": 13,
+          "boundary": "start",
+          "offset": 1790928436.999709
+        },
+        {
+          "commandIndex": 13,
+          "boundary": "end",
+          "offset": 1790928436.9997065
+        },
+        {
+          "commandIndex": 14,
+          "boundary": "start",
+          "offset": 1790928436.9988797
+        },
+        {
+          "commandIndex": 14,
+          "boundary": "end",
+          "offset": 1790928436.9988773
+        },
+        {
+          "commandIndex": 15,
+          "boundary": "start",
+          "offset": 1790928436.9988759
+        },
+        {
+          "commandIndex": 15,
+          "boundary": "end",
+          "offset": 1790928436.9988735
+        },
+        {
+          "commandIndex": 16,
+          "boundary": "start",
+          "offset": 1790928436.9988673
+        },
+        {
+          "commandIndex": 16,
+          "boundary": "end",
+          "offset": 1790928436.998865
+        },
+        {
+          "commandIndex": 17,
+          "boundary": "start",
+          "offset": 1790928436.9988575
+        },
+        {
+          "commandIndex": 17,
+          "boundary": "end",
+          "offset": 1790928436.9988549
+        },
+        {
+          "commandIndex": 18,
+          "boundary": "start",
+          "offset": 1790928436.9988449
+        },
+        {
+          "commandIndex": 18,
+          "boundary": "end",
+          "offset": 1790928436.998844
+        },
+        {
+          "commandIndex": 19,
+          "boundary": "start",
+          "offset": 1790928436.9988449
+        },
+        {
+          "commandIndex": 19,
+          "boundary": "end",
+          "offset": 1790928436.9988432
+        }
+      ],
+      "captureTiming": [
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-0.25.png",
+          "epochStartLateness": 0.0228579044342041,
+          "monotonicStartLateness": 0.02285824966384098,
+          "epochDuration": 0.46805787086486816,
+          "monotonicDuration": 0.4680606670008274
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-1.png",
+          "epochStartLateness": 0.013835906982421875,
+          "monotonicStartLateness": 0.013840166662703268,
+          "epochDuration": 0.48554205894470215,
+          "monotonicDuration": 0.4855446659930749
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-3.png",
+          "epochStartLateness": 0.0326540470123291,
+          "monotonicStartLateness": 0.03266733266355004,
+          "epochDuration": 0.488055944442749,
+          "monotonicDuration": 0.4880582920013694
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-0-active-plus-5.png",
+          "epochStartLateness": 0.03235602378845215,
+          "monotonicStartLateness": 0.03237858266220428,
+          "epochDuration": 0.4625720977783203,
+          "monotonicDuration": 0.4625742089992855
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-0.25.png",
+          "epochStartLateness": 0.04325604438781738,
+          "monotonicStartLateness": 0.043256958335405216,
+          "epochDuration": 0.4695558547973633,
+          "monotonicDuration": 0.4695588750037132
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-1.png",
+          "epochStartLateness": 0.009072065353393555,
+          "monotonicStartLateness": 0.009076374335563742,
+          "epochDuration": 0.46367478370666504,
+          "monotonicDuration": 0.4636772499943618
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-3.png",
+          "epochStartLateness": 0.019178152084350586,
+          "monotonicStartLateness": 0.019191583327483386,
+          "epochDuration": 0.47241759300231934,
+          "monotonicDuration": 0.4724209160049213
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-1-preview-plus-5.png",
+          "epochStartLateness": 0.03601384162902832,
+          "monotonicStartLateness": 0.036037166326423176,
+          "epochDuration": 0.5049972534179688,
+          "monotonicDuration": 0.5049996670131804
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-0.25.png",
+          "epochStartLateness": 0.07414889335632324,
+          "monotonicStartLateness": 0.07415045767265838,
+          "epochDuration": 0.5036301612854004,
+          "monotonicDuration": 0.5036327499983599
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-1.png",
+          "epochStartLateness": 0.04324793815612793,
+          "monotonicStartLateness": 0.043253374664345756,
+          "epochDuration": 0.479996919631958,
+          "monotonicDuration": 0.47999945799529087
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-3.png",
+          "epochStartLateness": 0.0630190372467041,
+          "monotonicStartLateness": 0.06303308266797103,
+          "epochDuration": 0.46765685081481934,
+          "monotonicDuration": 0.46765937500458676
+        },
+        {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-muted-workout-live-c-landscape/phase-2-active-plus-5.png",
+          "epochStartLateness": 0.06939888000488281,
+          "monotonicStartLateness": 0.06942274967150297,
+          "epochDuration": 0.4611520767211914,
+          "monotonicDuration": 0.4611546669912059
+        }
+      ],
+      "causalComparisonEligible": true,
+      "limits": [
+        "Clock stability does not prove uninterrupted OS scheduling, continuous GPU state or an underlying cause.",
+        "Failure forbids the planned causal comparison; raw prior validator results are never rewritten.",
+        "This checks recorded clock pairs only; assertion-wrapper operation is separate evidence."
+      ]
+    }
+  },
+  "passed": true,
+  "visualResult": "REQUIRES_SEPARATE_WHOLE_IMAGE_REVIEW",
+  "oldPrestartAndSupplemental": "NOT_APPLICABLE_AS_MUTED_GATE; ORIGINAL_BYTES_RETAINED",
+  "limit": "Technical proof only, no repair/acceptance or IMAGE authorization"
+}

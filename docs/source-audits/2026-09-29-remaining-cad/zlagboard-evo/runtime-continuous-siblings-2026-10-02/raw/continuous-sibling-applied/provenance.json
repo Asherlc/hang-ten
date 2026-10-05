@@ -1,0 +1,21 @@
+{
+  "beforeRootSHA256": "c1063ed42a466853d2c69a2df4900f7b5e318886bba4aaf8461d4ca748b3353d",
+  "afterRootSHA256": "3d139f8b078e14e253ee1b9b3133fbd1c6c09cd9a9f1e19e7cc68dae1400a9a8",
+  "patchSHA256": "7ce6c5fa03cde22a5b9ee41e1cd378a2effaef43edbd6eaa8a02e2eb6b9ae1b2",
+  "source": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "sha256": "3d139f8b078e14e253ee1b9b3133fbd1c6c09cd9a9f1e19e7cc68dae1400a9a8"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "sha256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    }
+  ],
+  "head": "84ee1aa413096630c524e435cafa6e4d7bc08717",
+  "protocol": "H0a/H1a/H1b/H0b; fixed210x36 board; fixed210x54 top overlay; synthetic40sec display only; no production training change; identical sparse tail42sec"
+}

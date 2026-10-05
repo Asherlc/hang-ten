@@ -1,0 +1,6 @@
+{
+  "currentObservation": "No process with Simulator executable name found in two read-only ps queries",
+  "historicalSetup": "ios-diagnosis/frontend-command.json records successful open -a Simulator --args -CurrentDeviceUDID BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "limit": "Current absence does not prove all historical runs headless or when frontend exited",
+  "nextBoundary": "Establish exact owned visible frontend and selected UUID before unchanged normal-O measurement"
+}

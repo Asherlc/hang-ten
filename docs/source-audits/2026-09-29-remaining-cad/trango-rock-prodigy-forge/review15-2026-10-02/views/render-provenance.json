@@ -1,0 +1,98 @@
+{
+  "renderer": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-depth-render.py",
+    "sha256": "8010160c9f686524f45fafe23c4f9a8b7719cc627fe831027f86bc46c20909ab"
+  },
+  "method": "whole actual triangles; barycentric per-pixel orthographic depth; no source-image processing",
+  "prior": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/prior-canonical/assets/primary.usdz",
+    "sha256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+    "package": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/native-author/prior-canonical",
+    "files": {
+      "trango-rock-prodigy-forge.FCStd": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "assets/primary.usdz": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+      "assets/primary.model.json": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
+    }
+  },
+  "current": {
+    "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+    "sha256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "kind": "actual compiled USDZ",
+    "package": ".context/placid-badger/forge-review15/native-author/stable-bindings/export-bound-package/Hangboards/trango-rock-prodigy-forge",
+    "files": {
+      "trango-rock-prodigy-forge.FCStd": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+      "assets/primary.usdz": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+      "assets/primary.model.json": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6"
+    }
+  },
+  "packageBytesUnchanged": true,
+  "camera": {
+    "front": "eye +Z",
+    "side": "eye +X",
+    "top": "eye +Y",
+    "oblique": "yaw -25 degrees then pitch +22 degrees",
+    "framing": "whole union of prior/current projections, identical camera and scale"
+  },
+  "images": [
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-front.png",
+      "sha256": "1d7d62b5ace0787175f1a43351391ade1b8817cf2ab825755268d334c3e880f2",
+      "view": "front",
+      "role": "current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front.png",
+      "sha256": "9c6029be098330c4b51b652faf16179c73ef7284f2c4395dd61241a46157e4a5",
+      "view": "front",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-side.png",
+      "sha256": "6c6717f142ba5688cae2724a707f4b8efefc9ee8ed404eee558506539d2fd19e",
+      "view": "side",
+      "role": "current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-side.png",
+      "sha256": "e27f857ab47463de48bd05df56b9d362db6f4f2936744d38970a7117b2737bce",
+      "view": "side",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-top.png",
+      "sha256": "fd33a3a5040c0efa04c59dc55fb0902160e7c9d829c356b8ef26ceb8d9c57d65",
+      "view": "top",
+      "role": "current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-top.png",
+      "sha256": "392ce11893b46e2dc6f4bf1b1485669e2c4a515083909d34ff5a507cbe04d7f2",
+      "view": "top",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/current-oblique.png",
+      "sha256": "d23a02ed3722f65cf0090469f3a362083bddc87ea0a34080b9711391725dbac3",
+      "view": "oblique",
+      "role": "current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-oblique.png",
+      "sha256": "3e03057919a1adcbdc3e47a089ad82a0a4c8ccace12d1b58c7ec9717eeba0cdb",
+      "view": "oblique",
+      "role": "prior/current"
+    },
+    {
+      "path": ".context/placid-badger/forge-review15/native-author/stable-bindings/final-whole-views/comparison-front-side-top.png",
+      "sha256": "5825f930e0e1d19b490effbbf4e1ac4ce7157e8d080a5c4d8a819f22a1f94499",
+      "views": [
+        "front",
+        "side",
+        "top"
+      ],
+      "role": "prior/current",
+      "layout": "three complete original comparison frames pasted without cropping, resizing or image processing"
+    }
+  ],
+  "appFrames": 0
+}

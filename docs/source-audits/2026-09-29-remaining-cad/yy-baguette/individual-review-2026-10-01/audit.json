@@ -1,0 +1,172 @@
+{
+  "timestampUTC": "2026-10-01T20:15:57.216745+00:00",
+  "package": "yy-baguette",
+  "gitHEAD": "9399160729fcc418cedf47344b41163d244b5d96",
+  "fileSHA256": {
+    "Hangboards/yy-baguette/assets/primary.model.json": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5",
+    "Hangboards/yy-baguette/assets/primary.usdz": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+    "Hangboards/yy-baguette/suspension.json": "7765417f4b49ff1efeded274a70a5c69907a3126aeb73f4a7d12d2fec14c688b",
+    "Hangboards/yy-baguette/yy-baguette.FCStd": "9e56cec4e8494d26bc97629c8a73a11dc7b4adf9e5071a0963eafe3827c95d52"
+  },
+  "archiveInspection": {
+    "passed": true,
+    "keys": [
+      "objects",
+      "members"
+    ],
+    "archiveMembers": 112
+  },
+  "noCanonicalBoardJSON": true,
+  "packageSchema": {
+    "passed": true,
+    "boardID": "yy.baguette"
+  },
+  "sourceEvidence": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-3.webp",
+      "expectedSHA256": "1f6742bddbb63d5583952d8ae10bfe7fbca5ac5dc7990c8ccbc1695f4c5c9080",
+      "actualSHA256": "1f6742bddbb63d5583952d8ae10bfe7fbca5ac5dc7990c8ccbc1695f4c5c9080",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-2.webp",
+      "expectedSHA256": "ecdd7142686b82cc93b103292cc5fe75a923ab8bb0389dc437d40a75609c8214",
+      "actualSHA256": "ecdd7142686b82cc93b103292cc5fe75a923ab8bb0389dc437d40a75609c8214",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-1.webp",
+      "expectedSHA256": "ae8a640c88a520246b964bcb67285836ebd2e63eb593efe3e00a7cefe7467676",
+      "actualSHA256": "ae8a640c88a520246b964bcb67285836ebd2e63eb593efe3e00a7cefe7467676",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/product.html",
+      "expectedSHA256": "a7e4ad58ba8cbefd9fb3d2ef3ebeeeb74c467c3bf61f6bd8583f8ad7c89b7b22",
+      "actualSHA256": "a7e4ad58ba8cbefd9fb3d2ef3ebeeeb74c467c3bf61f6bd8583f8ad7c89b7b22",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/6_-_YY_-_BAGUETTE.jpg",
+      "expectedSHA256": "714d3b1d806a647a57e1353cfcfd682f29864efc8cc063617d80a2ff708ef78f",
+      "actualSHA256": "714d3b1d806a647a57e1353cfcfd682f29864efc8cc063617d80a2ff708ef78f",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/4_-_YY_-_BAGUETTE.jpg",
+      "expectedSHA256": "edf1fe79e9e08e7d0329215ef372a4c0ef174ec4426d3226490d26dc6376d8bf",
+      "actualSHA256": "edf1fe79e9e08e7d0329215ef372a4c0ef174ec4426d3226490d26dc6376d8bf",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/2_-_YY_-_BAGUETTE.jpg",
+      "expectedSHA256": "3a10846614985d0471b4edc23c6a614649eca322ad0e37c5411829aeb2b9979a",
+      "actualSHA256": "3a10846614985d0471b4edc23c6a614649eca322ad0e37c5411829aeb2b9979a",
+      "match": true
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/5_-_YY_-_BAGUETTE.jpg",
+      "expectedSHA256": "011b024d01d61a3ce22521d39eedf32ec086041c4d6846e719a27a450de894de",
+      "actualSHA256": "011b024d01d61a3ce22521d39eedf32ec086041c4d6846e719a27a450de894de",
+      "match": true
+    }
+  ],
+  "historicalProofFiles": {
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/contact-selection-accessibility.json": "4694708dbe6e181788808a31f12a8a688f4926db99c7c40a02c7cdfd216f8e38",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/contact-selection.png": "1f46dd00a7fa0c8041c1da6346cf9a85abe0374200c61816c364d85781bb8543",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/default-accessibility.json": "027f4d25567c1fa7b5ff63eece5edf41a8467ab43d4e5765778a9d5698f319dd",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/default.png": "1cbe2761fd9c3319b6bdbe78107fac2dc69df1f2cde3827f07e8a8f549e4a9e0",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/index.html": "04970d15984c22477fcba2b365fec820f1d54922387a6c437afe1a541f584956",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/index.md": "3d5d7781a64563ae35aa877bfd474fd8e920695d6d46bfd4157334ca56771e2f",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/app-review/validation.json": "38af15d6b4ba51a43fb5a3fef9b54e3f0c2cf85b14706453478a246170482777",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/camera-correction-proof.json": "5a3038b23e294bb1c58a83e74ee149ce0621d79a4a0dfe32048fa8e663014b72",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/compile.json": "6d062ebfd009a701ef81a8bd0d9015a2ad84734ac1377899f78f525b71c90126",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/contact-contract.json": "3a0ec619daadebb5d96abd05037cb40a8c4affac19fe93a6b82e463f456cddb8",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/cord-continuous-clearance.json": "47b65310dc9916ef0426a7bb55fffa3b60345d75b2c0d53464672315e4531896",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/cord-primary-check.json": "d809b9ee064f579fe658137a9090f10c8f6174b4a3dcb09bdb0db5e66ca905be",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/2_-_YY_-_BAGUETTE.jpg": "3a10846614985d0471b4edc23c6a614649eca322ad0e37c5411829aeb2b9979a",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/4_-_YY_-_BAGUETTE.jpg": "edf1fe79e9e08e7d0329215ef372a4c0ef174ec4426d3226490d26dc6376d8bf",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/5_-_YY_-_BAGUETTE.jpg": "011b024d01d61a3ce22521d39eedf32ec086041c4d6846e719a27a450de894de",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/6_-_YY_-_BAGUETTE.jpg": "714d3b1d806a647a57e1353cfcfd682f29864efc8cc063617d80a2ff708ef78f",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/product.html": "a7e4ad58ba8cbefd9fb3d2ef3ebeeeb74c467c3bf61f6bd8583f8ad7c89b7b22",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-1.webp": "ae8a640c88a520246b964bcb67285836ebd2e63eb593efe3e00a7cefe7467676",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-2.webp": "ecdd7142686b82cc93b103292cc5fe75a923ab8bb0389dc437d40a75609c8214",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-3.webp": "1f6742bddbb63d5583952d8ae10bfe7fbca5ac5dc7990c8ccbc1695f4c5c9080",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/metadata-diff.json": "8e78a1654161b7c0da7687213894b219106072d0ca262aecae9482573a44c25a",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/native-authoring.md": "41a3bced369f36dae4336fcf907a251c44dfd48bd494db93b2b4084e8e89cb36",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/native-checks.json": "b78a1cc373e0bd55c58595290f7c2ac2df6d5214185004299be12b28333185c9",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/native-cord-evidence.json": "4396c73546dd5756e37653a7f3e641cf5f2c76b77fc22156201c2115c2bfacac",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/reproducibility.json": "ce63b4b7ece1d1c5fd305b579a3af60d17d2bdc17f7d80352fcfa92621286711",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-front-20-25-front.png": "c7b2a4c49eacb886d1b47efe3009dee9d32bdc4e25ad5ff78b1447ee8b8f003b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-front-20-25-side.png": "f688bfba50b69e9ff4f87ffa256a4856fc6db214fd94b1e75b78682a50bc7651",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-front-20-25-top.png": "1103678eee3a52ec59508c79d3539fcb39d67f1ac79b50ea313d0f968dfe2037",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-outer-upper-front.png": "c7b2a4c49eacb886d1b47efe3009dee9d32bdc4e25ad5ff78b1447ee8b8f003b",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-reverse-10-15-30-corrected-camera.png": "a870c61e7a7b2861d2e20c62f699c9ed8e4895b4e86072e2ca572feceef9b8db",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/cord-primary-reverse-10-15-30-front.png": "c3f97db64d9f8e98dbf7299766f9e72cdb7f97c2bc0a8c846466f11e335731fe",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/index.html": "247d6dfadc214b7172e7a5eaaa91d1c9a413ab664d1e1dbc742ae9a2e657b6b7",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/primary-front.png": "34ba9fbba87389a65b791844c77c3d02e35d97acca57da29c2d540e691712b2d",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/primary-oblique.png": "b74432c9a9b02da1087ac209c71b3260563230a45a522c73aa70324ab59d91c7",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/primary-rear.png": "9dc62703b466440c54724ef6243da2ef170cbb3dd375b255dbed70a1a224fa0d",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/primary-side.png": "756a85df5548ecb097bb3064c12911fa1540a20743f2d245d9c999f2bc7451d3",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/primary-top.png": "c69aa30faa57828f7ef694fa4433abbc73b86ead75a3872702a8c0b5023e5b46",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/prior-reverse-face.png": "c0aba597cd593e3c9b2ed0b656dea4a8d56c45196c6d4c5162cc049aebd5d7da",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/review/prior-stepped-face.png": "5f3657948ddd31fe65c478150cf78075af8b776f2584b728fd1f0579906a362d",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/sources.json": "f0cd8b7e9b125beadc7b6a3d3f32b5978359ed6a72e84a7b310acc4172a15bc7",
+    "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/validation.json": "ac279041e311c17b4e87f4e6e4d719c9f9e8867fb222b497bb8fdcdd04ad6774"
+  },
+  "historicalIdentityMatches": {
+    "source": false,
+    "usdz": true,
+    "sidecar": true
+  },
+  "bytePreservedSinceInitialMigration": {
+    "Hangboards/yy-baguette/suspension.json": true,
+    "Hangboards/yy-baguette/yy-baguette.FCStd": false,
+    "Hangboards/yy-baguette/assets/primary.usdz": true,
+    "Hangboards/yy-baguette/assets/primary.model.json": true
+  },
+  "generatedDisplay": {
+    "camera": {
+      "type": "orthographic",
+      "viewDirection": [
+        0,
+        0,
+        -1
+      ],
+      "up": [
+        0,
+        1,
+        0
+      ],
+      "fitPadding": 0.12
+    },
+    "surfaceFinish": "wood"
+  },
+  "generatedPositions": [
+    {
+      "id": "front-20-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "reverse-10-15-30",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-15",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "tray"
+      ]
+    }
+  ],
+  "suspensionType": "cadRoutedCord"
+}

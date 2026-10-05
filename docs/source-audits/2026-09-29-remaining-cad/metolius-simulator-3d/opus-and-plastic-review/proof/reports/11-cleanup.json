@@ -1,0 +1,20 @@
+{
+  "verifiedAtUTC": "2026-10-01T19:10:06.887202+00:00",
+  "owner": "placid-badger",
+  "simulator": "72312582-DB46-44A7-9C61-D8C0E9F75876",
+  "exactSimulatorAbsent": true,
+  "derivedDataRemoved": true,
+  "xcresultRemoved": true,
+  "cleanupStatus": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "--json"
+  ],
+  "devicesJSONSHA256": "a1b6e27cd5c17d296d0a39c6224d5a5f2c3691174e42092ac3a1cb5cf68c0eed",
+  "lifecycle": "The registered EXIT trap performed teardown before this independent read-only verification."
+}

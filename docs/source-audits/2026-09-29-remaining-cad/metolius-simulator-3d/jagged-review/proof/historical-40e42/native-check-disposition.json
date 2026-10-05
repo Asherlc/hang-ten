@@ -1,0 +1,20 @@
+{
+  "reviewedAtUTC": "2026-10-01T13:53:52.893825+00:00",
+  "status": "pass-with-documented-estimate-exception",
+  "sourceSHA256": "40e42ed072a72946d11756cd6f92047fd0d5acd79eb33946cb2188441babbbde",
+  "rawCheckReport": "native-check.json",
+  "rawCheckSHA256": "7de45ceff54fa38e33e4f96ea49a6d8fbf731ac29699c1c1ebc94529a8181c29",
+  "originalStrictFindings": [
+    "711x94x222 mm envelope (94 display estimate)"
+  ],
+  "blockingFindings": [],
+  "acceptedException": {
+    "property": "unsourced overall display thickness",
+    "previousEstimateMM": 94,
+    "measuredMM": 94.11832462653064,
+    "differenceMM": 0.11832462653063658,
+    "scope": "Only this named estimate; no relaxation of published face envelope, depths, contact-surface or metadata gates.",
+    "authority": "Parent/root direct coordination message",
+    "quote": "Root accepts and author will explicitly document measured 94.1183246 mm overall display thickness versus prior authored ~94 mm estimate. This thickness is unsourced, unlike face711\u00d7222 and hold depths; the .1183 mm difference is below .28 mm tessellation deflection. Keep measured bound and original strict-check finding visible; allow only this named estimate exception, not general relaxed tolerances or any exact94claim."
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "scope": "Read-only retained setup evidence audit; no Simulator interaction, runtime action, source edit, or visual/pixel analysis.",
+  "finding": "Unresolved system deep-link confirmation and inconsistent AX coordinate orientation invalidate measured-workout interpretation.",
+  "firstAX": {
+    "applicationPID": 17396,
+    "rootFrame": [
+      0,
+      0,
+      874,
+      402
+    ],
+    "appSwitcherFrame": [
+      0,
+      0,
+      402,
+      874
+    ],
+    "openButtonFrame": [
+      164.33333333333331,
+      441,
+      48,
+      140
+    ],
+    "reportedTap": [
+      188.33333333333331,
+      511
+    ],
+    "tapYExceedsRootHeight": true
+  },
+  "dismissalEvidence": {
+    "tapExitStatus": 0,
+    "beforeAfterPNGByteIdentical": true,
+    "sha256": "742519fc7355e272d7ef1aa3b60b7c46e5bea8f4efdeef374660f1d040d21718",
+    "subsequentLaunchAXStillContainsOpenConfirmation": true,
+    "subsequentRootFrame": [
+      0,
+      0,
+      402,
+      874
+    ],
+    "subsequentOpenFrame": [
+      205,
+      450,
+      140,
+      48
+    ],
+    "subsequentOpenCenter": [
+      275,
+      474
+    ]
+  },
+  "rawNoteQualification": "route-setup/note.json says confirmation accepted; retained screenshot identity and subsequent AX prompt do not support successful dismissal. Original note preserved exactly.",
+  "helper": {
+    "path": "capture-prep/capture.py",
+    "launchFlags": [
+      "HANGTEN_REVIEW_BOARD_ID=zlagboard.evo",
+      "HANGTEN_REVIEW_PLAN_ID=research.max-hangs",
+      "HANGTEN_REVIEW_LANDSCAPE=1"
+    ],
+    "arguments": [
+      "-workoutAudioCuesEnabled",
+      "NO"
+    ],
+    "setupGate": "Requires train.settings and expected train.board before route.",
+    "route": "hangten://plan/research.max-hangs/workout",
+    "afterRoute": "Screenshots only; intentionally no AX/taps during measurement.",
+    "externalAnchorLimitation": "simctl openurl success records request completion, not confirmation dismissal or actual workout phase."
+  },
+  "runScope": {
+    "first": "Stopped invalid setup-bound capture; no renderer/workflow verdict.",
+    "second": "Setup AX assertion failed before route and before any scheduled screenshots."
+  },
+  "boundedRecommendation": [
+    "Use a setup-only portrait warmup, separate from measured trial; root already owns and plans this action.",
+    "Obtain fresh AX plus whole screen in the same stable orientation; do not reuse historical or inferred transformed coordinates.",
+    "One setup Open action; require prompt absence and actual app UI evidence afterward. Command exit0 alone is insufficient.",
+    "If still unresolved, stop and preserve failure. Only after successful setup terminate exact owned app and start a separate fresh measured landscape launch; document prior setup rendering history."
+  ],
+  "limits": [
+    "Mixed AX frames demonstrate inconsistent coordinates, not the cause of that inconsistency or a supported coordinate transform.",
+    "No assertion that warmup will repair routing or that any renderer issue is resolved.",
+    "No continuous or presented-frame state inferred from AX or process status."
+  ],
+  "proofs": [
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/01.stdout",
+      "bytes": 193126,
+      "sha256": "2dd3105226c9a70ad1f3be9b1d5eb2e1a4b3301de969b9e75bf82084538ae75f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/03.stdout",
+      "bytes": 84,
+      "sha256": "ce401d5ff1a1ef4edd809d2147c21bdeb7479b743b40afc27183d0890c457396"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/commands.json",
+      "bytes": 1720,
+      "sha256": "f716dba880f5ca5f5ccedeb6ec32838c127c2bdf417e3c874d5389716bce437e"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/note.json",
+      "bytes": 245,
+      "sha256": "ef48c52ab32e474fc0f49d82bdfa91b7201e682935129265310db4804d4739a9"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/launch.json",
+      "bytes": 294,
+      "sha256": "e9a1747038af16f63c8becb6c15c054cf99a5df032c812ece1055c1bcee93603"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/confirmation-before.png",
+      "bytes": 533595,
+      "sha256": "742519fc7355e272d7ef1aa3b60b7c46e5bea8f4efdeef374660f1d040d21718"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/route-setup/confirmation-after.png",
+      "bytes": 533595,
+      "sha256": "742519fc7355e272d7ef1aa3b60b7c46e5bea8f4efdeef374660f1d040d21718"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/live-baseline-route-approved/003-stdout.txt",
+      "bytes": 235839,
+      "sha256": "7a0a5c1733a7fb284906941a9d250e73ccf845704da4aa446346b508ba92ac4d"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/live-baseline/completion.json",
+      "bytes": 229,
+      "sha256": "3d823dcf0191c4215457b1e1b3792bd6577f3da3077e10290a9e2d1e56b35c31"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/live-baseline-route-approved/completion.json",
+      "bytes": 228,
+      "sha256": "022afda1f7e7ac80486c68553dd8bd3ab78edf4862cdd46663c6621bac4d9f8f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/post-main-render-fix-2026-10-03/capture-prep/capture.py",
+      "bytes": 11072,
+      "sha256": "094d27e0dcd20b042a41979390fa78d254dd511b84dd2133d72c8b223a70d7d8"
+    }
+  ]
+}

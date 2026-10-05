@@ -1,0 +1,58 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "5DBF7406-93EC-474A-9320-931FC57FA394",
+        "deviceName" : "Hang Ten Paseo placid-badger Metolius Simulator Jagged Review",
+        "modelName" : "iPhone 17 Pro",
+        "osBuildNumber" : "23F77",
+        "osVersion" : "26.5",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 1278,
+      "skippedTests" : 3,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "HangTen · Built with macOS 27.0",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1790867533.09,
+  "passedTests" : 1278,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/HangTenTests/WorkoutSessionStoreTests.swift"
+    }
+  ],
+  "skippedTests" : 3,
+  "startTime" : 1790867495.16,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - HangTen",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "62% of duration",
+      "text" : "5 longest test runs with outlier durations exceeding 1.08s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 1281
+}

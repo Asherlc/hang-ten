@@ -1,0 +1,78 @@
+142: struct HistoryView: View {
+143:     @EnvironmentObject private var store: AppStore
+144:     @EnvironmentObject private var settings: MotherboardSettingsStore
+145:     @Environment(\.scenePhase) private var scenePhase
+146: 
+147:     var body: some View {
+148:         NavigationStack {
+149:             WorkoutSessionHistoryView(
+150:                 sessions: store.sessionHistory,
+151:                 unit: settings.forceUnit,
+152:                 loadAdjustmentUnit: settings.loadAdjustmentUnit,
+153:                 persistenceError: store.sessionPersistenceError
+154:             )
+155:         }
+156:         .onAppear {
+157:             store.refreshHealthAuthorization()
+158:         }
+159:         .onChange(of: scenePhase) { _, phase in
+160:             if phase == .active {
+161:                 store.refreshHealthAuthorization()
+162:             }
+163:         }
+164:     }
+165: }
+166: 
+167: struct WorkoutSessionHistoryView: View {
+168:     let sessions: [WorkoutSessionRecord]
+169:     let unit: MotherboardForceUnit
+170:     let loadAdjustmentUnit: WorkoutLoadAdjustmentDisplayUnit
+171:     var persistenceError: String? = nil
+172: 
+173:     var body: some View {
+174:         List {
+175:             if let persistenceError {
+176:                 Label(persistenceError, systemImage: "exclamationmark.triangle.fill")
+177:                     .font(.system(size: 13, weight: .semibold, design: .rounded))
+178:                     .foregroundStyle(Color.holdActiveDeep)
+179:             }
+180: 
+181:             if sessions.isEmpty {
+182:                 ContentUnavailableView(
+183:                     "No saved sessions",
+184:                     systemImage: "clock.arrow.circlepath",
+185:                     description: Text("Save a completed workout to review it here.")
+186:                 )
+187:             } else {
+188:                 ForEach(sessions) { session in
+189:                     NavigationLink {
+190:                         WorkoutSummaryContent(
+191:                             session: session,
+192:                             unit: unit,
+193:                             loadAdjustmentUnit: loadAdjustmentUnit,
+194:                             mode: .history
+195:                         )
+196:                         .navigationTitle("Session summary")
+197:                         .navigationBarTitleDisplayMode(.inline)
+198:                     } label: {
+199:                         VStack(alignment: .leading, spacing: 5) {
+200:                             Text(session.planTitle)
+201:                                 .font(.system(size: 15, weight: .bold, design: .rounded))
+202:                                 .foregroundStyle(Color.hangInk)
+203:                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
+204:                                 .font(.system(size: 12, weight: .medium, design: .rounded))
+205:                                 .foregroundStyle(Color.hangMuted)
+206:                             if session.initialWeight.source != .untracked {
+207:                                 Text(session.initialWeight.source.label)
+208:                                     .font(.system(size: 12, weight: .medium, design: .rounded))
+209:                                     .foregroundStyle(Color.hangMuted)
+210:                             }
+211:                         }
+212:                         .padding(.vertical, 3)
+213:                     }
+214:                 }
+215:             }
+216:         }
+217:         .navigationTitle("History")
+218:         .navigationBarTitleDisplayMode(.inline)
+219:     }

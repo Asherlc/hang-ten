@@ -1,0 +1,63 @@
+{
+  "runtimeExecuted": false,
+  "validatorsExecuted": false,
+  "arm": "hand-image-muted-workout-live-a-landscape",
+  "helpers": [
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-cpu-semantics.py",
+      "sourceSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-cpu-semantics.py",
+      "adaptedSHA256": "56904f6987700dde08031f047f2238e5c66795a26693d0252f152b6c4db06a8a",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-frames.py",
+      "sourceSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-frames.py",
+      "adaptedSHA256": "802324cfc40906fdf1425c7a67ddda5ee5cff4dd07d1d4a8e8bdb2bc33b1fd66",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-constructors.py",
+      "sourceSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-constructors.py",
+      "adaptedSHA256": "0fae8660b79bbc35e7e19beb096926a404e7f6fef511209f049a26c74562cf55",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-ownership.py",
+      "sourceSHA256": "2208c5c389d1bac54122d72a77500773a593742dddac3a260ac81f688fa5ced9",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-ownership.py",
+      "adaptedSHA256": "aed6d064a4956719b04543683669fc80789a4bb8c8541096ec329783df0585ba",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-navigation.py",
+      "sourceSHA256": "deda8bf3a760533892b428fce4f9810667eefcc1346a8585268adf1369235907",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-navigation.py",
+      "adaptedSHA256": "6416604364affd782d562898b0f2e9760c2af158709b9fa2db8114d674f9dfb3",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-real-hands.py",
+      "sourceSHA256": "012acaef4cee2bc734bb7524da7a5186df02c7d130c27ed1b2ae0f877e23cc18",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-real-hands.py",
+      "adaptedSHA256": "5d52a9554ac096bacdb225466797a51fca7dfebd164986913c1bcee8bc98b74a",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-weak-hand-census.py",
+      "sourceSHA256": "f0217e87e33c4ef3ea58315e27ea0cbcbffcece80ecdcab6f8393ba5d6ed7567",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-weak-hand-census.py",
+      "adaptedSHA256": "2c408b131b66769b551a2c6178c8fb8c74e62e08b0433bfff883b3c5359a79ec",
+      "change": "Run path only; no predicate changes"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-full-color-runtime-prep/control/check-sync-counters.py",
+      "sourceSHA256": "850061ffc495b5c4cf786589f6cdf52880067a47c7d4779606f31e5fab48c650",
+      "adapted": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-muted-live-validator-prep/live/check-sync-counters.py",
+      "adaptedSHA256": "36c4bfcd41f31934a1c526823af63e4611635c3e8fc65613dc05827ecd6746cc",
+      "change": "Run path only; no predicate changes"
+    }
+  ]
+}

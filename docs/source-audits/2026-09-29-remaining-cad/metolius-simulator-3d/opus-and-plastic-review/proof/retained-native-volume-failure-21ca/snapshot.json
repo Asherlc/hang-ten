@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "scope": "Exact original final21ca native cavity-volume failure and pre-final preview provenance; retained raw, not a completion gate",
+  "files": {
+    "native-check.json": {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/native-check.json",
+      "sha256": "883a144231f704bb076d529be14619caf0f6bf442af057712fd725e79db9606c",
+      "bytes": 6095
+    },
+    "final-native-check.log": {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-native-check.log",
+      "sha256": "18fc15c11786d942ae7b3b094f175c705444194cacf73b9ca5d25326915be430",
+      "bytes": 363
+    },
+    "check_native_candidate.py": {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/check_native_candidate.py",
+      "sha256": "174055bd479bb8dbaa04977def3ac7b016f929ab1b536d5ceee2edff198486ba",
+      "bytes": 5366
+    },
+    "final-native-check-ownership.json": {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/independent-validation/final-native-check-ownership.json",
+      "sha256": "a1329fab8c07881f1f5be36ba1e74b1e0555c96382423cbf1682a8fb1f980787",
+      "bytes": 580
+    },
+    "native-preview-provenance.json": {
+      "source": ".context/placid-badger/metolius-simulator-3d-opus-corrections/native-preview-provenance.json",
+      "sha256": "62928f2f392e20e533eb1b94cb61c918b9d305ad10e4b0168f9e14ad266902f2",
+      "bytes": 3604
+    }
+  }
+}

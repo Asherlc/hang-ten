@@ -1,0 +1,49 @@
+{
+  "package": "tension-flash-board",
+  "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+  "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+  "sidecarSHA256": "25830bef1ac6409ec5f1d7ac5e13317de974f96f1fa1037947554d64cbf5fc0b",
+  "validatorSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+  "fullPathSelfAndInterstrandTubeGate": "passed",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "poses": {
+        "three-edge-upright": {
+          "mouth-1-lead": 0.0020125431610703817,
+          "mouth-2-lead": 0.0019942758997149954,
+          "mouth-3-lead": 0.0019942758997149946,
+          "mouth-4-lead": 0.0020125431610703865,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        },
+        "three-edge-inverted": {
+          "mouth-1-lead": 0.002012525153347661,
+          "mouth-2-lead": 0.0019942758997149954,
+          "mouth-3-lead": 0.0019942758997149946,
+          "mouth-4-lead": 0.0020125251533476616,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        },
+        "two-edge-upright": {
+          "mouth-1-lead": 0.0020296518916209975,
+          "mouth-2-lead": 0.0020297099908277616,
+          "mouth-3-lead": 0.0020295510306624818,
+          "mouth-4-lead": 0.002029441667839361,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        },
+        "two-edge-inverted": {
+          "mouth-1-lead": 0.002029652396602793,
+          "mouth-2-lead": 0.002029710496002451,
+          "mouth-3-lead": 0.002029551535830022,
+          "mouth-4-lead": 0.002029442172810622,
+          "left-rear-return": 0.0020016042176746684,
+          "right-rear-return": 0.002001604217644798
+        }
+      }
+    }
+  ]
+}

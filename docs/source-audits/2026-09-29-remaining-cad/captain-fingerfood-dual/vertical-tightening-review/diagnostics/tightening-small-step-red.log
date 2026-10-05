@@ -1,0 +1,17 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____ test_small_certified_bearing_motion_is_not_misreported_as_convergence _____
+
+    def test_small_certified_bearing_motion_is_not_misreported_as_convergence():
+        mesh=trimesh.creation.box(extents=[.0002,.0379,.1]); mesh.apply_translation([0,.00895,0])
+        path=np.array([[-.2,0,0],[0,.03,0],[.2,0,0]])
+        paths,_=tighten(mesh,{"lead":path},{"lead":.002},{"lead":[0,1,0]})
+>       assert length(paths["lead"]) < length(path)-1e-5
+E       assert 0.40447496832313373 < (0.40447496832313373 - 1e-05)
+E        +  where 0.40447496832313373 = length(array([[-0.2 ,  0.  ,  0.  ],\n       [ 0.  ,  0.03,  0.  ],\n       [ 0.2 ,  0.  ,  0.  ]]))
+E        +  and   0.40447496832313373 = length(array([[-0.2 ,  0.  ,  0.  ],\n       [ 0.  ,  0.03,  0.  ],\n       [ 0.2 ,  0.  ,  0.  ]]))
+
+Tools/HangboardCAD/tests/test_native_cord_tightening.py:134: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_tightening.py::test_small_certified_bearing_motion_is_not_misreported_as_convergence
+1 failed, 8 deselected in 0.52s

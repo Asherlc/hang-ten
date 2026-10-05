@@ -1,0 +1,9 @@
+{
+  "simulatorUUID": "E9D3D8B4-1440-4417-862B-3023AF3841FA",
+  "exactTestProcessGroup": 83280,
+  "signal": "SIGTERM",
+  "reason": "Guest remains on boot splash, no test startup or app launch; retained boot logs show render synchronization timeout and lost main display digitizer. Controlled same-device reboot authorized by root.",
+  "exactOwnedSamplerPIDsTerminated": [
+    86699
+  ]
+}

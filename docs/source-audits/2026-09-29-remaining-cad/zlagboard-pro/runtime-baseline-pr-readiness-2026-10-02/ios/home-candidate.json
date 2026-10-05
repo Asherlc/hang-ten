@@ -1,0 +1,9 @@
+{
+  "simulator": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "responsiveAXConfirmed": true,
+  "screenshotSHA256": "c3c8738fa8adec1d168266d12d369a08973262f3d121f56667e04f30afd8a25a",
+  "screenshot": "home-candidate.png",
+  "accessibility": "home-candidate-ax.stdout",
+  "actualHomeConfirmed": false,
+  "rootVisualApprovalPending": true
+}

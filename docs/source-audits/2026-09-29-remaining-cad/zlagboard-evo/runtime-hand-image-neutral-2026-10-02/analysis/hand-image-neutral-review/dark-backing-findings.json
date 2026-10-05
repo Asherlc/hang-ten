@@ -1,0 +1,36 @@
+{
+  "scope": "Additive independent whole dark-backing static review",
+  "directWholeImageViewed": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-dark-e/whole-app.png",
+    "sha256": "2eb7f44ca52979ec490364545d88089d0866e0d060a7beef19f770d7357e874a"
+  },
+  "observations": [
+    "Black review backing is visible around the full hand silhouettes and in finger gaps; no opaque rectangular image backing is apparent.",
+    "Both hands upright, wrists complete, four red highlighted fingers readable per hand, thumbs visually distinct.",
+    "Neutral shading remains an appearance adaptation, not live renderer equivalence.",
+    "Black text/header loses contrast against this diagnostic backing; this flag is an alpha/composition probe, not an approved UI theme."
+  ],
+  "technicalChecks": {
+    "completion.json": true,
+    "app-cleanup.json": true,
+    "retained-trace-validation.json": true
+  },
+  "metadata": {
+    "alphaInfo": 1,
+    "colorSpace": "kCGColorSpaceSRGB",
+    "orientation": "up",
+    "publishedSHA256": "049b78e0e891219e4d03439247179113b071cd5f7f7e81f845a4acfaa8a1919d",
+    "copiedPNGMatchesPublished": true,
+    "wholePNGByteEqualToCreamOutput": true
+  },
+  "conclusion": "Static neutral pair is readable on both complete cream and black composites, with alpha-bearing metadata. This supports transparent composition without pixel inspection; it is not an exhaustive per-pixel alpha test.",
+  "nextBoundary": "No remaining demonstrated static cue-readability/composition blocker to a separately authorized bounded workout comparison. Actual small workout slot, live mode changes, gestures and energy remain unvalidated.",
+  "productionReady": false,
+  "workoutPassed": false,
+  "priorFindingsUnchanged": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-neutral-review/findings.json",
+    "sha256": "3d3bcf049785c235cd7823d9b455c375757fd87855a7540afc524b20b1825669"
+  },
+  "sourceEdited": false,
+  "runtimeTouched": false
+}

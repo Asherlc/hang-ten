@@ -1,0 +1,24 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2397F02F-15E4-48C9-8E5C-37DE8CC995B2",
+  "archiveExitCode": 0,
+  "simulatorAbsent": true,
+  "derivedDataAbsent": true,
+  "tmpAbsent": true,
+  "ownedManifestConsumed": true,
+  "pendingManifestConsumed": true,
+  "ownedProcessGroups": [
+    82966,
+    82977,
+    83057,
+    83566,
+    92820,
+    93907,
+    94035
+  ],
+  "ownedProcessGroupsAbsent": true,
+  "remainingOwnedProcesses": [],
+  "simulatorProcessesAbsent": true,
+  "remainingSimulatorProcesses": [],
+  "verifiedUTC": "2026-10-02T13:46:42.840691+00:00"
+}

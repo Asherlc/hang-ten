@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "get_app_container",
+    "F96B758F-638C-4C74-8732-08ACB950A84F",
+    "com.hangten.training",
+    "app"
+  ],
+  "exitStatus": null,
+  "timedOut": true,
+  "elapsedSeconds": 20.009154081344604
+}

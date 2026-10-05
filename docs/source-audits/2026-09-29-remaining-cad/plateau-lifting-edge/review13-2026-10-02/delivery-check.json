@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "lockedFiles": 135,
+  "newManifestSHA256": "44758ac3a2b242182833edb770b0b715c0be703b958f513061830c0e606127d7",
+  "priorManifestSHA256": "fa6fcdde53a95fef8561af7baf12d363372c2a7d9571230ddc3ea600e908fa23",
+  "onlyChangedLockedFiles": [
+    "Hangboards/plateau-lifting-edge/assets/depth-10mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/depth-15mm.model.json",
+    "Hangboards/plateau-lifting-edge/assets/primary.model.json",
+    "Hangboards/plateau-lifting-edge/plateau-lifting-edge.FCStd",
+    "Hangboards/plateau-lifting-edge/suspension.json"
+  ],
+  "unchangedLockedFiles": 130,
+  "allLockedFileHashesMatch": true,
+  "otherPackageFilesVerifiedUnchanged": 198,
+  "modelPackages": 58,
+  "sharedCodeChanged": false,
+  "parallelWorkspaceInspectedOrMerged": false
+}

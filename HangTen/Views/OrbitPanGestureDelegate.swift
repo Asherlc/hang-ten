@@ -59,19 +59,38 @@ final class OrbitPanGestureRecognizer: UIPanGestureRecognizer {
         }
         super.touchesMoved(touches, with: event)
     }
+
 }
 
-/// Lets a 3D model's orbit drag live inside an ancestor vertical ScrollView.
-/// The drag is claimed for orbiting only once it has moved more horizontally
-/// than vertically; a mostly-vertical drag is left alone so the enclosing
-/// scroll view still scrolls — the same arbitration a horizontal carousel
-/// needs when it sits inside a vertical feed.
+/// Defaults to horizontal orbit arbitration inside an ancestor vertical ScrollView.
+/// Interactive maps opt into both orbit axes and their own simultaneous pinch pair.
 final class OrbitPanGestureDelegate: NSObject, UIGestureRecognizerDelegate {
+    private let allowsAllDirections: Bool
+    weak var simultaneousPan: UIPanGestureRecognizer?
+    weak var simultaneousPinch: UIPinchGestureRecognizer?
+
+    /// Interactive maps accept both orbit axes; embedded previews retain scroll arbitration.
+    init(allowsAllDirections: Bool = false) {
+        self.allowsAllDirections = allowsAllDirections
+        super.init()
+    }
+
+    /// Only the configured map pan and pinch pair may recognize together.
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let pan = simultaneousPan, let pinch = simultaneousPinch,
+              pan.view != nil, pan.view === pinch.view else { return false }
+        return (gestureRecognizer === pan && otherGestureRecognizer === pinch)
+            || (gestureRecognizer === pinch && otherGestureRecognizer === pan)
+    }
+
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer, let view = pan.view else { return true }
-        return OrbitPanArbitration.shouldBegin(
+        if allowsAllDirections { return true }
+        let decision = OrbitPanArbitration.shouldBegin(
             translation: pan.translation(in: view),
             velocity: pan.velocity(in: view)
         )
+        return decision
     }
 }

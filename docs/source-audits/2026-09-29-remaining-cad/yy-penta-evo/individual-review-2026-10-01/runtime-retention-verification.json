@@ -1,0 +1,2258 @@
+{
+  "status": "passed",
+  "copyCount": 450,
+  "simulatorDeleted": "B404FE03-AE3E-4295-88F7-D63D384E3E58",
+  "bothDerivedDataAndAllResultBundlesAbsent": true,
+  "files": [
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/app-review.png",
+      "retained": "ios/app-review.png",
+      "sha256": "43b9c0df35a135b56bafadde6005485acdd4905fe9d0a4015caee9d725ce5492"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/build.log",
+      "retained": "ios/build.log",
+      "sha256": "efb3c38f515bb761af1a26e887803cc4a24c09fec23713a9882226c06531639f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/capture-coverage.json",
+      "retained": "ios/capture-coverage.json",
+      "sha256": "ce2abbe37a6d0de5cb2534f18f294d4a0d1b2cbe10cf8c7b12097c0d4a5c5ebc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/binary-parity.json",
+      "retained": "ios/captures/binary-parity.json",
+      "sha256": "fd4f97183ef2aaf6ae95913c81498199cdd1e556508c314da5119074bb387d7d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/000-stderr.txt",
+      "retained": "ios/captures/commands/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/000-stdout.txt",
+      "retained": "ios/captures/commands/000-stdout.txt",
+      "sha256": "261b2a5f6b5e72d4a352bc28f7df24db1232c41b7bba11c26b35a0761aab2963"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/001-stderr.txt",
+      "retained": "ios/captures/commands/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/001-stdout.txt",
+      "retained": "ios/captures/commands/001-stdout.txt",
+      "sha256": "fd1eb2de10406b205ca5c0911a532476f252fa642ddbac2cda4a072badff8ab8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/002-stderr.txt",
+      "retained": "ios/captures/commands/002-stderr.txt",
+      "sha256": "3e5f7f0435a964f27a17e1d0fe66cd36b6b0c180137079a0d36e53f7381cc510"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/002-stdout.txt",
+      "retained": "ios/captures/commands/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/003-stderr.txt",
+      "retained": "ios/captures/commands/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/003-stdout.txt",
+      "retained": "ios/captures/commands/003-stdout.txt",
+      "sha256": "e17e6b14826ec92ae9dc1ccf47c4391fca03110de085014435bd555d25b5e5e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/004-stderr.txt",
+      "retained": "ios/captures/commands/004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/004-stdout.txt",
+      "retained": "ios/captures/commands/004-stdout.txt",
+      "sha256": "d528b893a62323a75a15e70dcd220775bfd3c0a31b531fb52d63ab9726bf145e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/005-stderr.txt",
+      "retained": "ios/captures/commands/005-stderr.txt",
+      "sha256": "70e93d596228a04e0ceb286894ff966adac07e45f630039dc5e6704ec10b4f08"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/005-stdout.txt",
+      "retained": "ios/captures/commands/005-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/006-stderr.txt",
+      "retained": "ios/captures/commands/006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/006-stdout.txt",
+      "retained": "ios/captures/commands/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/007-stderr.txt",
+      "retained": "ios/captures/commands/007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/007-stdout.txt",
+      "retained": "ios/captures/commands/007-stdout.txt",
+      "sha256": "18e0f605e272dcbf3fb914fa77e9aa70065400e6527a2bf14e26010c6bf5b0cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/008-stderr.txt",
+      "retained": "ios/captures/commands/008-stderr.txt",
+      "sha256": "813085215b98a8b29848212acb418bbd26c589d0d62c84a49dd878b0a0ee3ad5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/008-stdout.txt",
+      "retained": "ios/captures/commands/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/009-stderr.txt",
+      "retained": "ios/captures/commands/009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/009-stdout.txt",
+      "retained": "ios/captures/commands/009-stdout.txt",
+      "sha256": "fab0f46714aef1a80aeab44168ded70e1b87f6dd35960dc4a9a8f2647c4eb82d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/010-stderr.txt",
+      "retained": "ios/captures/commands/010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/010-stdout.txt",
+      "retained": "ios/captures/commands/010-stdout.txt",
+      "sha256": "94a60b3a8ebe9b5188e2ef756f5d66273e4fd2690ce485864c880838f75fc2cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/011-stderr.txt",
+      "retained": "ios/captures/commands/011-stderr.txt",
+      "sha256": "52e997222f9bd297f7afd2ebf7ac7d7be2cf4f63c10b94e33c05128e9b0988f2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/011-stdout.txt",
+      "retained": "ios/captures/commands/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/012-stderr.txt",
+      "retained": "ios/captures/commands/012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/012-stdout.txt",
+      "retained": "ios/captures/commands/012-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/013-stderr.txt",
+      "retained": "ios/captures/commands/013-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/013-stdout.txt",
+      "retained": "ios/captures/commands/013-stdout.txt",
+      "sha256": "64005bc0f9088c90b882da494d578733701b59061a0d8ba31e759b4aa1262759"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/014-stderr.txt",
+      "retained": "ios/captures/commands/014-stderr.txt",
+      "sha256": "674c9ebab375c68924b8e58c5350718b2bf93814b621947336553072c38fddbf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/014-stdout.txt",
+      "retained": "ios/captures/commands/014-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/015-stderr.txt",
+      "retained": "ios/captures/commands/015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/015-stdout.txt",
+      "retained": "ios/captures/commands/015-stdout.txt",
+      "sha256": "e03dcd9acc51e2ac6f03434fbb139c1a1c08a4dd9171f55c66533b967c6244da"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/016-stderr.txt",
+      "retained": "ios/captures/commands/016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/016-stdout.txt",
+      "retained": "ios/captures/commands/016-stdout.txt",
+      "sha256": "b349ed6d9928ea0db49d1965d783bf6f51b6cb0e158c90f37d5867bd9213ac06"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/017-stderr.txt",
+      "retained": "ios/captures/commands/017-stderr.txt",
+      "sha256": "465093224bef8d67d6acf863ae95a794f177e90a0cc8f646d6e2f2f2e518bedd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/017-stdout.txt",
+      "retained": "ios/captures/commands/017-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/018-stderr.txt",
+      "retained": "ios/captures/commands/018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/018-stdout.txt",
+      "retained": "ios/captures/commands/018-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/019-stderr.txt",
+      "retained": "ios/captures/commands/019-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/019-stdout.txt",
+      "retained": "ios/captures/commands/019-stdout.txt",
+      "sha256": "984589c048b76af69f36d45ad46296860c71aeecd6a94a7b66bc9ea0aef2f068"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/020-stderr.txt",
+      "retained": "ios/captures/commands/020-stderr.txt",
+      "sha256": "aaa62d0c0b75aa0081aeb558c268addbbe631c9b81a3363fe61f53383000251f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/020-stdout.txt",
+      "retained": "ios/captures/commands/020-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/021-stderr.txt",
+      "retained": "ios/captures/commands/021-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/021-stdout.txt",
+      "retained": "ios/captures/commands/021-stdout.txt",
+      "sha256": "5b45faef9a5e8661e0bfafe9f722797f2108599c3d5cf938dd8cf74d33ca251f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/022-stderr.txt",
+      "retained": "ios/captures/commands/022-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/022-stdout.txt",
+      "retained": "ios/captures/commands/022-stdout.txt",
+      "sha256": "4fc881b930104d349b3a31dbd07fa0d36268fd97a20aa82b0f2f6078e7efa438"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/023-stderr.txt",
+      "retained": "ios/captures/commands/023-stderr.txt",
+      "sha256": "f61742b34fb725e9f6be7f14c88697042a2b7cf5eaf89a20b6cc0b94e8c58e29"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/023-stdout.txt",
+      "retained": "ios/captures/commands/023-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/024-stderr.txt",
+      "retained": "ios/captures/commands/024-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/024-stdout.txt",
+      "retained": "ios/captures/commands/024-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/025-stderr.txt",
+      "retained": "ios/captures/commands/025-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/025-stdout.txt",
+      "retained": "ios/captures/commands/025-stdout.txt",
+      "sha256": "e7b2ba3a8c0a68afd42452ca2fd31e07063f96fea8e867004afb6dfa54861043"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/026-stderr.txt",
+      "retained": "ios/captures/commands/026-stderr.txt",
+      "sha256": "601b44b5e500f0dc51a05ed96dd4e2351687dd3e56efbd2a913f722abe11f2d4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/026-stdout.txt",
+      "retained": "ios/captures/commands/026-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/027-stderr.txt",
+      "retained": "ios/captures/commands/027-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/027-stdout.txt",
+      "retained": "ios/captures/commands/027-stdout.txt",
+      "sha256": "94d5f60523fa3cf68c87cc00b9a4673aeb4abeb5a44f8b80b2a9692ca3e48816"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/028-stderr.txt",
+      "retained": "ios/captures/commands/028-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/028-stdout.txt",
+      "retained": "ios/captures/commands/028-stdout.txt",
+      "sha256": "b4a21fe6fd0483a9f84bb683c79ac68715a5d01169b768d1179d9b87dbf4564a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/029-stderr.txt",
+      "retained": "ios/captures/commands/029-stderr.txt",
+      "sha256": "6b27657f1c8ec62a6300d356f79fb73157e1613040248085d613bac933409ea6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/029-stdout.txt",
+      "retained": "ios/captures/commands/029-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/030-stderr.txt",
+      "retained": "ios/captures/commands/030-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/030-stdout.txt",
+      "retained": "ios/captures/commands/030-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/031-stderr.txt",
+      "retained": "ios/captures/commands/031-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/031-stdout.txt",
+      "retained": "ios/captures/commands/031-stdout.txt",
+      "sha256": "b213fdd865e6020f4e514fea9132d14b73c9307b13d0ef7d2db789deb67767d0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/032-stderr.txt",
+      "retained": "ios/captures/commands/032-stderr.txt",
+      "sha256": "693c1aa2a9f906c7c6475a9529bcbe1cc859e53f02a6ed4c454f9ca7893f28d5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/032-stdout.txt",
+      "retained": "ios/captures/commands/032-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/033-stderr.txt",
+      "retained": "ios/captures/commands/033-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/033-stdout.txt",
+      "retained": "ios/captures/commands/033-stdout.txt",
+      "sha256": "58a42925d3a919827cfcf4a2e34aae9a704df0f31c3c02829554125966b7c8a7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/034-stderr.txt",
+      "retained": "ios/captures/commands/034-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/034-stdout.txt",
+      "retained": "ios/captures/commands/034-stdout.txt",
+      "sha256": "211eeb3fa5b6e8a26b98c7bdfa77b07dca6481b0cfbff98ff31a3e6c6bf8b6b4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/035-stderr.txt",
+      "retained": "ios/captures/commands/035-stderr.txt",
+      "sha256": "da6a061b3fbb09efb8d94a9fa4ae1f18b0476161ee7acc08a857352867ee55fa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/035-stdout.txt",
+      "retained": "ios/captures/commands/035-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/036-stderr.txt",
+      "retained": "ios/captures/commands/036-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/036-stdout.txt",
+      "retained": "ios/captures/commands/036-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/037-stderr.txt",
+      "retained": "ios/captures/commands/037-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/037-stdout.txt",
+      "retained": "ios/captures/commands/037-stdout.txt",
+      "sha256": "7a8d153f18910e1442dbc80d0ad0a799531e847fab0e7c45f471c8e1a21594e9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/038-stderr.txt",
+      "retained": "ios/captures/commands/038-stderr.txt",
+      "sha256": "fd1a18a918967852e394ecf204e192af0293ce33b58297aab46cea40f04b60e1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/038-stdout.txt",
+      "retained": "ios/captures/commands/038-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/039-stderr.txt",
+      "retained": "ios/captures/commands/039-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/039-stdout.txt",
+      "retained": "ios/captures/commands/039-stdout.txt",
+      "sha256": "ee95eac75866c896d33e4a6817208b10c3ec1e14efc05bafdcca62b734d21ef3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/040-stderr.txt",
+      "retained": "ios/captures/commands/040-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/040-stdout.txt",
+      "retained": "ios/captures/commands/040-stdout.txt",
+      "sha256": "36b7dd7ff3e3197262d8dcbdaa88c06291be52baa8c7ccd422d76657bf2bcbaa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/041-stderr.txt",
+      "retained": "ios/captures/commands/041-stderr.txt",
+      "sha256": "abca597eef431bd50672130b9384015645edfb740eb580698c34cb0234b7313d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/041-stdout.txt",
+      "retained": "ios/captures/commands/041-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/042-stderr.txt",
+      "retained": "ios/captures/commands/042-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/042-stdout.txt",
+      "retained": "ios/captures/commands/042-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/043-stderr.txt",
+      "retained": "ios/captures/commands/043-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/043-stdout.txt",
+      "retained": "ios/captures/commands/043-stdout.txt",
+      "sha256": "0ca6dc57e6ea2351b27cde28c1883c1beeafb66d55dcedf3a60348667424bccc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/044-stderr.txt",
+      "retained": "ios/captures/commands/044-stderr.txt",
+      "sha256": "4ff20a98ff4dd42b3bd64799d17bf185e2c71e04e630dd9b225cfcdb89809a52"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/044-stdout.txt",
+      "retained": "ios/captures/commands/044-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/045-stderr.txt",
+      "retained": "ios/captures/commands/045-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/045-stdout.txt",
+      "retained": "ios/captures/commands/045-stdout.txt",
+      "sha256": "351e17a6dec3a196e3abf7d09c60ec06b462b9a355b6be8eca67ca3de6aee41b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/046-stderr.txt",
+      "retained": "ios/captures/commands/046-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/046-stdout.txt",
+      "retained": "ios/captures/commands/046-stdout.txt",
+      "sha256": "d662994d1818cd7bfe670f791767b5acbaf81fb176a57f972602b02fe155730e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/047-stderr.txt",
+      "retained": "ios/captures/commands/047-stderr.txt",
+      "sha256": "087e6394ecbc660d68c8478366890e465e2313cf568e57039108f0f2d7bb4375"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/047-stdout.txt",
+      "retained": "ios/captures/commands/047-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/048-stderr.txt",
+      "retained": "ios/captures/commands/048-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/048-stdout.txt",
+      "retained": "ios/captures/commands/048-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/049-stderr.txt",
+      "retained": "ios/captures/commands/049-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/049-stdout.txt",
+      "retained": "ios/captures/commands/049-stdout.txt",
+      "sha256": "17fb574b078f8138ad76cf1cde6da48545c9becf529613562edd2cd1686818cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/050-stderr.txt",
+      "retained": "ios/captures/commands/050-stderr.txt",
+      "sha256": "bf55367bcd3922b4041c31260afa50e10a13709cb2f17f6ce2bf3d920647a33d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/050-stdout.txt",
+      "retained": "ios/captures/commands/050-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/051-stderr.txt",
+      "retained": "ios/captures/commands/051-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/051-stdout.txt",
+      "retained": "ios/captures/commands/051-stdout.txt",
+      "sha256": "ebc7fa2e239895b4366dd646b16387a9481072d98fb90b779a1affd8cc747629"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/052-stderr.txt",
+      "retained": "ios/captures/commands/052-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/052-stdout.txt",
+      "retained": "ios/captures/commands/052-stdout.txt",
+      "sha256": "a50e7cf29821217478fcd1ce91ec9f3ab9f875abdaa0840a0fe3cd5890901f4b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/053-stderr.txt",
+      "retained": "ios/captures/commands/053-stderr.txt",
+      "sha256": "a782b7978a186a93ca0bf533ab088b6ee7b827814ad18bb06084dce6af178bbb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/053-stdout.txt",
+      "retained": "ios/captures/commands/053-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/054-stderr.txt",
+      "retained": "ios/captures/commands/054-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/054-stdout.txt",
+      "retained": "ios/captures/commands/054-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/055-stderr.txt",
+      "retained": "ios/captures/commands/055-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/055-stdout.txt",
+      "retained": "ios/captures/commands/055-stdout.txt",
+      "sha256": "37edf123a3a5d9497a4a0da08ac4aae672d8a6ef10e003ed7b7ad601290d59f8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/056-stderr.txt",
+      "retained": "ios/captures/commands/056-stderr.txt",
+      "sha256": "7060ee01989c3fc2b4036dac9c526c054af784fc5303e0047648ff572416729e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/056-stdout.txt",
+      "retained": "ios/captures/commands/056-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/057-stderr.txt",
+      "retained": "ios/captures/commands/057-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/057-stdout.txt",
+      "retained": "ios/captures/commands/057-stdout.txt",
+      "sha256": "06da8f26d9d949a05de7c31faa5c4da95b6eb09a5d9494bce27087a474dbb36c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/058-stderr.txt",
+      "retained": "ios/captures/commands/058-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/058-stdout.txt",
+      "retained": "ios/captures/commands/058-stdout.txt",
+      "sha256": "7c4b0c5c00679a714ac5002ec97f3f4142bc7a042d93597cb85c59efc65f18c5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/059-stderr.txt",
+      "retained": "ios/captures/commands/059-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/059-stdout.txt",
+      "retained": "ios/captures/commands/059-stdout.txt",
+      "sha256": "e31f0ec9932181b454cf256576fb0fdd65f1363fa6a5b590a428ebe262dbed13"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/060-stderr.txt",
+      "retained": "ios/captures/commands/060-stderr.txt",
+      "sha256": "e96f446044043ce508e003313adb88c704eb2360b7aa8e82c929ed71aa20f1e7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/060-stdout.txt",
+      "retained": "ios/captures/commands/060-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/061-stderr.txt",
+      "retained": "ios/captures/commands/061-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/061-stdout.txt",
+      "retained": "ios/captures/commands/061-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/062-stderr.txt",
+      "retained": "ios/captures/commands/062-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/062-stdout.txt",
+      "retained": "ios/captures/commands/062-stdout.txt",
+      "sha256": "4487f457cb1f5b395876a841571d8d41ade4e17a9083c0c15bb081416c607998"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/063-stderr.txt",
+      "retained": "ios/captures/commands/063-stderr.txt",
+      "sha256": "ead8460b0535412d3d543d28b86c5ba2a1042ba2f506bb22e048e49393039ef2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/063-stdout.txt",
+      "retained": "ios/captures/commands/063-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/064-stderr.txt",
+      "retained": "ios/captures/commands/064-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/064-stdout.txt",
+      "retained": "ios/captures/commands/064-stdout.txt",
+      "sha256": "73e0d80be6225668f136e219d2fd2d3f2cc426344291277ea778ba4b2e36af5d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/065-stderr.txt",
+      "retained": "ios/captures/commands/065-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/065-stdout.txt",
+      "retained": "ios/captures/commands/065-stdout.txt",
+      "sha256": "86a9e1170474941ee5afd800a427673a07f5c2995057d2900d358cd24276b3cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/066-stderr.txt",
+      "retained": "ios/captures/commands/066-stderr.txt",
+      "sha256": "f603e2abd5470a81fecbbc63e308e8751b7911a1e6bbf71e05d3a81cd9fc4ac6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/066-stdout.txt",
+      "retained": "ios/captures/commands/066-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/067-stderr.txt",
+      "retained": "ios/captures/commands/067-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/067-stdout.txt",
+      "retained": "ios/captures/commands/067-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/068-stderr.txt",
+      "retained": "ios/captures/commands/068-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/068-stdout.txt",
+      "retained": "ios/captures/commands/068-stdout.txt",
+      "sha256": "fbd091a3baa994f2e3b6e4e6d064f5b7a0ef30837bad55ed243071c6792e47cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/069-stderr.txt",
+      "retained": "ios/captures/commands/069-stderr.txt",
+      "sha256": "8e3b8ac5223a235f9dff959f47358aecb631d8cd1e1094f968f4196e5a668217"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/069-stdout.txt",
+      "retained": "ios/captures/commands/069-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/070-stderr.txt",
+      "retained": "ios/captures/commands/070-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/070-stdout.txt",
+      "retained": "ios/captures/commands/070-stdout.txt",
+      "sha256": "c253070dea4419c75c34f418fa2304df7eeb015b9619f17069ebfd1a723ac4f7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/071-stderr.txt",
+      "retained": "ios/captures/commands/071-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/071-stdout.txt",
+      "retained": "ios/captures/commands/071-stdout.txt",
+      "sha256": "b2600d6b575a6bd4f99145d5df17d752726b6716d5a75a08ad8283738b2468f9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/072-stderr.txt",
+      "retained": "ios/captures/commands/072-stderr.txt",
+      "sha256": "36607058d09ea6adf653378bb1cf009e77802343c022954bdb96b0a6ec27ac7f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/072-stdout.txt",
+      "retained": "ios/captures/commands/072-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/073-stderr.txt",
+      "retained": "ios/captures/commands/073-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/073-stdout.txt",
+      "retained": "ios/captures/commands/073-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/074-stderr.txt",
+      "retained": "ios/captures/commands/074-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/074-stdout.txt",
+      "retained": "ios/captures/commands/074-stdout.txt",
+      "sha256": "bb3ba7597a6c945c3305d02f3ef3307a8d4b2d0b116847eb29f26c5691feebd2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/075-stderr.txt",
+      "retained": "ios/captures/commands/075-stderr.txt",
+      "sha256": "9c75ad5368b0befe36984497a25b63ab60858060332962ac167f7b1ba648136c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/075-stdout.txt",
+      "retained": "ios/captures/commands/075-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/076-stderr.txt",
+      "retained": "ios/captures/commands/076-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/076-stdout.txt",
+      "retained": "ios/captures/commands/076-stdout.txt",
+      "sha256": "fc7826342f98f326cc4a6680a2f0d40eb947e4e8687a7ae8f632554765b8f0fb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/077-stderr.txt",
+      "retained": "ios/captures/commands/077-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/077-stdout.txt",
+      "retained": "ios/captures/commands/077-stdout.txt",
+      "sha256": "0b282748182343d5883e1efa2557c8f3285d8b173053932442e1404af7e7b7b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/078-stderr.txt",
+      "retained": "ios/captures/commands/078-stderr.txt",
+      "sha256": "756fb6d5db86a1b36cfe0b825490d04a8fbf476522dd207994b276ff98a6752a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/078-stdout.txt",
+      "retained": "ios/captures/commands/078-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/079-stderr.txt",
+      "retained": "ios/captures/commands/079-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/079-stdout.txt",
+      "retained": "ios/captures/commands/079-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/080-stderr.txt",
+      "retained": "ios/captures/commands/080-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/080-stdout.txt",
+      "retained": "ios/captures/commands/080-stdout.txt",
+      "sha256": "d388ffe671fb993882e1ecc613f299e3fbdd94e3e29f2a2f095ff4fcdd3206b3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/081-stderr.txt",
+      "retained": "ios/captures/commands/081-stderr.txt",
+      "sha256": "d24cac5bd8a00717be18b52b6f18df69544e7cd9552c4d4b10ff155c3ced843e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/081-stdout.txt",
+      "retained": "ios/captures/commands/081-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/082-stderr.txt",
+      "retained": "ios/captures/commands/082-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/082-stdout.txt",
+      "retained": "ios/captures/commands/082-stdout.txt",
+      "sha256": "f30ab91f9fd743784af96f3bb874dadc18e2e2afc74eb9995336c5f6b1622e6d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/083-stderr.txt",
+      "retained": "ios/captures/commands/083-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/083-stdout.txt",
+      "retained": "ios/captures/commands/083-stdout.txt",
+      "sha256": "0d8300e965069f53b58fa11ce3c3c4e946e30ceeeb6db1fb4d7519668cf2ddc0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/084-stderr.txt",
+      "retained": "ios/captures/commands/084-stderr.txt",
+      "sha256": "ac46a17725aa048e2324d3e37ff2a69ac98d4951d449d4c2f98b372b97a4995d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/084-stdout.txt",
+      "retained": "ios/captures/commands/084-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/085-stderr.txt",
+      "retained": "ios/captures/commands/085-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/085-stdout.txt",
+      "retained": "ios/captures/commands/085-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/086-stderr.txt",
+      "retained": "ios/captures/commands/086-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/086-stdout.txt",
+      "retained": "ios/captures/commands/086-stdout.txt",
+      "sha256": "ce2bd2e901b7a2152be4aeb966c4c4fbfe2f3c474bde6d19a86b11d6242d4cc6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/087-stderr.txt",
+      "retained": "ios/captures/commands/087-stderr.txt",
+      "sha256": "e8c985baa3f78946cb9d6e97ff15e5d2dd2313e6e935c9a4e65be1eb504c1b94"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/087-stdout.txt",
+      "retained": "ios/captures/commands/087-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/commands/index.json",
+      "retained": "ios/captures/commands/index.json",
+      "sha256": "d050436bd179af6964355fa82a5b2c0f63db3b6c10732fbd9d1d5615b8b39856"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/default-accessibility.json",
+      "retained": "ios/captures/default-accessibility.json",
+      "sha256": "65c420157dc87f34fa078e082e12fe372112b0bbf0c50fd8a8eb73d37c546ba2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/default.png",
+      "retained": "ios/captures/default.png",
+      "sha256": "ca102dbbf9c25ec7c51feb338044ea2375eeedfbd4e3102eb65429d45214cf81"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-left-accessibility.json",
+      "retained": "ios/captures/duo-left-accessibility.json",
+      "sha256": "33ada80e5940f94e87d9dbc5c0d73c44068934578861dc32aab5a29be16dcf54"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/duo-left-penta-orbit-accessibility.json",
+      "sha256": "1577c919b916bd92490a4528c44a81d1f28f5f43e6cd5eeb745620dd4e9d7063"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-left-penta-orbit.png",
+      "retained": "ios/captures/duo-left-penta-orbit.png",
+      "sha256": "29d0bfd2c27a762673541b4d17ffcf1da8fb04776c835649cc46dffaf638d739"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-left.png",
+      "retained": "ios/captures/duo-left.png",
+      "sha256": "8bd4b12630b28fd5970bbe426752f1eacb5230946d06e273e0a860bda5b51242"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-right-accessibility.json",
+      "retained": "ios/captures/duo-right-accessibility.json",
+      "sha256": "740d97c7de6aa2e5807f4acb91ef21060673d4014bcff329275f1c556033acb9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/duo-right-penta-orbit-accessibility.json",
+      "sha256": "5980842b4159bbb3ff5b62ccafe9a358221ca4d6b54ff28b5f6b2331e219b771"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-right-penta-orbit.png",
+      "retained": "ios/captures/duo-right-penta-orbit.png",
+      "sha256": "3a6cd7d5d3cdaecc9e68b21ec2db9e9bd0ce6f0108560bc1362d3862f43211c9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/duo-right.png",
+      "retained": "ios/captures/duo-right.png",
+      "sha256": "4088e80065563109c359ea33379a09f9f170b97969056c4e5e0a0534a0f0bed0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-10-left-accessibility.json",
+      "retained": "ios/captures/edge-10-left-accessibility.json",
+      "sha256": "7f2c40b399b0249d5577f1b0ef118db4865cd2597964981fcd16f06384a698db"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-10-left.png",
+      "retained": "ios/captures/edge-10-left.png",
+      "sha256": "ff64e36becc7644c8fefaad5fb9202594decf882bfb638b4211ccbcb96bbbf36"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-10-right-accessibility.json",
+      "retained": "ios/captures/edge-10-right-accessibility.json",
+      "sha256": "6a3763680183ed5d526d9432e0df81b750cf23b2c2865c8b7b4aeb8442d718b0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-10-right.png",
+      "retained": "ios/captures/edge-10-right.png",
+      "sha256": "ec5da6d993591c64b2c1628c849344db0f25dece60fc7993e7ef3f035dfd3b1f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-left-accessibility.json",
+      "retained": "ios/captures/edge-15-left-accessibility.json",
+      "sha256": "395404c779ad4786bd9d65eba55452cce519f880b9f6f47681ea7ad49f9a7f57"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/edge-15-left-penta-orbit-accessibility.json",
+      "sha256": "6c2689385548bdb15d8bf6f1c4dc40e1a702b1f7f654b8f43b7072cd63211908"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-left-penta-orbit.png",
+      "retained": "ios/captures/edge-15-left-penta-orbit.png",
+      "sha256": "22e7d5069828930c3272c7a8aa044cf41591c1ecdf62b01a9c5ec367739a2e85"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-left.png",
+      "retained": "ios/captures/edge-15-left.png",
+      "sha256": "1c3145834cd8757cbb3430cf51171e479ad0b25aa1ac1f43f7f3e769c6d557cb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-right-accessibility.json",
+      "retained": "ios/captures/edge-15-right-accessibility.json",
+      "sha256": "3f42db05c5e34ba585d1dde34a80dc3ca70993c324df74c16ea86d5449faf88e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/edge-15-right-penta-orbit-accessibility.json",
+      "sha256": "606483d9b4391a5d73f5e6dfdffef7289f91aac6b9ce52e483b7821a10aaed74"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-right-penta-orbit.png",
+      "retained": "ios/captures/edge-15-right-penta-orbit.png",
+      "sha256": "06bc8187b89d3e46975f5fa748bfb601aab74da0e51b211be7292019b887daaa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-15-right.png",
+      "retained": "ios/captures/edge-15-right.png",
+      "sha256": "98f513d555d34ff48cebd5aca62657148af3f73025201e129302a2ee2be310de"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-left-accessibility.json",
+      "retained": "ios/captures/edge-20-left-accessibility.json",
+      "sha256": "5c2374517322c467a8b1b4918072af7340a70ea8f58844d8414ffa1f4ce627a4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/edge-20-left-penta-orbit-accessibility.json",
+      "sha256": "09e417e1fa88cc7a07389e33437df5292506dc7142751db3668f8b36d68ef834"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-left-penta-orbit.png",
+      "retained": "ios/captures/edge-20-left-penta-orbit.png",
+      "sha256": "44d605a26678326d8400536118b2133b5684ec280e3af92e7f2f1550686b8e09"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-left.png",
+      "retained": "ios/captures/edge-20-left.png",
+      "sha256": "3d878351e087dffeb6c51a61e3c88cad5ec6bd5fbb1984ede0cbfd0aa0055b49"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-right-accessibility.json",
+      "retained": "ios/captures/edge-20-right-accessibility.json",
+      "sha256": "c6d8a5fc36f554a8806f08e98ff60af2f5ffdff073100da2372085976597cbef"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/edge-20-right-penta-orbit-accessibility.json",
+      "sha256": "eb97bd254ad4adf2705833e30bdb034ec6c1cf66033d9b35f042342109aa0a72"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-right-penta-orbit.png",
+      "retained": "ios/captures/edge-20-right-penta-orbit.png",
+      "sha256": "e4715744ac2ebc8ee204221698a3ae11a9e1bd129013e72afbab3560d54391cf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-20-right.png",
+      "retained": "ios/captures/edge-20-right.png",
+      "sha256": "97b43a2414b42c82c21839391901f73dff1fa676a578f5a8ab9abaa18af18d60"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-25-left-accessibility.json",
+      "retained": "ios/captures/edge-25-left-accessibility.json",
+      "sha256": "31237f4e34db018416c1c0d3285be766bfa406f829fbfc04fc5e7b97a880fa86"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-25-left.png",
+      "retained": "ios/captures/edge-25-left.png",
+      "sha256": "ca102dbbf9c25ec7c51feb338044ea2375eeedfbd4e3102eb65429d45214cf81"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-25-right-accessibility.json",
+      "retained": "ios/captures/edge-25-right-accessibility.json",
+      "sha256": "715c0ca0fc5a4fff020350e547869b3b9b42c7ec39f0930de27248e8dcc37f2a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/edge-25-right.png",
+      "retained": "ios/captures/edge-25-right.png",
+      "sha256": "72bd3c908c9640a66b88f52aecbfc5f1344b875764e733aec6afb1179a40a523"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-left-accessibility.json",
+      "retained": "ios/captures/mono-left-accessibility.json",
+      "sha256": "ff2ee0b25f16c6006b2fa001cbd2f1f719ee0585216578f0de30682ea740622b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/mono-left-penta-orbit-accessibility.json",
+      "sha256": "8531d32f901785e678edf9538c02f67cb927c28606d6fc6a4535cda05c7df737"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-left-penta-orbit.png",
+      "retained": "ios/captures/mono-left-penta-orbit.png",
+      "sha256": "ce5ce4ace6b1078fc840901cae960ba18294d508de4631d56f00d181c00175be"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-left.png",
+      "retained": "ios/captures/mono-left.png",
+      "sha256": "bd6cd9073953057ed648242cbefe5dcc0b61a21dd5340101fe22168ac10bb692"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-right-accessibility.json",
+      "retained": "ios/captures/mono-right-accessibility.json",
+      "sha256": "dcebdea9d5005276dbd21e6f5ab46453a6a84492633faa6026ebac2446e8fd4e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/mono-right-penta-orbit-accessibility.json",
+      "sha256": "6812bad61e87c75c2d46e1084f2e899624d9dbe150e600ea72c38906bb228886"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-right-penta-orbit.png",
+      "retained": "ios/captures/mono-right-penta-orbit.png",
+      "sha256": "f6f3517ce22da9cc904c54a94fe1b37e114df70c9c65bc5f7608c658ccf87a57"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/mono-right.png",
+      "retained": "ios/captures/mono-right.png",
+      "sha256": "2e5d31a1c1be5d5a7f9328ffd7e2fbdf5e86488644560ff95ea4a1b6426a3d53"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/package-parity.json",
+      "retained": "ios/captures/package-parity.json",
+      "sha256": "a019b73fb3ed5c5aa9c1eba08906b1c48ea896bd4247caf2981d9d9ad6970aae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/primary-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/primary-left-penta-orbit-accessibility.json",
+      "sha256": "f4f1584768316dbbbe8b042e6034dd45ab9235b91cf4250f87928077d0e74e0d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/primary-left-penta-orbit.png",
+      "retained": "ios/captures/primary-left-penta-orbit.png",
+      "sha256": "e8c3aafea249f519ffcd484b0568a4d468e0215173ef42b1794230248ddc5948"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/primary-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/primary-right-penta-orbit-accessibility.json",
+      "sha256": "b2a2c744d09bc851b5b7e4a80ddc3c87643beaf08ec5f2ba04966978175d6c73"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/primary-right-penta-orbit.png",
+      "retained": "ios/captures/primary-right-penta-orbit.png",
+      "sha256": "e5636d415809f9a12bb9ed8a6abea1609aebab5c88ed036b73f8ec58abc70aa1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/resolved-capture-plan.json",
+      "retained": "ios/captures/resolved-capture-plan.json",
+      "sha256": "46c55c8a3628c6641d3533c2b7627e8d705750a62d698523890de58a58c0afcb"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/reverse-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/reverse-left-penta-orbit-accessibility.json",
+      "sha256": "480d9083b6a9080e1722b0a0967336cd833615016f6e68896576cde3e95b692b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/reverse-left-penta-orbit.png",
+      "retained": "ios/captures/reverse-left-penta-orbit.png",
+      "sha256": "681515915479cd5f937a957723f4681d0bbfb46bb09d709454e32d2c1e30c6c7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/reverse-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/reverse-right-penta-orbit-accessibility.json",
+      "sha256": "6a7b0d40ce9ac3c9080d0819dcee7aa0d2bd4e0e92cc72b026368028ecb9db8b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/reverse-right-penta-orbit.png",
+      "retained": "ios/captures/reverse-right-penta-orbit.png",
+      "sha256": "3f83ae9bc34a7fc70c83fd578552b66e0954ea3affcb8f66e21717d6fd472e87"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-left-accessibility.json",
+      "retained": "ios/captures/tray-left-accessibility.json",
+      "sha256": "304fa6488284e22a072b00ad23c000221b2a199687926ac7af4b980490d14ec7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-left-penta-orbit-accessibility.json",
+      "retained": "ios/captures/tray-left-penta-orbit-accessibility.json",
+      "sha256": "994bd5f53181e317fafbb62801f88613697924b5483ecc4a9dc8f1564e14a8bf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-left-penta-orbit.png",
+      "retained": "ios/captures/tray-left-penta-orbit.png",
+      "sha256": "6a8149e5080983dac5ac1414851a523b235da74b325925aa05373abcf15df93b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-left.png",
+      "retained": "ios/captures/tray-left.png",
+      "sha256": "fa0c5bcf5b88a3a0bc5e5857002b1f6f7e599c7b14bd65c7c144cc2e01e9a5b4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-right-accessibility.json",
+      "retained": "ios/captures/tray-right-accessibility.json",
+      "sha256": "c3c50f97caaa23f092437acbef4be8f4f358835e21abf6e84ff28ae353ab47bd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-right-penta-orbit-accessibility.json",
+      "retained": "ios/captures/tray-right-penta-orbit-accessibility.json",
+      "sha256": "f40c6babfc0d0784daf539432b63c29a19520ef1a48048fce6dd70e5cc156668"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-right-penta-orbit.png",
+      "retained": "ios/captures/tray-right-penta-orbit.png",
+      "sha256": "f49280a04b21fd698c837f39ed0718cae5a6e4f70fe5b88b1938d586cd397505"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/tray-right.png",
+      "retained": "ios/captures/tray-right.png",
+      "sha256": "8c913f5ab2547713534a66eb512da7ddc1a74d40f4c2d86a29e4101fd9c4cda7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/captures/validation.json",
+      "retained": "ios/captures/validation.json",
+      "sha256": "c25468a9034f8b90c8cee127656ffd37a9664a6454704afafd8840ba102f2e88"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/cleanup-requested",
+      "retained": "ios/cleanup-requested",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/cleanup-verification.json",
+      "retained": "ios/cleanup-verification.json",
+      "sha256": "bc835a3dfb7235a211b19789c8776a9fe66046539aa2c797802f3956e444acb3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/cleanup.log",
+      "retained": "ios/cleanup.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/final-runtime-validation.json",
+      "retained": "ios/final-runtime-validation.json",
+      "sha256": "c58a3f52973bdfa5f4e6d99b3d31825d1c22c58d5af4084dabd18980c7e7fade"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/generated-board-at-build.json",
+      "retained": "ios/generated-board-at-build.json",
+      "sha256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/install.log",
+      "retained": "ios/install.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/installed-container.txt",
+      "retained": "ios/installed-container.txt",
+      "sha256": "776072b98907d0e04df46dcfbd721f7fa5566903c0a65f38ae7a3bd07d5cbbef"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/launch-services.log",
+      "retained": "ios/launch-services.log",
+      "sha256": "261e3d932bd32d6948d58c0a3e2c6f8fd7b8ca5247a9c148c97566724daab32a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/ownership.json",
+      "retained": "ios/ownership.json",
+      "sha256": "2df66ee361d8f34caf1a8916e44489d1a62df1bacac44c645522796b2871bc3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/000-stderr.txt",
+      "retained": "ios/physical-probes/01-front/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/000-stdout.txt",
+      "retained": "ios/physical-probes/01-front/000-stdout.txt",
+      "sha256": "3734e0eb43a02d6c4247d3fedd37d9f92c6dbfc2e117c95dfacea2a03d0ae706"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/001-stderr.txt",
+      "retained": "ios/physical-probes/01-front/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/001-stdout.txt",
+      "retained": "ios/physical-probes/01-front/001-stdout.txt",
+      "sha256": "f47fb22176bcd5ed4fc4f24fca7175e9a876cb0822641eeddc2ee8f63c1c93df"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/002-stderr.txt",
+      "retained": "ios/physical-probes/01-front/002-stderr.txt",
+      "sha256": "ae7063694b7ce1ed110cbf7f73d3a3a0439aa1522f46e3807ed9907a7597f3c5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/002-stdout.txt",
+      "retained": "ios/physical-probes/01-front/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/accessibility.json",
+      "retained": "ios/physical-probes/01-front/accessibility.json",
+      "sha256": "d1b9429258ce544db916785d40620609d95ce35188de2f9b7dfaa3b6258707e1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/commands.json",
+      "retained": "ios/physical-probes/01-front/commands.json",
+      "sha256": "c4f7403e19894c163ad1c7f2f4bb85e08c35df8114aa9999d7f31266f1b4c42c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/01-front/view.png",
+      "retained": "ios/physical-probes/01-front/view.png",
+      "sha256": "810e4584497bbf2aff5b1818daecf7ad956a3b72af36ca43c5390db08cee9df1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/000-stderr.txt",
+      "retained": "ios/physical-probes/02-orbit/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/000-stdout.txt",
+      "retained": "ios/physical-probes/02-orbit/000-stdout.txt",
+      "sha256": "d2868ab38c44a66f2195a808263fead312f6e3b3fc5150dd4d298c279e5a5198"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/001-stderr.txt",
+      "retained": "ios/physical-probes/02-orbit/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/001-stdout.txt",
+      "retained": "ios/physical-probes/02-orbit/001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/002-stderr.txt",
+      "retained": "ios/physical-probes/02-orbit/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/002-stdout.txt",
+      "retained": "ios/physical-probes/02-orbit/002-stdout.txt",
+      "sha256": "8deea584e17ee579d3c82a675b19832dc85c96211955183076b6f4a649d99030"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/003-stderr.txt",
+      "retained": "ios/physical-probes/02-orbit/003-stderr.txt",
+      "sha256": "94fc20116432816eca2cdaf6a6bf0775957bcbc16bf88ac97d9e3fdc6ec56443"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/003-stdout.txt",
+      "retained": "ios/physical-probes/02-orbit/003-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/accessibility.json",
+      "retained": "ios/physical-probes/02-orbit/accessibility.json",
+      "sha256": "7e20c34b8fca8abf90935ab54f201838ebc7f094220a717d656bb7f16c2e4240"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/commands.json",
+      "retained": "ios/physical-probes/02-orbit/commands.json",
+      "sha256": "67cc09390349e943d337aaa214ebefbcf1cb15c4c8fa1f436ef26ce0063fad91"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/02-orbit/view.png",
+      "retained": "ios/physical-probes/02-orbit/view.png",
+      "sha256": "6fa1284bca6c2d6751da1af3ee9eee024d393bbd957603e17cff5b8f7718b232"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/000-stderr.txt",
+      "retained": "ios/physical-probes/03-contact-reset/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/000-stdout.txt",
+      "retained": "ios/physical-probes/03-contact-reset/000-stdout.txt",
+      "sha256": "3868e01f0635bd0bdf625d112c65e70a09bba4cd4ae3ccb029f70ec0517c44cd"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/001-stderr.txt",
+      "retained": "ios/physical-probes/03-contact-reset/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/001-stdout.txt",
+      "retained": "ios/physical-probes/03-contact-reset/001-stdout.txt",
+      "sha256": "21243c51846661a2ba255acba9de621c0a0202a4f9d753c1f2153b56c7cb0f66"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/002-stderr.txt",
+      "retained": "ios/physical-probes/03-contact-reset/002-stderr.txt",
+      "sha256": "e1a4ebe6193dc7a8012ab381974e9836feefbdda30ad5e61663166a000456955"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/002-stdout.txt",
+      "retained": "ios/physical-probes/03-contact-reset/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/accessibility.json",
+      "retained": "ios/physical-probes/03-contact-reset/accessibility.json",
+      "sha256": "ea9ff6c3b9621ca25f2582fdd149fb411335186edf098230a458e6db8d35c53e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/commands.json",
+      "retained": "ios/physical-probes/03-contact-reset/commands.json",
+      "sha256": "1e0309ad98ae4665d851a57f4f9fd7bff3ee4c33f45ac164663d6eeaec1d32ba"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/03-contact-reset/view.png",
+      "retained": "ios/physical-probes/03-contact-reset/view.png",
+      "sha256": "ffaace83789ac6b9f842b910f80f4035693d6a0c5a446e4cb67606f2fbf11bf5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/000-stderr.txt",
+      "retained": "ios/physical-probes/04-left-cord/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/000-stdout.txt",
+      "retained": "ios/physical-probes/04-left-cord/000-stdout.txt",
+      "sha256": "1da617eb123cd119936e43dfd7f9e8cb672fa35187b24b09a2643102c1a1a3a4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/001-stderr.txt",
+      "retained": "ios/physical-probes/04-left-cord/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/001-stdout.txt",
+      "retained": "ios/physical-probes/04-left-cord/001-stdout.txt",
+      "sha256": "df3ed790a344b7760ffb97e7af62dee587c73abbf21288b316330118c796e824"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/002-stderr.txt",
+      "retained": "ios/physical-probes/04-left-cord/002-stderr.txt",
+      "sha256": "27eb602777b6feaafc7c51daa2169b46ef39d9492a6fd5d1271c30585f3a06a7"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/002-stdout.txt",
+      "retained": "ios/physical-probes/04-left-cord/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/accessibility.json",
+      "retained": "ios/physical-probes/04-left-cord/accessibility.json",
+      "sha256": "6e5439d2a9280cddba45a99d4117bf345fa333b4bd3edd1cf83be1152ffbe9d5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/commands.json",
+      "retained": "ios/physical-probes/04-left-cord/commands.json",
+      "sha256": "f66284e0de4574093fc691f3a3d157a9a8d8bc00553a8a315eb099f979fda1f2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/04-left-cord/view.png",
+      "retained": "ios/physical-probes/04-left-cord/view.png",
+      "sha256": "4fe88ae9b4c8db46aaca6b7f8f681e81ef760fea39f1edf04c84626c98d1dd00"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/000-stderr.txt",
+      "retained": "ios/physical-probes/05-right-cord/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/000-stdout.txt",
+      "retained": "ios/physical-probes/05-right-cord/000-stdout.txt",
+      "sha256": "0caf08d450758fcf4d14383a633613489640a90b600cc034c72dc129f12e4ab2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/001-stderr.txt",
+      "retained": "ios/physical-probes/05-right-cord/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/001-stdout.txt",
+      "retained": "ios/physical-probes/05-right-cord/001-stdout.txt",
+      "sha256": "d6a170eded57eabbcae403986cde4cb751dc3b06da96f57590f29f7606bf4630"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/002-stderr.txt",
+      "retained": "ios/physical-probes/05-right-cord/002-stderr.txt",
+      "sha256": "a81d895764d31aa66991d7afcb95d2ed55924dbd593974ca8e97bc32634bb30d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/002-stdout.txt",
+      "retained": "ios/physical-probes/05-right-cord/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/accessibility.json",
+      "retained": "ios/physical-probes/05-right-cord/accessibility.json",
+      "sha256": "5aa08d5fc11d5ab68d3e065768e986e8149ed1db1db8464bcb62ae39970ebd9e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/commands.json",
+      "retained": "ios/physical-probes/05-right-cord/commands.json",
+      "sha256": "4fe35beda0728c6925f93225b2c2e026146e587ab03ad5618c73636907b4868d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/05-right-cord/view.png",
+      "retained": "ios/physical-probes/05-right-cord/view.png",
+      "sha256": "dd565e4cc4e22aa3e7a29abaae90f38b5b86b1e3da3af7ae3ff5b9b39cd6e6b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/000-stderr.txt",
+      "retained": "ios/physical-probes/06-right-pick/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/000-stdout.txt",
+      "retained": "ios/physical-probes/06-right-pick/000-stdout.txt",
+      "sha256": "165660c5df4f3dc7cf26f68a39d09ed789cb2defffb60351789b5abc72a4fd31"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/001-stderr.txt",
+      "retained": "ios/physical-probes/06-right-pick/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/001-stdout.txt",
+      "retained": "ios/physical-probes/06-right-pick/001-stdout.txt",
+      "sha256": "1206c26adf34d2473c253e6234c97f9761ae8beab5fc96eb0fec9bb33b3ea640"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/002-stderr.txt",
+      "retained": "ios/physical-probes/06-right-pick/002-stderr.txt",
+      "sha256": "60ab064042d8971dfb4efde1923ad250c2400ac4a1d6547e092352f15c9eea7f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/002-stdout.txt",
+      "retained": "ios/physical-probes/06-right-pick/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/accessibility.json",
+      "retained": "ios/physical-probes/06-right-pick/accessibility.json",
+      "sha256": "0aaf0c11243a5e10d227f78108333de1efe334a869b48e0fe2715e9cf5974677"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/commands.json",
+      "retained": "ios/physical-probes/06-right-pick/commands.json",
+      "sha256": "1382710774dfaa45e14d16a118842d629d44dab9737183c30d60c162d81c6b7d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/06-right-pick/view.png",
+      "retained": "ios/physical-probes/06-right-pick/view.png",
+      "sha256": "d2a267cb1cc13383e772a012e96d564ebf52079ddc4b1a39eda5c847e871722d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/000-stderr.txt",
+      "retained": "ios/physical-probes/07-left-pick/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/000-stdout.txt",
+      "retained": "ios/physical-probes/07-left-pick/000-stdout.txt",
+      "sha256": "d5e2df588f3e3bc3ba51a0af683ff32ed64144a9553061784f887ab44f54ec44"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/001-stderr.txt",
+      "retained": "ios/physical-probes/07-left-pick/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/001-stdout.txt",
+      "retained": "ios/physical-probes/07-left-pick/001-stdout.txt",
+      "sha256": "13a8f62da34f3522fc832b20289feca8f2fe1d180d3b59c080a15795fa4b2b7f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/002-stderr.txt",
+      "retained": "ios/physical-probes/07-left-pick/002-stderr.txt",
+      "sha256": "39f3026b2d931aca818da24296ee951424356db00484c4bdd6052d356775e701"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/002-stdout.txt",
+      "retained": "ios/physical-probes/07-left-pick/002-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/accessibility.json",
+      "retained": "ios/physical-probes/07-left-pick/accessibility.json",
+      "sha256": "fd986cee5ffd9fbd6582ff88d97cffb3855e18dbf22f88d6ca269cbb47152a1e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/commands.json",
+      "retained": "ios/physical-probes/07-left-pick/commands.json",
+      "sha256": "2c599c2c775f551bab97cc00dd0db3844c163b87e0ecd67861d4e3d732176d25"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/07-left-pick/view.png",
+      "retained": "ios/physical-probes/07-left-pick/view.png",
+      "sha256": "dd565e4cc4e22aa3e7a29abaae90f38b5b86b1e3da3af7ae3ff5b9b39cd6e6b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/physical-probes/validation.json",
+      "retained": "ios/physical-probes/validation.json",
+      "sha256": "d4b4bfe88d778c1a91f5ded04f6ccc2e53c9234597f4384aa05d4f6db37b1bf2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/cleanup-verification.json",
+      "retained": "ios/red-regression/cleanup-verification.json",
+      "sha256": "b1aca24c5b4f119c89115faa309cd221b04dbe19495eb77618239b87404e4036"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/ownership.json",
+      "retained": "ios/red-regression/ownership.json",
+      "sha256": "2107a458c3aec14fe50fa12fa3ab3616dc77fe1ddee9f63aa54a3fd9dc7e6e95"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/test-results-summary-stderr.txt",
+      "retained": "ios/red-regression/test-results-summary-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/test-results-summary.json",
+      "retained": "ios/red-regression/test-results-summary.json",
+      "sha256": "bab5b936e7c04190b2bb851a1ac14b8c4db9f07e0473da0ee1b2ecb8ff18a774"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/tests-exit-status.txt",
+      "retained": "ios/red-regression/tests-exit-status.txt",
+      "sha256": "979b894f2d91bf199766571d58024f020d1a44a417da5f48e1fa1cdf554a14f5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/red-regression/tests.log",
+      "retained": "ios/red-regression/tests.log",
+      "sha256": "86b4942b588ce19337ed01e296473cca1234d42a6633a94ce5f45b1776a2fa59"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/retained-sha256.json",
+      "retained": "ios/retained-sha256.json",
+      "sha256": "e6710418435d6e4bc33a502c4fe371cfdc1895d8bbd3065689636d4026c51ed3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/orbits-1.png",
+      "retained": "ios/review-montages/orbits-1.png",
+      "sha256": "74d2ca292c0d09a9a6c1ec8381dbc9346691b3a85e6b13a2cac16c506da04c06"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/orbits-2.png",
+      "retained": "ios/review-montages/orbits-2.png",
+      "sha256": "4307b5368f333665762192687f8c133a4859e176962fbfc91589851fafc26d93"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/orbits-3.png",
+      "retained": "ios/review-montages/orbits-3.png",
+      "sha256": "032ee1702ff34eb7c1d91ccf2998c181e1fe3610362f53e5e29f55bb9d24cba3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/orbits-4.png",
+      "retained": "ios/review-montages/orbits-4.png",
+      "sha256": "33cb5f1fd9ffd8b81c6b03c02c53613878d9306e7f958ede903f0a0bffee46dc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/orbits.png",
+      "retained": "ios/review-montages/orbits.png",
+      "sha256": "70a851cec52a7f2071ec73f7f681659cf3415282acb0d75ca1f036395cefc3b8"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/selections-1.png",
+      "retained": "ios/review-montages/selections-1.png",
+      "sha256": "0363d8ea3132acef6e8118a909522218a1a5b07e9f98e93db3d628fe89805bcc"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/selections-2.png",
+      "retained": "ios/review-montages/selections-2.png",
+      "sha256": "0925b73761b99459faa2b9f4e6a34b801e9e65c054d7e0678a8fdd27677b2e60"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/selections-3.png",
+      "retained": "ios/review-montages/selections-3.png",
+      "sha256": "5eed21d9becfdecf67c2d4e99c03e05194253882668ba64e45efd707ac4278cf"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/selections-4.png",
+      "retained": "ios/review-montages/selections-4.png",
+      "sha256": "40a9be7bf9a8c8201b19b2c56e2dd46dc72d9fdc7132c1a56748bad46b28c672"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/review-montages/selections.png",
+      "retained": "ios/review-montages/selections.png",
+      "sha256": "3ba6e2824043da278eef12bb3347ce1e8620306742c40eb214816ff839364e28"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/runtime-before-fix.json",
+      "retained": "ios/runtime-before-fix.json",
+      "sha256": "9897f51099a455d2d083ae1087d14f934122694cd159861a976effeedaa8c58c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/simulator-ready",
+      "retained": "ios/simulator-ready",
+      "sha256": "adb199a63b69e04bd35905460659679ff4e351826443055b5b6b32c00def8d5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/simulator-uuid",
+      "retained": "ios/simulator-uuid",
+      "sha256": "adb199a63b69e04bd35905460659679ff4e351826443055b5b6b32c00def8d5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/source-package-sha256-before-build.json",
+      "retained": "ios/source-package-sha256-before-build.json",
+      "sha256": "6922aa313d0a1998663f3495f9652ee70a0dca39062bea7aa610f808746bc330"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/test-results-summary-stderr.txt",
+      "retained": "ios/test-results-summary-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/test-results-summary.json",
+      "retained": "ios/test-results-summary.json",
+      "sha256": "ae73d3a635763e381456ae515ea84a5bb564372f0c894327b0985cc3ad3d2f44"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/tests-exit-status.txt",
+      "retained": "ios/tests-exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/tests.log",
+      "retained": "ios/tests.log",
+      "sha256": "50e629e0a4ee188305ae599a697b209392e5a9794b8bbeebb80adb76492a4969"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/000-stderr.txt",
+      "retained": "ios/workout-settled/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/000-stdout.txt",
+      "retained": "ios/workout-settled/000-stdout.txt",
+      "sha256": "5cf3ceb5b67cb092443727209d527d7c9cdc55e25489a3a9a2ef9a150b65162c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/001-stderr.txt",
+      "retained": "ios/workout-settled/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/001-stdout.txt",
+      "retained": "ios/workout-settled/001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/002-stderr.txt",
+      "retained": "ios/workout-settled/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/002-stdout.txt",
+      "retained": "ios/workout-settled/002-stdout.txt",
+      "sha256": "dc1e58648f6b584f847c2bff0470a0ded09bb8c2b5d0445d344ad510f1cfddf6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/003-stderr.txt",
+      "retained": "ios/workout-settled/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/003-stdout.txt",
+      "retained": "ios/workout-settled/003-stdout.txt",
+      "sha256": "0c3851f1fea3f1276e2076f211a66ef9636e813f0e5dc272d55e01c6a6130780"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/004-stderr.txt",
+      "retained": "ios/workout-settled/004-stderr.txt",
+      "sha256": "2ce036ed70a923e513afa428ea063102bde49a2c90f8f57a5741866130953e3f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/004-stdout.txt",
+      "retained": "ios/workout-settled/004-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/005-stderr.txt",
+      "retained": "ios/workout-settled/005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/005-stdout.txt",
+      "retained": "ios/workout-settled/005-stdout.txt",
+      "sha256": "ccb4cc85635f41a8bb3f49904a2bae6d2c5ddc4b1abca6917707888c59976b3c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/006-stderr.txt",
+      "retained": "ios/workout-settled/006-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/006-stdout.txt",
+      "retained": "ios/workout-settled/006-stdout.txt",
+      "sha256": "ca0d1950b8581fcd2d3df0940d6b2c5983ba04c08258eb7916c99798506d5276"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/007-stderr.txt",
+      "retained": "ios/workout-settled/007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/007-stdout.txt",
+      "retained": "ios/workout-settled/007-stdout.txt",
+      "sha256": "eb672e34dd4f42d6f3281d01c7cc2cc3a2218fab4248374908fd2a052c291a28"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/008-stderr.txt",
+      "retained": "ios/workout-settled/008-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/008-stdout.txt",
+      "retained": "ios/workout-settled/008-stdout.txt",
+      "sha256": "d1039c9998b410f50fd541d711779ba5eb4e6f5a1d982b2498834264d59de5e3"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/009-stderr.txt",
+      "retained": "ios/workout-settled/009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/009-stdout.txt",
+      "retained": "ios/workout-settled/009-stdout.txt",
+      "sha256": "b7a7e8950efb6afaba9da2fca70b6dbe39af4fc488c8a2c2afea23c226079256"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/010-stderr.txt",
+      "retained": "ios/workout-settled/010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/010-stdout.txt",
+      "retained": "ios/workout-settled/010-stdout.txt",
+      "sha256": "a950642700b67080a4cedf370c91378746d1251308dff2d2b268c9673e21b368"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/011-stderr.txt",
+      "retained": "ios/workout-settled/011-stderr.txt",
+      "sha256": "269ab8186a00c4a343401849578e3fcd7d418379aad4c38c77ba7e73e8780c86"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/011-stdout.txt",
+      "retained": "ios/workout-settled/011-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/012-stderr.txt",
+      "retained": "ios/workout-settled/012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/012-stdout.txt",
+      "retained": "ios/workout-settled/012-stdout.txt",
+      "sha256": "462ad6d1ff1d96ee7b47c2057011da053164e636b40b1e6cfd9615dfa051bea9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/013-stderr.txt",
+      "retained": "ios/workout-settled/013-stderr.txt",
+      "sha256": "3a449beefab36c0487e1dc62ba5e9d01a57b5513f3298c0071622bdd44a5c709"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/013-stdout.txt",
+      "retained": "ios/workout-settled/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/014-stderr.txt",
+      "retained": "ios/workout-settled/014-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/014-stdout.txt",
+      "retained": "ios/workout-settled/014-stdout.txt",
+      "sha256": "55633f940159c9471547cca28597e4d0aee3461bda0a1f50606b7e8948b8c8c9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/015-stderr.txt",
+      "retained": "ios/workout-settled/015-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/015-stdout.txt",
+      "retained": "ios/workout-settled/015-stdout.txt",
+      "sha256": "7980f3fe48021f578c366de38926af186154fed21c7bb38a134d97c462f9d19a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/016-stderr.txt",
+      "retained": "ios/workout-settled/016-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/016-stdout.txt",
+      "retained": "ios/workout-settled/016-stdout.txt",
+      "sha256": "05894e46576e3bed979d4e70b437705b0cce2504d65d06400d3681605013a0a1"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/017-stderr.txt",
+      "retained": "ios/workout-settled/017-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/017-stdout.txt",
+      "retained": "ios/workout-settled/017-stdout.txt",
+      "sha256": "0dedece53bf78208565194e61b89c2aa778e05bcfa1e13b1debb8558f93db21c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/018-stderr.txt",
+      "retained": "ios/workout-settled/018-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/018-stdout.txt",
+      "retained": "ios/workout-settled/018-stdout.txt",
+      "sha256": "3b7720a51f801bfa90086ab0fe8564f2ac21c7e74f40c33735c82275ae899734"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/019-stderr.txt",
+      "retained": "ios/workout-settled/019-stderr.txt",
+      "sha256": "3fc4567ee3a6c8637df24c95ce482910faa19cc2d79bb2ddb4229ee5769c34b5"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/019-stdout.txt",
+      "retained": "ios/workout-settled/019-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/active-first-hang-ax.json",
+      "retained": "ios/workout-settled/active-first-hang-ax.json",
+      "sha256": "036dbfff090a730118fb3f42c3e31efcad7982447263ce336fc33ddb192457c0"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/active-first-hang.png",
+      "retained": "ios/workout-settled/active-first-hang.png",
+      "sha256": "fc716e247ac0271d881d8b08409bd0f6c34b3923824f63feb5d731d8136d0f90"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/active-settled-ax.json",
+      "retained": "ios/workout-settled/active-settled-ax.json",
+      "sha256": "9384eb2e481885ff62fe18e07d55b83fc5598cd38e0129c080b5ee59ad5e2016"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/active-settled.png",
+      "retained": "ios/workout-settled/active-settled.png",
+      "sha256": "a0c45e5954f03cc20a494976dc35254291a7b15dc3121763bddd8a9636d0cf6e"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/following-rest-ax.json",
+      "retained": "ios/workout-settled/following-rest-ax.json",
+      "sha256": "b36a679426aab7120782ee2ad604d37cd6e7f13a0a08a8bd661caa122a46ddec"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/following-rest.png",
+      "retained": "ios/workout-settled/following-rest.png",
+      "sha256": "ca7d5b2e559277f9410b7d50c0fcdea3d90dd6728bfcec61ee756d97553cd306"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/open-confirmation-ax.json",
+      "retained": "ios/workout-settled/open-confirmation-ax.json",
+      "sha256": "3353e1f5502651a4d018e20a46d415aed3965aee80b564b67bf99dd560243152"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/open-confirmation.png",
+      "retained": "ios/workout-settled/open-confirmation.png",
+      "sha256": "51913cc9d48ab834999fb83a8ec24195dfd9c3a2ada707d3d61ed778a0c2b522"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-settled/validation.json",
+      "retained": "ios/workout-settled/validation.json",
+      "sha256": "251c52fe4e7476d59ea2179e71a54298393df5b338e52ad273207d04f8f52603"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-review/workout-visual-failure.json",
+      "retained": "ios/workout-visual-failure.json",
+      "sha256": "280c7267dec5544771eccdeabc290844f21c00bd9c2b695f286bd3e6fd413812"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/build.log",
+      "retained": "ios-runtime-retry/build.log",
+      "sha256": "c12fa597bdf69250e75d4222b59bba43cd05d4d6bcf5b37046321090733fdaf6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/captures/binary-parity.json",
+      "retained": "ios-runtime-retry/captures/binary-parity.json",
+      "sha256": "b5298db24b78af538c433458abe69cb6abc41e26af4728910fa4e17a4173b005"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/captures/package-parity.json",
+      "retained": "ios-runtime-retry/captures/package-parity.json",
+      "sha256": "a019b73fb3ed5c5aa9c1eba08906b1c48ea896bd4247caf2981d9d9ad6970aae"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/cleanup-requested",
+      "retained": "ios-runtime-retry/cleanup-requested",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/cleanup-verification.json",
+      "retained": "ios-runtime-retry/cleanup-verification.json",
+      "sha256": "9a1f216b8ca61f334d751d56fa5c33c6e77e41d682d5190406b87fe65e293508"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/generated-board-at-build.json",
+      "retained": "ios-runtime-retry/generated-board-at-build.json",
+      "sha256": "58c9e678d0949d0b5728febb850b9d911f79f18a7c7a990779ce6f3d91471e63"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/install.log",
+      "retained": "ios-runtime-retry/install.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/installed-container.txt",
+      "retained": "ios-runtime-retry/installed-container.txt",
+      "sha256": "759322d6032be818168bd4969fd74e2cc54f6bdd46ac599ade06a4e06b5206d4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/ownership.json",
+      "retained": "ios-runtime-retry/ownership.json",
+      "sha256": "e35a40a1dc9f22a6d4670d9160a915b70131e2f16ac4047eb3b49efc3fee51f6"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/retained-sha256.json",
+      "retained": "ios-runtime-retry/retained-sha256.json",
+      "sha256": "b00a13ec7f753b1b2c38b16318a209ab64d29ff1046442cecd4385c5d8d7e261"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/simulator-ready",
+      "retained": "ios-runtime-retry/simulator-ready",
+      "sha256": "adb199a63b69e04bd35905460659679ff4e351826443055b5b6b32c00def8d5f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/source-package-sha256-before-build.json",
+      "retained": "ios-runtime-retry/source-package-sha256-before-build.json",
+      "sha256": "6922aa313d0a1998663f3495f9652ee70a0dca39062bea7aa610f808746bc330"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/source-readiness.json",
+      "retained": "ios-runtime-retry/source-readiness.json",
+      "sha256": "cbc43225acdf62f1f84611f870d254f0f9e9268b415b1b4b96a4912c4b7b437d"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/test-results-summary-stderr.txt",
+      "retained": "ios-runtime-retry/test-results-summary-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/test-results-summary.json",
+      "retained": "ios-runtime-retry/test-results-summary.json",
+      "sha256": "041e842a4665ad7ecc420c230b6d6a9b6cc12b7895e3857834e699580c5f020c"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/tests-exit-status.txt",
+      "retained": "ios-runtime-retry/tests-exit-status.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/tests.log",
+      "retained": "ios-runtime-retry/tests.log",
+      "sha256": "418752c929124c3a0efcc0fc2230620175977bfb5153382104582f6214c4f446"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/0-stderr.txt",
+      "retained": "ios-runtime-retry/workout-rest-settled/0-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/0-stdout.txt",
+      "retained": "ios-runtime-retry/workout-rest-settled/0-stdout.txt",
+      "sha256": "a2b49ad40c87e28bd4f406bcd7541c555eab39c9dbeca25ab89cea66e4e2bcab"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/1-stderr.txt",
+      "retained": "ios-runtime-retry/workout-rest-settled/1-stderr.txt",
+      "sha256": "306fa240a6520bae2e402c3963ca36dc0938d5fd4f2718acbc5144799c1a9303"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/1-stdout.txt",
+      "retained": "ios-runtime-retry/workout-rest-settled/1-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/commands.json",
+      "retained": "ios-runtime-retry/workout-rest-settled/commands.json",
+      "sha256": "ed980b855bc23088e7701d79ffa891c4a0dc3b18260a0e88c39534eefa1535ac"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-rest-settled/view.png",
+      "retained": "ios-runtime-retry/workout-rest-settled/view.png",
+      "sha256": "d2da2d26a7fe2308f2dd7e551d4b09e9a3a6c95221c9c9fba17e55359eba9959"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/000-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/000-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/000-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/000-stdout.txt",
+      "sha256": "1883093067813e555b9364da2a74c19f407287d65a332659595f6740add39d89"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/001-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/001-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/001-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/001-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/002-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/002-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/002-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/002-stdout.txt",
+      "sha256": "a67c4c32a2618df9a3b21b589867405f02c7a5379da424d7bd5584f4a75c6b3a"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/003-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/003-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/003-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/003-stdout.txt",
+      "sha256": "82c3926833ad574646437af2ac9a18ce3e923511554b3fe59d57a3fc41cc7e81"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/004-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/004-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/004-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/004-stdout.txt",
+      "sha256": "2a545ae8426412d642e3d630d97f496d70ab9869ad69c7d7792b141cde237c77"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/005-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/005-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/005-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/005-stdout.txt",
+      "sha256": "4f4a7eb880829c69504fc8984c31951cb9e65d68841d672cd9d509bb8a750a37"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/006-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/006-stderr.txt",
+      "sha256": "23337d5c0912db5248bf1806a4d87904618b0d937f498839a139a50b27526912"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/006-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/006-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/007-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/007-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/007-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/007-stdout.txt",
+      "sha256": "303c001e46236bb2a426bec3002cc7e27ce3a3170b20410ab6c0a4f814d1e5c9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/008-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/008-stderr.txt",
+      "sha256": "1f6ac0ec28b9fe0bc34945c060b1cbe014871ad5546560c2e1d10664c6051a0f"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/008-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/008-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/009-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/009-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/009-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/009-stdout.txt",
+      "sha256": "6a6c6ab9cfec93b4c6731910c1a8bc1571dc6f81f97bbeeb390c63ff60d4198b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/010-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/010-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/010-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/010-stdout.txt",
+      "sha256": "a015c27b0172cee006c7abcc48418d59c30fc06e2dd3daeee58fbd862c816724"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/011-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/011-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/011-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/011-stdout.txt",
+      "sha256": "8c4e62d3fa91d2085900689738291a88f64ad44374a6b2a6930f8459c06f13e2"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/012-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/012-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/012-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/012-stdout.txt",
+      "sha256": "f5960f155b47d58df1256af96b2dd99e8941d6518302d754c2865a902fa2c742"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/013-stderr.txt",
+      "retained": "ios-runtime-retry/workout-settled/013-stderr.txt",
+      "sha256": "243d1a0f602548911299efa0a239201e285b9a82640043436a2be8b154eb1cc4"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/013-stdout.txt",
+      "retained": "ios-runtime-retry/workout-settled/013-stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/active-first-hang-ax.json",
+      "retained": "ios-runtime-retry/workout-settled/active-first-hang-ax.json",
+      "sha256": "0050c3378372f7c5d454f2b1dbca03ee84d775fd75814086119d979a2f2bfee9"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/active-first-hang.png",
+      "retained": "ios-runtime-retry/workout-settled/active-first-hang.png",
+      "sha256": "de773c6b7db4b697c673d205eb3e9292c2d103df0bf852a34bbd2d73b63b8514"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/active-settled-ax.json",
+      "retained": "ios-runtime-retry/workout-settled/active-settled-ax.json",
+      "sha256": "50da5e77a3ea3868a7d8f2a01df6d179bf63b3b41e4d278a19ad4730fd6e2752"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/active-settled.png",
+      "retained": "ios-runtime-retry/workout-settled/active-settled.png",
+      "sha256": "a01a3383608cc32758f71c7f75dc52735c45e38d24d54a175f9534c06b8c7a92"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/following-rest-ax.json",
+      "retained": "ios-runtime-retry/workout-settled/following-rest-ax.json",
+      "sha256": "7389f3ccd581d2a9cec4b70eee72866378086a07feeeddaac2248505230a419b"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/following-rest.png",
+      "retained": "ios-runtime-retry/workout-settled/following-rest.png",
+      "sha256": "190a3b2580b2947fbb77358b3065c99cdcecbe8fa62fa9564da25faa05336b06"
+    },
+    {
+      "source": ".context/placid-badger-cad-second-half/yy-penta-evo/ios-runtime-retry/workout-settled/validation.json",
+      "retained": "ios-runtime-retry/workout-settled/validation.json",
+      "sha256": "3184d045a606f67628b4b723725ba56b86534e2654c4f3bcc4cf4f7d32bc4c55"
+    }
+  ]
+}

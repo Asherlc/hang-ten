@@ -1,0 +1,35 @@
+{
+  "scope": "Exact already retained restoration proofs; no duplicate source snapshots.",
+  "files": [
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/raw/source-restoration/restoration-verification.json",
+      "sha256": "6f3f3f3a7e9b81df7a3b34ccd79e3d52e54613cb2405ae2c7091e9956bca8c85",
+      "bytes": 2397
+    },
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/raw/source-restoration/manifest.json",
+      "sha256": "5c79f938c51864de10b2035792e906c70b058f9404bd452a44b7389e1f063e51",
+      "bytes": 2450
+    },
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/raw/source-restoration/restoration-command-note.json",
+      "sha256": "27dc1f46ff2489cf8e748e1eea2e07789f481d806d53d2ddc91db27b3ce300db",
+      "bytes": 266
+    },
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/raw/source-restoration/diagnostic.patch",
+      "sha256": "78faa173551bbbe6e2b7bffdf193e35a983d8a0fce8e77a897c0d8ab8afd60e3",
+      "bytes": 155209
+    },
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/raw/source-restoration/restoration-independent.json",
+      "sha256": "6a9043045d7679ac1361c9519d2d0aa0cb3620cdc591e59cdaf83f5d452d357e",
+      "bytes": 5185
+    },
+    {
+      "path": "../../second-half-canonical-integration-2026-10-03/existing-diagnostic-source-references.json",
+      "sha256": "f8e52e8c651b07e4788ca04f2a90f7bee607b478bda6a2d7a4b631ef02ae5545",
+      "bytes": 2334
+    }
+  ]
+}

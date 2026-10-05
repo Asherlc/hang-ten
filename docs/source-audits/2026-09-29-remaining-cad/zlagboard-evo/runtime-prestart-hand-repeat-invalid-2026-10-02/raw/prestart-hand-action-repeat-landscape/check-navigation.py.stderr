@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-helpers/check-navigation.py", line 4, in <module>
+    f=next(p.glob('events-*.jsonl'));raw=f.read_bytes();rows=[json.loads(l) for l in raw.splitlines()];readiness=json.loads((p/'train-startup-readiness.json').read_text());opening=json.loads((p/'workout-openurl-timing.json').read_text());trans=json.loads((p/'transition-observations.json').read_text());ready=readiness['evidence'];pre=ready['trainToken'];work=trans[0]['actualMutation']['sceneLifecycleToken'];nav=[r for r in rows if r['event']=='train-navigation-source'];initial=[r for r in nav if not r['showsDeepLinkedWorkout']];show=[r for r in nav if r['showsDeepLinkedWorkout']];ctors=[r for r in rows if r['event']=='board-scene-constructed'];makes=[r for r in rows if r['event']=='view-make'];trial=json.loads((p/'structural-dependency-ownership.json').read_text());bySeq={r['sequence']:r for r in rows}
+                                                                                                                                                                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/lib/python3.12/pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-landscape/transition-observations.json'

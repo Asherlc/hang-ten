@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "exactSimulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "simulatorAbsent": true,
+  "derivedDataAbsent": true,
+  "temporaryDirectoryAbsent": true,
+  "allOwnedResultBundlesAbsent": true,
+  "ownedAndPendingManifestEntriesConsumed": true,
+  "exactLifecycleAndFinalTestProcessesAbsent": true,
+  "scope": "Only exact workspace-owned resources cleaned; other workspace/shared/unknown resources untouched"
+}

@@ -1,0 +1,24 @@
+{
+  "reviewer": "/root",
+  "scope": "Exactly three whole images directly opened by root; control two separately scoped. No claim all24 root-reviewed.",
+  "captures": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-unmount-landscape/phase-1-preview-plus-5.png",
+      "sha256": "960e8624279761069e2f81989cd8413b973d8dcc64413743a5e02ee9a114c39c",
+      "observedBoardColor": "blue",
+      "timer": "02:55"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-unmount-landscape/phase-2-active-plus-0.25.png",
+      "sha256": "ae927713b2ab836106d1b28f9bc4bad36493085cbe178dbfb475f57b8ef9c47a",
+      "observedBoardColor": "red",
+      "timer": "00:07"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-unmount-landscape/phase-2-active-plus-5.png",
+      "sha256": "26e003b8320d2f39151c4a622291d8ea7261ddf0105af6312c8a6d114d4baedc",
+      "observedBoardColor": "red",
+      "timer": "00:02"
+    }
+  ]
+}

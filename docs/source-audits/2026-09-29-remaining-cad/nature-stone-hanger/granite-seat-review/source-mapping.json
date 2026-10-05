@@ -1,0 +1,81 @@
+{
+  "feedback": "The granite is overlapping with wood, look at photos",
+  "sourceSet": "../source-register.json",
+  "wholePrimaryEvidenceReviewed": [
+    {
+      "path": "evidence/Stone_Hanger_Granite_1.jpg",
+      "publisher": "Nature Climbing",
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_1.jpg?v=1760101291",
+      "binaryURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_1.jpg?v=1760101291",
+      "sha256": "8e8df7719638e42d4018a43254b3dac0bf3bfb5ac0d6ba149e9c92f634254f40",
+      "bytes": 340996,
+      "supports": "Granite front establishes two front cavities and the stone contact; side shows a lateral cord mouth and three adjustment grooves; close-up distinguishes incut/flat rails and granite insert. Technical drawing shows both faces and eight grip edges. The exact hidden side-to-side connection is not visible; historical evidence explicitly leaves it unknown.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/Stone_Hanger_Granite_3.jpg",
+      "publisher": "Nature Climbing",
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_3.jpg?v=1760101291",
+      "binaryURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_3.jpg?v=1760101291",
+      "sha256": "905103e785b884af1a56abc203010cac92ade82d9e3a9e97d67d3427de4c9bc2",
+      "bytes": 185000,
+      "supports": "Granite front establishes two front cavities and the stone contact; side shows a lateral cord mouth and three adjustment grooves; close-up distinguishes incut/flat rails and granite insert. Technical drawing shows both faces and eight grip edges. The exact hidden side-to-side connection is not visible; historical evidence explicitly leaves it unknown.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/Stone_Hanger_Granite_4.jpg",
+      "publisher": "Nature Climbing",
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_4.jpg?v=1760859575",
+      "binaryURL": "https://natureclimbing.com/cdn/shop/files/Stone_Hanger_Granite_4.jpg?v=1760859575",
+      "sha256": "56d7f7312d42222f66bd01cfd7e77a5c9f711dd55dea3cfc885ce5094f322576",
+      "bytes": 1093675,
+      "supports": "Granite front establishes two front cavities and the stone contact; side shows a lateral cord mouth and three adjustment grooves; close-up distinguishes incut/flat rails and granite insert. Technical drawing shows both faces and eight grip edges. The exact hidden side-to-side connection is not visible; historical evidence explicitly leaves it unknown.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/StonehangerTechDrawing_Draft1.jpg",
+      "publisher": "Nature Climbing",
+      "sourceURL": "https://natureclimbing.com/cdn/shop/files/StonehangerTechDrawing_Draft1.jpg?v=1760860112",
+      "binaryURL": "https://natureclimbing.com/cdn/shop/files/StonehangerTechDrawing_Draft1.jpg?v=1760860112",
+      "sha256": "57287e539da523b0366c3cf5a0d1c0b551a0ee65f2fddae202c9c4614bc1d7ee",
+      "bytes": 78855,
+      "supports": "Granite front establishes two front cavities and the stone contact; side shows a lateral cord mouth and three adjustment grooves; close-up distinguishes incut/flat rails and granite insert. Technical drawing shows both faces and eight grip edges. The exact hidden side-to-side connection is not visible; historical evidence explicitly leaves it unknown.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    }
+  ],
+  "facts": {
+    "graniteInWoodSeat": [
+      "Stone_Hanger_Granite_1.jpg",
+      "Stone_Hanger_Granite_4.jpg"
+    ],
+    "straightLowerOpeningSidesAndCleanBottomSeam": [
+      "Stone_Hanger_Granite_4.jpg",
+      "StonehangerTechDrawing_Draft1.jpg"
+    ],
+    "graniteTwentyMMContactDepth": [
+      "StonehangerTechDrawing_Draft1.jpg"
+    ],
+    "sideCordFeaturesPreserved": [
+      "Stone_Hanger_Granite_3.jpg"
+    ]
+  },
+  "displayEstimates": [
+    "80 mm insert width",
+    "13 mm insert height",
+    "2.4 mm local rounds",
+    "precise wood pocket profile",
+    "generic runtime granite/wood texture"
+  ],
+  "method": "Direct native authoring and whole-image visual review. No tracing, crops, pixel measurements, registration, masks or image-derived contours.",
+  "sourceApproval": {
+    "state": "approved",
+    "reviewer": "user",
+    "date": "2026-09-29",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "scope": "Exact retained visual set and further individual manufacturer source research."
+  }
+}

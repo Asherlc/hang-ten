@@ -1,0 +1,36 @@
+{
+  "owner": "placid-badger",
+  "rootFinalHashReady": true,
+  "packageSHA256": {
+    "Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+    "Hangboards/nature-stone-hanger/assets/primary.usdz": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+    "Hangboards/nature-stone-hanger/assets/primary.model.json": "82c3c09be41b0fe28ff2f40ba969925b4048d07dc3222b60cc0eb303ccaf2b24",
+    "Hangboards/nature-stone-hanger/suspension.json": "90d73134e31b84a68cce1825c33b5abe21bbb450738f5a6a6ea63979301acdae"
+  },
+  "generatedBoardSHA256": "946b91c96e6141f10035e01d6720d5a694d66084da41bae9af86726df58b59af",
+  "frozenCodeSHA256": "cef46c7b031eba55bdbcde889fc27d505eedeba137dbee0abb1d3aa74a789012",
+  "proofs": {
+    "canonical": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-canonical-package-validation.json",
+      "sha256": "dc7d5bcec6ce95914fa4030d96c6dbffa540f842ef82b53ab4822c85751d08bc"
+    },
+    "reproduction": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/final-reproducibility.json",
+      "sha256": "fb9e54e6c389d6e4b4ebfbc853759bcb63ffa3635214da565f70adbd482850e8"
+    },
+    "independentRoutes": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/sixteen-vertical-candidate-audit.json",
+      "sha256": "e5c09868c3352ea831792799f59db88c97bf0ccb772d029adad37b2cf90b85d2"
+    },
+    "nativeBearing": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-evidence/packet-preparation/independent-guide-feasibility/native-bearing/final-sidecar-native-bearing.json",
+      "sha256": "7ce9e1ff9d3d4c3a4546c249fce1c5e2197d42de3075b8c754aed4dbfc7c67d9"
+    },
+    "scope": {
+      "path": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/root-canonical-pre-runtime-scope.json",
+      "sha256": "6e958794c75b8d3013a11e7dd21ee4d3dd5bb33f3b22321cf0765464d2bd1bfc"
+    }
+  },
+  "humanAcceptance": "pending review #9",
+  "scope": "Authorize the prepared isolated runtime lane on the audited current package; no human acceptance implied."
+}

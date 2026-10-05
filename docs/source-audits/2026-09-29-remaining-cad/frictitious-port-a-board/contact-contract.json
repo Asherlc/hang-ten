@@ -1,0 +1,67 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "edge-30",
+    "edge-25",
+    "edge-20",
+    "edge-15",
+    "edge-12",
+    "edge-10",
+    "edge-8",
+    "jug-outer-rim",
+    "pinch-body"
+  ],
+  "removedContactIDs": [
+    "pocket-30-two-finger-mono"
+  ],
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "front-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "reverse-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-12",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "reverse-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-15",
+        "edge-8"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-outer-rim"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-body"
+      ]
+    }
+  ],
+  "metadataDecision": "Removed pocket-30-two-finger-mono, an unsupported duplicate semantic ID for the same30mm cavity. Retained edge-30 and all eight other actual contacts unchanged. Finger-placement capability does not create another physical contact. Existing saved snapshots remain historical; unknown exact targets fail closed under existing app contract."
+}

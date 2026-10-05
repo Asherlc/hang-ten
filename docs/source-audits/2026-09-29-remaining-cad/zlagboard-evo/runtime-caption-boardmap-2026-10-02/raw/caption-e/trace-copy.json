@@ -1,0 +1,11 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/583488A7-29D8-4AFE-A358-A0BD739178CC/Documents/HighlightDiagnostic-placid-badger-cad-second-half-caption-e/events-B083F0B5-170B-412A-8BBF-15D07A073C32.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/caption-e/events-B083F0B5-170B-412A-8BBF-15D07A073C32.jsonl",
+      "sha256": "ba673ca453cb3f495c0a71c70c15b082e6a68ff3d5a1af0a46240cd6847fc5e9"
+    }
+  ],
+  "records": 70,
+  "completeContiguous": true
+}

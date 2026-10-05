@@ -1,0 +1,23 @@
+{
+  "owner": "placid-badger",
+  "kind": "bounded read-only status of exact currently owned group",
+  "phase": {
+    "phase": "native-gate running",
+    "at": "2026-10-03T01:27:43.304941+00:00"
+  },
+  "argv": [
+    "rtk",
+    "proxy",
+    "ps",
+    "-o",
+    "pid=,ppid=,pgid=,etime=,time=,state=,comm=",
+    "-g",
+    "13361"
+  ],
+  "exitCode": 0,
+  "output": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/placid-badger-native-gate-owned-status.txt",
+  "sha256": "9d3ff6052553e940a2dd77f8dcdf4d36868d435fac41392e6b27e2c0d57bf528",
+  "recordedAt": "2026-10-03T01:32:45.526600+00:00",
+  "signalsSent": false,
+  "unknownOrSharedProcessInspected": false
+}

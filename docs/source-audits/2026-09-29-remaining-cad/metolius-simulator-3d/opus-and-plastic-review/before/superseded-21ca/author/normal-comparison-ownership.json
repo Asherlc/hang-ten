@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "normal-comparison",
+  "script": ".context/placid-badger/metolius-simulator-3d-opus-corrections/compare_final_uv_normals.py",
+  "timeoutSeconds": 240,
+  "startedUTC": "2026-10-01T15:54:09.696540+00:00",
+  "ownedProcessGroup": 38224,
+  "elapsedSeconds": 0.30473295802948996,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

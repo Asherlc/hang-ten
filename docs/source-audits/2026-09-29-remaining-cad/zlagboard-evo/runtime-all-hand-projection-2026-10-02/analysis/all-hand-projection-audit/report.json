@@ -1,0 +1,66 @@
+{
+  "status": "READ_ONLY_PROSPECTIVE_SOURCE_AND_MATH_AUDIT_NO_EXPERIMENT_AUTHORIZED",
+  "source": {
+    "path": "HangTen/Views/GripHandModelView.swift",
+    "sha256": "b47b76a780061f291a2e32b888e00adfba6b1dcc6a157d5f73df36a5d1797f15"
+  },
+  "currentContract": {
+    "single": "Initializer 418\u2013445 installs only OrthographicCameraComponent (near .1, far100). resetCamera473\u2013514 uses actual posed vertices with X mirroring, unchanged AABB center and oblique offset (\u00b15.8,2.75,9.4). scale=max(projectedHalfHeight,projectedHalfWidth/aspect)*1.08. Orbit516\u2013546 moves camera at original distance/zoom and changes ortho scale/zoom.",
+    "pair": "Initializer608\u2013647 installs orthographic with same clips, transforms mirrored left/right hands by \u00b1.82. reset671\u2013711 frames union from framedPoints739\u2013740 with actual hand matrices, offset(0,2.75,9.4), same margin. Orbit713\u2013737 retains center/direction and scales distance and orthographic scale by zoom.",
+    "updatePredicates": "Single448\u2013470: pose, side, viewport or resetToken change. Pair649\u2013668: pose, viewport or resetToken change. Preserve predicates, pose application order, meshes/materials/lights, lazy storage, host constructors, virtual RealityView camera and gesture invalidation.",
+    "forceUnwrapPaths": [
+      {
+        "symbol": "GripHandRealityScene.resetCamera",
+        "line": 504
+      },
+      {
+        "symbol": "GripHandRealityScene.orbit",
+        "line": 540
+      },
+      {
+        "symbol": "GripHandRealityPairScene.resetCamera",
+        "line": 702
+      },
+      {
+        "symbol": "GripHandRealityPairScene.orbit",
+        "line": 731
+      }
+    ]
+  },
+  "smallestProspectiveScope": [
+    "Fresh DEBUG immutable process projection flag distinct from strict suppression and old plain-second-host projection probe; apply to both real hand classes at initialization, before any portrait/landscape history. Keep strict suppression off.",
+    "One projection choice per process, one camera component per hand camera entity. Change constructor, reset and orbit branches for both classes; never install perspective alongside orthographic or leave orthographic force unwrap reachable.",
+    "ON/control and perspective arms share the existing root route, wrappers, lifetime recorder, active hands, host count, viewport, update predicates and capture offsets. No new host, texture, shader, geometry, timer or state observer.",
+    "Add projection/clip/FOV information to already sparse hand constructor/make records only if later authorized. Current counters prove creation, not which camera component rendered."
+  ],
+  "projectionMath": {
+    "coordinates": "Use exactly the current transformed source vertices. With center C and unchanged look direction, define orthonormal right R, up U and backward B=offset/length(offset). For v=p-C, x=dot(R,v), y=dot(U,v), z=dot(B,v). Camera at C+D*B sees vertex camera-space(x,y,z-D); positive depth d=D-z. This derives from current cameraTransform columns, not images.",
+    "fixedFOVFit": "For one declared fixed vertical FOV \u03b8 (0<\u03b8<180), t=tan(\u03b8*pi/360), aspect a>0 and existing margin m=1.08, choose D=max_i(z_i+m*abs(y_i)/t, z_i+m*abs(x_i)/(a*t), z_i+near+epsilon). Require finite values and D < min_i(z_i+far-epsilon). Then all vertices satisfy |y|/(d*t)<=1/m and |x|/(a*d*t)<=1/m at canonical reset. Set camera=C+D*B, store fitted canonicalOffset=D*B, clips unchanged .1/100, explicit vertical FOV orientation.",
+    "derivingOneFixedFOVInstead": "If preserving original reset distances is the stronger control, for each explicitly declared pose/side/viewport reference combination at original D0 compute t_required=m*max_i(abs(y_i)/(D0-z_i),abs(x_i)/(a*(D0-z_i))); require .1<D0-z_i<100. Choose \u03b8=2*atan(max_reference(t_required))*180/pi once, freeze across both classes and entire process. This reference envelope must include startup portrait plus final landscape and all exercised poses, or it is not a fit guarantee. A fallback aspect .85 is not proof of the actual viewport.",
+    "notUnique": "Vertices alone do not determine a unique globally fixed FOV and distance simultaneously. A reference envelope or explicit selected rendering parameter is required. Recomputing the minimal FOV every reset is a different experiment and must not be described as fixed FOV.",
+    "publicDefaultAlternative": "SDK public initializer defaults to 60 degrees; explicitly selecting fixed60 then deriving D is a bounded diagnostic parameter choice, not a manufacturer fact or a claim that it matches the old orthographic appearance.",
+    "orbit": "Retain existing yaw/elevation calculation and clamps, zoom .75\u20261.35, distance=canonicalDistance/zoom. Keep perspective FOV fixed; do not additionally scale FOV or orthographic scale (would double-apply zoom). Orthographic branch remains byte-equivalent. Validate near/far depth for allowed orbit poses; canonical fit alone does not prove unclipped full orbit. Do not silently refit on drag, alter clips or change reset predicates to conceal a failure."
+  },
+  "focusedCoverageIfAuthorized": [
+    "Both single sides and paired union; initial load/pose change/viewport change/reset token; direct syncScene test entry points.",
+    "Exactly one intended camera component; no orthographic force unwrap on perspective paths.",
+    "Per-vertex finite positive depth, unchanged near/far, horizontal/vertical frustum inequalities at reset from actual vertices.",
+    "Nonzero orbit, zoom extrema, zero/invalid viewport fallback, invalid gesture values, full azimuth and elevation limits; reset restores canonical fitted camera.",
+    "Existing GripHandOrbitTests assumes orthographic components extensively (lines59,65,210,227,268,275,294,373 etc.); run unchanged with new flag absent. A separate projection-aware diagnostic check is needed for the flag-on branch; do not weaken existing assertions."
+  ],
+  "limitations": [
+    "No numerical FOV chosen, no reference viewport envelope asserted, no image-derived measurements.",
+    "Perspective necessarily changes foreshortening; fixed-FOV distance fit also changes camera translation. Neither can preserve every orthographic pixel. Record the changed camera/framing as a controlled adaptation.",
+    "Projection-specific failure is unproven. Historical plain extra-host O/P did not replace all actual hand camera history and is not an equivalent comparison.",
+    "Actual strict OFF/ON evidence still needs bounded reverse-order outcomes; this audit authorizes no further run.",
+    "No tracked write, patch, build, native export, device operation or test execution."
+  ],
+  "primaryAPI": {
+    "localSDK": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/RealityFoundation.framework/Modules/RealityFoundation.swiftmodule/arm64-apple-ios-simulator.swiftinterface",
+    "excerpt": "public-sdk-camera-interface.txt",
+    "contract": "PerspectiveCameraComponent public near/far/FOV; explicit vertical fieldOfViewOrientation initializer available iOS18. OrthographicCameraComponent also iOS18. Existing project uses these APIs.",
+    "retainedAppleDoc": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/camera-default-appendix/perspective-camera.md",
+    "url": "https://developer.apple.com/documentation/realitykit/perspectivecamera",
+    "limit": "Public camera APIs establish projection configuration, not a guarantee that this change repairs the observed stale frame."
+  }
+}

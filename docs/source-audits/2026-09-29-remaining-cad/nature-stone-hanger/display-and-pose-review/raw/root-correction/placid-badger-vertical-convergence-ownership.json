@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "placid-badger-vertical-convergence",
+  "script": ".context/placid-badger/nature-stone-review9/vertical-groove-correction/solve_front_flat_convergence.py",
+  "timeoutSeconds": 1200,
+  "startedUTC": "2026-10-01T22:59:31.219114+00:00",
+  "ownedProcessGroup": 87044,
+  "elapsedSeconds": 308.96425208303845,
+  "exitCode": -15,
+  "ownedProcessGroupExited": true
+}

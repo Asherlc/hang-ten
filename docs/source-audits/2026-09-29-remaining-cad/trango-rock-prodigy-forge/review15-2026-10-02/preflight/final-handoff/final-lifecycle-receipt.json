@@ -1,0 +1,111 @@
+{
+  "owner": "placid-badger",
+  "verifiedAt": "2026-10-03T02:12:24.033002+00:00",
+  "jobs": [
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743",
+      "ownership": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/ownership.json",
+        "sha256": "05faf62ec903ddb8f0d4e07c671fe4a73a94a6e6d11b24747d1aa44aff34365e"
+      },
+      "cleanup": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T012743/cleanup-receipt.json",
+        "sha256": "a696750a6a417f2362d630213c21944f1a9f39963e277d697c933c54b93b3612"
+      },
+      "recordedExitCode": 1,
+      "recordedGroupAbsenceReverified": [
+        {
+          "pid": 13361,
+          "pgid": 13361,
+          "absent": true
+        }
+      ],
+      "exactTemporaryPathsAbsent": true
+    },
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220",
+      "ownership": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/ownership.json",
+        "sha256": "aad2dba7f0935d6347fd7432f42cd0b8794bb25d1f6f1e339d60554a74733922"
+      },
+      "cleanup": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T014220/cleanup-receipt.json",
+        "sha256": "815e18c28aa30a80ea1870e781ff77059866177e3310b3a5b80dfc60e6ea4770"
+      },
+      "recordedExitCode": 1,
+      "recordedGroupAbsenceReverified": [
+        {
+          "pid": 28191,
+          "pgid": 28191,
+          "absent": true
+        }
+      ],
+      "exactTemporaryPathsAbsent": true
+    },
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610",
+      "ownership": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/ownership.json",
+        "sha256": "5c75d3306e0ca22235da067345c0b8a61ca9a0ae09368ff28923ad047d85246f"
+      },
+      "cleanup": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-native-export-20261003T015610/cleanup-receipt.json",
+        "sha256": "57fe4873bc21ae5595ff403d74a4bf2ab921c6aee4576aaaffc0f8523dbd9dd8"
+      },
+      "recordedExitCode": 1,
+      "recordedGroupAbsenceReverified": [
+        {
+          "pid": 41436,
+          "pgid": 41436,
+          "absent": true
+        },
+        {
+          "pid": 41549,
+          "pgid": 41549,
+          "absent": true
+        },
+        {
+          "pid": 45552,
+          "pgid": 45552,
+          "absent": true
+        },
+        {
+          "pid": 47316,
+          "pgid": 47316,
+          "absent": true
+        },
+        {
+          "pid": 47320,
+          "pgid": 47320,
+          "absent": true
+        }
+      ],
+      "exactTemporaryPathsAbsent": true
+    },
+    {
+      "job": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854",
+      "ownership": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/ownership.json",
+        "sha256": "2bd6ca9453c078ba47bdbc2dc83bc1390b1492b4639f594254d70c6740988e77"
+      },
+      "cleanup": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/forge-review15/preflight/placid-badger-full-precision-normal-diagnostic-20261003T020854/cleanup-receipt.json",
+        "sha256": "0e9112a2670bfe9dfe31f4a752d7cfd7103fcbd8f34a1faa8944fa1e3949c036"
+      },
+      "recordedExitCode": 0,
+      "recordedGroupAbsenceReverified": [
+        {
+          "pid": 53996,
+          "pgid": 53996,
+          "absent": true
+        }
+      ],
+      "exactTemporaryPathsAbsent": true
+    }
+  ],
+  "allRecordedExactOwnedGroupsAbsent": true,
+  "allRecordedConfigCacheTMPAbsent": true,
+  "unknownSharedResourcesModified": false,
+  "additionalCancellationSignalSentAtFinalVerification": false,
+  "retainedSharedPythonDependenciesUnmodified": true
+}

@@ -1,0 +1,280 @@
+{
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "bodyVolume": 5323666.102382597,
+  "bodyValid": true,
+  "objects": 427,
+  "contacts": {
+    "face-a-left-outer-slot": {
+      "area": 6118.636177367231,
+      "bounds": [
+        96.0,
+        22.000000000000004,
+        27.0
+      ]
+    },
+    "face-a-right-outer-slot": {
+      "area": 6118.636177367231,
+      "bounds": [
+        96.0,
+        22.000000000000004,
+        27.0
+      ]
+    },
+    "face-a-left-single-pocket": {
+      "area": 1242.7913250163092,
+      "bounds": [
+        24.0,
+        17.000000000000007,
+        24.0
+      ]
+    },
+    "face-a-left-dual-pocket": {
+      "area": 2396.0587064147503,
+      "bounds": [
+        47.0,
+        17.000000000000007,
+        24.0
+      ]
+    },
+    "face-a-right-single-pocket": {
+      "area": 1242.7913250163092,
+      "bounds": [
+        24.0,
+        17.000000000000007,
+        24.0
+      ]
+    },
+    "face-a-right-dual-pocket": {
+      "area": 2396.0587064147458,
+      "bounds": [
+        47.0,
+        17.000000000000007,
+        24.0
+      ]
+    },
+    "face-a-center-pull-up-slot": {
+      "area": 4799.999771075662,
+      "bounds": [
+        93.0,
+        17.000000000000007,
+        25.0
+      ]
+    },
+    "face-b-left-outer-slot": {
+      "area": 5344.109301911649,
+      "bounds": [
+        96.0,
+        27.0,
+        18.0
+      ]
+    },
+    "face-b-right-outer-slot": {
+      "area": 5344.1093019116515,
+      "bounds": [
+        96.0,
+        27.0,
+        18.0
+      ]
+    },
+    "face-b-left-single-pocket": {
+      "area": 1353.881446860489,
+      "bounds": [
+        24.0,
+        24.0,
+        19.0
+      ]
+    },
+    "face-b-left-dual-pocket": {
+      "area": 2592.1164095805952,
+      "bounds": [
+        47.0,
+        24.0,
+        19.0
+      ]
+    },
+    "face-b-right-single-pocket": {
+      "area": 1353.881446860489,
+      "bounds": [
+        24.0,
+        24.0,
+        19.0
+      ]
+    },
+    "face-b-right-dual-pocket": {
+      "area": 2592.1164095805907,
+      "bounds": [
+        47.0,
+        24.0,
+        19.0
+      ]
+    },
+    "face-b-center-pull-up-slot": {
+      "area": 5168.101297028972,
+      "bounds": [
+        93.0,
+        25.0,
+        19.0
+      ]
+    },
+    "face-c-left-outer-slot": {
+      "area": 4587.236273600029,
+      "bounds": [
+        96.0,
+        14.000000000000007,
+        27.0
+      ]
+    },
+    "face-c-right-outer-slot": {
+      "area": 4587.236273600029,
+      "bounds": [
+        96.0,
+        14.000000000000007,
+        27.0
+      ]
+    },
+    "face-c-left-single-pocket": {
+      "area": 1187.7337708351565,
+      "bounds": [
+        24.0,
+        16.000000000000007,
+        24.0
+      ]
+    },
+    "face-c-left-dual-pocket": {
+      "area": 2298.9092018081938,
+      "bounds": [
+        47.0,
+        16.000000000000007,
+        24.0
+      ]
+    },
+    "face-c-right-single-pocket": {
+      "area": 1187.7337708351565,
+      "bounds": [
+        24.0,
+        16.000000000000007,
+        24.0
+      ]
+    },
+    "face-c-right-dual-pocket": {
+      "area": 2298.9092018081888,
+      "bounds": [
+        47.0,
+        16.000000000000007,
+        24.0
+      ]
+    },
+    "face-c-center-pull-up-slot": {
+      "area": 4617.621759936105,
+      "bounds": [
+        93.0,
+        16.000000000000007,
+        25.0
+      ]
+    },
+    "face-d-left-outer-slot": {
+      "area": 3857.7318720244302,
+      "bounds": [
+        96.0,
+        27.0,
+        10.0
+      ]
+    },
+    "face-d-right-outer-slot": {
+      "area": 3857.7318720244325,
+      "bounds": [
+        96.0,
+        27.0,
+        10.0
+      ]
+    },
+    "face-d-left-single-pocket": {
+      "area": 1298.1848699491327,
+      "bounds": [
+        24.0,
+        24.0,
+        18.0
+      ]
+    },
+    "face-d-left-dual-pocket": {
+      "area": 2493.8140678953205,
+      "bounds": [
+        47.0,
+        24.0,
+        18.000000000000007
+      ]
+    },
+    "face-d-right-single-pocket": {
+      "area": 1298.1848699491327,
+      "bounds": [
+        24.0,
+        24.0,
+        18.0
+      ]
+    },
+    "face-d-right-dual-pocket": {
+      "area": 2493.814067895316,
+      "bounds": [
+        47.0,
+        24.0,
+        18.000000000000007
+      ]
+    },
+    "face-d-center-pull-up-slot": {
+      "area": 4983.530068663977,
+      "bounds": [
+        93.0,
+        25.0,
+        18.000000000000007
+      ]
+    },
+    "face-b-left-deep-sloper": {
+      "area": 15798.707074082395,
+      "bounds": [
+        132.0,
+        86.0,
+        40.706700000000055
+      ]
+    },
+    "face-c-left-shallow-half-round": {
+      "area": 8528.595599731803,
+      "bounds": [
+        132.00000000000006,
+        11.09356005413025,
+        55.3558
+      ]
+    },
+    "face-d-left-deep-rounded-recess": {
+      "area": 13035.366320155212,
+      "bounds": [
+        132.00000000000003,
+        62.62950000000001,
+        26.123938034389738
+      ]
+    },
+    "face-b-right-deep-sloper": {
+      "area": 15798.707074082395,
+      "bounds": [
+        132.0,
+        86.0,
+        40.70670000000011
+      ]
+    },
+    "face-c-right-shallow-half-round": {
+      "area": 8528.595599731801,
+      "bounds": [
+        132.0,
+        11.09356005413025,
+        55.3558
+      ]
+    },
+    "face-d-right-deep-rounded-recess": {
+      "area": 13035.366320155212,
+      "bounds": [
+        132.0,
+        62.62950000000001,
+        26.123938034389738
+      ]
+    }
+  }
+}

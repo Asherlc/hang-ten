@@ -1,0 +1,261 @@
+{
+  "protocol": "H0a/H1a/H1b/H0b; same binary, four launches only",
+  "outcome": "All four isolated sequences passed; changing timer/progress siblings alone did not reproduce the normal workout failure.",
+  "productionFix": false,
+  "normalWorkoutIssueResolved": false,
+  "syntheticAdaptation": "40-second standalone diagnostic, five eight-second phases, not a training source claim",
+  "visualReviewMethods": {
+    "H0a": "five final whole images plus one differing image individually viewed;19 other whole-file comparisons",
+    "H1a": "independent reviewer inspected all20 whole images; operator inspected first7; root inspected five finals",
+    "H1b": "operator individually inspected all20 whole images",
+    "H0b": "five final whole images plus differing active+.25 individually viewed;19 equal prior viewed references"
+  },
+  "limitations": [
+    "Only captured frames judged; no assertion about every rendered frame",
+    "Black rounded capsule visible outside board in H0a clear+.25, H1b clear+.25 and phase2preview+7, H0b phase3active+.25; preserved",
+    "Isolated top-overlay experiment does not duplicate complete production workout hierarchy/lifecycle",
+    "No production code adoption; diagnostic source remains dirty and reserved"
+  ],
+  "runs": [
+    {
+      "run": "sibling-h0a",
+      "records": 77,
+      "captures": 20,
+      "allStructuralChecks": true,
+      "allPlacementChecks": true,
+      "all20CPUBrackets": true,
+      "all20BoardColorsCorrect": true,
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "evidence": [
+        {
+          "path": "sibling-h0a/captures.json",
+          "sha256": "52430e375dbbe856cdbb953675d36cc50308e2d3073d1e6b39323f8d3d3ee9f9"
+        },
+        {
+          "path": "sibling-h0a/commands.json",
+          "sha256": "7dfc3fbc5dc1d711a37f45acde128f3f34d0643cfc42b6e462606cd1cae1fac2"
+        },
+        {
+          "path": "sibling-h0a/events-310A845A-7F28-46B1-849F-87727CCFDADE.jsonl",
+          "sha256": "693393f7d7a62e2720bfb6154fa9e13b7c4ecb39e20b258e12dfefd9e02c2a45"
+        },
+        {
+          "path": "sibling-h0a/launch-review-environment.json",
+          "sha256": "5ef5bbcab7de92620af616819dd2aa3e3bb95ade2073997e7d49fd342ef45474"
+        },
+        {
+          "path": "sibling-h0a/schedule.json",
+          "sha256": "85770501ad688111505857b7515631557a4b5218207408d9cfa77bb1e66ebad5"
+        },
+        {
+          "path": "sibling-h0a/structural-validation.json",
+          "sha256": "558bbdbcccfdf7362ef1786bb3c557d5ec23ed43986e661932e528375c1b9f69"
+        },
+        {
+          "path": "sibling-h0a/surface-placement-validation.json",
+          "sha256": "972657eb9c0fa5d8bf49686215b12bf336b2b417dc541aff0ee61b027d739361"
+        },
+        {
+          "path": "sibling-h0a/trace-copy.json",
+          "sha256": "7c9374d3f02f2079fbc4cdbb91bd935cfa6f7507cb5d8d6cb55bf7fb435f996f"
+        },
+        {
+          "path": "sibling-h0a/visual-review-appendix.json",
+          "sha256": "27199f48f58aab036b35d6e0e203961e653e06b720645730d83d300cf2c56908"
+        },
+        {
+          "path": "sibling-h0a/visual-review.json",
+          "sha256": "26f072db9fe3d4fe00f816f5965dae08d9c2b4c7a7ccd0467b30371213709576"
+        }
+      ]
+    },
+    {
+      "run": "sibling-h1a",
+      "records": 77,
+      "captures": 20,
+      "allStructuralChecks": true,
+      "allPlacementChecks": true,
+      "all20CPUBrackets": true,
+      "all20BoardColorsCorrect": true,
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "evidence": [
+        {
+          "path": "sibling-h1a/captures.json",
+          "sha256": "899c21039079f51d115ec43affb2f15a478a1bcc58f4311c0f7743de5b17cedb"
+        },
+        {
+          "path": "sibling-h1a/commands.json",
+          "sha256": "fc373eb31ad8ae90c1970bf4f9644b7a14677f8fd92984fa1644d506f4531213"
+        },
+        {
+          "path": "sibling-h1a/events-1FFB50C7-EC3B-4F05-B534-289FF3BE417F.jsonl",
+          "sha256": "0cad4887f2beed9a8a70c735c49d4e208c50eff7573c7be1798deec2bd52287e"
+        },
+        {
+          "path": "sibling-h1a/independent-visual-review.json",
+          "sha256": "90f991fc7178b26ca83f06a168f6d3c46becb6cbc6246c417d6ec472712654cb"
+        },
+        {
+          "path": "sibling-h1a/launch-review-environment.json",
+          "sha256": "539e4fb893bed1da088f7a96934ab0feefc2c199434437714822f2abe23ced7d"
+        },
+        {
+          "path": "sibling-h1a/root-final-image-review.json",
+          "sha256": "a7c0eeed0075262da631acafd20d024941cda7dbb0c2f3ae2423d49b02f121fb"
+        },
+        {
+          "path": "sibling-h1a/schedule.json",
+          "sha256": "ba8d5faa2be3207daeee9c8310e2249ece5a1b534fed365cf6884603b0c779e6"
+        },
+        {
+          "path": "sibling-h1a/structural-validation.json",
+          "sha256": "96341c71e0f3a60897f8d75c38f34c2a9edfb02444ee4e3ef68ae59df615aa0b"
+        },
+        {
+          "path": "sibling-h1a/surface-placement-validation.json",
+          "sha256": "58efeff958124b7dec96023b3b0d66695a60b16576df797819e32cf3c7e2318d"
+        },
+        {
+          "path": "sibling-h1a/trace-copy.json",
+          "sha256": "7de8f3deff4d651c6f578b1ba8b6232eb074d0c4525985fa22b274a70b97ff2f"
+        }
+      ]
+    },
+    {
+      "run": "sibling-h1b",
+      "records": 77,
+      "captures": 20,
+      "allStructuralChecks": true,
+      "allPlacementChecks": true,
+      "all20CPUBrackets": true,
+      "all20BoardColorsCorrect": true,
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "evidence": [
+        {
+          "path": "sibling-h1b/captures.json",
+          "sha256": "0d0df33562d4cdc5e8fa6edeb7b886d9e86e57e465cbb9596f209c402033b875"
+        },
+        {
+          "path": "sibling-h1b/commands.json",
+          "sha256": "01ce1b4ed057fca617b065c80d3ceb0c94ea2569ceadd8bf203bc8b4cdecf0bb"
+        },
+        {
+          "path": "sibling-h1b/events-A0EB5816-CDD8-4E2A-A0A5-213A24D18C1A.jsonl",
+          "sha256": "ae050eb7446125e0e1bc9247f11442794f2dfe077ce317913a1e69eb035ff2ff"
+        },
+        {
+          "path": "sibling-h1b/independent-visual-review.json",
+          "sha256": "6268057ea3bb078f4abc7f19bab9ca9b0a2bc58ccb1b9ae7af69202c2ed44fd4"
+        },
+        {
+          "path": "sibling-h1b/launch-review-environment.json",
+          "sha256": "98d6b56681cd86697c1483bd424cdc51653fffc79433059ba465d2308c2c075e"
+        },
+        {
+          "path": "sibling-h1b/schedule.json",
+          "sha256": "b939a096f977f77a0675f31733553fc9e53cf60cdd65d675d99db5b31b73ebaf"
+        },
+        {
+          "path": "sibling-h1b/structural-validation.json",
+          "sha256": "da1ce423bdfef5b6c944709c31c8c4dc4772b2a0cee3e06ed3061b35aa0fb054"
+        },
+        {
+          "path": "sibling-h1b/surface-placement-validation.json",
+          "sha256": "1c8cd44859aeaa4d882cf8ef211de3efb611a7a750effadacd73bc14e5ecfee5"
+        },
+        {
+          "path": "sibling-h1b/trace-copy.json",
+          "sha256": "a48f15b9fa6755d538b0c4266509e8adf66b4bb916fe6e9a448731dcf0952ef7"
+        },
+        {
+          "path": "sibling-h1b/visual-review.json",
+          "sha256": "efa0ce12e148cecf9d934e9a13b5552bf51fba44153cbf1b0f625e56e536012f"
+        }
+      ]
+    },
+    {
+      "run": "sibling-h0b",
+      "records": 77,
+      "captures": 20,
+      "allStructuralChecks": true,
+      "allPlacementChecks": true,
+      "all20CPUBrackets": true,
+      "all20BoardColorsCorrect": true,
+      "leafRect": [
+        332,
+        166,
+        210,
+        36
+      ],
+      "evidence": [
+        {
+          "path": "sibling-h0b/captures.json",
+          "sha256": "6cefa3f39053085c13ba5e2b27392efeee622701b9fcc1e284b8e23c1ebc6b61"
+        },
+        {
+          "path": "sibling-h0b/commands.json",
+          "sha256": "4e66bbaad02507d28112b5e7482d43e0afb6ebea7edd8a61de77f36ad9348e71"
+        },
+        {
+          "path": "sibling-h0b/events-3FA2FFFC-32B7-465C-A6CC-DF4607008EF2.jsonl",
+          "sha256": "15baa79c3199f6052848e4733fbaab69c8aeb4bfd83c22716c4ed8bb2433a7f4"
+        },
+        {
+          "path": "sibling-h0b/launch-review-environment.json",
+          "sha256": "945ff827df1c786d87f954256f645e6875236834de88a717c54a7221f58d9d95"
+        },
+        {
+          "path": "sibling-h0b/schedule.json",
+          "sha256": "7a531fd5690be665bd166c95ca63a73ce8366b38a7106db81a78c3387430986b"
+        },
+        {
+          "path": "sibling-h0b/structural-validation.json",
+          "sha256": "3e24e088c0249b754507377eedb2d18520c77ebd8a10f61dd1caf5bc96271fcf"
+        },
+        {
+          "path": "sibling-h0b/surface-placement-validation.json",
+          "sha256": "5fb812b2cba860ae1dafc6d505738a20f23f60c6113aab17886d665c956cebda"
+        },
+        {
+          "path": "sibling-h0b/trace-copy.json",
+          "sha256": "ae4bf9c25e8cd34a08c32de4f3f985b52cea090b3ad27961f717d5c11893acfd"
+        },
+        {
+          "path": "sibling-h0b/visual-review.json",
+          "sha256": "50517e1eb92c45e5eaeec7c8cd778cf139f4708da2c5bf08c78e6d9ecad84f48"
+        },
+        {
+          "path": "sibling-h0b/whole-file-reference-comparison.json",
+          "sha256": "75c3297585f272581a5318b66177681b8bb98c6bdd5a1bc36ff9aabe41cbccc8"
+        }
+      ]
+    }
+  ],
+  "sourceProvenance": {
+    "path": "continuous-sibling-applied/provenance.json",
+    "sha256": "3acbf68a5d082fb372e3a19043b89c15cdb16ee633cc2b70499df588f1d8803b"
+  },
+  "binaryDebugSHA256": "306b326385892f07ec70f28dcb9316db2149f9b315728dec04c58eeee6ca5de5",
+  "finalParity": {
+    "path": "sibling-final-parity.json",
+    "sha256": "9ccf7aca80d806341c1f0c09be5d05b41512f9b2ee734631032e0cb55bef04d6",
+    "all25Equal": true
+  },
+  "resourceDisposition": "Exact existing device/DD/controller retained live for root; no new external resources, no cleanup performed by diagnostic worker",
+  "sourceRuntimeHandback": "Four launches completed. No further source/runtime activity authorized by this report."
+}

@@ -1,0 +1,331 @@
+255:         self.descriptor = descriptor
+256:         self.display = display
+257:         self.suspension = suspension
+258:         self.orientation = orientation
+259:         self.allowedPositionIDs = allowedPositionIDs
+260:         self.instances = instances
+261:         self.physics = physics
+262:         self.presentationID = presentationID
+263:         self.resourceLease = resourceLease
+264:         let woodNodes = Set(display.woodNodeIDs)
+265:         let plasticNodes = Set(display.plasticNodeIDs)
+266:         let graniteNodes = Set(display.graniteNodeIDs)
+267:         self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
+268:             ($0.nodeID, $0.role == .attachment ? .neutral
+269:                 : woodNodes.contains($0.nodeID) ? .wood
+270:                 : plasticNodes.contains($0.nodeID) ? .plastic
+271:                 : graniteNodes.contains($0.nodeID) ? .granite : display.surfaceFinish)
+272:         })
+273:     }
+274: 
+275: /// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
+276:     func load(usdzURL: URL) async throws {
+277:         // RealityKit imports the USDZ asynchronously and reports malformed assets.
+278:         let modelEntity = try await Entity(contentsOf: usdzURL)
+279: 
+280:         self.modelEntity = modelEntity
+281: 
+282:         // Build instance entities from media instances
+283:         if let instances = instances, !instances.isEmpty {
+284:             try buildInstanceEntities(from: modelEntity, instances: instances)
+285:         } else {
+286:             // Single instance (legacy behavior)
+287:             root.addChild(modelEntity)
+288:             instanceEntities = [modelEntity]
+289:         }
+290: 
+291:         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
+292:         // each finish before highlighting so deselection restores the authored finish.
+293:         applyBoardMaterials()
+294: 
+295:         // Build contact entity mapping from descriptor
+
+405:     private static let woodMaterial: any RealityKit.Material = {
+406:         var base = PhysicallyBasedMaterial()
+407:         base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
+408:         base.roughness = .init(floatLiteral: 0.82)
+409:         base.metallic = .init(floatLiteral: 0)
+410:         base.faceCulling = .none
+411:         guard let device = MTLCreateSystemDefaultDevice(),
+412:               let library = device.makeDefaultLibrary() else { return base }
+413:         do {
+414:             let shader = CustomMaterial.SurfaceShader(named: "boardWoodSurfaceShader", in: library)
+415:             return try CustomMaterial(from: base, surfaceShader: shader)
+416:         } catch {
+417:             #if DEBUG
+418:             print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
+419:             #endif
+420:             // A warm matte fallback still identifies wood on unsupported devices.
+421:             return base
+422:         }
+423:     }()
+424: 
+425:     private static let graniteMaterial: any RealityKit.Material = {
+426:         var base = PhysicallyBasedMaterial()
+427:         base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
+428:         base.roughness = .init(floatLiteral: 0.92)
+429:         base.metallic = .init(floatLiteral: 0)
+430:         base.faceCulling = .none
+431:         guard let device = MTLCreateSystemDefaultDevice(),
+432:               let library = device.makeDefaultLibrary() else { return base }
+433:         do {
+434:             let shader = CustomMaterial.SurfaceShader(named: "boardGraniteSurfaceShader", in: library)
+435:             return try CustomMaterial(from: base, surfaceShader: shader)
+436:         } catch {
+437:             #if DEBUG
+438:             print("[BoardModelRealityScene] Granite shader unavailable: \(error)")
+439:             #endif
+440:             return base
+441:         }
+442:     }()
+443: 
+444:     private static let plasticMaterial: any RealityKit.Material = {
+445:         var base = PhysicallyBasedMaterial()
+446:         // Seafoam mint is the app's display palette, not a product color fact.
+447:         base.baseColor = .init(tint: UIColor(red: 123.0 / 255, green: 203.0 / 255,
+448:                                             blue: 178.0 / 255, alpha: 1))
+449:         base.roughness = .init(floatLiteral: 0.78)
+450:         base.metallic = .init(floatLiteral: 0)
+451:         // Like the neutral finish, retain front surfaces when an instance's
+452:         // reflection reverses winding. CustomMaterial inherits this setting.
+453:         base.faceCulling = .none
+454:         guard let device = MTLCreateSystemDefaultDevice(),
+455:               let library = device.makeDefaultLibrary() else { return base }
+456:         do {
+457:             let shader = CustomMaterial.SurfaceShader(named: "boardPlasticSurfaceShader", in: library)
+458:             return try CustomMaterial(from: base, surfaceShader: shader)
+459:         } catch {
+460:             #if DEBUG
+461:             print("[BoardModelRealityScene] Plastic shader unavailable: \(error)")
+462:             #endif
+463:             return base
+464:         }
+465:     }()
+466: 
+
+641:     func select(positionID: String?) -> Bool {
+642:         guard let positionID else {
+643:             clearSelection()
+644:             return false
+645:         }
+646:         guard allowedPositionIDs.contains(positionID) else {
+647:             return false
+648:         }
+649:         if liveFailure != nil { return false }
+650:         if activePositionID == positionID { return true }
+651:         if hasLiveRopes {
+652:             var targets:[simd_quatd]=[]
+653:             for index in liveControllers.indices {
+654:                 let setup=instances.flatMap{$0.indices.contains(index) ? $0[index].suspension:nil} ?? suspension
+655:                 guard let pose=setup?.canonicalPoses[positionID],pose.rotation.count == 4 else {return false}
+656:                 let q=simd_quatd(ix:pose.rotation[0],iy:pose.rotation[1],iz:pose.rotation[2],r:pose.rotation[3])
+657:                 guard q.vector.x.isFinite,q.vector.y.isFinite,q.vector.z.isFinite,q.vector.w.isFinite,
+658:                       abs(simd_length(q.vector)-1)<1e-6 else {return false}
+659:                 targets.append(simd_normalize(q))
+660:             }
+661:             liveGeneration &+= 1
+662:             for (controller,target) in zip(liveControllers,targets) {
+663:                 controller.setTarget(orientation:target,generation:liveGeneration)
+664:                 if liveActivity { controller.resume() } else { controller.pause() }
+665:             }
+666:             if transientCordEntity == nil {
+667:                 do {
+668:                     for index in liveFrames.indices { try applyLiveFrame(liveFrames[index],instance:index) }
+669:                     attachLiveCordGroup()
+670:                 } catch { failLiveRopes(error); return false }
+671:             }
+672:             activePositionID = positionID
+673:             #if DEBUG
+674:             if let degrees = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_ROPE_ROTATION_DEGREES"].flatMap(Double.init), degrees.isFinite {
+675:                 setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+
+927:         }) else {throw BoardModelRealityError.invalidSuspension}
+928:         for (index,profile) in profiles.enumerated() {
+929:             let prepared = try await Task.detached(priority:.userInitiated) {
+930:                 let collider=try RopeTriangleCollider(input:physics)
+931:                 let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+932:                 let state=try RopeThreadedSeed.make(input:physics,profileID:profile.id,orientation:q,collider:collider)
+933:                 return try RopeDynamicsSolver.prepareDisplay(input:physics,state:state,collider:collider)
+934:             }.value
+935:             try Task.checkCancellation()
+936:             let meshes=try prepared.1.ropes.map { try LiveRopeMesh(capacity:$0.positions.count,radialSegments:8,radius:Float($0.radius)) }
+937:             liveMeshes.append(meshes); liveFrames.append(prepared.1)
+938:             let controller=LiveRopeController(solver:prepared.0,sceneID:liveSceneID,delivery:{ [weak self] sceneID,generation,frame in
+939:                 guard let self,sceneID == self.liveSceneID,generation == self.liveGeneration,self.activePositionID != nil else { return }
+940:                 do { try self.applyLiveFrame(frame,instance:index) }
+941:                 catch { self.failLiveRopes(error) }
+942:             },failure:{ [weak self] error in self?.failLiveRopes(error) })
+943:             controller.pause(); liveControllers.append(controller)
+944:             try applyLiveFrame(prepared.1,instance:index)
+945:         }
+946:     }
+947: 
+948:     private func attachLiveCordGroup() {
+949:         let group=Entity()
+950:         for meshes in liveMeshes { for mesh in meshes { group.addChild(mesh.entity) } }
+951:         transientCordEntity?.removeFromParent()
+952:         transientCordEntity=group; root.addChild(group)
+953:         updateLiveFraming()
+954:     }
+955: 
+956:     private func applyLiveFrame(_ frame:RopeFrameSnapshot,instance:Int) throws {
+957:         guard liveMeshes.indices.contains(instance),liveBaseTransforms.indices.contains(instance),
+958:               frame.metrics.geometryAccepted,liveMeshes[instance].count == frame.ropes.count else { throw BoardModelRealityError.invalidSuspension }
+959:         let base=liveBaseTransforms[instance]
+960:         for (mesh,rope) in zip(liveMeshes[instance],frame.ropes) {
+961:             guard abs(Double(mesh.radius)-rope.radius)<1e-8 else { throw BoardModelRealityError.invalidSuspension }
+962:             try mesh.update(positions:rope.positions)
+963:             mesh.entity.transform=Transform(matrix:base)
+964:         }
+965:         liveFrames[instance]=frame
+966:         let q=frame.orientation.vector
+967:         let physical=Transform(scale:SIMD3(repeating:1),
+968:             rotation:simd_quatf(ix:Float(q.x),iy:Float(q.y),iz:Float(q.z),r:Float(q.w)),
+969:             translation:SIMD3(0,Float(frame.boardHeight),0))
+970:         instanceEntities[instance].transform=Transform(matrix:base*physical.matrix)
+971:         if frame.settled {
+972:             updateLiveFraming()
+973:             #if DEBUG
+974:             if activePositionID != nil,!reviewRotations.isEmpty {
+975:                 let degrees=reviewRotations.removeFirst()
+976:                 setLivePhysicalOrientation(simd_quatd(angle:degrees*Double.pi/180,axis:SIMD3(0,0,1)))
+977:             }
+978:             #endif
+979:         }
+980:         onLiveFrame?()
+981:     }
+
+1015:     var hasLiveUpdateSubscription: Bool { liveSubscription != nil }
+1016: 
+1017:     func installLiveUpdateSubscription(_ subscription:EventSubscription?) {
+1018:         liveSubscription?.cancel(); liveSubscription=subscription
+1019:     }
+1020:     func advanceLiveRopes(elapsed:Double) {
+1021:         guard activePositionID != nil,liveFailure == nil else { return }
+1022:         liveControllers.forEach { $0.advance(elapsed:elapsed) }
+1023:     }
+1024:     func setLiveActivity(_ active:Bool) {
+1025:         guard liveActivity != active else { return }
+1026:         liveActivity=active
+1027:         if !active, geometricTiltTask != nil {
+1028:             cancelGeometricTilt()
+1029:             applyGeometricCordPose(angles: SIMD2(orbitAzimuth, orbitElevation))
+1030:         }
+1031:         for controller in liveControllers {
+1032:             if active && activePositionID != nil { controller.resume() } else { controller.pause() }
+1033:         }
+1034:     }
+1035:     func configureLiveMotion(reduceMotion:Bool,displayOnly:Bool) {
+1036:         geometricMotionImmediate = reduceMotion || displayOnly
+1037:         if geometricMotionImmediate, geometricTiltTask != nil {
+1038:             cancelGeometricTilt()
+1039:             applyGeometricCordPose(angles: SIMD2(orbitAzimuth, orbitElevation))
+1040:         }
+1041:         liveControllers.forEach { $0.settleImmediately = reduceMotion || displayOnly }
+1042:     }
+1043:     func stopLiveRopes() {
+1044:         cancelGeometricTilt()
+1045:         liveSubscription?.cancel(); liveSubscription=nil
+1046:         liveControllers.forEach { $0.stop() }
+1047:     }
+1048:     private func failLiveRopes(_ error:Error) {
+1049:         liveFailure=error; stopLiveRopes()
+1050:         transientCordEntity?.removeFromParent(); transientCordEntity=nil
+1051:         onLiveFailure?()
+1052:     }
+1053:     #if DEBUG
+
+1098:     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
+1099:         let selectionChanged = contactIDs != lastHighlightedContactIDs
+1100:             || activePositionID != lastFocusedPositionID
+1101:         guard selectionChanged || mode != lastHighlightMode else { return }
+1102:         let hadSelection = !(lastHighlightedContactIDs ?? []).isEmpty
+1103:         lastHighlightedContactIDs = contactIDs
+1104:         lastFocusedPositionID = activePositionID
+1105:         if selectionChanged, !contactIDs.isEmpty || hadSelection {
+1106:             // Evaluate visibility in the canonical board pose so repeated
+1107:             // selections do not add another pitch to the already tilted body.
+1108:             let previousAngles = displayedCordAngles
+1109:             applyGeometricCordPose(angles: .zero)
+1110:             let adjustment = selectionOrbit(for: contactIDs)
+1111:             applyGeometricCordPose(angles: previousAngles)
+1112:             orbitAzimuth = adjustment.x
+1113:             orbitElevation = adjustment.y
+1114:             orbitZoom = 1
+1115:             updateCameraTransform(animated: true)
+1116:         }
+1117:         lastHighlightMode = mode
+1118:         // A shared mesh is selected when any of its logical contacts is selected.
+1119:         // Update each entity once so an unselected membership cannot clear it.
+1120:         let highlightedEntities = Set(contactIDs.flatMap { contactEntities[$0] ?? [] })
+1121:         let allEntities = Set(contactEntities.values.flatMap { $0 })
+1122:         for entity in allEntities {
+1123:             let highlightColor: Color = highlightedEntities.contains(entity)
+1124:                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+1125:             applyHighlight(to: entity, color: highlightColor, mode: mode)
+1126:         }
+1127:     }
+1128: 
+
+1402:                 // V1 picking uses the node's primary identity. Memberships come
+1403:                 // from the full contact inventory and may share the same mesh.
+1404:                 for node in descriptor.nodes where node.role == .contact {
+1405:                     if let primaryID = node.contactID {
+1406:                         nodeIDToSlotID[node.nodeID] = primaryID
+1407:                     }
+1408:                 }
+1409:                 var contactIDsByNodeID: [String: [String]] = [:]
+1410:                 for contactID in contactDescriptorByPhysicalID.keys.sorted() {
+1411:                     for nodeID in contactDescriptorByPhysicalID[contactID]?.nodeIDs ?? [] {
+1412:                         contactIDsByNodeID[nodeID, default: []].append(contactID)
+1413:                     }
+1414:                 }
+1415: 
+1416:                 let slotIDToContactID = Dictionary(
+1417:                     nodeIDToSlotID.values.map { ($0, $0) },
+1418:                     uniquingKeysWith: { first, _ in first }
+1419:                 )
+1420: 
+1421:                 var matchedNodeIDs: Set<String> = []
+1422:                 traverseEntities(instanceEntity) { entity in
+1423:                     if let modelEntity = entity as? ModelEntity,
+1424:                        let nodeID = findNodeID(for: entity, relativeTo: instanceEntity,
+1425:                                                bindings: nodeIDToSlotID),
+1426:                        let slotID = nodeIDToSlotID[nodeID],
+1427:                        let contactID = slotIDToContactID[slotID] {
+1428:                         matchedNodeIDs.insert(nodeID)
+1429:                         for member in contactIDsByNodeID[nodeID] ?? [] {
+1430:                             contactEntities[member, default: []].append(modelEntity)
+1431:                         }
+1432:                         contactIDByEntity[modelEntity] = contactID
+1433:                         modelEntity.generateCollisionShapes(recursive: false)
+1434:                         modelEntity.components.set(InputTargetComponent())
+1435:                     }
+1436:                 }
+1437:                 try requireDescriptorNodes(nodeIDToSlotID, matched: matchedNodeIDs,
+1438:                                            slotIDToContactID: slotIDToContactID)
+1439:             }
+1440:         }
+1441:     }
+1442: 
+1443:     private func findNodeID<Value>(for entity: Entity, relativeTo instanceRoot: Entity,
+1444:                                    bindings: [String: Value]) -> String? {
+1445:         if bindings[entity.name] != nil { return entity.name }
+
+1475:     private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
+1476:         guard let baseline = baselineMaterials[entity] else { return }
+1477: 
+1478:         if color == .clear {
+1479:             // Restore the complete runtime finish, including a wood shader.
+1480:             entity.model?.materials = [baseline]
+1481:             return
+1482:         }
+1483: 
+1484:         // Use a solid selection color for legibility over either finish.
+1485:         var material = (baseline as? PhysicallyBasedMaterial) ?? Self.neutralMaterial()
+1486:         let uiColor = UIColor(color)
+1487:         material.baseColor = .init(tint: uiColor.withAlphaComponent(0.6))
+1488:         material.roughness = .init(floatLiteral: 0.8)
+1489: 
+1490:         entity.model?.materials = [material]
+1491:     }

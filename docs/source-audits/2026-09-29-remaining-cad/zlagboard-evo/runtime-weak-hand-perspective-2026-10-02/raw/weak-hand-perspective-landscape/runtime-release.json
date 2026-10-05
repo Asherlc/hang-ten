@@ -1,0 +1,20 @@
+{
+  "runtimeAuthorized": true,
+  "arm": "weak-hand-perspective",
+  "helperSHA256": "4247d647de1de58b79d1a26ce1ee05c7903bddc5ca88e79fa936b636b9dfefc9",
+  "constructorMarkerAuditReady": true,
+  "structuralNavEventAuditReady": true,
+  "rootSourceRuntimeRelease": true,
+  "previousEvidenceFrozen": true,
+  "postbootConfirmationPassed": true,
+  "retainedDetachIntervention": false,
+  "simulatorUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "binarySHA256": "70707e27453ae150763a302152c04e028564dbe97b41bffbcc91c98642f95c94",
+  "codePackageParityPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-perspective-before-parity.json",
+  "codePackageParitySHA256": "6eef9132a6b466830d30272ccb53d3b0708765eb010e2e06dcf751ff8b32d0e5",
+  "priorFrozenManifestPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-frozen-manifest.json",
+  "priorFrozenManifestSHA256": "69e302ed00b3b09759799547a95a316b8fc053b616cc964e99b4a77d332b7cb9",
+  "authorization": "Root authorized exactly one same-binary P run; no additional arm/source/build/install. Stop aftertail, exact app termination, freeze handback.",
+  "completedOrthographicAuditPath": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/weak-hand-census-root-gate.json",
+  "completedOrthographicAuditSHA256": "1ab681076b5b7ea4ad654f44e6805fe5464fa0da5fd3edc8836b230f796c2ea5"
+}

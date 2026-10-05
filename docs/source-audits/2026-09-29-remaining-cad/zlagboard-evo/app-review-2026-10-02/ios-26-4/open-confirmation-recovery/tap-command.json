@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "/opt/homebrew/bin/axe",
+    "tap",
+    "-x",
+    "511",
+    "-y",
+    "214",
+    "--tap-style",
+    "physical",
+    "--udid",
+    "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+  ],
+  "reason": "Systemalert AX reports portrait coordinates while whole screenshot landscape; actualvisible Open button tapped in landscape UI"
+}

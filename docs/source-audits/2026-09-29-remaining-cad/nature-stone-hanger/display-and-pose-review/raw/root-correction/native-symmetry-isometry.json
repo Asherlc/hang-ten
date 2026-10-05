@@ -1,0 +1,11 @@
+{
+  "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
+  "plane": "native X=0",
+  "originalValid": true,
+  "reflectedValid": true,
+  "originalVolumeMM3": 299887.52229181246,
+  "reflectedVolumeMM3": 299887.52229181246,
+  "originalMinusReflectedMM3": 0.0,
+  "reflectedMinusOriginalMM3": 0.0,
+  "status": "pass"
+}

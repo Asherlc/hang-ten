@@ -1,0 +1,36 @@
+{
+  "installedBaselineHead": "7a6867151307170dd0993a6d6492500d3fd46467",
+  "reviewer": "baguette_review_prep",
+  "visuallyReviewed": true,
+  "workflowPassed": false,
+  "states": [
+    {
+      "file": "active-settled.png",
+      "sha256": "12e918c6190d82bc332fb3a57eefd9ee3ac9fb0539e38dc03e39870a3951153f",
+      "phase": "Step1 Hang",
+      "timer": "00:05",
+      "boardPocketColor": "red",
+      "expected": "red",
+      "passes": true
+    },
+    {
+      "file": "following-rest-settled.png",
+      "sha256": "e5ba0065f0f7aefa811bc497206e610a99e75c6d91c506a0fe07ab910446dc28",
+      "phase": "Step2 Rest",
+      "timer": "02:45",
+      "boardPocketColor": "blue",
+      "expected": "blue",
+      "passes": true
+    },
+    {
+      "file": "next-active-timed-2.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "phase": "Step3 Hang",
+      "timer": "00:06",
+      "boardPocketColor": "blue",
+      "expected": "red",
+      "passes": false
+    }
+  ],
+  "interpretation": "Next active bilateral20 pockets remain blue despite Step3 Hang00:06. No renderer fix installed. Routine unchanged."
+}

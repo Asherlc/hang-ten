@@ -30,6 +30,8 @@ enum TrainReviewDestination: Hashable {
 struct TrainView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var deepLinkManager: DeepLinkManager
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var showsDeepLinkedBoardDetail = false
     @State private var showsDeepLinkedWorkout = false
     @State private var deepLinkedWorkoutPlan: TrainingPlan?
@@ -48,6 +50,7 @@ struct TrainView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     selectedBoardCard
+                    freeWorkoutButton
                     favoritesSection
                 }
                 .padding(.horizontal, 20)
@@ -55,6 +58,8 @@ struct TrainView: View {
                 .padding(.bottom, 30)
             }
             .background(Color.hangBackground)
+            .navigationTitle("Train")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
@@ -126,7 +131,7 @@ struct TrainView: View {
                 deepLinkManager.clearPending()
             }
             .sheet(isPresented: $showsFreeWorkout) {
-                FreeWorkoutStartSheet()
+                FreeWorkoutStartSheet(isPresented: $showsFreeWorkout)
                     .environmentObject(store)
             }
         }
@@ -137,44 +142,65 @@ struct TrainView: View {
     }
 
     private var selectedBoardCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            BoardMapView(board: store.selectedBoard)
+        let isCompact = verticalSizeClass == .compact && !dynamicTypeSize.isAccessibilitySize
+        let layout = isCompact
+            ? AnyLayout(HStackLayout(alignment: .center, spacing: 20))
+            : AnyLayout(VStackLayout(alignment: .leading, spacing: 12))
+        return layout {
+            BoardMapView(board: store.selectedBoard, maximumMapHeight: isCompact ? 72 : 80)
                 .cardPreviewStyle()
+                .frame(width: isCompact ? 220 : nil)
 
-            VStack(alignment: .leading, spacing: 5) {
-                SectionLabel(title: "Your board")
-                Text(store.selectedBoard.name)
-                    .font(.system(size: 21, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                if let dimensions = store.selectedBoard.dimensions {
-                    Text(dimensions)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(Color.hangMuted)
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 5) {
+                    SectionLabel(title: "Your board")
+                    Text(store.selectedBoard.name)
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
                 }
+
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) { boardActions }
+                        .fixedSize(horizontal: true, vertical: false)
+                    VStack(alignment: .leading, spacing: 8) { boardActions }
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                .tint(.hangGreenDark)
             }
-
-            HStack(spacing: 16) {
-                Link(destination: store.selectedBoard.productURL) {
-                    Label("Product page", systemImage: "arrow.up.right")
-                }
-
-                Spacer()
-
-                NavigationLink("Change board") {
-                    BoardPickerView()
-                }
-                .accessibilityIdentifier("train.changeBoard")
-
-                NavigationLink("View hold specs") {
-                    BoardDetailView(board: store.selectedBoard)
-                }
-                .accessibilityIdentifier("train.boardDetails")
-            }
-            .font(.system(size: 13, weight: .bold, design: .rounded))
-            .foregroundStyle(Color.hangGreenDark)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("train.board")
+    }
+
+    @ViewBuilder
+    private var boardActions: some View {
+        NavigationLink("Change board") {
+            BoardPickerView()
+        }
+        .accessibilityIdentifier("train.changeBoard")
+
+        NavigationLink("View hold specs") {
+            BoardDetailView(board: store.selectedBoard)
+        }
+        .accessibilityIdentifier("train.boardDetails")
+    }
+
+    private var freeWorkoutButton: some View {
+        Button {
+            showsFreeWorkout = true
+        } label: {
+            Label("Start free workout", systemImage: "plus")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .tint(.hangGreenDark)
+        .accessibilityIdentifier("train.freeWorkout")
     }
 
     @ViewBuilder
@@ -182,23 +208,19 @@ struct TrainView: View {
         if store.favoritePlans.isEmpty {
             VStack(alignment: .leading, spacing: 17) {
                 SectionLabel(title: "Favorites")
-                Text("Favorite routines from Plans to keep them handy here.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                Text("No favorites yet")
+                    .font(.system(.headline, design: .rounded))
                     .foregroundStyle(Color.hangInk)
-                Text("Your favorites will appear here when they are compatible with your selected board.")
-                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                Text("Star a plan to keep it handy here.")
+                    .font(.system(.subheadline, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
                 Button("Browse plans", action: onBrowsePlans)
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
                     .tint(.hangGreenDark)
                     .accessibilityIdentifier("train.browsePlans")
-                Button("Start Free Workout") {
-                    showsFreeWorkout = true
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hangGreenDark)
-                .accessibilityIdentifier("train.freeWorkout")
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .hangCard()
         } else {
             VStack(alignment: .leading, spacing: 12) {
@@ -206,20 +228,12 @@ struct TrainView: View {
                 ForEach(store.favoritePlans) { plan in
                     FavoritePlanCard(
                         plan: plan,
-                        board: store.board(for: plan),
-                        labels: store.metadata(for: plan).athleteFacingLabels,
                         isFavorite: store.isFavorite(plan),
                         isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
                     ) {
                         store.toggleFavorite(plan)
                     }
                 }
-                Button("Start Free Workout") {
-                    showsFreeWorkout = true
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(.hangGreenDark)
-                .accessibilityIdentifier("train.freeWorkout")
             }
         }
     }
@@ -228,10 +242,10 @@ struct TrainView: View {
         VStack(alignment: .leading, spacing: 8) {
             SectionLabel(title: "No compatible routine")
             Text("No routines are available for this board.")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(.system(.callout, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
             Text("Choose another board or browse plans.")
-                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .font(.system(.footnote, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
         }
         .hangCard()
@@ -243,6 +257,7 @@ struct BoardDetailView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedHoldID: String?
+    @State private var selectedPositionID: String?
     @State private var showsReportProblem = false
     @State private var compactMetrics = BoardDetailCompactMetrics()
 
@@ -271,6 +286,10 @@ struct BoardDetailView: View {
 
     private var selectedHold: PhysicalContact? {
         guard let selectedHoldID else { return nil }
+        if let selectedPositionID,
+           let configured = board.contacts(inPosition: selectedPositionID).first(where: { $0.id == selectedHoldID }) {
+            return configured
+        }
         return board.contacts.first { $0.id == selectedHoldID }
     }
 
@@ -282,11 +301,13 @@ struct BoardDetailView: View {
                     Text(board.name)
                         .font(.system(size: isCompactHeight ? 22 : 28, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
-                    if let dimensions = board.dimensions {
-                        Text(dimensions)
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
+                    Link(destination: board.productURL) {
+                        Label("Product page", systemImage: "arrow.up.right")
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangGreenDark)
                 }
                 .overlay {
                     GeometryReader { summary in
@@ -301,6 +322,7 @@ struct BoardDetailView: View {
                 BoardDetailMapView(
                     board: board,
                     selectedHoldID: $selectedHoldID,
+                    selectedPositionID: $selectedPositionID,
                     maximumMapHeight: compactMaximumMapHeight,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
@@ -372,17 +394,17 @@ struct BoardDetailView: View {
         VStack(alignment: .leading, spacing: 14) {
             SectionLabel(title: "Selected hold", tint: .holdActiveDeep)
             Text(hold.name)
-                .font(.system(size: 21, weight: .bold, design: .rounded))
+                .font(.system(.title3, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
 
             ForEach(BoardHoldSpecifications.entries(for: hold)) { specification in
                 HStack(alignment: .firstTextBaseline, spacing: 16) {
                     Text(specification.label)
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                     Spacer()
                     Text(specification.value)
-                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangInk)
                 }
             }
@@ -418,70 +440,48 @@ private struct BoardDetailCompactMetricsPreferenceKey: PreferenceKey {
 struct BoardPickerView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var filters = BoardPickerFilters()
+    @State private var favoritesOnly = false
+    @State private var inspectedBoardID: String?
+    @State private var isSearchPresented = false
 
     private var filteredBoards: [BoardRevision] {
         filters.filteredBoards(
             from: BoardCatalog.all,
             favoriteBoardIDs: store.favoriteBoardIDs
-        )
+        ).filter { !favoritesOnly || store.isFavorite($0) }
     }
 
     private var manufacturerOptions: [String] {
         BoardPickerFilters.manufacturerOptions(from: BoardCatalog.all)
     }
 
+    private var galleryColumns: [GridItem] {
+        dynamicTypeSize.isAccessibilitySize
+            ? [GridItem(.flexible())]
+            : [GridItem(.adaptive(minimum: 160), spacing: 14)]
+    }
+
     var body: some View {
         ScrollView(showsIndicators: false) {
-            LazyVStack(spacing: 16) {
-                Picker("Manufacturer", selection: $filters.manufacturer) {
-                    Text("All manufacturers")
-                        .tag(nil as String?)
-                    ForEach(manufacturerOptions, id: \.self) { manufacturer in
-                        Text(manufacturer)
-                            .tag(Optional(manufacturer))
-                    }
+            VStack(alignment: .leading, spacing: 20) {
+                scopeControls
+
+                if let manufacturer = filters.manufacturer {
+                    Text(manufacturer)
+                        .font(.system(.title3, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangInk)
                 }
-                .pickerStyle(.menu)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .accessibilityIdentifier("boardPicker.manufacturerFilter")
 
                 if filteredBoards.isEmpty {
-                    VStack(spacing: 8) {
-                        Text("No boards match your filters.")
-                            .font(.system(size: 18, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.hangInk)
-                        Text("Try a different search or manufacturer.")
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
-                            .foregroundStyle(Color.hangMuted)
-                        Button("Clear filters") {
-                            filters.clear()
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.hangGreenDark)
-                        .accessibilityIdentifier("boardPicker.clearFilters")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 36)
+                    emptyState
                 } else {
-                    ForEach(filteredBoards) { board in
-                        BoardPickerCard(
-                            board: board,
-                            isSelected: board.id == store.selectedBoard.id,
-                            isFavorite: store.isFavorite(board),
-                            onSelect: {
-                                store.selectBoard(board)
-                                dismiss()
-                            },
-                            onToggleFavorite: {
-                                store.toggleFavorite(board)
-                            }
-                        )
-                    }
+                    gallery(filteredBoards)
                 }
             }
             .padding(.horizontal, 20)
-            .padding(.top, 18)
+            .padding(.top, 12)
             .padding(.bottom, 30)
         }
         .background(Color.hangBackground)
@@ -489,10 +489,94 @@ struct BoardPickerView: View {
         .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: $filters.searchText,
+            isPresented: $isSearchPresented,
             placement: .navigationBarDrawer(displayMode: .always),
             prompt: "Search boards"
         )
         .accessibilityIdentifier("boardPicker.search")
+        .navigationDestination(item: $inspectedBoardID) { boardID in
+            BoardDetailView(board: BoardCatalog.board(for: boardID))
+        }
+    }
+
+    private var scopeControls: some View {
+        HStack(spacing: 12) {
+            Picker("Boards", selection: $favoritesOnly) {
+                Text("All boards").tag(false)
+                Text("Favorites").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("boardPicker.scope")
+
+            Menu {
+                Picker("Manufacturer", selection: $filters.manufacturer) {
+                    Text("All manufacturers").tag(nil as String?)
+                    ForEach(manufacturerOptions, id: \.self) { manufacturer in
+                        Text(manufacturer).tag(Optional(manufacturer))
+                    }
+                }
+            } label: {
+                Image(systemName: filters.manufacturer == nil
+                      ? "line.3.horizontal.decrease" : "line.3.horizontal.decrease.circle.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel("Filter by manufacturer")
+            .accessibilityValue(filters.manufacturer ?? "All manufacturers")
+            .accessibilityIdentifier("boardPicker.manufacturerFilter")
+        }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: favoritesOnly ? "star" : "magnifyingglass")
+                .font(.system(size: 30, weight: .regular))
+                .foregroundStyle(Color.hangMuted)
+            Text(favoritesOnly ? "No matching favorites" : "No boards match your filters")
+                .font(.system(.headline, design: .rounded, weight: .semibold))
+                .foregroundStyle(Color.hangInk)
+            Text(favoritesOnly && store.favoriteBoardIDs.isEmpty
+                 ? "Star a board to keep it here."
+                 : "Try another search or manufacturer.")
+                .font(.system(.subheadline, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+            Button("Show all boards") {
+                favoritesOnly = false
+                filters.clear()
+            }
+            .buttonStyle(.bordered)
+            .tint(.hangGreenDark)
+            .accessibilityIdentifier("boardPicker.clearFilters")
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
+    }
+
+    private func gallery(_ boards: [BoardRevision]) -> some View {
+        LazyVGrid(columns: galleryColumns, alignment: .leading, spacing: 14) {
+            ForEach(boards) { board in
+                card(board)
+            }
+        }
+    }
+
+    private func card(_ board: BoardRevision) -> some View {
+        BoardPickerCard(
+            board: board,
+            isSelected: board.id == store.selectedBoard.id,
+            isFavorite: store.isFavorite(board),
+            onSelect: {
+                isSearchPresented = false
+                store.selectBoard(board)
+                dismiss()
+            },
+            onToggleFavorite: { store.toggleFavorite(board) },
+            onViewSpecs: {
+                isSearchPresented = false
+                inspectedBoardID = board.id
+            }
+        )
     }
 }
 
@@ -555,62 +639,77 @@ private struct BoardPickerCard: View {
     let isFavorite: Bool
     let onSelect: () -> Void
     let onToggleFavorite: () -> Void
+    let onViewSpecs: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ZStack(alignment: .topTrailing) {
-                Button(action: onSelect) {
-                    VStack(alignment: .leading, spacing: 14) {
-                        BoardMapView(board: board, isDisplayOnly: true)
-                            .cardPreviewStyle()
+        ZStack(alignment: .bottomTrailing) {
+            Button(action: onSelect) {
+                VStack(alignment: .leading, spacing: 12) {
+                    BoardMapView(board: board, isDisplayOnly: true, maximumMapHeight: 150)
+                        .cardPreviewStyle()
+                        .frame(height: 150)
+                        .accessibilityHidden(true)
+                        .allowsHitTesting(false)
 
-                        HStack(alignment: .top, spacing: 12) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(board.name)
-                                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                                    .foregroundStyle(Color.hangInk)
-                            }
+                    Text(board.name)
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .foregroundStyle(Color.hangInk)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.trailing, 40)
+                        .frame(minHeight: 44, alignment: .top)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(14)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(board.name)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+            .accessibilityIdentifier("boardPicker.board.\(board.id)")
 
-                            Spacer()
-
-                            if isSelected {
-                                Image(systemName: "checkmark.circle.fill")
-                                    .font(.system(size: 22, weight: .bold))
-                                    .foregroundStyle(Color.hangGreenDark)
-                                    .accessibilityLabel("Selected")
-                            }
-                        }
-                    }
+            Button(action: onToggleFavorite) {
+                Image(systemName: isFavorite ? "star.fill" : "star")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
+                    .frame(width: 44, height: 44)
                     .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityIdentifier("boardPicker.board.\(board.id)")
-
-                Button(action: onToggleFavorite) {
-                    Image(systemName: isFavorite ? "star.fill" : "star")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(isFavorite ? Color.hangGreenDark : Color.hangMuted)
-                        .padding(10)
-                        .background(.ultraThinMaterial, in: Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(
-                    isFavorite
-                        ? "Remove \(board.name) from favorites"
-                        : "Add \(board.name) to favorites"
-                )
-                .accessibilityIdentifier("boardPicker.favorite.\(board.id)")
-                .padding(10)
             }
-
-            NavigationLink("View hold specs") {
-                BoardDetailView(board: board)
-            }
-            .font(.system(size: 13, weight: .bold, design: .rounded))
-            .foregroundStyle(Color.hangGreenDark)
-            .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isFavorite
+                    ? "Remove \(board.name) from favorites"
+                    : "Add \(board.name) to favorites"
+            )
+            .accessibilityIdentifier("boardPicker.favorite.\(board.id)")
+            .padding(.trailing, 8)
+            .padding(.bottom, 8)
         }
-        .hangCard()
+        .hangCard(padding: 0)
+        .overlay(alignment: .topLeading) {
+            if isSelected {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(width: 44, height: 44)
+                    .padding(8)
+                    .accessibilityHidden(true)
+                    .allowsHitTesting(false)
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            Button(action: onViewSpecs) {
+                Image(systemName: "info.circle")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(Color.hangMuted)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("View hold specs for \(board.name)")
+            .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
+            .padding(8)
+        }
     }
 }
 

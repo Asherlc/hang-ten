@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger",
+  "discoveredOwnedPaths": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-conditional-wrap-astar-20261003T001020/placid-badger-candidate-repository/Tools/HangboardPackages/src/hangboard_packages/__pycache__"
+  ],
+  "createdBy": "owned runner importing its copied package generator; original shared modules untouched"
+}

@@ -1,0 +1,231 @@
+{
+  "owner": "placid-badger",
+  "reviewNumber": 5,
+  "boardID": "frictitious.port-a-board",
+  "currentPackageSHA256": {
+    "frictitious-port-a-board.FCStd": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+    "assets/primary.usdz": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+    "assets/primary.model.json": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+    "suspension.json": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305"
+  },
+  "observedAssetIdentities": {
+    "appCaptureSourceMatchesCurrent": true,
+    "appCaptureModelMatchesCurrent": true,
+    "appCaptureDescriptorMatchesCurrent": true,
+    "descriptorBindsCurrentModel": true,
+    "sidecarBindsCurrentModel": true,
+    "retainedCompileSourceModelMatches": true,
+    "retainedReproducibilitySourceModelDescriptorMatches": true
+  },
+  "priorAppCapture": {
+    "validationPath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/app-review/validation.json",
+    "validationSHA256": "b034acaf86118c91d47ec9ebdd790d347c20b28aac391b6e994a8e53ffbcfb6e",
+    "runtime": "iOS 26.5",
+    "device": "iPhone 17 Pro",
+    "captureTime": "Earlier batch retained app capture; exact timestamp not specified in validation. No new build, launch or runtime capture performed.",
+    "checks": [
+      {
+        "contactID": "edge-30",
+        "selection": "DEBUG initial hold",
+        "image": "default.png",
+        "accessibility": "default-accessibility.json"
+      },
+      {
+        "contactID": "pinch-body",
+        "selection": "DEBUG contact review route",
+        "image": "contact-selection.png",
+        "accessibility": "contact-selection-accessibility.json"
+      }
+    ],
+    "sidecarIdentityLimitation": "Retained app validation binds source/model/descriptor, but does not record a sidecar hash; current sidecar hash is observed separately, not attributed retroactively to these screenshots."
+  },
+  "facts": {
+    "sourcePath": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/native-authoring.md",
+    "sourceSHA256": "dfaa188181a2bf147865d596db4981e503a1290284667a29f8e2741d92aa37e0",
+    "publishedDimensionsMM": [
+      128,
+      140,
+      48
+    ],
+    "edgeDepthsMM": [
+      30,
+      25,
+      20,
+      15,
+      12,
+      10,
+      8
+    ],
+    "otherContacts": [
+      "exterior jug",
+      "side pinch"
+    ]
+  },
+  "outputs": [
+    {
+      "image": "preview-reference-cad-overview.png",
+      "sha256": "caedb95c8ffcfd5be13caed48b71d8918b108c9d2e334defa3b428582bae50ca",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/prior-primary.png",
+          "sha256": "6d345c8dd4bb9970b9b58a0800bbf340119cc74cc11028c9867551cc9a6a5cd0",
+          "originalDimensionsPX": [
+            1400,
+            1400
+          ],
+          "renderedDimensionsPX": [
+            430,
+            430
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/primary-front.png",
+          "sha256": "88ead8d1611fb9c839013d481f944aec7e04eb6cafaff25b2a9326f1cc5e5beb",
+          "originalDimensionsPX": [
+            900,
+            650
+          ],
+          "renderedDimensionsPX": [
+            570,
+            412
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/primary-oblique.png",
+          "sha256": "b87c68154cf72b446fb8ed0645fca132aab988d44b4a86dd3de3bc592742fd51",
+          "originalDimensionsPX": [
+            900,
+            650
+          ],
+          "renderedDimensionsPX": [
+            570,
+            412
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/prior-back.png",
+          "sha256": "39223f41fd3a0c77bea2c7d04e3567475e6b418eab52a25f519fa627107c258e",
+          "originalDimensionsPX": [
+            1400,
+            1400
+          ],
+          "renderedDimensionsPX": [
+            430,
+            430
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/primary-rear.png",
+          "sha256": "8e66b9beb4ad4b57d0f865aa3139085a90bc1a3b29fc9eaa0cfb5cbe6fe6a91e",
+          "originalDimensionsPX": [
+            900,
+            650
+          ],
+          "renderedDimensionsPX": [
+            570,
+            412
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/primary-top.png",
+          "sha256": "dc66145bf853a2d8f5af3374df90c54bee154419d83ae95dd8323614abfe447a",
+          "originalDimensionsPX": [
+            900,
+            650
+          ],
+          "renderedDimensionsPX": [
+            570,
+            412
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/prior-side.png",
+          "sha256": "cf1fe06bef3c374fd980d1168cf0279e885bc260401df914579c025e1e55e7ad",
+          "originalDimensionsPX": [
+            1400,
+            1400
+          ],
+          "renderedDimensionsPX": [
+            430,
+            430
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/review/primary-side.png",
+          "sha256": "dcfaf191f8c278854f22fc8a925e4a595004996bcca6fa0469432c5c73162151",
+          "originalDimensionsPX": [
+            900,
+            650
+          ],
+          "renderedDimensionsPX": [
+            570,
+            412
+          ],
+          "crop": false
+        }
+      ]
+    },
+    {
+      "image": "preview-app-selection-overview.png",
+      "sha256": "975a1f96a526c8889c17723d631cf15fc7ba209e28babfc6654f9e5a645ddfbe",
+      "inputs": [
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/app-review/default.png",
+          "sha256": "167555ad8f8bd9b9d66775949c10dc6805b5195fe21d84bb15ffe25dac640b2c",
+          "originalDimensionsPX": [
+            1206,
+            2622
+          ],
+          "renderedDimensionsPX": [
+            610,
+            1326
+          ],
+          "crop": false
+        },
+        {
+          "path": "docs/source-audits/2026-09-29-remaining-cad/frictitious-port-a-board/app-review/contact-selection.png",
+          "sha256": "11763afed1f5ff15bcd5bffe1f1ef9429026f56641dd8ac2390a84791aeeb2f7",
+          "originalDimensionsPX": [
+            1206,
+            2622
+          ],
+          "renderedDimensionsPX": [
+            610,
+            1326
+          ],
+          "crop": false
+        }
+      ]
+    }
+  ],
+  "rendererSourceSHA256": "7a4584e9630a853e3ac6aa07189fac5406badcc0451ad7a8b65357ea4d90f7c1",
+  "method": "Existing complete retained images uniformly fitted into labeled contact sheets. No cropping, photo registration, tracing, inferred geometry, new rendering, or changes to package/core/source files. No exact image-to-physical scale is claimed; published dimensions retained verbatim.",
+  "humanGeometryAcceptance": "Pending user review; no authoritative geometry judgment in this preparation.",
+  "visualInspection": {
+    "status": "Both final composites physically inspected. Human board-shape acceptance remains pending.",
+    "checks": [
+      "Full prior reference photos preserved with all margins, branding and printed depth labels; no cropping.",
+      "Current retained CAD front/side/top/rear/oblique views present with accurate view labels.",
+      "Both full app screens retained, including top/bottom system and navigation regions. Selected30mm edge and body pinch labels are visible.",
+      "Published128\u00d7140\u00d748mm dimensions match retained source audit and both app screens.",
+      "App capture age labeled explicitly; no new runtime capture claimed."
+    ],
+    "images": [
+      {
+        "image": "preview-reference-cad-overview.png",
+        "sha256": "caedb95c8ffcfd5be13caed48b71d8918b108c9d2e334defa3b428582bae50ca"
+      },
+      {
+        "image": "preview-app-selection-overview.png",
+        "sha256": "975a1f96a526c8889c17723d631cf15fc7ba209e28babfc6654f9e5a645ddfbe"
+      }
+    ]
+  }
+}

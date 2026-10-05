@@ -1,0 +1,67 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "CEC83800-5035-404E-B5A2-E40B826FE00E",
+  "control": "ordinary Train route on existing raster board after same-owned reboot; review detail/hold/pose/plan variables cleared",
+  "commands": [
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "xcrun",
+        "simctl",
+        "launch",
+        "--terminate-running-process",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E",
+        "com.hangten.training"
+      ],
+      "timeoutSeconds": 30,
+      "timedOut": true,
+      "elapsedSeconds": 30.016825542028528
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 0,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 1,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    },
+    {
+      "command": [
+        "rtk",
+        "proxy",
+        "/opt/homebrew/bin/axe",
+        "describe-ui",
+        "--udid",
+        "CEC83800-5035-404E-B5A2-E40B826FE00E"
+      ],
+      "attempt": 2,
+      "timeoutSeconds": 6,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Error: No translation object returned for simulator. This means you have likely specified a point onscreen that is invalid or invisible due to a fullscreen dialog\n"
+    }
+  ]
+}

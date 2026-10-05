@@ -1,0 +1,36 @@
+{
+  "status": "prepared-awaiting-new-final-inputs",
+  "resourcesCreated": false,
+  "testsRun": false,
+  "scope": "Fresh native vertical-groove source, model, descriptor and regenerated sidecar required. Prior ios lane is historical and not current-proof.",
+  "authorizationGate": "New final-inputs.json with rootFinalHashReady and packageSHA256; explicit root ready message before creating any simulator.",
+  "capturePlan": [
+    "All eight exact contact selections and canonical pose membership from installed generated manifest.",
+    "Front and reverse oblique and side orbits with actual drag assertions; inspect longitudinal cord nesting and sidehole entry on both sides, preserving three transverse notches.",
+    "Wood/granite appearance, granite selected then wood selected in the same scene with restored granite, unselected card and relaunch."
+  ],
+  "testClasses": [
+    "BoardModelTests",
+    "BoardModelRealityTests",
+    "BoardPackageStoreTests",
+    "SuspendedBoardPresentationTests"
+  ],
+  "cleanup": "Hardened exact owned process groups and simulator exit trap, verified UUID/DD/xcresult/own tmp absence.",
+  "historicalProofUntouched": true,
+  "historicalScriptsSHA256": {
+    "preflight.py": "a9eca94efa985fb61dd220e3f4ca50d5364c656e160231147dcba7494a5aeb72",
+    "ios-session.zsh": "adadef17d7a8c4287c911c7212c4b39e72e98554e717b9b6c6ecf7e684dabebe",
+    "run_xcode.py": "ec342f7db251fa4d50709dc72c955a7f300b58b3dd6e4c8b56240692a6dee5b5",
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "install_app.py": "b9540796b420a74082045e600a88099cb3fcc0c8c69c8d05c942117dbe0d086a",
+    "capture_review.py": "beb9328772a5b2c984b60e3bc94eb769ed556fdfd0d4de6883d1667829080591"
+  },
+  "fileSHA256": {
+    "preflight.py": "a9eca94efa985fb61dd220e3f4ca50d5364c656e160231147dcba7494a5aeb72",
+    "ios-session.zsh": "98ed530eac5e623e23f6663b2ed5b2648b06105fa6f0aaca3b52ceff9c6cfe31",
+    "run_xcode.py": "9b1d7c50929dc5320b5b663febdbaca26d51284be9ec4bbde76dabb3cf52116d",
+    "build_ios.py": "564e41dd97b8fedbaef32bc697099955e21441c1bc8ff1ff5b95ce2ecfb57570",
+    "install_app.py": "c21924a98fe7ceecd44661c582fa65120c7fb94ea06a786e2806ade1e1bdb626",
+    "capture_review.py": "2ba23610028ecd030c60e7b2cf84fc654d2bc699b9949b266ca69d721bce40b0"
+  }
+}

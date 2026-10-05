@@ -1,0 +1,10 @@
+{
+  "exitStatus": 0,
+  "command": [
+    "rtk",
+    "proxy",
+    "python3",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/startup-observation-runtime-prep-v2/check-observation.py",
+    ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-observation-action-landscape"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "checks": {
+    "completeContiguous": true,
+    "censusGateEnabled": true,
+    "realHandsEnabled": true,
+    "actualConstructorsObserved": false,
+    "allConstructedCamerasConfigured": true,
+    "allSchemaIdentityTombstoneAssociationsValid": true,
+    "all12HaveExistingCensusBrackets": false
+  },
+  "traceSHA256": "6d5eba850131777d8c4f78be71aad51b71b245c72657add944f23e8b7ba3cc1c",
+  "errors": [],
+  "constructorCount": 0,
+  "constructorRecords": [],
+  "lifecycleAndCameraEvents": [],
+  "snapshots": [
+    {
+      "sequence": 8,
+      "epoch": 1791003464.170851,
+      "event": "highlight-before",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    },
+    {
+      "sequence": 9,
+      "epoch": 1791003464.172275,
+      "event": "highlight-after",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    },
+    {
+      "sequence": 10,
+      "epoch": 1791003464.174546,
+      "event": "view-make",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    },
+    {
+      "sequence": 12,
+      "epoch": 1791003464.39045,
+      "event": "detach-trial-before",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    },
+    {
+      "sequence": 13,
+      "epoch": 1791003464.390991,
+      "event": "detach-trial-after",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    },
+    {
+      "sequence": 14,
+      "epoch": 1791003464.391506,
+      "event": "view-disappear",
+      "boardSceneToken": "56535604-AD18-4940-8349-F8BA10D3B61C",
+      "lifetimes": []
+    }
+  ],
+  "captureBrackets": [],
+  "limitations": [
+    "No fixed constructor count, overlap, alive/attached or last-appearance outcome is required.",
+    "All UUID lifetimes remain separate even if pointer strings are reused.",
+    "Weak liveness and last SwiftUI event are point observations; not actual presenting UIKit host, GPU work, or exact deallocation evidence.",
+    "Snapshots come from existing board checkpoints only. Brackets may span time; no claim of hand state at every instant.",
+    "Source bookkeeping can perturb timing; failure reproduction judged independently from whole images."
+  ]
+}

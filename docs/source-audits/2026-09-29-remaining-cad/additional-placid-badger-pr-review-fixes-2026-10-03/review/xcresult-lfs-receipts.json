@@ -1,0 +1,778 @@
+{
+  "reviewedCommit": "184e4a70bd320922a4083b581ed2757490ad20c5",
+  "capturedUTC": "2026-10-04T03:39:07.143643+00:00",
+  "count": 45,
+  "allCommittedAsLFSPointers": true,
+  "allLocalObjectHashesAndSizesMatchOIDs": true,
+  "allAttributesSelectLFS": true,
+  "archives": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/additional-placid-badger-final-validation-2026-10-03/validation/final-natural-workflows.xcresult.zip",
+      "oidSHA256": "2dfd1d8273bce790dd8018aa23d80f1384fdad59791c031eb32639704435e4a8",
+      "localSHA256": "2dfd1d8273bce790dd8018aa23d80f1384fdad59791c031eb32639704435e4a8",
+      "objectBytes": 1925432,
+      "committedPointerSHA256": "41e8eedd0ff43d020d017d0eeda7c6363bf928e6605bd9c2b8821763f5dfb477",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:2dfd1d8273bce790dd8018aa23d80f1384fdad59791c031eb32639704435e4a8\nsize 1925432\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/additional-placid-badger-final-validation-2026-10-03/validation/final-ui-regressions.xcresult.zip",
+      "oidSHA256": "bb263a730e78015763160e135fef18196f9413716de90d1de64cfa8abb149907",
+      "localSHA256": "bb263a730e78015763160e135fef18196f9413716de90d1de64cfa8abb149907",
+      "objectBytes": 3619025,
+      "committedPointerSHA256": "9dfdaea719c9067e894e5f3f207808926462239953f5a98bfb247c2340a80213",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:bb263a730e78015763160e135fef18196f9413716de90d1de64cfa8abb149907\nsize 3619025\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/additional-placid-badger-final-validation-2026-10-03/validation/plateau-layout-red.xcresult.zip",
+      "oidSHA256": "cd913adeedf3c6e56ee46569aad3aba692a16be01e43970ba944d15c9b29eba3",
+      "localSHA256": "cd913adeedf3c6e56ee46569aad3aba692a16be01e43970ba944d15c9b29eba3",
+      "objectBytes": 19990697,
+      "committedPointerSHA256": "414904b92482148802650241d551cc43be084c4d1c36b0f83d67ed30c4f26634",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:cd913adeedf3c6e56ee46569aad3aba692a16be01e43970ba944d15c9b29eba3\nsize 19990697\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/board-ui-reviewed-corrections/tests-placid-badger-cad-second-half-board-ui-reviewed-corrections.xcresult.zip",
+      "oidSHA256": "ff0ac08391499b45fa760709d0ca69dcc4158fea67715ab1dda441d53e808a4b",
+      "localSHA256": "ff0ac08391499b45fa760709d0ca69dcc4158fea67715ab1dda441d53e808a4b",
+      "objectBytes": 12951240,
+      "committedPointerSHA256": "ceb6384582e271ecc4a12e5b25468b5eaa8961bb47f55c4ff6edfe85c3c640d7",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:ff0ac08391499b45fa760709d0ca69dcc4158fea67715ab1dda441d53e808a4b\nsize 12951240\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/build-compatibility-integration/build-placid-badger-cad-second-half-compatibility-integration.xcresult.zip",
+      "oidSHA256": "1315a7cd81fc51134c4acaaa428923a98e9cc85caaee1ac5daa56ef9a6be5011",
+      "localSHA256": "1315a7cd81fc51134c4acaaa428923a98e9cc85caaee1ac5daa56ef9a6be5011",
+      "objectBytes": 39944,
+      "committedPointerSHA256": "fc6ab335c9b9d4f8a937611e78c184828ce804a78f44e70b3a3fa3b502909809",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:1315a7cd81fc51134c4acaaa428923a98e9cc85caaee1ac5daa56ef9a6be5011\nsize 39944\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-compatibility/full-unit-compatibility-integration/tests-placid-badger-cad-second-half-full-unit-compatibility-integration.xcresult.zip",
+      "oidSHA256": "7544ef25e103e75e0c817d7d05c06102da9ff2752476d3929d9df4fd40c669fa",
+      "localSHA256": "7544ef25e103e75e0c817d7d05c06102da9ff2752476d3929d9df4fd40c669fa",
+      "objectBytes": 2650755,
+      "committedPointerSHA256": "314ad8c20b24e40e8c1fb4564ba997faf07464062dc4e0e229e25934b51cd4be",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:7544ef25e103e75e0c817d7d05c06102da9ff2752476d3929d9df4fd40c669fa\nsize 2650755\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-final-validation-phase3/final-integrated-validation/tests-placid-badger-cad-second-half-final-integrated-validation.xcresult.zip",
+      "oidSHA256": "33d6462ea7a14902e2159325a300b963f7457475522e190b4f53ca75bdce2dd7",
+      "localSHA256": "33d6462ea7a14902e2159325a300b963f7457475522e190b4f53ca75bdce2dd7",
+      "objectBytes": 7585389,
+      "committedPointerSHA256": "390fa1c8b9d84f356d90fcee07546185318de253fdf9b20326df30bcc8233518",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:33d6462ea7a14902e2159325a300b963f7457475522e190b4f53ca75bdce2dd7\nsize 7585389\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/build-reviewed-corrections/build-placid-badger-cad-second-half-reviewed-corrections.xcresult.zip",
+      "oidSHA256": "90991050c0b1bd5bceb002b080f8c5d16690526d659ac2537538b8371eeb3bb8",
+      "localSHA256": "90991050c0b1bd5bceb002b080f8c5d16690526d659ac2537538b8371eeb3bb8",
+      "objectBytes": 34283,
+      "committedPointerSHA256": "c1d46a3e8d0fb3589d8e890dd49578cc6852f870da8710580b9ffcdcee4930e4",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:90991050c0b1bd5bceb002b080f8c5d16690526d659ac2537538b8371eeb3bb8\nsize 34283\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-reviewed-unit/full-unit-reviewed-corrections/tests-placid-badger-cad-second-half-full-unit-reviewed-corrections.xcresult.zip",
+      "oidSHA256": "e1dd6ebd817de1d0bdc80f56b89623c5e5d3fad6037503a45ec30e26a42ac520",
+      "localSHA256": "e1dd6ebd817de1d0bdc80f56b89623c5e5d3fad6037503a45ec30e26a42ac520",
+      "objectBytes": 50327156,
+      "committedPointerSHA256": "8b559542fd16a11288b7b3b20885b9045d42f3100cf06674c5d06d2ae36dc48a",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:e1dd6ebd817de1d0bdc80f56b89623c5e5d3fad6037503a45ec30e26a42ac520\nsize 50327156\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-integration-test-corrections/build-placid-badger-cad-second-half-integration-test-corrections.xcresult.zip",
+      "oidSHA256": "036fbcd281533468847f57107986074c79fe666c81e3a3cbee1c120f84306fbb",
+      "localSHA256": "036fbcd281533468847f57107986074c79fe666c81e3a3cbee1c120f84306fbb",
+      "objectBytes": 36131,
+      "committedPointerSHA256": "e04f4ab162ba74c5e642829de659743043beca6834e45041052794077793bb63",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:036fbcd281533468847f57107986074c79fe666c81e3a3cbee1c120f84306fbb\nsize 36131\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-penta-task-correction-retry/build-placid-badger-cad-second-half-penta-task-correction-retry.xcresult.zip",
+      "oidSHA256": "e8553f3bb0cf43dd9702d0cb75eafbc7dc71aeca56eb389bb5bd584d10296bae",
+      "localSHA256": "e8553f3bb0cf43dd9702d0cb75eafbc7dc71aeca56eb389bb5bd584d10296bae",
+      "objectBytes": 43480,
+      "committedPointerSHA256": "2caeea29a505f75202791defdbc7647050afb48d9d75f4b9025e143eb74495eb",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:e8553f3bb0cf43dd9702d0cb75eafbc7dc71aeca56eb389bb5bd584d10296bae\nsize 43480\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/build-penta-task-correction/build-placid-badger-cad-second-half-penta-task-correction.xcresult.zip",
+      "oidSHA256": "7f263bd03999581cc5a701a9d9025f502631e875d13671420b2d0bd0e5cb5055",
+      "localSHA256": "7f263bd03999581cc5a701a9d9025f502631e875d13671420b2d0bd0e5cb5055",
+      "objectBytes": 44326,
+      "committedPointerSHA256": "5ce119ead63f7db26a5cd79a129d3041ef8d5ab624836d448a8726eeb35b41af",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:7f263bd03999581cc5a701a9d9025f502631e875d13671420b2d0bd0e5cb5055\nsize 44326\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/integration-test-corrections-focus/tests-placid-badger-cad-second-half-integration-test-corrections-focus.xcresult.zip",
+      "oidSHA256": "fff1029e8f3f3de5353da53eef13eddc1b06dbbeaaa8d44f0c3e7904d83e336f",
+      "localSHA256": "fff1029e8f3f3de5353da53eef13eddc1b06dbbeaaa8d44f0c3e7904d83e336f",
+      "objectBytes": 183359989,
+      "committedPointerSHA256": "eb137a7a3e445be2a44d3a9e808cf9ba90921f20ec496ee5ef5d5cd41d7cd15f",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:fff1029e8f3f3de5353da53eef13eddc1b06dbbeaaa8d44f0c3e7904d83e336f\nsize 183359989\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence-test-corrections/penta-task-correction-focus/tests-placid-badger-cad-second-half-penta-task-correction-focus.xcresult.zip",
+      "oidSHA256": "e9e922badbe70c8fa6f75297932952d0f68c96f89cb70b304fc37473d49a1bfc",
+      "localSHA256": "e9e922badbe70c8fa6f75297932952d0f68c96f89cb70b304fc37473d49a1bfc",
+      "objectBytes": 74405,
+      "committedPointerSHA256": "432d1820b947932fd2fc19be98d70c4479d76542d0303fb09c4f49a8ee94f5e2",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:e9e922badbe70c8fa6f75297932952d0f68c96f89cb70b304fc37473d49a1bfc\nsize 74405\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-ci/build-placid-badger-cad-second-half-ci.xcresult.zip",
+      "oidSHA256": "28a9f3b19447771131235895f6d2d0b2b208e3b92dbb510f9f51e56195c885ff",
+      "localSHA256": "28a9f3b19447771131235895f6d2d0b2b208e3b92dbb510f9f51e56195c885ff",
+      "objectBytes": 36950,
+      "committedPointerSHA256": "4b0f77d87d7c37154fbf6237b0cbc93d9df6e89dc3f172a390281aa19ddaaa9b",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:28a9f3b19447771131235895f6d2d0b2b208e3b92dbb510f9f51e56195c885ff\nsize 36950\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-retry/build-placid-badger-cad-second-half-retry.xcresult.zip",
+      "oidSHA256": "52d0b5462a305d54532d7e89fbb81d97a15e0cee3bbfcce3554889d5f2ce0e58",
+      "localSHA256": "52d0b5462a305d54532d7e89fbb81d97a15e0cee3bbfcce3554889d5f2ce0e58",
+      "objectBytes": 46589,
+      "committedPointerSHA256": "2242de22ee84c1146dd98f2cf6fba20cec1e0b7c7f12a42b8598b35f465a367c",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:52d0b5462a305d54532d7e89fbb81d97a15e0cee3bbfcce3554889d5f2ce0e58\nsize 46589\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-terminal-green/build-placid-badger-cad-second-half-terminal-green.xcresult.zip",
+      "oidSHA256": "b43fc56c617894fab99b101ad1448a7053d2e3c62d63eec5bad29ff9b4835e3b",
+      "localSHA256": "b43fc56c617894fab99b101ad1448a7053d2e3c62d63eec5bad29ff9b4835e3b",
+      "objectBytes": 41221,
+      "committedPointerSHA256": "f656f7221950433d53fd9425f1a6a314beb920b1cbd139a609861c94ef43e818",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:b43fc56c617894fab99b101ad1448a7053d2e3c62d63eec5bad29ff9b4835e3b\nsize 41221\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/build-terminal-red/build-placid-badger-cad-second-half-terminal-red.xcresult.zip",
+      "oidSHA256": "5c8e2a4edf368701d06fca81c2e868dd46ba553fb30987be9a949ff804b56c69",
+      "localSHA256": "5c8e2a4edf368701d06fca81c2e868dd46ba553fb30987be9a949ff804b56c69",
+      "objectBytes": 71028,
+      "committedPointerSHA256": "852289359b8d10e0fc06da51fbda290f31d4d200bcab891c1bd216e7cc37356e",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:5c8e2a4edf368701d06fca81c2e868dd46ba553fb30987be9a949ff804b56c69\nsize 71028\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/focused-pause/tests-placid-badger-cad-second-half-focused-pause.xcresult.zip",
+      "oidSHA256": "8600427df1c8843c8f092b94297c73feb171494e60aa6b9b5c43e81e2a119dcb",
+      "localSHA256": "8600427df1c8843c8f092b94297c73feb171494e60aa6b9b5c43e81e2a119dcb",
+      "objectBytes": 165865793,
+      "committedPointerSHA256": "4f9d6c169f34c442a9d4400f08674c958f3d227c9163e2f1c2e413e2e8388afd",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:8600427df1c8843c8f092b94297c73feb171494e60aa6b9b5c43e81e2a119dcb\nsize 165865793\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/full-unit-ci-recipe/tests-placid-badger-cad-second-half-full-unit-ci-recipe.xcresult.zip",
+      "oidSHA256": "1fbbea7fca7e9733b0b4ac84838d4511e9a007a590309a9349f403ab85a3d7b6",
+      "localSHA256": "1fbbea7fca7e9733b0b4ac84838d4511e9a007a590309a9349f403ab85a3d7b6",
+      "objectBytes": 191742518,
+      "committedPointerSHA256": "058b40ea37872eccb0be190f9258c62cf046e00582e2d9a6b54e7a08bfb15adc",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:1fbbea7fca7e9733b0b4ac84838d4511e9a007a590309a9349f403ab85a3d7b6\nsize 191742518\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/additional-raw-evidence/pause-timing-controller/tests-placid-badger-cad-second-half-pause-timing-controller.xcresult.zip",
+      "oidSHA256": "59b447868394d0ba020814cbad424e48a14beaf515a27d771b805554b46d3233",
+      "localSHA256": "59b447868394d0ba020814cbad424e48a14beaf515a27d771b805554b46d3233",
+      "objectBytes": 172185407,
+      "committedPointerSHA256": "3521eb3440bd66c9df3c18700907bbed752e7990736a6b6279a9540b1f15a3d9",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:59b447868394d0ba020814cbad424e48a14beaf515a27d771b805554b46d3233\nsize 172185407\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/board-ui-clean-modal-setup/tests-placid-badger-cad-second-half-board-ui-clean-modal-setup.xcresult.zip",
+      "oidSHA256": "6795d6760acfa2eba24d02f7ff44bb19c3c756c12a0c168b74cd91fb06fea200",
+      "localSHA256": "6795d6760acfa2eba24d02f7ff44bb19c3c756c12a0c168b74cd91fb06fea200",
+      "objectBytes": 4936771,
+      "committedPointerSHA256": "efc06ec22174369b54a37f84862174e72a061e610a6fcb69a114f475b5400294",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:6795d6760acfa2eba24d02f7ff44bb19c3c756c12a0c168b74cd91fb06fea200\nsize 4936771\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-boundary-evidence/boundary-audit-green/tests-placid-badger-cad-second-half-boundary-audit-green.xcresult.zip",
+      "oidSHA256": "a804b5e8a6abdc4fe87d9fa1594d8c636230de5db41111267e18e46dcd8d1027",
+      "localSHA256": "a804b5e8a6abdc4fe87d9fa1594d8c636230de5db41111267e18e46dcd8d1027",
+      "objectBytes": 55144,
+      "committedPointerSHA256": "3e2462d433b9a3df91c572748e83361b65c652244c4a3f823a72b23536b40ef8",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:a804b5e8a6abdc4fe87d9fa1594d8c636230de5db41111267e18e46dcd8d1027\nsize 55144\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/pause-timing-optimized/tests-placid-badger-cad-second-half-pause-timing-optimized.xcresult.zip",
+      "oidSHA256": "67b00e16a7daad3d7cdbf2555de0ff3043db5465a32338ddd8f4f6cfbd56e09c",
+      "localSHA256": "67b00e16a7daad3d7cdbf2555de0ff3043db5465a32338ddd8f4f6cfbd56e09c",
+      "objectBytes": 34946,
+      "committedPointerSHA256": "d7c130062d19618b96fe52796f13123df05ee5c41f47bfe65461d397fb23a0df",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:67b00e16a7daad3d7cdbf2555de0ff3043db5465a32338ddd8f4f6cfbd56e09c\nsize 34946\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/terminal-readiness-green/tests-placid-badger-cad-second-half-terminal-readiness-green.xcresult.zip",
+      "oidSHA256": "a24497a6623d71df2f9205b527ab97390d241b37a8b563224fb58f880bcb4ca2",
+      "localSHA256": "a24497a6623d71df2f9205b527ab97390d241b37a8b563224fb58f880bcb4ca2",
+      "objectBytes": 64994,
+      "committedPointerSHA256": "28db92e95c22423123685226f94833e88fc4f414a8a449256b285fe9aec6fa09",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:a24497a6623d71df2f9205b527ab97390d241b37a8b563224fb58f880bcb4ca2\nsize 64994\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/combined-integration-2026-10-03/focused-evidence/terminal-readiness-red/tests-placid-badger-cad-second-half-terminal-readiness-red.xcresult.zip",
+      "oidSHA256": "b8f3dbb459418a1a95798d9f8a92d40fff1a0f0378b1cc8e5b1e9c44b21ec4a7",
+      "localSHA256": "b8f3dbb459418a1a95798d9f8a92d40fff1a0f0378b1cc8e5b1e9c44b21ec4a7",
+      "objectBytes": 43606654,
+      "committedPointerSHA256": "7386a85597ef29cc3b20103280ac36c433fae8107d57703b6f55a686e687f03f",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:b8f3dbb459418a1a95798d9f8a92d40fff1a0f0378b1cc8e5b1e9c44b21ec4a7\nsize 43606654\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/failed-boundary-binding-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "a5c9adf357786f84bfe06b153dccebab46294e06306a9e6e1d9e254233dc5b8a",
+      "localSHA256": "a5c9adf357786f84bfe06b153dccebab46294e06306a9e6e1d9e254233dc5b8a",
+      "objectBytes": 44050,
+      "committedPointerSHA256": "cde1be556005f3a3c7b2bae6d756602d89f182d95b091527b876c78f7a879584",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:a5c9adf357786f84bfe06b153dccebab46294e06306a9e6e1d9e254233dc5b8a\nsize 44050\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/failed-manifest-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "2bf468f82368c2b688339de03cd2547e547fa9586f50f784941c1e4d3c118ad7",
+      "localSHA256": "2bf468f82368c2b688339de03cd2547e547fa9586f50f784941c1e4d3c118ad7",
+      "objectBytes": 96158,
+      "committedPointerSHA256": "18142490fe0f012293b5b8be3b186fa2c7b8c8444dc26027ddb993e243327d4e",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:2bf468f82368c2b688339de03cd2547e547fa9586f50f784941c1e4d3c118ad7\nsize 96158\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/failed-runtime-integration-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "fa6a5ebb36077cd75dd5458bf028f9c974546b1382dcc4fe01ab3b05343348e6",
+      "localSHA256": "fa6a5ebb36077cd75dd5458bf028f9c974546b1382dcc4fe01ab3b05343348e6",
+      "objectBytes": 46688274,
+      "committedPointerSHA256": "120ec16a116c8ee8741cf7668d3a2c4da0b8af46032b8718586adbf7f9df3bec",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:fa6a5ebb36077cd75dd5458bf028f9c974546b1382dcc4fe01ab3b05343348e6\nsize 46688274\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/failed-test-merge-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "f8c21b902d5b87f42d0c9ca7ba36990744eb3bfc8302dd7d786228c60f4d8ece",
+      "localSHA256": "f8c21b902d5b87f42d0c9ca7ba36990744eb3bfc8302dd7d786228c60f4d8ece",
+      "objectBytes": 38112,
+      "committedPointerSHA256": "a8f0b0da00d2dec58d158156d302aa0216abd4ea65e2017d9afdaf8aa0575440",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:f8c21b902d5b87f42d0c9ca7ba36990744eb3bfc8302dd7d786228c60f4d8ece\nsize 38112\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/failed-workout-api-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "98853464bf3a5ccbfd02313a5fd1a0d8b4957dcc6a86512dc985d5430b9b236f",
+      "localSHA256": "98853464bf3a5ccbfd02313a5fd1a0d8b4957dcc6a86512dc985d5430b9b236f",
+      "objectBytes": 48614,
+      "committedPointerSHA256": "e4c6980e07bd9f90699e8061f30cb132fd1afa3d57978fd3763cbcedc94c572a",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:98853464bf3a5ccbfd02313a5fd1a0d8b4957dcc6a86512dc985d5430b9b236f\nsize 48614\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/interrupted-physics-repeat-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "e9a9096691ee728f574c6bb0c898edfa70f004ee58f95cd823e4b1c3fc61d66d",
+      "localSHA256": "e9a9096691ee728f574c6bb0c898edfa70f004ee58f95cd823e4b1c3fc61d66d",
+      "objectBytes": 41487721,
+      "committedPointerSHA256": "ab1e4f38b8cdb6f3ec052e931ddecf5ac623255a980ccd62a55291ea04e153aa",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:e9a9096691ee728f574c6bb0c898edfa70f004ee58f95cd823e4b1c3fc61d66d\nsize 41487721\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/main-sync-2026-10-03/evidence/raw-results/passed-final-contracts-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "999c86c640446e8f7454cd76a6081e8ae9aed713cf6bce42318c6d984a1afeb1",
+      "localSHA256": "999c86c640446e8f7454cd76a6081e8ae9aed713cf6bce42318c6d984a1afeb1",
+      "objectBytes": 285980,
+      "committedPointerSHA256": "f6978a60e3a0db215987d692de859a09d9c39fcd78ac40785a0dae56cff2bd6c",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:999c86c640446e8f7454cd76a6081e8ae9aed713cf6bce42318c6d984a1afeb1\nsize 285980\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-readiness-tests/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "1eaf6369a116de4cb11ad624d945195708126e47effac8e4e4810751caf9e3d3",
+      "localSHA256": "1eaf6369a116de4cb11ad624d945195708126e47effac8e4e4810751caf9e3d3",
+      "objectBytes": 204433,
+      "committedPointerSHA256": "2afa44bf063cac30654d276a95f7479bb6cb2f8844dbadc554dd5ac4455fe8d6",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:1eaf6369a116de4cb11ad624d945195708126e47effac8e4e4810751caf9e3d3\nsize 204433\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/clean-workout-regression-tests/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "7c10ff989657378c1d11cbc3982a49d05c715a1a61804c309746bfb09e2ce046",
+      "localSHA256": "7c10ff989657378c1d11cbc3982a49d05c715a1a61804c309746bfb09e2ce046",
+      "objectBytes": 125206,
+      "committedPointerSHA256": "e8be562dbf088c248244b44e1957ec1a26fcb87afbe876565a33db618bec6af7",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:7c10ff989657378c1d11cbc3982a49d05c715a1a61804c309746bfb09e2ce046\nsize 125206\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/ios/build-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "3a0253795b2c1eb4bf9215e3ac25cde52223dbe027ce824d86e30898937bfc65",
+      "localSHA256": "3a0253795b2c1eb4bf9215e3ac25cde52223dbe027ce824d86e30898937bfc65",
+      "objectBytes": 87178,
+      "committedPointerSHA256": "599a8403a0bdb6bb74eff5a602d9b484466f2209e23d84057ac2d6e580cc05fb",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:3a0253795b2c1eb4bf9215e3ac25cde52223dbe027ce824d86e30898937bfc65\nsize 87178\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-final-green/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "625bd73e31b7b2c4dbea9f9763d863c312e17a597589132e65768493c6d60250",
+      "localSHA256": "625bd73e31b7b2c4dbea9f9763d863c312e17a597589132e65768493c6d60250",
+      "objectBytes": 182511,
+      "committedPointerSHA256": "122250bd60a91d0d4480c35802309c23afd2f11679bf907e3dd49b5fd5670cc9",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:625bd73e31b7b2c4dbea9f9763d863c312e17a597589132e65768493c6d60250\nsize 182511\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-green/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "1e7f8b5ba469eba90707bc523f989fc3bf7493811d1f5941def3474c193bcbbc",
+      "localSHA256": "1e7f8b5ba469eba90707bc523f989fc3bf7493811d1f5941def3474c193bcbbc",
+      "objectBytes": 191930,
+      "committedPointerSHA256": "9b330d787c991a08e6c3d6d188ce3e879182d8261ddaf42a17de3ae8c3f00d96",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:1e7f8b5ba469eba90707bc523f989fc3bf7493811d1f5941def3474c193bcbbc\nsize 191930\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-host-green/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "9d3aa27af29ce53da659ef7c4157088c70e5a14e2cca8562be81d63380710962",
+      "localSHA256": "9d3aa27af29ce53da659ef7c4157088c70e5a14e2cca8562be81d63380710962",
+      "objectBytes": 189431,
+      "committedPointerSHA256": "b007fffafa0aeb0bc1610053b39436a668d127e1dec222c351f2a7cda164fb50",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:9d3aa27af29ce53da659ef7c4157088c70e5a14e2cca8562be81d63380710962\nsize 189431\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-host-red/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "dbc0f9d9ae152d2ad6c552f9492149ff91c767364313c6e60c1ecb770a2cb90a",
+      "localSHA256": "dbc0f9d9ae152d2ad6c552f9492149ff91c767364313c6e60c1ecb770a2cb90a",
+      "objectBytes": 43946198,
+      "committedPointerSHA256": "66ee82853d055ae890ee29b3ab76de5c486a77abf350953da9fdeb4781b6feb3",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:dbc0f9d9ae152d2ad6c552f9492149ff91c767364313c6e60c1ecb770a2cb90a\nsize 43946198\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-red/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "fe3c6077693545afa7b9c25273a17ee9556411bb0f024caf56c8034d92911142",
+      "localSHA256": "fe3c6077693545afa7b9c25273a17ee9556411bb0f024caf56c8034d92911142",
+      "objectBytes": 42518122,
+      "committedPointerSHA256": "a2cd0ffdd42721fe91c7d19602ceeee6616b0c71bb463a9445bebaa91ab738b1",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:fe3c6077693545afa7b9c25273a17ee9556411bb0f024caf56c8034d92911142\nsize 42518122\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-revised-green/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "ee7c2c300b5041fc1c7c1bf8eec6b435600d4542a0045313615dce7d857307ea",
+      "localSHA256": "ee7c2c300b5041fc1c7c1bf8eec6b435600d4542a0045313615dce7d857307ea",
+      "objectBytes": 17728,
+      "committedPointerSHA256": "32ae51739b792991dcdb788f36bc739ccc6c01f443c60720b89fca3949214da8",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:ee7c2c300b5041fc1c7c1bf8eec6b435600d4542a0045313615dce7d857307ea\nsize 17728\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/post-main-presentation-2026-10-03/raw/readiness-token-green/tests-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "2f67f74680937606a12a388c095be5b5ee8299e7bac8b8a0ee19c3c71a70db55",
+      "localSHA256": "2f67f74680937606a12a388c095be5b5ee8299e7bac8b8a0ee19c3c71a70db55",
+      "objectBytes": 193093,
+      "committedPointerSHA256": "0f2ddbe96ec5378e5945dbaaf5ea7fc09523086871a731b63d7485b6939354b6",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:2f67f74680937606a12a388c095be5b5ee8299e7bac8b8a0ee19c3c71a70db55\nsize 193093\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-board-frame-2026-10-03/raw/raw-results/cache-green-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "46888338f803b5feaab1750e369a16e48c6813afe23228663fd2eef8b7826a86",
+      "localSHA256": "46888338f803b5feaab1750e369a16e48c6813afe23228663fd2eef8b7826a86",
+      "objectBytes": 73730,
+      "committedPointerSHA256": "f14b4d80d914fdfee102972fa5fb5daee6724ad446aae58e4c6feadffad5fa3c",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:46888338f803b5feaab1750e369a16e48c6813afe23228663fd2eef8b7826a86\nsize 73730\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-board-frame-2026-10-03/raw/raw-results/cache-red-placid-badger-cad-second-half.xcresult.zip",
+      "oidSHA256": "0b04ed5e8787f3a476c43eebb09f87502814570facf269739d18e3b58ab08ddc",
+      "localSHA256": "0b04ed5e8787f3a476c43eebb09f87502814570facf269739d18e3b58ab08ddc",
+      "objectBytes": 42165061,
+      "committedPointerSHA256": "63930863a927b8dc3137ed6de521f4b1607b5224618f701801bde3a2c003d45d",
+      "committedPointerText": "version https://git-lfs.github.com/spec/v1\noid sha256:0b04ed5e8787f3a476c43eebb09f87502814570facf269739d18e3b58ab08ddc\nsize 42165061\n",
+      "gitAttributes": {
+        "diff": "lfs",
+        "merge": "lfs",
+        "text": "unset",
+        "filter": "lfs"
+      },
+      "localObjectIsZIP": true,
+      "ignoredByCurrentPatterns": false,
+      "checkIgnoreOutput": ""
+    }
+  ],
+  "limits": [
+    "No index mutation, git add, download or source/binary rewrite was performed."
+  ]
+}

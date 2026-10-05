@@ -1,0 +1,26 @@
+{
+  "nativePackageByteUnchanged": true,
+  "files": [
+    {
+      "path": "Hangboards/zlagboard-pro/zlagboard-pro.FCStd",
+      "sha256": "44028d9bb5f7f301aab912da164e9e6684aa9533bfbe9cda55a6fde2819da72a"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "sha256": "eda5db09ff9069d5bd2c12aaffcadb154dc7c2b3cd68e022b2b2b2aa05a51684"
+    },
+    {
+      "path": "Hangboards/zlagboard-pro/assets/primary.model.json",
+      "sha256": "71fa8f295d119f476a99b0885f4b24ce9a1b1b1d789b9f690c1bd78a0274930f"
+    }
+  ],
+  "sourceAndAssetHashesExactAcceptedRevision": true,
+  "noNewExportOrGeometryChange": true,
+  "sourceAudit": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/source-audit.md",
+  "manufacturerWholeSourcesReviewed": [
+    "sources/product-01.png",
+    "sources/product-02.png"
+  ],
+  "displayEstimateLabelsPreserved": true,
+  "proof": "Worker preservation audit and current generated manifest/source freeze"
+}

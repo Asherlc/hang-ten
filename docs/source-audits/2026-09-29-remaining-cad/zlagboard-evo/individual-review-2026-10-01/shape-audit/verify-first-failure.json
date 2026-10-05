@@ -1,0 +1,6 @@
+{
+  "exitCode": 3,
+  "location": "verify-candidate.py:9",
+  "error": "AssertionError comparing binders and support faces in sequence; binder topology orders faces independently of Support subname order. Check unordered geometric signatures instead.",
+  "savedSourceModified": false
+}

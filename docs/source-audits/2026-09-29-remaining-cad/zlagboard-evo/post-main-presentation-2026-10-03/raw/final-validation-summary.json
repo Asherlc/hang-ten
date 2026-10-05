@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "a314f39c03121465b493da6f45e49fa7c928b1cc",
+  "sourceReferenceSHA256": "7f77c0b2161c28e55f026b0e8fd72eda63a3f8e030a6b5554b63958255a6dbb6",
+  "testedBinarySHA256": "97f7f90cc61f594cb75c4fe17e68dade07ffa90173cad7d3b3b986944fd69453",
+  "sourceUnchangedAfterTestsAndCaptures": true,
+  "readinessAndTimelineTestsPassed": 86,
+  "sessionAndAudioPolicyTestsPassed": 47,
+  "fullIOSSuiteClaimed": false,
+  "cleanEvoScheduledImages": 58,
+  "cleanProScheduledImages": 58,
+  "portraitAudioEnabledSmokeImages": 25,
+  "wholeImageVerdicts": [
+    "clean-evo-whole-visual-review.json",
+    "clean-pro-whole-visual-review.json",
+    "clean-portrait-audio-whole-visual-review.json"
+  ],
+  "rawHistoricalFailureStatusPreserved": true,
+  "canonicalPackagesChanged": false,
+  "reviewQueueChanged": false,
+  "humanAcceptanceChanged": false,
+  "noPhysicalDeviceAvailable": true,
+  "noCPUOrPresentedFrameGuarantee": true
+}

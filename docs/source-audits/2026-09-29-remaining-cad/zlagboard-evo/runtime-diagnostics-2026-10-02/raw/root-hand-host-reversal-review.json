@@ -1,0 +1,30 @@
+{
+  "reviewer": "Astra primary agent",
+  "method": "Viewed complete screenshots; OFF additionally reopened individually. No pixel measurements.",
+  "images": [
+    {
+      "path": "hand-on-a-landscape/next-active-timed-2.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "visibleStep": "Step3 active Hang",
+      "boardPocketColor": "blue",
+      "correct": false
+    },
+    {
+      "path": "hand-off-a-landscape/next-active-timed-2.png",
+      "sha256": "bf4c4b7f5f0124c5fb22b2e85f018c15481bc4ad379a380e0a9f08e331ce71dc",
+      "visibleStep": "Step3 active Hang",
+      "boardPocketColor": "red",
+      "correct": true
+    },
+    {
+      "path": "hand-on-b-landscape/next-active-timed-2.png",
+      "sha256": "6806ee0b4b98b43655ad0ad4d5fddbd3fc87b019b838331c64cde1331fee4602",
+      "visibleStep": "Step3 active Hang",
+      "boardPocketColor": "blue",
+      "correct": false
+    }
+  ],
+  "correction": "Worker incorrectly reported OFF as blue; exact previously recorded hash matches current image, so this was visual misclassification, not an image overwrite. Root corrected user-facing progress after independently inspecting.",
+  "inference": "This reversal supports simultaneous hand/board host involvement under the current default board camera configuration. It does not yet establish that combining hosts is required or that camera selection is irrelevant.",
+  "humanAcceptance": false
+}

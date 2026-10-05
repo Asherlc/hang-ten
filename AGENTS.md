@@ -51,8 +51,8 @@ is never committed and an on-disk copy is rejected. Change the CAD metadata
 with `Tools/HangboardCAD/set_board_manifest.py`. A CAD package may keep its
 cord setup in a separate `suspension.json`; generation merges that authoring
 file into `board.json`, and both app platforms stage only the generated file.
-The sidecar must match the descriptor's model SHA-256 and is covered by the
-delivery lock. See `Tools/HangboardCAD/README.md`. Building or validating
+The sidecar must match the descriptor's model SHA-256 and is checked by package
+validation. See `Tools/HangboardCAD/README.md`. Building or validating
 packages needs the FCStd Git LFS objects, not pointers.
 
 Do not use image-driven hold detection, segmentation, generated masks or
@@ -90,6 +90,21 @@ For missing or changed cords on model-media boards, use the repository-local
 the only Apple On-Demand Resource; suspension is bundled package metadata and
 renders as transient, non-pickable geometry. Current retained source facts and
 evidence govern representation decisions, not superseded design assumptions.
+
+For a corded CAD board, preserve the evidenced connection graph and follow
+[`docs/HANGBOARD_CORD_AUTHORING.md`](docs/HANGBOARD_CORD_AUTHORING.md). For
+connected internal mouth pairs, the standard method models the hidden passage
+as an FCStd void, uses `twoBranchCord` (or `threadedLoopCord`) with
+`internalLoop` in `suspension.json`, and measures its channel length with
+`measure_channel_spines.py`. For source-backed independent visible leads,
+exterior wraps, or mouths whose hidden connection is unknown, use the
+`cadRoutedCord` topology and authoring `ropeSolver.method: "nativeRoutes"`;
+never invent a hidden join to fit the connected-passage method. Generate every
+canonical pose against the actual CAD solid with `solve_threaded_rope.py
+--apply`, reproduce it with `--check`, and retain native-solid clearance,
+length, tube and topology checks. Do not hand-author cord routes or keep a
+`pairedLeadCord` when a board moves to CAD; extend the solver with evidence and
+tests when the supported native methods do not fit.
 
 ## CodeGraph
 

@@ -1,0 +1,66 @@
+{
+  "incut-reorientation.png": {
+    "beforeSHA256": "ed8666aa38891a9408c32e0c4243cb916b01dbee5f039b85f0f3cd00137b6d80",
+    "afterSHA256": "0c8b2efc53f0ba4545695179dc4bfd6bfbfecb9cde92d5e7fd1a836138b568e1",
+    "originalSizes": [
+      [
+        1206,
+        2622
+      ],
+      [
+        1206,
+        2622
+      ]
+    ],
+    "sha256": "d3e91b4f25d84ff1ecae8d14098c9ceca9148f2e67249541d2498c697792f20d",
+    "method": "Whole-frame uniform aspect-fit with letterboxing; no crop or registration."
+  },
+  "wood-and-granite.png": {
+    "beforeSHA256": "af606c505324d59a61dece921997e01f88beea0554f79944507856e8513af9f1",
+    "afterSHA256": "8704dfe59077f83ed84e8eb4b55ac1c215935010b53166daecce2f625f55f869",
+    "originalSizes": [
+      [
+        1206,
+        2622
+      ],
+      [
+        1206,
+        2622
+      ]
+    ],
+    "sha256": "2a87df0b1f6178e5cefc081471c152e339be10f6df6ba71dc225431da92fdce0",
+    "method": "Whole-frame uniform aspect-fit with letterboxing; no crop or registration."
+  },
+  "granite-restoration.png": {
+    "beforeSHA256": "22c57a226fb875f0fca65740d522e455b40188dcd80067a6fcb08895a976e075",
+    "afterSHA256": "2aa6c85bccdf097902befd812a68ce26a6831a596030998fd9ccf46b0759f650",
+    "originalSizes": [
+      [
+        1206,
+        2622
+      ],
+      [
+        1206,
+        2622
+      ]
+    ],
+    "sha256": "a4e9dd09ea3ed815811c49f92183c161a14cf0a1d7d4fc7a0a2ff458a54c4f9c",
+    "method": "Whole-frame uniform aspect-fit with letterboxing; no crop or registration."
+  },
+  "side-groove-entry.png": {
+    "beforeSHA256": "d001b3cef9f0b58bb604ee5734caa9630c1f4e1a79d3db17581cd6e0698df9e4",
+    "afterSHA256": "ad38f5a1db4cf7ae27df0eada0321474b5edd07a85a59873e65ff9c22eaba9ae",
+    "originalSizes": [
+      [
+        1206,
+        2622
+      ],
+      [
+        1206,
+        2622
+      ]
+    ],
+    "sha256": "a118f2b099a895b33a0e5e69e8f442b298c11668a77a603d8c914a9bda85d424",
+    "method": "Whole-frame uniform aspect-fit with letterboxing; no crop or registration."
+  }
+}

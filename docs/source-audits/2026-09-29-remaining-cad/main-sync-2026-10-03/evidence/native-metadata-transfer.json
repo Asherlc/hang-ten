@@ -1,0 +1,292 @@
+{
+  "main": "d53c019c43319a70b32e6dc654814de29e87ab89",
+  "scope": "Main material/handCapacity integration; real six unchanged; no shape changes",
+  "rows": [
+    {
+      "package": "aelith-cyclops-011",
+      "beforeSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "afterSHA256": "6caa7db79f8c92ff3801c15e7cf42016b92808ac312dbb99b7e3dbfedf4e32da",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "value": "neutral",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "beforeSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "afterSHA256": "10b254fc3e2ad3c3b4c25b2876c2c0fc086d9ed4f634025d42397352e0e5cd8e",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "wood",
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "beforeSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "afterSHA256": "b4e8941017237f1196ab8c29632e0c19b7c9301ed92b5fd2011bb3229cb05e87",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "wood",
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "frictitious-nug",
+      "beforeSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "afterSHA256": "b01c9692af21073b1e0a67af4fd7fcea350decd87fe24fbced569ce3a830e2fa",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "value": "wood",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "beforeSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "afterSHA256": "45ca78a21b1f0f25f1c471a0e1244bfd8a77ca57abac37dcc99cde034e29a289",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "value": "wood",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "metolius-contact",
+      "beforeSHA256": "b25efa337a9ac5def16392aa574c1ec0a0659daec0f27465fb2c7d2339a1f351",
+      "afterSHA256": "732ee95e7b434e188708b96f974bd3afdacdd62fedc93d382f66e7401a480be1",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "plastic",
+          "ours": null,
+          "alreadyPreserved": false
+        },
+        {
+          "contact": "flat-sloper-center",
+          "field": "handCapacity",
+          "main": 2,
+          "ours": null,
+          "alreadyPreserved": false
+        },
+        {
+          "contact": "edge-17-center",
+          "field": "handCapacity",
+          "main": 2,
+          "ours": null,
+          "alreadyPreserved": false
+        },
+        {
+          "contact": "edge-18-center",
+          "field": "handCapacity",
+          "main": 2,
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "beforeSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+      "afterSHA256": "ac957ebf25e5134ab2875e9b06d9c23831f35b0b8bcbc64730d6a626b7f8588e",
+      "changes": [
+        {
+          "contact": "round-sloper-3-center",
+          "field": "handCapacity",
+          "main": 2,
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "nature-stone-hanger",
+      "beforeSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "afterSHA256": "09c0ae303e3fa1c91b2944da853d9c24e7d85a9e1acff11612f9a59fbf0d49a0",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "wood",
+          "ours": null,
+          "alreadyPreserved": false
+        },
+        {
+          "presentation": "primary",
+          "field": "graniteNodeIDs",
+          "main": [
+            "edge_front_20mm_granite_mesh_001"
+          ],
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "beforeSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "afterSHA256": "4922d6a75a6de2c22cc75b080b5982ceb132737319a407d31f83782d9c766440",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "value": "wood",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "primary",
+          "field": "graniteNodeIDs",
+          "value": [
+            "nature_stone"
+          ],
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "beforeSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "afterSHA256": "9972ecf60ce77398c8e78a22fad1e9f8a27cf9cb4e101e7047c37b809dc6a4fe",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "value": "wood",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "primary",
+          "field": "graniteNodeIDs",
+          "value": [
+            "nature_stone"
+          ],
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "owl-climb-poker",
+      "beforeSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "afterSHA256": "ad4d8c946b5bed3a681b9d67eb6a87aba86b2bc007823cf75315c7d5dd8de546",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "wood",
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "beforeSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "afterSHA256": "29730834b325f24c219fe798fb3cf55acdcd003d31cb33073d41e7f80fd740ae",
+      "changes": [
+        {
+          "presentation": "depth-18mm",
+          "field": "surfaceFinish",
+          "value": "neutral",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "depth-18mm",
+          "field": "woodNodeIDs",
+          "value": [
+            "plateau_edge_18"
+          ],
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "depth-15mm",
+          "field": "surfaceFinish",
+          "value": "neutral",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "depth-15mm",
+          "field": "woodNodeIDs",
+          "value": [
+            "plateau_edge_18"
+          ],
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "depth-10mm",
+          "field": "surfaceFinish",
+          "value": "neutral",
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        },
+        {
+          "presentation": "depth-10mm",
+          "field": "woodNodeIDs",
+          "value": [
+            "plateau_edge_18"
+          ],
+          "source": "retained maker material source audit; neutral is explicit metal display adaptation"
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "tension-flash-board",
+      "beforeSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "afterSHA256": "dfac72c8638dd54be2085c4909792f325c7f1f2445e29c3fc03ae85a3e4e0213",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "wood",
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "beforeSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "afterSHA256": "f1f5f4d9f95f1def0ea09e0bc5e0d8081d3ad5450b3c3e07eee9d643f6312200",
+      "changes": [
+        {
+          "presentation": "primary",
+          "field": "surfaceFinish",
+          "main": "plastic",
+          "ours": null,
+          "alreadyPreserved": false
+        }
+      ],
+      "geometryArchiveMembersBytePreserved": true
+    }
+  ]
+}

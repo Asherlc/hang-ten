@@ -1,0 +1,1960 @@
+diff --git a/Hangboards/nature-stone-hanger/assets/primary.model.json b/Hangboards/nature-stone-hanger/assets/primary.model.json
+index c584bce86..e9f2c06a8 100644
+--- a/Hangboards/nature-stone-hanger/assets/primary.model.json
++++ b/Hangboards/nature-stone-hanger/assets/primary.model.json
+@@ -1,7 +1,7 @@
+ {
+   "schemaVersion": 1,
+   "coordinateFrame": "hang-ten-board-v1",
+-  "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
++  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+   "modelBounds": {
+     "min": [
+       -0.052499998,
+diff --git a/Hangboards/nature-stone-hanger/assets/primary.usdz b/Hangboards/nature-stone-hanger/assets/primary.usdz
+index 2c9eaf35e..f924559e6 100644
+--- a/Hangboards/nature-stone-hanger/assets/primary.usdz
++++ b/Hangboards/nature-stone-hanger/assets/primary.usdz
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf
+-size 681835
++oid sha256:c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba
++size 756536
+diff --git a/Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd b/Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd
+index c4f924d34..3715021f1 100644
+--- a/Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd
++++ b/Hangboards/nature-stone-hanger/nature-stone-hanger.FCStd
+@@ -1,3 +1,3 @@
+ version https://git-lfs.github.com/spec/v1
+-oid sha256:08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666
+-size 1565189
++oid sha256:ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6
++size 1974900
+diff --git a/Hangboards/nature-stone-hanger/suspension.json b/Hangboards/nature-stone-hanger/suspension.json
+index 12223f0a5..35fc7ef2b 100644
+--- a/Hangboards/nature-stone-hanger/suspension.json
++++ b/Hangboards/nature-stone-hanger/suspension.json
+@@ -1,7 +1,7 @@
+ {
+   "schemaVersion": 1,
+   "presentationID": "primary",
+-  "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
++  "modelSHA256": "c4aa097bb61240f0596aca0db5bff5f4a9ea195f0436c4cb27dac9d261e672ba",
+   "suspension": {
+     "type": "cadRoutedCord",
+     "bodyNodeID": "body_oak_mesh_001",
+@@ -9,123 +9,383 @@
+       {
+         "id": "left-lead",
+         "kind": "lead",
+-        "restLength": 0.55,
++        "restLength": 0.12,
+         "radius": 0.0015,
+         "material": "matteCord",
+-        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
++        "provenance": "Manufacturer whole side photo and technical drawing plus owner clarification establish one vertical side groove guiding each visible lead into the existing middle side hole. Native Z groove selection; 1.75 mm groove radius, 1.5 mm cord radius, 120 mm visible length and 2.75 mm terminal inset are display estimates. No hidden connection is inferred. Correctly upward-facing hold orientations use the native longitudinal seat; no transverse-groove pitch or forward support offset is retained."
+       },
+       {
+         "id": "right-lead",
+         "kind": "lead",
+-        "restLength": 0.55,
++        "restLength": 0.12,
+         "radius": 0.0015,
+         "material": "matteCord",
+-        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
++        "provenance": "Manufacturer whole side photo and technical drawing plus owner clarification establish one vertical side groove guiding each visible lead into the existing middle side hole. Native Z groove selection; 1.75 mm groove radius, 1.5 mm cord radius, 120 mm visible length and 2.75 mm terminal inset are display estimates. No hidden connection is inferred. Correctly upward-facing hold orientations use the native longitudinal seat; no transverse-groove pitch or forward support offset is retained."
+       }
+     ],
+     "anchor": {
+-      "offsetFromBoardBounds": [0, 0.3, 0],
++      "offsetFromBoardBounds": [0, 0.025, 0],
+       "visibility": "invisible",
+-      "provenance": "displayEstimate; shared overhead convergence"
++      "provenance": "Display estimate: centered support with 25 mm initial offset; final board height solves unchanged 120 mm leads against native solid."
+     },
+     "canonicalPoses": {
+-      "front": {
++      "edge-front-15mm-incut": {
++        "rotation": [
++          0,
++          0,
++          1,
++          0
++        ],
++        "translation": [0, -0.020716779, 0],
++        "camera": {
++          "viewDirection": [0, 0, -1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050403022, -0.051482249, 0.0],
++            [-0.051417329, -0.050450978, 0.0],
++            [-0.052053274, -0.049632761, 0.0],
++            [-0.052196658, -0.04932863, 0.0],
++            [-0.052270111, -0.049000663, 0.0],
++            [-0.052271233, -0.004265532, 0.0],
++            [-0.05221326, -0.003952489, 0.0],
++            [-0.052121031, -0.003676912, 0.0],
++            [-0.052012816, -0.003479987, 0.0],
++            [-0.051885863, -0.003326037, 0.0],
++            [-0.051718384, -0.003185804, 0.0],
++            [-0.051480809, -0.003049902, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050402988, -0.051482246, -3.35e-07],
++            [0.051417249, -0.05045109, -3.42e-07],
++            [0.052053393, -0.049632592, -3.47e-07],
++            [0.052196682, -0.049328663, -3.44e-07],
++            [0.052270097, -0.049000905, -3.42e-07],
++            [0.052271321, -0.004266552, -2.4e-08],
++            [0.052213745, -0.003954513, -2.2e-08],
++            [0.052121493, -0.003677815, -1.9e-08],
++            [0.052012964, -0.003480199, -1.8e-08],
++            [0.051885914, -0.003326067, -1.6e-08],
++            [0.051718333, -0.003185774, -1.5e-08],
++            [0.0514808, -0.003049899, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-front-15mm-flat": {
+         "rotation": [
+           0,
+           0,
+           0,
+           1
+         ],
+-        "translation": [0, -0.19139277, 0],
++        "translation": [0, -0.013320159, 0],
+         "camera": {
+           "viewDirection": [0, 0, -1],
+           "fitPadding": 0.1
+         },
+         "wrappedRoutes": {
+           "left-lead": [
+-            [-0.054143878, 0.044590252, 0.0],
+-            [-0.054152056, 0.044507214, 0.0],
+-            [-0.054184553, 0.044066669, 0.0],
+-            [-0.054188647, 0.043983329, 0.0],
+-            [-0.054194068, 0.043762525, 0.0],
+-            [-0.054199488, 0.04354172, 0.0],
+-            [-0.0542, 0.0435, 0.0],
+-            [-0.0542, 0.02575, 0.0],
+-            [-0.0542, -0.000399646, 0.0],
+-            [-0.054167508, -0.000730785, 0.0],
+-            [-0.054071137, -0.001049252, 0.0],
+-            [-0.05391458, -0.001342848, 0.0],
+-            [-0.053703834, -0.001600326, 0.0],
+-            [-0.053446972, -0.001811823, 0.0],
+-            [-0.0525, -0.0024, 0.0]
++            [-0.050443876, 0.05142165, 0.0],
++            [-0.051352454, 0.050534446, 0.0],
++            [-0.052053313, 0.04963271, 0.0],
++            [-0.052196687, 0.049328536, 0.0],
++            [-0.052270109, 0.049000639, 0.0],
++            [-0.052271506, -0.00053275, 0.0],
++            [-0.052213369, -0.000847134, 0.0],
++            [-0.052121071, -0.001123016, 0.0],
++            [-0.052012779, -0.001320079, 0.0],
++            [-0.051885829, -0.001473984, 0.0],
++            [-0.051718418, -0.001614176, 0.0],
++            [-0.051480815, -0.001750095, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050444002, 0.051421551, -3.52e-07],
++            [0.051352551, 0.050534335, -3.59e-07],
++            [0.052053409, 0.049632573, -3.65e-07],
++            [0.0521967, 0.049328612, -3.63e-07],
++            [0.052270096, 0.049000885, -3.61e-07],
++            [0.052271489, -0.00053208, -2.3e-08],
++            [0.052213306, -0.00084734, -2.1e-08],
++            [0.052121215, -0.001122591, -1.9e-08],
++            [0.052012712, -0.001320346, -1.7e-08],
++            [0.051884665, -0.001475211, -1.6e-08],
++            [0.05171699, -0.001615103, -1.4e-08],
++            [0.051480176, -0.001750337, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-reverse-10mm-incut": {
++        "rotation": [
++          1,
++          0,
++          0,
++          0
++        ],
++        "translation": [0, -0.020716779, 0],
++        "camera": {
++          "viewDirection": [0, 0, 1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050403022, -0.051482249, 0.0],
++            [-0.051417329, -0.050450978, 0.0],
++            [-0.052053274, -0.049632761, 0.0],
++            [-0.052196658, -0.04932863, 0.0],
++            [-0.052270111, -0.049000663, 0.0],
++            [-0.052271233, -0.004265532, 0.0],
++            [-0.05221326, -0.003952489, 0.0],
++            [-0.052121031, -0.003676912, 0.0],
++            [-0.052012816, -0.003479987, 0.0],
++            [-0.051885863, -0.003326037, 0.0],
++            [-0.051718384, -0.003185804, 0.0],
++            [-0.051480809, -0.003049902, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050402988, -0.051482246, -3.35e-07],
++            [0.051417249, -0.05045109, -3.42e-07],
++            [0.052053393, -0.049632592, -3.47e-07],
++            [0.052196682, -0.049328663, -3.44e-07],
++            [0.052270097, -0.049000905, -3.42e-07],
++            [0.052271321, -0.004266552, -2.4e-08],
++            [0.052213745, -0.003954513, -2.2e-08],
++            [0.052121493, -0.003677815, -1.9e-08],
++            [0.052012964, -0.003480199, -1.8e-08],
++            [0.051885914, -0.003326067, -1.6e-08],
++            [0.051718333, -0.003185774, -1.5e-08],
++            [0.0514808, -0.003049899, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-reverse-10mm-flat": {
++        "rotation": [
++          0,
++          1,
++          0,
++          0
++        ],
++        "translation": [0, -0.013320159, 0],
++        "camera": {
++          "viewDirection": [0, 0, 1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050443876, 0.05142165, 0.0],
++            [-0.051352454, 0.050534446, 0.0],
++            [-0.052053313, 0.04963271, 0.0],
++            [-0.052196687, 0.049328536, 0.0],
++            [-0.052270109, 0.049000639, 0.0],
++            [-0.052271506, -0.00053275, 0.0],
++            [-0.052213369, -0.000847134, 0.0],
++            [-0.052121071, -0.001123016, 0.0],
++            [-0.052012779, -0.001320079, 0.0],
++            [-0.051885829, -0.001473984, 0.0],
++            [-0.051718418, -0.001614176, 0.0],
++            [-0.051480815, -0.001750095, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050444002, 0.051421551, -3.52e-07],
++            [0.051352551, 0.050534335, -3.59e-07],
++            [0.052053409, 0.049632573, -3.65e-07],
++            [0.0521967, 0.049328612, -3.63e-07],
++            [0.052270096, 0.049000885, -3.61e-07],
++            [0.052271489, -0.00053208, -2.3e-08],
++            [0.052213306, -0.00084734, -2.1e-08],
++            [0.052121215, -0.001122591, -1.9e-08],
++            [0.052012712, -0.001320346, -1.7e-08],
++            [0.051884665, -0.001475211, -1.6e-08],
++            [0.05171699, -0.001615103, -1.4e-08],
++            [0.051480176, -0.001750337, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-reverse-06mm-flat": {
++        "rotation": [
++          1,
++          0,
++          0,
++          0
++        ],
++        "translation": [0, -0.020716779, 0],
++        "camera": {
++          "viewDirection": [0, 0, 1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050403022, -0.051482249, 0.0],
++            [-0.051417329, -0.050450978, 0.0],
++            [-0.052053274, -0.049632761, 0.0],
++            [-0.052196658, -0.04932863, 0.0],
++            [-0.052270111, -0.049000663, 0.0],
++            [-0.052271233, -0.004265532, 0.0],
++            [-0.05221326, -0.003952489, 0.0],
++            [-0.052121031, -0.003676912, 0.0],
++            [-0.052012816, -0.003479987, 0.0],
++            [-0.051885863, -0.003326037, 0.0],
++            [-0.051718384, -0.003185804, 0.0],
++            [-0.051480809, -0.003049902, 0.0],
++            [-0.04975, -0.0024, -0.0]
+           ],
+           "right-lead": [
+-            [0.054143878, 0.044590252, 0.0],
+-            [0.054152056, 0.044507214, 0.0],
+-            [0.054168305, 0.044286941, 0.0],
+-            [0.054184553, 0.044066669, 0.0],
+-            [0.054188647, 0.043983329, 0.0],
+-            [0.054194068, 0.043762525, 0.0],
+-            [0.054199488, 0.04354172, 0.0],
+-            [0.0542, 0.0435, 0.0],
+-            [0.0542, 0.02225, 0.0],
+-            [0.0542, -0.000400579, 0.0],
+-            [0.054167331, -0.000732255, 0.0],
+-            [0.054070578, -0.001051182, 0.0],
+-            [0.053913461, -0.001345104, 0.0],
+-            [0.053702018, -0.001602724, 0.0],
+-            [0.053444376, -0.00181414, 0.0],
+-            [0.0525, -0.0024, 0.0]
++            [0.050402988, -0.051482246, -3.35e-07],
++            [0.051417249, -0.05045109, -3.42e-07],
++            [0.052053393, -0.049632592, -3.47e-07],
++            [0.052196682, -0.049328663, -3.44e-07],
++            [0.052270097, -0.049000905, -3.42e-07],
++            [0.052271321, -0.004266552, -2.4e-08],
++            [0.052213745, -0.003954513, -2.2e-08],
++            [0.052121493, -0.003677815, -1.9e-08],
++            [0.052012964, -0.003480199, -1.8e-08],
++            [0.051885914, -0.003326067, -1.6e-08],
++            [0.051718333, -0.003185774, -1.5e-08],
++            [0.0514808, -0.003049899, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
+           ]
+         }
+       },
+-      "reverse": {
++      "edge-reverse-06mm-incut": {
+         "rotation": [
+           0,
+           1,
+           0,
+           0
+         ],
+-        "translation": [0, -0.19139277, 0],
++        "translation": [0, -0.013320159, 0],
+         "camera": {
+           "viewDirection": [0, 0, 1],
+           "fitPadding": 0.1
+         },
+         "wrappedRoutes": {
+           "left-lead": [
+-            [-0.054143878, 0.044590252, 0.0],
+-            [-0.054152056, 0.044507214, 0.0],
+-            [-0.054184553, 0.044066669, 0.0],
+-            [-0.054188647, 0.043983329, 0.0],
+-            [-0.054194068, 0.043762525, 0.0],
+-            [-0.054199488, 0.04354172, 0.0],
+-            [-0.0542, 0.0435, 0.0],
+-            [-0.0542, 0.02575, 0.0],
+-            [-0.0542, -0.000399646, 0.0],
+-            [-0.054167508, -0.000730785, 0.0],
+-            [-0.054071137, -0.001049252, 0.0],
+-            [-0.05391458, -0.001342848, 0.0],
+-            [-0.053703834, -0.001600326, 0.0],
+-            [-0.053446972, -0.001811823, 0.0],
+-            [-0.0525, -0.0024, 0.0]
++            [-0.050443876, 0.05142165, 0.0],
++            [-0.051352454, 0.050534446, 0.0],
++            [-0.052053313, 0.04963271, 0.0],
++            [-0.052196687, 0.049328536, 0.0],
++            [-0.052270109, 0.049000639, 0.0],
++            [-0.052271506, -0.00053275, 0.0],
++            [-0.052213369, -0.000847134, 0.0],
++            [-0.052121071, -0.001123016, 0.0],
++            [-0.052012779, -0.001320079, 0.0],
++            [-0.051885829, -0.001473984, 0.0],
++            [-0.051718418, -0.001614176, 0.0],
++            [-0.051480815, -0.001750095, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050444002, 0.051421551, -3.52e-07],
++            [0.051352551, 0.050534335, -3.59e-07],
++            [0.052053409, 0.049632573, -3.65e-07],
++            [0.0521967, 0.049328612, -3.63e-07],
++            [0.052270096, 0.049000885, -3.61e-07],
++            [0.052271489, -0.00053208, -2.3e-08],
++            [0.052213306, -0.00084734, -2.1e-08],
++            [0.052121215, -0.001122591, -1.9e-08],
++            [0.052012712, -0.001320346, -1.7e-08],
++            [0.051884665, -0.001475211, -1.6e-08],
++            [0.05171699, -0.001615103, -1.4e-08],
++            [0.051480176, -0.001750337, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-front-20mm-wood-flat": {
++        "rotation": [
++          0,
++          0,
++          1,
++          0
++        ],
++        "translation": [0, -0.020716779, 0],
++        "camera": {
++          "viewDirection": [0, 0, -1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050403022, -0.051482249, 0.0],
++            [-0.051417329, -0.050450978, 0.0],
++            [-0.052053274, -0.049632761, 0.0],
++            [-0.052196658, -0.04932863, 0.0],
++            [-0.052270111, -0.049000663, 0.0],
++            [-0.052271233, -0.004265532, 0.0],
++            [-0.05221326, -0.003952489, 0.0],
++            [-0.052121031, -0.003676912, 0.0],
++            [-0.052012816, -0.003479987, 0.0],
++            [-0.051885863, -0.003326037, 0.0],
++            [-0.051718384, -0.003185804, 0.0],
++            [-0.051480809, -0.003049902, 0.0],
++            [-0.04975, -0.0024, -0.0]
++          ],
++          "right-lead": [
++            [0.050402988, -0.051482246, -3.35e-07],
++            [0.051417249, -0.05045109, -3.42e-07],
++            [0.052053393, -0.049632592, -3.47e-07],
++            [0.052196682, -0.049328663, -3.44e-07],
++            [0.052270097, -0.049000905, -3.42e-07],
++            [0.052271321, -0.004266552, -2.4e-08],
++            [0.052213745, -0.003954513, -2.2e-08],
++            [0.052121493, -0.003677815, -1.9e-08],
++            [0.052012964, -0.003480199, -1.8e-08],
++            [0.051885914, -0.003326067, -1.6e-08],
++            [0.051718333, -0.003185774, -1.5e-08],
++            [0.0514808, -0.003049899, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
++          ]
++        }
++      },
++      "edge-front-20mm-granite": {
++        "rotation": [
++          0,
++          0,
++          0,
++          1
++        ],
++        "translation": [0, -0.013320159, 0],
++        "camera": {
++          "viewDirection": [0, 0, -1],
++          "fitPadding": 0.1
++        },
++        "wrappedRoutes": {
++          "left-lead": [
++            [-0.050443876, 0.05142165, 0.0],
++            [-0.051352454, 0.050534446, 0.0],
++            [-0.052053313, 0.04963271, 0.0],
++            [-0.052196687, 0.049328536, 0.0],
++            [-0.052270109, 0.049000639, 0.0],
++            [-0.052271506, -0.00053275, 0.0],
++            [-0.052213369, -0.000847134, 0.0],
++            [-0.052121071, -0.001123016, 0.0],
++            [-0.052012779, -0.001320079, 0.0],
++            [-0.051885829, -0.001473984, 0.0],
++            [-0.051718418, -0.001614176, 0.0],
++            [-0.051480815, -0.001750095, 0.0],
++            [-0.04975, -0.0024, -0.0]
+           ],
+           "right-lead": [
+-            [0.054143878, 0.044590252, 0.0],
+-            [0.054152056, 0.044507214, 0.0],
+-            [0.054168305, 0.044286941, 0.0],
+-            [0.054184553, 0.044066669, 0.0],
+-            [0.054188647, 0.043983329, 0.0],
+-            [0.054194068, 0.043762525, 0.0],
+-            [0.054199488, 0.04354172, 0.0],
+-            [0.0542, 0.0435, 0.0],
+-            [0.0542, 0.02225, 0.0],
+-            [0.0542, -0.000400579, 0.0],
+-            [0.054167331, -0.000732255, 0.0],
+-            [0.054070578, -0.001051182, 0.0],
+-            [0.053913461, -0.001345104, 0.0],
+-            [0.053702018, -0.001602724, 0.0],
+-            [0.053444376, -0.00181414, 0.0],
+-            [0.0525, -0.0024, 0.0]
++            [0.050444002, 0.051421551, -3.52e-07],
++            [0.051352551, 0.050534335, -3.59e-07],
++            [0.052053409, 0.049632573, -3.65e-07],
++            [0.0521967, 0.049328612, -3.63e-07],
++            [0.052270096, 0.049000885, -3.61e-07],
++            [0.052271489, -0.00053208, -2.3e-08],
++            [0.052213306, -0.00084734, -2.1e-08],
++            [0.052121215, -0.001122591, -1.9e-08],
++            [0.052012712, -0.001320346, -1.7e-08],
++            [0.051884665, -0.001475211, -1.6e-08],
++            [0.05171699, -0.001615103, -1.4e-08],
++            [0.051480176, -0.001750337, -1.3e-08],
++            [0.04975, -0.0024, -0.0]
+           ]
+         }
+       }
+@@ -138,15 +398,122 @@
+     "terminalsByStrandID": {
+       "left-lead": {
+         "points": [
+-          [-0.0525, -0.0024, 0]
++          [-0.04975, -0.0024, 0]
+         ],
+-        "planeNormal": [0, 0, 1]
++        "planeNormal": [0, 0, 1],
++        "planeAxis": [0, 0, 1],
++        "mouthAxis": [-1, 0, 0]
+       },
+       "right-lead": {
+         "points": [
+-          [0.0525, -0.0024, 0]
++          [0.04975, -0.0024, 0]
+         ],
+-        "planeNormal": [0, 0, 1]
++        "planeNormal": [0, 0, 1],
++        "planeAxis": [0, 0, 1],
++        "mouthAxis": [1, 0, 0]
++      }
++    },
++    "sectionPlane": "anchor",
++    "pathSearch": "aStar",
++    "grooveGuides": {
++      "sourceSHA256": "ee189092c1727c096894b1223ce78fd5214f858de2908507cc5ee0e6fb1297e6",
++      "byPoseID": {
++        "edge-front-15mm-incut": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": -1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": -1
++          }
++        },
++        "edge-front-15mm-flat": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": 1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": 1
++          }
++        },
++        "edge-reverse-10mm-incut": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": -1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": -1
++          }
++        },
++        "edge-reverse-10mm-flat": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": 1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": 1
++          }
++        },
++        "edge-reverse-06mm-flat": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": -1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": -1
++          }
++        },
++        "edge-reverse-06mm-incut": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": 1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": 1
++          }
++        },
++        "edge-front-20mm-wood-flat": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": -1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": -1
++          }
++        },
++        "edge-front-20mm-granite": {
++          "left-lead": {
++            "feature": "LeftVerticalCordGroove",
++            "boreFeature": "LeftVisibleMouth",
++            "exitSign": 1
++          },
++          "right-lead": {
++            "feature": "RightVerticalCordGroove",
++            "boreFeature": "RightVisibleMouth",
++            "exitSign": 1
++          }
++        }
+       }
+     }
+   }
+diff --git a/Tools/HangboardCAD/export_rope_collision_solid.py b/Tools/HangboardCAD/export_rope_collision_solid.py
+index 29f534b52..209cf42ba 100644
+--- a/Tools/HangboardCAD/export_rope_collision_solid.py
++++ b/Tools/HangboardCAD/export_rope_collision_solid.py
+@@ -31,16 +31,17 @@ if feature is None or not feature.Shape.isValid() or len(feature.Shape.Solids) !
+ points, triangles = feature.Shape.tessellate(0.25)
+ vertices = [[point.x / 1000, point.z / 1000, -point.y / 1000] for point in points]
+ destination.parent.mkdir(parents=True, exist_ok=True)
+-destination.write_text(
+-    json.dumps(
+-        {
+-            "sourcePackage": package,
+-            "sourceFeature": feature_name,
+-            "sourceSHA256": hashlib.sha256(source.read_bytes()).hexdigest(),
+-            "vertices": vertices,
+-            "triangles": [list(face) for face in triangles],
+-        }
+-    )
+-    + "\n"
+-)
++payload={
++    "sourcePackage": package,
++    "sourceFeature": feature_name,
++    "sourceSHA256": hashlib.sha256(source.read_bytes()).hexdigest(),
++    "vertices": vertices,
++    "triangles": [list(face) for face in triangles],
++}
++grooves=[name for name in os.environ.get("HANGTEN_ROPE_GROOVE_FEATURES","").split(",") if name]
++bores=[name for name in os.environ.get("HANGTEN_ROPE_BORE_FEATURES","").split(",") if name]
++if grooves or bores:
++    from native_cord_features import extract_native_cord_features
++    payload["nativeCordFeatures"]=extract_native_cord_features(document,feature.Shape,grooves,bores)
++destination.write_text(json.dumps(payload)+"\n")
+ print(f"{destination}: {len(vertices)} vertices, {len(triangles)} triangles")
+diff --git a/Tools/HangboardCAD/native_cord_features.py b/Tools/HangboardCAD/native_cord_features.py
+new file mode 100644
+index 000000000..cdc65ded1
+--- /dev/null
++++ b/Tools/HangboardCAD/native_cord_features.py
+@@ -0,0 +1,109 @@
++"""Read optional cord-guide cylinders from the final native CAD solid.
++
++This module is loaded only by the FreeCAD authoring exporter. Feature names
++select existing CAD construction; no runtime route points are authored here.
++"""
++
++def extract_native_cord_features(document,body,groove_names,bore_names):
++    import FreeCAD as App
++    import Part
++    def vector(v,scale=1.):return [v.x*scale,v.z*scale,-v.y*scale]
++    def shared_edges(a,b):
++        return [e for e in a.Edges if e.Length>1e-7 and any(e.isSame(f) for f in b.Edges)]
++
++    def merged_aperture(feature, origin, axis, radius, record, result):
++        """Witness a real exterior aperture whose rim is removed by a guide.
++
++        A selected intersecting native guide must share final wall topology with
++        both the bore and the finite exterior face. Tool endpoints and unrelated
++        parallel planes cannot establish this opening.
++        """
++        witnesses=[]
++        for guide_name,g in result.items():
++            if g["kind"]!="groove":continue
++            guide=document.getObject(guide_name)
++            go=guide.Placement.Base;ga=guide.Placement.Rotation.multVec(App.Vector(0,0,1));ga.normalize()
++            if abs(ga.dot(axis))>1e-8:continue
++            t=(go-origin).dot(axis);crossing=origin+axis*t
++            if (crossing-go).cross(ga).Length>1e-7 or not 0<t<float(feature.Height):continue
++            bore_faces=[body.Faces[i-1] for i in record["wallFaces"]]
++            guide_faces=[body.Faces[i-1] for i in g["wallFaces"]]
++            shared=sum(len(shared_edges(a,b)) for a in bore_faces for b in guide_faces)
++            if not shared:continue
++            overlap=feature.Shape.common(guide.Shape).Volume
++            if overlap<=1e-8:continue
++            cavity=feature.Shape.fuse(guide.Shape)
++            if len(cavity.Solids)!=1 or cavity.common(body).Volume>1e-8:continue
++            circle=Part.makeCircle(radius,crossing,axis)
++            disk=Part.Face(Part.Wire([circle]))
++            area=disk.common(body).Area
++            # Start just within the bore cutoff, end outside its actual side
++            # plane. The complete finite axis crossing must be a native void.
++            entry=Part.makeLine(origin+axis*1e-6,crossing+axis*1e-3)
++            length=entry.common(body).Length
++            if area>1e-8 or length>1e-8 or body.isInside(crossing+axis*1e-3,1e-8,True):continue
++            planes=[]
++            for i,face in enumerate(body.Faces):
++                if not isinstance(face.Surface,Part.Plane):continue
++                u0,u1,v0,v1=face.ParameterRange
++                if face.normalAt((u0+u1)/2,(v0+v1)/2).dot(axis)<1-1e-8:continue
++                point=face.valueAt((u0+u1)/2,(v0+v1)/2)
++                if abs((point-crossing).dot(axis))>1e-7:continue
++                edges=sum(len(shared_edges(face,f)) for f in guide_faces)
++                distance=face.distToShape(Part.Vertex(crossing))[0]
++                if not edges or distance>radius+float(guide.Radius)+1e-7:continue
++                planes.append((t/1000,i+1,distance/1000))
++            if planes:
++                witnesses.append((planes,{"guideFeature":guide_name,"sharedWallEdges":shared,
++                    "finiteToolOverlapMM3":overlap,"nativeCavityMaterialVolumeMM3":cavity.common(body).Volume,
++                    "apertureMaterialAreaMM2":area,"axisMaterialLengthMM":length,
++                    "outerPlaneStationMM":t,"boreWallAxialBoundsMM":[v*1000 for v in record["axialBounds"]]}))
++        if len(witnesses)!=1:return None
++        return witnesses[0]
++
++    result={}
++    for kind,names in (("groove",groove_names),("bore",bore_names)):
++        for name in names:
++            feature=document.getObject(name)
++            if feature is None or not hasattr(feature,"Radius") or not hasattr(feature,"Height"):
++                raise ValueError(f"native cord feature {name} is not an existing cylinder")
++            origin=feature.Placement.Base;axis=feature.Placement.Rotation.multVec(App.Vector(0,0,1));axis.normalize()
++            components=[abs(axis.x),abs(axis.y),abs(axis.z)]
++            if max(components)<1-1e-10:raise ValueError("native cord feature extraction currently requires an axis-aligned cylinder")
++            radius=float(feature.Radius);faces=[];stations=[]
++            for i,face in enumerate(body.Faces):
++                surface=face.Surface
++                if not isinstance(surface,Part.Cylinder) or abs(surface.Radius-radius)>1e-7 or surface.Axis.cross(axis).Length>1e-8 or (surface.Center-origin).cross(axis).Length>1e-7:continue
++                bounds=face.optimalBoundingBox(False,False)
++                face_stations=[]
++                # Exact geometry-only bounds, never the cached triangulation.
++                for x in (bounds.XMin,bounds.XMax):
++                    for y in (bounds.YMin,bounds.YMax):
++                        for z in (bounds.ZMin,bounds.ZMax):face_stations.append((App.Vector(x,y,z)-origin).dot(axis)/1000)
++                if max(face_stations)<-1e-8 or min(face_stations)>float(feature.Height)/1000+1e-8:continue
++                stations.extend(face_stations);faces.append(i+1)
++            if not faces:raise ValueError(f"native cord feature {name} has no wall in the final solid")
++            record={"kind":kind,"origin":vector(origin,.001),"axis":vector(axis),"radius":radius/1000,"axialBounds":[min(stations),max(stations)],"wallFaces":faces,"nativeToolHeight":float(feature.Height)/1000}
++            if kind=="bore":
++                planes=[]
++                for i,face in enumerate(body.Faces):
++                    surface=face.Surface
++                    if not isinstance(surface,Part.Plane) or abs(abs(surface.Axis.dot(axis))-1)>1e-8:continue
++                    u0,u1,v0,v1=face.ParameterRange;point=face.valueAt((u0+u1)/2,(v0+v1)/2);station=(point-origin).dot(axis)/1000
++                    if not 0<station<=record["nativeToolHeight"]+1e-8:continue
++                    if abs(station-record["axialBounds"][1])>1e-8:continue
++                    aperture_center=origin+axis*(station*1000)
++                    distance=face.distToShape(Part.Vertex(aperture_center))[0]/1000
++                    if abs(distance-record["radius"])>1e-8:continue
++                    planes.append((station,i+1,distance))
++                merged=None
++                if not planes:
++                    merged=merged_aperture(feature,origin,axis,radius,record,result)
++                    if merged:planes=merged[0]
++                if not planes:raise ValueError(f"native bore {name} has no actual exterior plane witness")
++                outer=max(x[0] for x in planes);record.update(outerMouthStation=outer,outerPlaneFaces=[i for u,i,d in planes if abs(u-outer)<1e-8],outerPlaneApertureDistances=[d for u,i,d in planes if abs(u-outer)<1e-8],outerMouthDefinition="Existing final-solid exterior plane intersected by bore axis; nonplanar groove rim is not a tool endpoint.")
++                if merged:
++                    record["mergedApertureWitness"]=merged[1]
++                    record["outerMouthDefinition"]="Actual outward final-solid side plane adjacent to selected native guide; finite bore/guide union and aperture/axis void certified. Circular rim is removed by the merged groove, not moved to a tool endpoint."
++            result[name]=record
++    return result
+diff --git a/Tools/HangboardCAD/native_cord_guides.py b/Tools/HangboardCAD/native_cord_guides.py
+new file mode 100644
+index 000000000..cbb847467
+--- /dev/null
++++ b/Tools/HangboardCAD/native_cord_guides.py
+@@ -0,0 +1,439 @@
++"""Opt-in native cylindrical groove guidance for visible exterior leads.
++
++The CAD owns the finite cylinders and bore. Sections generate a seed; no path
++points are supplied by an author or read from an old cache. The bounded 3D
++search is followed by independent whole-solid, tube, finite traversal and
++active-material reaction checks. The latter is discrete frictionless contact
++feasibility at a numerical offset, not a continuous rope/safety simulation.
++"""
++from __future__ import annotations
++import copy
++import logging
++_LOG=logging.getLogger(__name__)
++import numpy as np
++import trimesh
++from scipy.optimize import minimize, nnls
++
++PROPOSAL_MARGIN = 2e-5
++CONTACT_NUMERICAL_ALLOWANCE = 1e-5
++REACTION_RESIDUAL_LIMIT = 1e-5
++
++
++def validate_guide_bindings(data, source):
++    settings=data["ropeSolver"]["grooveGuides"]
++    if not isinstance(source,dict) or settings["sourceSHA256"]!=source.get("sourceSHA256"):
++        raise ValueError("native groove source binding is stale")
++    features=source.get("nativeCordFeatures",{})
++    poses=data["suspension"]["canonicalPoses"]
++    strands={s["id"] for s in data["suspension"]["strands"]}
++    if set(settings["byPoseID"])!=set(poses):
++        raise ValueError("native groove selections must exactly match every pose")
++    for selections in settings["byPoseID"].values():
++        if set(selections)!=strands:raise ValueError("native groove selections must exactly match every lead")
++        for selection in selections.values():
++            for key,kind in (("feature","groove"),("boreFeature","bore")):
++                feature=features.get(selection[key])
++                if not isinstance(feature,dict) or feature.get("kind")!=kind or not feature.get("wallFaces"):
++                    raise ValueError("native groove/bore feature has no source-bound final-solid wall")
++    return features
++
++
++def _frame(guide):
++    origin=np.asarray(guide["origin"],float);axis=np.asarray(guide["axis"],float)
++    axis=axis/np.linalg.norm(axis)
++    return origin,axis
++
++
++def certify_groove_traversal(path,radius,guide,exit_sign,terminal):
++    """A finite inner span is required; touching the terminal is insufficient.
++
++    The two witness sections partition the native bore-to-exit interval into
++    thirds. They are validation witnesses, never constrained solver vertices.
++    Convex radial bounds certify every segment between those crossings.
++    """
++    p=np.asarray(path,float);origin,axis=_frame(guide)
++    available=float(guide["radius"])-radius
++    if available<=PROPOSAL_MARGIN:raise ValueError("native groove radius cannot contain the finite cord")
++    center=float((np.asarray(terminal)-origin)@axis)
++    end=float(guide["axialBounds"][1 if exit_sign>0 else 0])
++    if (end-center)*exit_sign<=2*radius:raise ValueError("native groove has no finite traversal interval")
++    axial=(p-origin)@axis;witnesses=[]
++    for fraction in (2/3,1/3):
++        station=center+(end-center)*fraction;hits=[]
++        for i,(a,b) in enumerate(zip(p,p[1:])):
++            da,db=axial[i]-station,axial[i+1]-station
++            if da*db>0 or abs(db-da)<1e-12:continue
++            t=-da/(db-da);q=a+t*(b-a);radial=q-origin-axis*station
++            hits.append((i+t,q,float(np.linalg.norm(radial))))
++        seated=[h for h in hits if h[2]<=available+CONTACT_NUMERICAL_ALLOWANCE]
++        if not seated:
++            raise ValueError("native groove seating/traversal is absent or bypassed")
++        at,q,radial=seated[-1]
++        witnesses.append({"pathParameter":float(at),"point":q.tolist(),"radialDistance":radial,"axialStation":station})
++    first,last=witnesses
++    if last["pathParameter"]<=first["pathParameter"]:
++        raise ValueError("native groove traversal runs away from its terminal")
++    samples=[np.array(first["point"]),np.array(last["point"])]
++    samples += [p[i] for i in range(int(np.floor(first["pathParameter"]))+1,int(np.ceil(last["pathParameter"]))) ]
++    radial=[]
++    for q in samples:
++        delta=q-origin;radial.append(float(np.linalg.norm(delta-axis*(delta@axis))))
++    if max(radial)>available+CONTACT_NUMERICAL_ALLOWANCE:
++        raise ValueError("native groove seating leaves its finite-radius cylinder between witnesses")
++    return {"status":"pass","availableCenterlineRadius":available,"witnesses":witnesses,"maximumInnerSpanRadialDistance":max(radial)}
++
++
++def material_normal_cone(normal, outward_normals):
++    """Return a real nonnegative witness; an empty cone supports only zero."""
++    normal=np.asarray(normal,float);normals=np.asarray(outward_normals,float)
++    if not len(normals):return np.zeros(0),float(np.linalg.norm(normal))
++    weights,_=nnls(normals.T,normal,maxiter=max(100,20*len(normals)))
++    # Some NNLS versions report zero for a 3-by-0 matrix. The independent
++    # residual is the contract, including for all nonempty solves.
++    return weights,float(np.linalg.norm(normal-normals.T@weights))
++
++
++def incident_material_triangles(mesh,point):
++    """Independent finite-facet incidence; no second closest-point query.
++
++    Orthonormal triangle coordinates avoid the absolute tiny-triangle
++    tolerances in generic closest-point routines for meter-scale CAD meshes.
++    """
++    point=np.asarray(point,float);tolerance=1e-8
++    candidates=list(mesh.triangles_tree.intersection(np.r_[point-tolerance,point+tolerance]));incident=[]
++    for face in candidates:
++        a,b,c=mesh.triangles[face];ab=b-a;ac=c-a;length=np.linalg.norm(ab);normal=np.cross(ab,ac);area=np.linalg.norm(normal)
++        if length<=1e-15 or area<=1e-30:continue
++        normal/=area;delta=point-a
++        if abs(delta@normal)>tolerance:continue
++        along=ab/length;across=np.cross(normal,along);height=ac@across
++        if abs(height)<=1e-15:continue
++        v=float(delta@across/height);u=float((delta@along-v*(ac@along))/length)
++        if min(u,v,1-u-v)>=-1e-6 and max(u,v,1-u-v)<=1+1e-6:incident.append(face)
++    return incident
++
++
++def facet_reconstructed_balance(mesh,required,contacts,weights):
++    """Independently balance actual incident-facet forces, including fit error.
++
++    A small per-direction cone error can be amplified by a large fitted force.
++    Recompose actual material forces and retain the weighted nodal error bound.
++    """
++    required=np.asarray(required,float).reshape(-1,3)
++    actual=np.zeros_like(required);bounds=np.zeros(len(required))
++    for contact,weight in zip(contacts,weights):
++        if weight<=0:continue
++        incident=contact["incidentMaterialTriangles"]
++        cone=np.asarray(contact["materialNormalConeWeights"],float)
++        if not incident or len(cone)!=len(incident) or np.any(cone<0):
++            raise ValueError("native reaction requires a nonempty nonnegative facet witness")
++        direction=np.asarray(mesh.face_normals[incident]).T@cone
++        mismatch=float(np.linalg.norm(np.asarray(contact["normal"])-direction))
++        i,t=contact["segment"],contact["fraction"]
++        for node,fraction in ((i-1,1-t),(i,t)):
++            if 0<=node<len(required):
++                actual[node]+=weight*fraction*direction
++                bounds[node]+=weight*fraction*mismatch
++    error=required-actual
++    maximum=float(np.linalg.norm(error,axis=1).max()) if len(error) else 0.
++    bound=float(bounds.max()) if len(bounds) else 0.
++    return {"status":"pass" if maximum<=REACTION_RESIDUAL_LIMIT and bound<=REACTION_RESIDUAL_LIMIT else "fail",
++            "maxFacetReconstructedNodalResidual":maximum,
++            "facetReconstructedNodalResiduals":error.tolist(),
++            "weightedMaterialConeErrorBounds":bounds.tolist(),
++            "maximumWeightedMaterialConeErrorBound":bound}
++
++
++def certify_active_reactions(mesh,path,radius):
++    """Nonnegative native contact forces balance all free route nodes.
++
++    Contacts are sampled on segments, not just vertices of a circumscribed
++    polyline. Barycentric nodal forces preserve each sampled contact's point
++    and moment. Inactive nearby walls cannot contribute. No groove constraint
++    or virtual support appears in this fit. Unit tension is the force scale.
++    """
++    p=np.asarray(path,float);delta=np.diff(p,axis=0);lengths=np.linalg.norm(delta,axis=1)
++    if np.any(lengths<=1e-9):raise ValueError("native reaction path contains duplicate vertices")
++    dirs=delta/lengths[:,None];required=(dirs[:-1]-dirs[1:]).ravel()
++    if not len(required) or np.linalg.norm(required)<REACTION_RESIDUAL_LIMIT:
++        error=required.reshape(-1,3)
++        maximum=float(np.linalg.norm(error,axis=1).max()) if len(error) else 0.
++        return {"status":"pass","maxNodalResidual":maximum,"activeContacts":[],
++                "requiredNodalReactions":error.tolist(),"nodalResiduals":error.tolist(),
++                "facetReconstructedBalance":facet_reconstructed_balance(mesh,required,[],[]),
++                "discreteFrictionless":True}
++    points=[];maps=[]
++    for i,span in enumerate(lengths):
++        count=max(51,int(np.ceil(span/2e-5))+1)
++        if count>20000:raise ValueError("native reaction sampling budget exceeded")
++        for t in np.linspace(0,1,count):points.append(p[i]*(1-t)+p[i+1]*t);maps.append((i,float(t)))
++    points=np.asarray(points)
++    if len(points)>65536:raise ValueError("native reaction sampling budget exceeded")
++    _,dist,_=trimesh.proximity.closest_point(mesh,points)
++    active_radius=radius+PROPOSAL_MARGIN+CONTACT_NUMERICAL_ALLOWANCE
++    columns=[];contacts=[]
++    for si in np.where(dist<=active_radius)[0]:
++        q=points[si];i,t=maps[si]
++        ids=list(mesh.triangles_tree.intersection(np.r_[q-active_radius,q+active_radius]))
++        feet=trimesh.triangles.closest_point(mesh.triangles[ids],np.repeat(q[None,:],len(ids),axis=0))
++        distances=np.linalg.norm(q-feet,axis=1)
++        for face,foot,distance in zip(ids,feet,distances):
++            if distance>active_radius or distance>dist[si]+CONTACT_NUMERICAL_ALLOWANCE or distance<1e-10:continue
++            normal=(q-foot)/distance
++            # A nearby triangle is not necessarily the closest material
++            # feature. Prove the radial direction is in the outward normal
++            # cone of actual facets incident at this exact feature point.
++            incident=incident_material_triangles(mesh,foot)
++            if not incident:continue
++            material_normals=mesh.face_normals[incident]
++            cone_weights,cone_error=material_normal_cone(normal,material_normals)
++            if cone_error>1e-5:continue
++            column=np.zeros((len(p)-2,3))
++            if i>0:column[i-1]+=(1-t)*normal
++            if i+1<len(p)-1:column[i]+=t*normal
++            if np.linalg.norm(column)<1e-12:continue
++            columns.append(column.ravel());contacts.append({"segment":int(i),"fraction":t,"point":q.tolist(),"materialPoint":foot.tolist(),"distance":float(distance),"globalClosestDistance":float(dist[si]),"closestFeatureTieGap":float(distance-dist[si]),"normal":normal.tolist(),"triangle":int(face),"incidentMaterialTriangles":list(map(int,incident)),"materialNormalConeResidual":float(cone_error),"materialNormalConeWeights":cone_weights.tolist()})
++    if not columns:raise ValueError("native reaction has no active material support")
++    matrix=np.column_stack(columns);weights,residual=nnls(matrix,required,maxiter=20000)
++    error=(required-matrix@weights).reshape(-1,3);maximum=float(np.linalg.norm(error,axis=1).max())
++    facet_balance=facet_reconstructed_balance(mesh,required,contacts,weights)
++    report={"status":"pass" if maximum<=REACTION_RESIDUAL_LIMIT and facet_balance["status"]=="pass" else "fail","maxNodalResidual":maximum,"residualNorm":float(residual),"unitTension":1.,"proposalMargin":PROPOSAL_MARGIN,"contactNumericalAllowance":CONTACT_NUMERICAL_ALLOWANCE,"closestFeatureTieAllowance":CONTACT_NUMERICAL_ALLOWANCE,"materialConeResidualLimit":1e-5,"discreteFrictionless":True,"nodalResiduals":error.tolist(),"requiredNodalReactions":required.reshape(-1,3).tolist(),"activeContacts":[dict(c,weight=float(v)) for c,v in zip(contacts,weights) if v>0],"facetReconstructedBalance":facet_balance}
++    if report["status"]!="pass":
++        failure=ValueError(f"native reaction requires unsupported force: radial residual {maximum:.9g}, actual facet residual {facet_balance['maxFacetReconstructedNodalResidual']:.9g}")
++        failure.report=report
++        raise failure
++    return report
++
++
++
++def certify_bore_entry(path,radius,bore,mouth_axis,clearance):
++    p=np.asarray(path,float);origin,axis=_frame(bore);terminal=p[-1]
++    axial=float((terminal-origin)@axis);radial=float(np.linalg.norm(terminal-origin-axis*axial))
++    outer=float(bore["outerMouthStation"])
++    if radial+radius>float(bore["radius"])+1e-8 or axial<radius+clearance-1e-8 or outer-axial<radius+clearance-1e-8:
++        raise ValueError("native bore terminal lacks finite radius/end-cap entry clearance")
++    outward=np.asarray(mouth_axis,float);outward/=np.linalg.norm(outward)
++    if outward@axis<1-1e-8 or float((p[-2]-terminal)@outward)<=1e-8:
++        raise ValueError("native bore route does not enter along the actual visible mouth axis")
++    # The final segment must contain a nonzero interval wholly in the bore's
++    # finite-radius eroded cross-section; no connection after the cutoff.
++    values=np.linspace(0,1,129);tail=p[-2][None,:]*(1-values[:,None])+terminal[None,:]*values[:,None]
++    d=tail-origin;u=d@axis;r=np.linalg.norm(d-u[:,None]*axis,axis=1)
++    valid=(r+radius<=float(bore["radius"])+1e-8)&(u>=radius+clearance-1e-8)&(u<=outer)
++    if not valid[-1] or valid.sum()<2:raise ValueError("native bore entry is only an endpoint touch")
++    return {"status":"pass","terminal":terminal.tolist(),"insetFromActualOuterPlane":outer-axial,"radialDistance":radial,"finiteTailLength":float(np.linalg.norm(tail[np.where(valid)[0][0]]-terminal)),"cutoffPolicy":"Existing visible bore only; no hidden connection."}
++
++
++def _remove_free_bends(mesh,path,radius,only_small=False):
++    from native_cord_routes import checked_clearance
++    p=np.asarray(path,float).copy();removed=0
++    for i in range(len(p)-2,0,-1):
++        a,b=p[i]-p[i-1],p[i+1]-p[i];la,lb=np.linalg.norm(a),np.linalg.norm(b)
++        if min(la,lb)<1e-8:
++            candidate=np.delete(p,i,axis=0)
++        else:
++            if only_small and np.degrees(np.arccos(np.clip(a@b/(la*lb),-1,1)))>5:continue
++            _,distance,_=trimesh.proximity.closest_point(mesh,p[i:i+1])
++            if distance[0]<=radius+PROPOSAL_MARGIN+CONTACT_NUMERICAL_ALLOWANCE:continue
++            candidate=np.delete(p,i,axis=0)
++        try:checked_clearance(mesh,np.array([p[i-1],p[i+1]]),radius+PROPOSAL_MARGIN)
++        except ValueError:continue
++        p=candidate;removed+=1
++    return p,removed
++
++
++def native_feature_plane(support,terminal,guide,bore):
++    """Optional analytic search plane; never substitutes for 3D certificates."""
++    go,ga=_frame(guide);bo,ba=_frame(bore);normal=np.cross(ga,ba)
++    if np.linalg.norm(normal)<1e-10:return None
++    normal/=np.linalg.norm(normal)
++    if max(abs(normal))<1-1e-10:return None
++    if any(abs(float((np.asarray(p)-bo)@normal))>1e-10 for p in (go,terminal,support)):return None
++    return {"point":bo.tolist(),"normal":normal.tolist(),"fixedCoordinate":int(np.argmax(abs(normal))),"provenance":"Intersecting selected native guide/bore axes, terminal and anchor are coplanar; full 3D gates remain required."}
++
++
++def unit_tension_chain_jacobian(path):
++    """Derivative of incoming-minus-outgoing unit tangents at free nodes."""
++    p=np.asarray(path,float);n=len(p)-2;matrix=np.zeros((3*n,3*n))
++    for k,vector in enumerate(np.diff(p,axis=0)):
++        length=np.linalg.norm(vector)
++        if length<=1e-9:raise ValueError("material settling has duplicate route vertices")
++        direction=vector/length;stiffness=(np.eye(3)-np.outer(direction,direction))/length
++        for a,sa in ((k,-1),(k+1,1)):
++            if not 0<a<len(p)-1:continue
++            for b,sb in ((k,-1),(k+1,1)):
++                if 0<b<len(p)-1:matrix[3*(a-1):3*a,3*(b-1):3*b]+=sa*sb*stiffness
++    return matrix
++
++
++def settle_material_forces(mesh,path,radius):
++    """Bounded 3D correction of actual facet-force residual, never a waiver.
++
++    Endpoints remain fixed. Each trial gets fresh closest-feature/cone forces
++    and full 3D clearance. The 10 micrometre step bound and five-step budget
++    limit numerical search; physical acceptance thresholds are unchanged.
++    """
++    from native_cord_routes import checked_clearance
++    p=np.asarray(path,float).copy();history=[]
++    if len(p)>128:raise ValueError("native guided optimization vertex budget exceeded")
++    for iteration in range(6):
++        clearance=checked_clearance(mesh,p,radius)
++        try:
++            forces=certify_active_reactions(mesh,p,radius)
++            return p,{"status":"pass","iterations":iteration,"corrections":history,
++                "continuousClearanceLowerBound":clearance,"reactions":forces,
++                "method":"Full 3D unit-tension chain Jacobian; independently reconstructed actual facet residual; fixed endpoints; <=10 micrometre steps; <=5 corrections."}
++        except ValueError as error:
++            failure=getattr(error,"report",None)
++            if failure is None or iteration==5:raise
++            residual=np.asarray(failure["facetReconstructedBalance"]["facetReconstructedNodalResiduals"],float).ravel()
++            correction=np.linalg.lstsq(unit_tension_chain_jacobian(p),-residual,rcond=1e-10)[0].reshape(-1,3)
++            maximum=float(np.linalg.norm(correction,axis=1).max())
++            if not np.isfinite(maximum) or maximum>1e-5:raise ValueError("native material settling correction exceeds bounded search")
++            history.append({"iteration":iteration,"maxCorrectionM":maximum,"pathBefore":p.tolist(),"actualFacetResidualBefore":failure["facetReconstructedBalance"]["maxFacetReconstructedNodalResidual"]})
++            p[1:-1]+=correction
++            _LOG.info("Native material settling correction %d: %.9g m",iteration,maximum)
++    raise AssertionError("unreachable material settling state")
++
++
++def _optimize_lead(mesh,seed,radius,mouth_axis,plane=None):
++    from native_cord_routes import checked_clearance,length
++    seed=np.asarray(seed,float);axis=np.asarray(mouth_axis,float);axis/=np.linalg.norm(axis)
++    initial_plane=copy.deepcopy(plane);native_precision=plane is not None
++    if plane is not None:
++        coordinate=plane["fixedCoordinate"];value=plane["point"][coordinate]
++        if max(abs(seed[[0,-1],coordinate]-value))>1e-10:raise ValueError("native feature plane does not contain fixed endpoints")
++        seed=seed.copy();seed[:,coordinate]=value
++    seed,_=_remove_free_bends(mesh,seed,radius,only_small=True)
++    reports=[]
++    for phase in range(4):
++        _LOG.info("Native guided lead phase %d, %d vertices",phase,len(seed))
++        if len(seed)>128:raise ValueError("native guided optimization vertex budget exceeded")
++        if native_precision and plane is None:
++            try:
++                settled,proof=settle_material_forces(mesh,seed,radius)
++                return settled,{"phases":reports,"materialEquilibrium":proof,"continuousClearanceLowerBound":proof["continuousClearanceLowerBound"],"reactions":proof["reactions"],"nativeSearchPlane":initial_plane}
++            except ValueError as error:
++                _LOG.info("Native material settling rejected: %s",error)
++        target=radius+PROPOSAL_MARGIN;last={};maps=[]
++        for i,span in enumerate(np.linalg.norm(np.diff(seed,axis=0),axis=1)):
++            for t in np.linspace(0,1,max(13,int(np.ceil(span/.0005))+1))[:-1]:maps.append((i,float(t)))
++        maps.append((len(seed)-2,1.))
++        def path(x):return np.vstack([seed[0],x.reshape(-1,3)/1000,seed[-1]])
++        def objective(x):
++            p=path(x);delta=np.diff(p,axis=0);ll=np.linalg.norm(delta,axis=1);directions=delta/np.maximum(ll[:,None],1e-12)
++            return float(ll.sum())*1000,(directions[:-1]-directions[1:]).ravel()
++        def constraints(x):
++            if "x" in last and np.array_equal(last["x"],x):return last["value"],last["jacobian"]
++            p=path(x);points=np.array([p[i]*(1-t)+p[i+1]*t for i,t in maps]);near,dist,_=trimesh.proximity.closest_point(mesh,points)
++            signed=-trimesh.proximity.signed_distance(mesh,points);normals=(points-near)/np.maximum(dist[:,None],1e-12);normals[signed<0]*=-1
++            values=np.r_[signed-target,float((p[-2]-p[-1])@axis)-1e-8]*1000
++            jac=np.zeros((len(values),len(x)))
++            for row,((i,t),normal) in enumerate(zip(maps,normals)):
++                for k,weight in ((i,1-t),(i+1,t)):
++                    if 0<k<len(p)-1:jac[row,3*(k-1):3*k]+=weight*normal
++            jac[-1,-3:]=axis;last.update(x=x.copy(),value=values,jacobian=jac);return values,jac
++        bounds=list(zip((seed[1:-1].ravel()-.025)*1000,(seed[1:-1].ravel()+.025)*1000))
++        if plane is not None:
++            for i in range(len(seed)-2):bounds[3*i+coordinate]=(value*1000,value*1000)
++        result=minimize(objective,seed[1:-1].ravel()*1000,jac=True,method="SLSQP",bounds=bounds,constraints=[{"type":"ineq","fun":lambda x:constraints(x)[0],"jac":lambda x:constraints(x)[1]}],options={"ftol":1e-9 if plane is not None else 1e-6,"maxiter":200 if plane is not None else 100})
++        candidate=path(result.x);candidate,removed=_remove_free_bends(mesh,candidate,radius)
++        record={"phase":phase,"optimizerSuccess":bool(result.success),"optimizerMessage":str(result.message),"iterations":int(result.nit),"removedInactiveBends":removed,"length":length(candidate)};reports.append(record)
++        if plane is not None:
++            # The analytic plane supplies a deterministic native seed only.
++            # Every final lead is tightened and certified in full 3D, including
++            # when the seed happened to satisfy a force test already.
++            record["nativePlaneSeedReleasedTo3D"]=True
++            plane=None;seed=candidate
++            continue
++        try:
++            clearance=checked_clearance(mesh,candidate,radius)
++            reactions=certify_active_reactions(mesh,candidate,radius)
++            _LOG.info("Native guided lead certified after %d iterations",result.nit)
++            return candidate,{"phases":reports,"continuousClearanceLowerBound":clearance,"reactions":reactions,"nativeSearchPlane":initial_plane}
++        except ValueError as error:
++            record["independentGateFailure"]=str(error);seed=candidate
++            _LOG.info("Native guided phase %d rejected: %s",phase,error)
++    raise ValueError(f"native guided optimization exhausted its bounded phases: {reports}")
++
++
++def _seed(mesh,support,terminal,guide,exit_sign,radius,clearance):
++    from native_cord_routes import NativeSection
++    origin,axis=_frame(guide);center=float((terminal-origin)@axis);end=guide["axialBounds"][1 if exit_sign>0 else 0]
++    station=origin+axis*(center+end)/2
++    first=NativeSection.for_span(mesh,support,station,axis,radius,clearance,plane_axis=axis,path_search="aStar").route(support,station)
++    normal=np.cross(axis,terminal-station)
++    second=NativeSection.for_span(mesh,station,terminal,normal,radius,clearance,path_search="aStar").route(station,terminal)
++    return np.vstack([first,second[1:]])
++
++
++def _certify_guided_paths(mesh,full,radii,rests,features,selections,terminals,clearance):
++    from native_cord_routes import checked_clearance,length
++    from hangboard_packages.cord_paths import validate_cord_paths
++    minimums={};ratios={};certificates={}
++    for k,p in full.items():
++        selection=selections[k];terminal=terminals[k]
++        minimums[k]=checked_clearance(mesh,p,radii[k]);ratios[k]=length(p)/rests[k]
++        certificates[k]={"seating":certify_groove_traversal(p,radii[k],features[selection["feature"]],selection["exitSign"],p[-1]),"entry":certify_bore_entry(p,radii[k],features[selection["boreFeature"]],terminal["mouthAxis"],clearance),"reactions":certify_active_reactions(mesh,p,radii[k])}
++    validate_cord_paths(full,radii)
++    if max(ratios.values())>1+1e-6 or abs(max(ratios.values())-1)>1e-6:raise ValueError("native guided cache does not match settled length")
++    return minimums,ratios,certificates
++
++
++def solve_groove_guided_routes(mesh,data,descriptor,source):
++    from native_cord_routes import checked_clearance,length
++    from solve_threaded_rope import rotate_inverse
++    from hangboard_packages.cord_paths import validate_cord_paths
++    if not mesh.is_watertight or not mesh.is_winding_consistent or mesh.volume<=0:
++        raise ValueError("native guided collider must be a closed consistently outward solid")
++    features=validate_guide_bindings(data,source);setup=data["suspension"];solver=data["ropeSolver"];settings=solver["grooveGuides"]
++    radii={s["id"]:s["radius"] for s in setup["strands"]};rests={s["id"]:s["restLength"] for s in setup["strands"]}
++    bounds=descriptor["modelBounds"];anchor=(np.array(bounds["min"])+np.array(bounds["max"]))/2;anchor[1]=bounds["max"][1];anchor+=np.array(setup["anchor"]["offsetFromBoardBounds"])
++    output={};dedup={}
++    for pose_id,pose in setup["canonicalPoses"].items():
++        selections=settings["byPoseID"][pose_id]
++        translation=np.array(pose["translation"],float)
++        def support(height):
++            t=translation.copy();t[1]=height;return rotate_inverse(pose["rotation"],anchor-t)
++        # Physics is expressed in native coordinates. Different presentation
++        # rotations may resolve to the exact same support line; reuse only
++        # within this fresh invocation, never from a saved route cache.
++        origin=tuple(support(0.));direction=tuple(rotate_inverse(pose["rotation"],np.array([0.,1.,0.])))
++        key=(origin,direction,tuple((k,tuple(sorted(v.items()))) for k,v in sorted(selections.items())))
++        if key in dedup:
++            first=dedup[key];result=copy.deepcopy(output[first]);height=result["height"]
++            full={k:np.vstack([support(height),p]) for k,p in result["routes"].items()}
++            minimums,ratios,certificates=_certify_guided_paths(mesh,full,radii,rests,features,selections,solver["terminalsByStrandID"],solver["clearance"])
++            result.update(minimumClearance=minimums,lengthRatios=ratios)
++            result["nativeGrooveGuidance"].update(certificates=certificates,freshComputationReuse={"sourcePoseID":first,"nativeSupportOrigin":origin,"nativeHeightDirection":direction,"independentlyRecertified":True})
++            output[pose_id]=result;continue
++        height=float(anchor[1]-.75*min(rests.values()));paths={};history=[]
++        for strand in sorted(radii):
++            g=solver["terminalsByStrandID"][strand];selection=selections[strand];terminal=np.array(g["points"][0],float)
++            paths[strand]=_seed(mesh,support(height),terminal,features[selection["feature"]],selection["exitSign"],radii[strand],solver["clearance"])
++        for iteration in range(12):
++            _LOG.info("Native guided pose %s settling iteration %d, height %.9f",pose_id,iteration,height)
++            record={"iteration":iteration,"heightBefore":height,"leads":{}}
++            for strand in sorted(paths):
++                selection=selections[strand]
++                plane=native_feature_plane(paths[strand][0],paths[strand][-1],features[selection["feature"]],features[selection["boreFeature"]])
++                paths[strand],record["leads"][strand]=_optimize_lead(mesh,paths[strand],radii[strand],solver["terminalsByStrandID"][strand]["mouthAxis"],plane=plane)
++            def ratio(candidate):
++                point=support(candidate)
++                return max((np.linalg.norm(point-p[1])+length(p[1:]))/rests[k] for k,p in paths.items())
++            near,far=0.,-2*max(rests.values())
++            if ratio(near)>1+1e-6 or ratio(far)<1:raise ValueError("native guided height cannot be bracketed")
++            for _ in range(40):
++                mid=(near+far)/2
++                if ratio(mid)>1:far=mid
++                else:near=mid
++            settled=round(float((near+far)/2),9);record["heightAfter"]=settled;history.append(record)
++            for k,p in paths.items():paths[k]=np.vstack([support(settled),p[1:]])
++            converged=abs(settled-height)<=1e-8;height=settled
++            if converged:break
++        else:raise ValueError("native guided height did not converge within 12 iterations")
++        routes={k:np.round(p[1:],9).tolist() for k,p in paths.items()};full={k:np.vstack([support(height),p]) for k,p in routes.items()}
++        minimums,ratios,certificates=_certify_guided_paths(mesh,full,radii,rests,features,selections,solver["terminalsByStrandID"],solver["clearance"])
++        output[pose_id]={"height":height,"routes":routes,"minimumClearance":minimums,"lengthRatios":ratios,"nativeGrooveGuidance":{"sourceSHA256":source["sourceSHA256"],"certificates":certificates,"settling":history,"policy":"Native-generated seeds; bounded local search; discrete frictionless feasibility only; no global minimum or safety claim."}}
++        dedup[key]=pose_id
++    return output
+diff --git a/Tools/HangboardCAD/native_cord_routes.py b/Tools/HangboardCAD/native_cord_routes.py
+index dda03fd66..01bffdb57 100644
+--- a/Tools/HangboardCAD/native_cord_routes.py
++++ b/Tools/HangboardCAD/native_cord_routes.py
+@@ -487,12 +487,15 @@ def native_mouth_collar(mesh, mouth, mouth_axis, radius, clearance):
+     return exterior
+ 
+ 
+-def solve_native_routes(mesh, data, descriptor):
++def solve_native_routes(mesh, data, descriptor, source_metadata=None):
+     """Generate native seeds, optionally tighten them, then settle and certify.
+ 
+     The optional method never reads authored wrappedRoutes as an initial guess.
+     With no tightening selection, the existing seed generator is unchanged.
+     """
++    if "grooveGuides" in data["ropeSolver"]:
++        from native_cord_guides import solve_groove_guided_routes
++        return solve_groove_guided_routes(mesh,data,descriptor,source_metadata)
+     if "pathSearch" in data["ropeSolver"] and data["ropeSolver"]["pathSearch"] != "aStar":
+         raise ValueError("native pathSearch must be aStar when present")
+     if data["ropeSolver"].get("pathSearch") == "aStar":
+diff --git a/Tools/HangboardCAD/solve_threaded_rope.py b/Tools/HangboardCAD/solve_threaded_rope.py
+index a6c00fbad..474b79ad7 100644
+--- a/Tools/HangboardCAD/solve_threaded_rope.py
++++ b/Tools/HangboardCAD/solve_threaded_rope.py
+@@ -399,7 +399,7 @@ def main():
+     native = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
+     if native:
+         from native_cord_routes import solve_native_routes
+-        solved = solve_native_routes(mesh, data, model)
++        solved = solve_native_routes(mesh, data, model, source_metadata=source)
+     else:
+         solved = solve_package(arguments.package, mesh, data, model)
+     for pose_id, result in solved.items():
+@@ -415,8 +415,11 @@ def main():
+             pose["wrappedRoutes" if native else "cordContactPoints"] = result["routes" if native else "contacts"]
+     if arguments.report:
+         arguments.report.parent.mkdir(parents=True, exist_ok=True)
+-        arguments.report.write_text(json.dumps({"package": arguments.package, "presentationID": data["presentationID"],
+-            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"], "method": "nativeRoutes" if native else "internalLoop", "poses": solved}, indent=2)+"\n")
++        report = {"package": arguments.package, "presentationID": data["presentationID"],
++            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"], "method": "nativeRoutes" if native else "internalLoop", "poses": solved}
++        if data.get("ropeSolver", {}).get("grooveGuides"):
++            report["collisionSolidSHA256"] = hashlib.sha256(arguments.solid.read_bytes()).hexdigest()
++        arguments.report.write_text(json.dumps(report, indent=2)+"\n")
+     if arguments.apply:
+         formatted = json.dumps(document, indent=2)
+         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"
+diff --git a/Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json b/Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json
+new file mode 100644
+index 000000000..7577904cc
+--- /dev/null
++++ b/Tools/HangboardCAD/tests/fixtures/native_groove_material_normals.json
+@@ -0,0 +1,120 @@
++{
++  "sourceSHA256": "1b0113f264ee1d0b31d7b30b68f8b1e64839268ecd53b97a2ba8067e29a01108",
++  "collisionMeshSHA256": "79a27178727825a8ef467ad1526356636b9694dd8f0d6c5028367dff70df2ab6",
++  "cases": [
++    {
++      "point": [
++        -0.05206096454294319,
++        -0.0033312880811919017,
++        0.018218132379833062
++      ],
++      "foot": [
++        -0.051073907261028624,
++        -0.00341427782439943,
++        0.017053980407394812
++      ],
++      "rejectedRadialDirection": [
++        -0.6457538059324675,
++        0.054293649934551665,
++        0.7616129080448397
++      ],
++      "incidentTriangles": [
++        9305,
++        9474,
++        9475,
++        20684,
++        20685,
++        20686
++      ],
++      "outwardNormals": [
++        [
++          -0.524600348699017,
++          -3.735906356101414e-06,
++          0.8513486207958012
++        ],
++        [
++          -0.5185837155429741,
++          4.094810251981973e-06,
++          0.8550268592020229
++        ],
++        [
++          -0.531028229830295,
++          4.577820083248212e-06,
++          0.8473541285096491
++        ],
++        [
++          -0.8254505619624459,
++          0.5644744187115167,
++          -1.939529761668003e-05
++        ],
++        [
++          -0.8123009404615025,
++          0.5832385286527524,
++          2.8641420864549942e-05
++        ],
++        [
++          -0.8041173155228377,
++          0.5944706407055073,
++          -1.4680898066080347e-05
++        ]
++      ]
++    },
++    {
++      "point": [
++        -0.05219838434782812,
++        -0.003206050080836711,
++        0.018036440848559543
++      ],
++      "foot": [
++        -0.05132576570072027,
++        -0.0036975645727182313,
++        0.016880457860958927
++      ],
++      "rejectedRadialDirection": [
++        -0.5705283314222506,
++        0.3213579538466591,
++        0.7557952689346706
++      ],
++      "incidentTriangles": [
++        9471,
++        9479,
++        9480,
++        20694,
++        20695,
++        20697
++      ],
++      "outwardNormals": [
++        [
++          -0.6082817694852153,
++          -1.0075690137145353e-05,
++          0.7937211656560608
++        ],
++        [
++          -0.6010918252778523,
++          7.1446794474450515e-06,
++          0.7991799656729974
++        ],
++        [
++          -0.6162932872729527,
++          7.958374172278935e-06,
++          0.7875167198218473
++        ],
++        [
++          -0.682714682779129,
++          0.7306850629978117,
++          2.509337136174386e-05
++        ],
++        [
++          -0.6840093286333321,
++          0.7294732606951481,
++          1.6533808942574865e-05
++        ],
++        [
++          -0.6579343334639008,
++          0.7530753034309835,
++          -1.4551453822211273e-05
++        ]
++      ]
++    }
++  ]
++}
+diff --git a/Tools/HangboardCAD/tests/native_cord_feature_checks.py b/Tools/HangboardCAD/tests/native_cord_feature_checks.py
+new file mode 100644
+index 000000000..6d8b46a75
+--- /dev/null
++++ b/Tools/HangboardCAD/tests/native_cord_feature_checks.py
+@@ -0,0 +1,58 @@
++"""Native cylinder binding: opposite bore and remote parallel plane regressions."""
++from pathlib import Path
++import sys
++import FreeCAD as App
++import Part
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++from native_cord_features import extract_native_cord_features
++
++doc=App.newDocument("CordFeatureChecks")
++try:
++    cylinders=[]
++    for name,sign in (("Left",-1),("Right",1)):
++        c=doc.addObject("Part::Cylinder",name);c.Radius=2;c.Height=8
++        c.Placement=App.Placement(App.Vector(sign*47,0,0),App.Rotation(App.Vector(0,0,1),App.Vector(sign,0,0)))
++        cylinders.append(c)
++    doc.recompute()
++    box=Part.makeBox(100,40,35,App.Vector(-50,-20,-17.5))
++    # This attached ledge has an outer plane at X55 inside the right tool's
++    # height, but it is remote from the actual aperture at X50/Y0/Z0.
++    box=box.fuse(Part.makeBox(5,5,8,App.Vector(50,10,-4)))
++    body=box.cut(cylinders[0].Shape).cut(cylinders[1].Shape)
++    assert body.isValid() and len(body.Solids)==1
++    features=extract_native_cord_features(doc,body,[],["Left","Right"])
++    assert set(features["Left"]["wallFaces"]).isdisjoint(features["Right"]["wallFaces"])
++    for record in features.values():
++        assert record["axialBounds"][0]>=-1e-8
++        assert abs(record["outerMouthStation"]-.003)<1e-8
++        assert all(abs(x-.002)<1e-8 for x in record["outerPlaneApertureDistances"])
++    print("PASS opposite coaxial bore binding; remote stepped face excluded; finite aperture distance exact")
++    # Longitudinal guide intersects the transverse adjustment notch and bore.
++    # Their union removes the circular rim at the actual exterior plane.
++    box=Part.makeBox(105,40,105,App.Vector(-52.5,-20,-52.5))
++    box=box.fuse(Part.makeBox(2.5,5,8,App.Vector(52.5,10,-4)))
++    guides=[]
++    for name,sign in (("LeftGuide",-1),("RightGuide",1)):
++        c=doc.addObject("Part::Cylinder",name);c.Radius=1.75;c.Height=110
++        c.Placement.Base=App.Vector(sign*52.5,0,-55);guides.append(c)
++    doc.recompute()
++    body=box
++    for c in cylinders+guides:body=body.cut(c.Shape)
++    for sign in (-1,1):
++        body=body.cut(Part.makeCylinder(1.75,45,App.Vector(sign*52.5,-22.5,0),App.Vector(0,1,0)))
++    assert body.isValid() and len(body.Solids)==1
++    merged=extract_native_cord_features(doc,body,[x.Name for x in guides],["Left","Right"])
++    for name in ("Left","Right"):
++        r=merged[name]
++        assert abs(r["outerMouthStation"]-.0055)<1e-8
++        assert r["mergedApertureWitness"]["apertureMaterialAreaMM2"]<1e-8
++        assert r["mergedApertureWitness"]["axisMaterialLengthMM"]<1e-8
++        assert r["mergedApertureWitness"]["sharedWallEdges"]>0
++    for selected in ([],["RightGuide"]):
++        try:extract_native_cord_features(doc,body,selected,["Left"])
++        except ValueError:pass
++        else:raise AssertionError("Missing/opposite guide must not witness merged left aperture")
++    print("PASS merged longitudinal/transverse/bore aperture; unrelated/opposite guide excluded")
++
++finally:
++    App.closeDocument(doc.Name)
+diff --git a/Tools/HangboardCAD/tests/test_cad_sidecars.py b/Tools/HangboardCAD/tests/test_cad_sidecars.py
+index cdf992a91..b6e455711 100644
+--- a/Tools/HangboardCAD/tests/test_cad_sidecars.py
++++ b/Tools/HangboardCAD/tests/test_cad_sidecars.py
+@@ -168,3 +168,31 @@ def test_native_path_search_rejects_invalid_explicit_selector(tmp_path, selector
+     front_entry_authoring(entries)["pathSearch"] = selector
+     with pytest.raises(cad_source.ManifestError, match="pathSearch"):
+         merge(tmp_path, board, entries)
++
++
++def guided_authoring(entries):
++    solver=front_entry_authoring(entries)
++    solver.pop("tightening")
++    entries[0]["suspension"]["canonicalPoses"]={"front":{}}
++    solver["grooveGuides"]={"sourceSHA256":"c"*64,"byPoseID":{"front":{"lead":{"feature":"NativeGroove","boreFeature":"NativeBore","exitSign":1}}}}
++    return solver
++
++
++def test_native_guides_stay_authoring_only_in_generated_manifest(tmp_path):
++    board,entries=package(tmp_path);guided_authoring(entries)
++    merged=merge(tmp_path,board,entries);rendered=cad_source.render_board(merged).decode()
++    assert "grooveGuides" not in rendered and "ropeSolver" not in rendered
++    assert "cadRoutedCord" in rendered
++
++
++@pytest.mark.parametrize("change",["missing-pose","missing-lead","authored-path","bad-source","bad-exit","mixed-tightening"])
++def test_native_guides_reject_incomplete_or_authored_route_contract(tmp_path,change):
++    board,entries=package(tmp_path);solver=guided_authoring(entries);guides=solver["grooveGuides"]
++    if change=="missing-pose":guides["byPoseID"]={}
++    if change=="missing-lead":guides["byPoseID"]["front"]={}
++    if change=="authored-path":guides["byPoseID"]["front"]["lead"]["points"]=[[0,0,0]]
++    if change=="bad-source":guides["sourceSHA256"]="stale"
++    if change=="bad-exit":guides["byPoseID"]["front"]["lead"]["exitSign"]=True
++    if change=="mixed-tightening":solver["tightening"]="coupled3D"
++    with pytest.raises(cad_source.ManifestError,match="grooveGuides"):
++        merge(tmp_path,board,entries)
+diff --git a/Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py b/Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py
+new file mode 100644
+index 000000000..c53d4b48a
+--- /dev/null
++++ b/Tools/HangboardCAD/tests/test_native_cord_feature_extraction.py
+@@ -0,0 +1,112 @@
++"""Exercise cord feature binding against actual native FreeCAD solids."""
++import os
++import json
++from pathlib import Path
++import signal
++import subprocess
++import sys
++import tempfile
++
++import pytest
++
++ROOT = Path(__file__).resolve().parents[3]
++FREECAD = Path(os.environ.get(
++    "HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
++))
++
++
++@pytest.mark.skipif(
++    not FREECAD.is_file() or not os.environ.get("HANGTEN_CAD_PYTHONPATH"),
++    reason="native FreeCAD/OpenUSD toolchain unavailable",
++)
++def test_native_cord_feature_extraction():
++    context = ROOT / ".context" / ROOT.name
++    context.mkdir(parents=True, exist_ok=True)
++    process = None
++    temp = None
++    ownership = None
++    record = {"workspaceOwner": ROOT.name}
++    try:
++        with tempfile.TemporaryDirectory(prefix=f"{ROOT.name}-cord-feature-tests-", dir=context) as temp:
++            env = dict(os.environ, TMPDIR=temp, XDG_CACHE_HOME=temp)
++            ownership = context / (Path(temp).name + "-ownership.json")
++            record["temporaryDirectory"] = temp
++            try:
++                process = subprocess.Popen(
++                    [sys.executable, str(ROOT / "Tools/HangboardCAD/run_freecad.py"),
++                     "--freecad", str(FREECAD), "--extra-python-path", env["HANGTEN_CAD_PYTHONPATH"],
++                     str(Path(__file__).with_name("native_cord_feature_checks.py"))],
++                    cwd=ROOT, env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
++                    start_new_session=True,
++                )
++                record["ownedProcessGroup"] = process.pid
++                ownership.write_text(json.dumps(record, indent=2) + "\n")
++                stdout, stderr = process.communicate(timeout=120)
++            finally:
++                # Cleanup is active before launch and before the ownership
++                # write, so a failed receipt cannot leave a native child alive.
++                if process is not None:
++                    try:
++                        os.killpg(process.pid, signal.SIGKILL)
++                    except ProcessLookupError:
++                        pass
++                    process.wait()
++                    try:
++                        os.killpg(process.pid, 0)
++                        group_absent = False
++                    except ProcessLookupError:
++                        group_absent = True
++                    record.update(processGroupAbsent=group_absent, exitCode=process.returncode)
++                    assert group_absent
++    finally:
++        if temp is not None:
++            record["temporaryDirectoryAbsent"] = not Path(temp).exists()
++            assert record["temporaryDirectoryAbsent"]
++        if ownership is not None:
++            ownership.write_text(json.dumps(record, indent=2) + "\n")
++    assert process.returncode == 0, stdout + stderr
++
++
++def test_failed_ownership_write_still_cleans_native_process(monkeypatch, tmp_path):
++    import importlib
++    module = importlib.import_module(__name__)
++    monkeypatch.setattr(module, "ROOT", tmp_path / "placid-badger")
++    monkeypatch.setenv("HANGTEN_CAD_PYTHONPATH", "unused-fake-native-path")
++    signals = []
++
++    class Process:
++        pid = 123987
++        returncode = None
++
++        def communicate(self, timeout):
++            pytest.fail("receipt failure must occur before native communicate")
++
++        def wait(self):
++            self.returncode = -9
++
++    process = Process()
++    monkeypatch.setattr(module.subprocess, "Popen", lambda *a, **k: process)
++
++    def kill_group(pid, sig):
++        assert pid == process.pid
++        signals.append(sig)
++        if sig == 0:
++            raise ProcessLookupError
++
++    monkeypatch.setattr(module.os, "killpg", kill_group)
++    original_write = Path.write_text
++    failed = []
++
++    def fail_first_receipt(path, text, *args, **kwargs):
++        if path.name.endswith("-ownership.json") and not failed:
++            failed.append(path)
++            raise OSError("injected ownership receipt failure")
++        return original_write(path, text, *args, **kwargs)
++
++    monkeypatch.setattr(Path, "write_text", fail_first_receipt)
++    with pytest.raises(OSError, match="injected ownership"):
++        test_native_cord_feature_extraction()
++    assert signals == [signal.SIGKILL, 0]
++    receipt = json.loads(failed[0].read_text())
++    assert receipt["processGroupAbsent"] and receipt["temporaryDirectoryAbsent"]
++    assert not Path(receipt["temporaryDirectory"]).exists()
+diff --git a/Tools/HangboardCAD/tests/test_native_cord_guides.py b/Tools/HangboardCAD/tests/test_native_cord_guides.py
+new file mode 100644
+index 000000000..7c77e8ddd
+--- /dev/null
++++ b/Tools/HangboardCAD/tests/test_native_cord_guides.py
+@@ -0,0 +1,205 @@
++"""Negative contracts for opt-in native groove guidance."""
++from pathlib import Path
++import sys
++import numpy as np
++import pytest
++import trimesh
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
++from native_cord_guides import certify_groove_traversal, certify_active_reactions, validate_guide_bindings
++
++GUIDE={"origin":[0,0,0],"axis":[0,0,1],"radius":.00175,"axialBounds":[-.02,.02],"wallFaces":[1],"kind":"groove"}
++
++def test_a_collision_clear_side_bypass_is_not_groove_seating():
++    path=np.array([[.003,0,.03],[.003,0,.005],[0,0,0]])
++    with pytest.raises(ValueError,match="seating"):
++        certify_groove_traversal(path,.0015,GUIDE,1,np.zeros(3))
++
++def test_touching_only_the_groove_endpoint_is_not_traversal():
++    path=np.array([[.02,.02,0],[0,0,0]])
++    with pytest.raises(ValueError,match="traversal"):
++        certify_groove_traversal(path,.0015,GUIDE,1,np.zeros(3))
++
++def test_finite_inside_span_passes_and_undersize_groove_fails():
++    path=np.array([[.0001,0,.03],[.0001,0,.001],[0,0,0]])
++    assert certify_groove_traversal(path,.0015,GUIDE,1,np.zeros(3))["status"]=="pass"
++    with pytest.raises(ValueError,match="radius"):
++        certify_groove_traversal(path,.002,GUIDE,1,np.zeros(3))
++
++def test_inactive_material_cannot_support_a_free_knee():
++    mesh=trimesh.creation.box(extents=[.02,.02,.02]);mesh.apply_translation([.03,0,0])
++    path=np.array([[0,-.02,0],[-.003,0,0],[0,.02,0]])
++    with pytest.raises(ValueError,match="reaction"):
++        certify_active_reactions(mesh,path,.0015)
++
++def test_open_side_wall_cannot_pull_rope_toward_it():
++    mesh=trimesh.creation.box(extents=[.02,.1,.1]);mesh.apply_translation([.01,0,0])
++    # Wall outward normal is -X; this inward knee requires +X.
++    path=np.array([[-.00152,-.01,0],[-.00151,0,0],[-.00152,.01,0]])
++    with pytest.raises(ValueError,match="reaction"):
++        certify_active_reactions(mesh,path,.0015)
++
++def test_source_and_feature_bindings_fail_closed():
++    data={"ropeSolver":{"grooveGuides":{"sourceSHA256":"a"*64,"byPoseID":{"front":{"lead":{"feature":"g","boreFeature":"b","exitSign":1}}}}},"suspension":{"canonicalPoses":{"front":{}},"strands":[{"id":"lead","kind":"lead"}]}}
++    source={"sourceSHA256":"b"*64,"nativeCordFeatures":{}}
++    with pytest.raises(ValueError,match="source"):
++        validate_guide_bindings(data,source)
++    source["sourceSHA256"]="a"*64
++    with pytest.raises(ValueError,match="feature"):
++        validate_guide_bindings(data,source)
++
++def test_default_native_routes_do_not_read_guide_metadata(monkeypatch):
++    import native_cord_routes as routes
++    sentinel={"default":"unchanged"}
++    monkeypatch.setattr(routes,"_solve_native_seed",lambda *a,**k:sentinel)
++    data={"ropeSolver":{},"suspension":{"canonicalPoses":{},"strands":[]}}
++    assert routes.solve_native_routes(None,data,{}) is sentinel
++
++
++def test_real_native_nearby_triangle_vectors_cannot_supply_tangential_force():
++    import json
++    from native_cord_guides import material_normal_cone
++    fixture=json.loads((Path(__file__).parent/"fixtures/native_groove_material_normals.json").read_text())
++    for case in fixture["cases"]:
++        _,bad=material_normal_cone(case["rejectedRadialDirection"],case["outwardNormals"])
++        assert bad>.04, "nearby triangle radial vector was misclassified as material support"
++        for actual in case["outwardNormals"]:
++            _,good=material_normal_cone(actual,case["outwardNormals"])
++            assert good<1e-10
++
++
++def test_empty_material_cone_cannot_support_nonzero_force():
++    from native_cord_guides import material_normal_cone
++    weights,residual=material_normal_cone([1,0,0],[])
++    assert len(weights)==0 and residual==pytest.approx(1.)
++
++
++def test_bore_entry_requires_finite_inset_and_respects_native_cutoff():
++    from native_cord_guides import certify_bore_entry
++    bore={"origin":[-.047,-.0024,0],"axis":[-1,0,0],"radius":.002,"outerMouthStation":.0055}
++    path=np.array([[-.055,-.0024,0],[-.0525,-.0024,0],[-.04975,-.0024,0]])
++    result=certify_bore_entry(path,.0015,bore,[-1,0,0],.0002)
++    assert result["insetFromActualOuterPlane"]==pytest.approx(.00275)
++    assert result["finiteTailLength"]>0
++    for endpoint in ([-.0525,-.0024,0],[-.0475,-.0024,0],[-.04975,-.001,0]):
++        rejected=path.copy();rejected[-1]=endpoint
++        with pytest.raises(ValueError,match="finite radius/end-cap"):
++            certify_bore_entry(rejected,.0015,bore,[-1,0,0],.0002)
++
++
++def test_facet_reconstructed_balance_rejects_amplified_direction_error():
++    from native_cord_guides import facet_reconstructed_balance
++    mesh=trimesh.creation.box()
++    face=int(np.argmax(mesh.face_normals[:,0]))
++    contact={"segment":0,"fraction":1.,"normal":[1.,5e-6,0.],
++             "incidentMaterialTriangles":[face],"materialNormalConeWeights":[1.]}
++    required=np.array([[100.,.0005,0.]])
++    result=facet_reconstructed_balance(mesh,required,[contact],[100.])
++    assert result["maxFacetReconstructedNodalResidual"]==pytest.approx(.0005)
++    assert result["maximumWeightedMaterialConeErrorBound"]==pytest.approx(.0005)
++    assert result["status"]=="fail"
++    with pytest.raises(ValueError,match="nonempty"):
++        facet_reconstructed_balance(mesh,required,[dict(contact,incidentMaterialTriangles=[],materialNormalConeWeights=[])],[100.])
++
++
++def test_longitudinal_vertical_seat_rejects_old_transverse_route():
++    # Runtime Y is native Z: the new vertical guide is not the old depth-axis
++    # adjustment notch. Exercise both physically upward canonical orientations.
++    guide={**GUIDE,"axis":[0,1,0],"axialBounds":[-.05,.05]}
++    for sign in (-1,1):
++        seated=np.array([[.0001,sign*.06,0],[.0001,sign*.001,0],[0,0,0]])
++        assert certify_groove_traversal(seated,.0015,guide,sign,np.zeros(3))["status"]=="pass"
++        old_transverse=np.array([[.0001,0,.025],[.0001,0,.001],[0,0,0]])
++        with pytest.raises(ValueError,match="traversal"):
++            certify_groove_traversal(old_transverse,.0015,guide,sign,np.zeros(3))
++
++
++def test_native_search_plane_requires_both_axes_anchor_and_terminal():
++    from native_cord_guides import native_feature_plane
++    guide={"origin":[-.0525,-.055,0],"axis":[0,1,0]}
++    bore={"origin":[-.047,-.0024,0],"axis":[-1,0,0]}
++    plane=native_feature_plane([0,.09,0],[-.04975,-.0024,0],guide,bore)
++    assert plane["fixedCoordinate"]==2 and abs(plane["normal"][2])==1
++    assert native_feature_plane([0,.09,.001],[-.04975,-.0024,0],guide,bore) is None
++    assert native_feature_plane([0,.09,0],[-.04975,-.0024,.001],guide,bore) is None
++    assert native_feature_plane([0,.09,0],[-.04975,-.0024,0],{**guide,"origin":[-.0525,-.055,.001]},bore) is None
++    assert native_feature_plane([0,.09,0],[-.04975,-.0024,0],guide,{**bore,"axis":[0,1,0]}) is None
++
++
++
++def test_unit_tension_jacobian_matches_independent_finite_difference():
++    from native_cord_guides import unit_tension_chain_jacobian
++    path=np.array([[0,.1,0],[.05,.05,.001],[.051,.002,0],[.049,0,0]])
++    def forces(p):
++        directions=np.diff(p,axis=0);directions/=np.linalg.norm(directions,axis=1)[:,None]
++        return (directions[:-1]-directions[1:]).ravel()
++    numerical=np.zeros((6,6));epsilon=1e-8
++    for column in range(6):
++        a=path.copy();b=path.copy();a[1+column//3,column%3]+=epsilon;b[1+column//3,column%3]-=epsilon
++        numerical[:,column]=(forces(a)-forces(b))/(2*epsilon)
++    np.testing.assert_allclose(unit_tension_chain_jacobian(path),numerical,rtol=1e-7,atol=1e-6)
++
++
++def test_material_settling_cannot_accept_missing_support_or_collision(monkeypatch):
++    import native_cord_guides as module
++    import native_cord_routes
++    path=np.array([[0,.1,0],[.05,.05,0],[.05,0,0]])
++    monkeypatch.setattr(native_cord_routes,"checked_clearance",lambda *a:.002)
++    def unsupported(*a):raise ValueError("no active material support")
++    monkeypatch.setattr(module,"certify_active_reactions",unsupported)
++    with pytest.raises(ValueError,match="no active"):module.settle_material_forces(None,path,.0015)
++    def collision(*a):raise ValueError("native solid collision")
++    monkeypatch.setattr(native_cord_routes,"checked_clearance",collision)
++    with pytest.raises(ValueError,match="collision"):module.settle_material_forces(None,path,.0015)
++
++
++@pytest.mark.parametrize("depth_offset,expected_frames",[(0.,2),(.01,4)])
++def test_native_physics_reuse_recertifies_every_presentation(monkeypatch,depth_offset,expected_frames):
++    import native_cord_guides as module
++    poses={"a":{"rotation":[0,0,0,1],"translation":[0,0,0]},"b":{"rotation":[0,1,0,0],"translation":[0,0,0]},"c":{"rotation":[1,0,0,0],"translation":[0,0,0]},"d":{"rotation":[0,0,1,0],"translation":[0,0,0]}}
++    features={};terminals={};selections={};calls=[]
++    for side,sign in (("left",-1),("right",1)):
++        features[side+"Guide"]={"origin":[sign*.05,-.05,0],"axis":[0,1,0]}
++        features[side+"Bore"]={"origin":[sign*.05,0,0],"axis":[sign,0,0]}
++        terminals[side]={"points":[[sign*.05,0,0]],"mouthAxis":[sign,0,0]}
++    for name in poses:
++        selections[name]={side:{"feature":side+"Guide","boreFeature":side+"Bore","exitSign":1 if name in ('a','b') else -1} for side in ('left','right')}
++    data={"suspension":{"strands":[{"id":side,"radius":.0015,"restLength":.12} for side in ('left','right')],"anchor":{"offsetFromBoardBounds":[0,.025,depth_offset]},"canonicalPoses":poses},"ropeSolver":{"clearance":.0002,"terminalsByStrandID":terminals,"grooveGuides":{"byPoseID":selections}}}
++    monkeypatch.setattr(module,"validate_guide_bindings",lambda *a:features)
++    monkeypatch.setattr(module,"_seed",lambda mesh,support,terminal,*a:np.vstack([support,terminal]))
++    monkeypatch.setattr(module,"_optimize_lead",lambda mesh,path,*a,**kw:(path,{"testStub":True}))
++    def certify(mesh,full,*args):
++        calls.append({k:v.copy() for k,v in full.items()})
++        return {k:.002 for k in full},{k:1. for k in full},{k:{"status":"pass"} for k in full}
++    monkeypatch.setattr(module,"_certify_guided_paths",certify)
++    descriptor={"modelBounds":{"min":[-.05,-.05,-.01],"max":[.05,.05,.01]}}
++    result=module.solve_groove_guided_routes(trimesh.creation.box(),data,descriptor,{"sourceSHA256":"test"})
++    assert len(calls)==len(poses)  # every copied output is independently certified
++    unique=[k for k,v in result.items() if 'freshComputationReuse' not in v['nativeGrooveGuidance']]
++    assert len(unique)==expected_frames
++    if depth_offset==0:
++        assert result['b']['nativeGrooveGuidance']['freshComputationReuse']['sourcePoseID']=='a'
++        assert result['d']['nativeGrooveGuidance']['freshComputationReuse']['sourcePoseID']=='c'
++
++
++def test_cancelled_cone_direction_errors_still_exceed_the_weighted_bound():
++    from native_cord_guides import facet_reconstructed_balance
++    mesh=trimesh.creation.box()
++    face=int(np.argmax(mesh.face_normals[:,0]))
++    contacts=[{"segment":0,"fraction":1.,"normal":[1.,sign*5e-6,0.],
++               "incidentMaterialTriangles":[face],"materialNormalConeWeights":[1.]}
++              for sign in (-1,1)]
++    result=facet_reconstructed_balance(mesh,np.array([[200.,0.,0.]]),contacts,[100.,100.])
++    assert result["maxFacetReconstructedNodalResidual"]==pytest.approx(0.)
++    assert result["maximumWeightedMaterialConeErrorBound"]==pytest.approx(.001)
++    assert result["status"]=="fail"
++
++
++def test_material_settling_rejects_oversize_paths_before_dense_work(monkeypatch):
++    import native_cord_guides as module
++    import native_cord_routes
++    path=np.column_stack([np.linspace(0,.1,129),np.zeros(129),np.zeros(129)])
++    def forbidden(*args):
++        pytest.fail("oversized path reached material/clearance work")
++    monkeypatch.setattr(native_cord_routes,"checked_clearance",forbidden)
++    with pytest.raises(ValueError,match="vertex budget"):
++        module.settle_material_forces(None,path,.0015)
+diff --git a/Tools/HangboardPackages/src/hangboard_packages/cad_source.py b/Tools/HangboardPackages/src/hangboard_packages/cad_source.py
+index 07b25f466..d0d23245e 100644
+--- a/Tools/HangboardPackages/src/hangboard_packages/cad_source.py
++++ b/Tools/HangboardPackages/src/hangboard_packages/cad_source.py
+@@ -396,7 +396,7 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) ->
+     # never merged into board.json.
+     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+-        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
++        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening", "pathSearch", "grooveGuides"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                 or isinstance(solver["clearance"], bool) \
+                 or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                 or not 0 < solver["clearance"] <= .01 \
+@@ -437,6 +437,25 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) ->
+         if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
+                for strand in strands):
+             raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
++        if "grooveGuides" in solver:
++            guides=solver["grooveGuides"]
++            poses=suspension.get("canonicalPoses",{})
++            if not isinstance(guides,dict) or set(guides)!={"sourceSHA256","byPoseID"} \
++                    or not isinstance(guides.get("sourceSHA256"),str) or not re.fullmatch(r"[0-9a-f]{64}",guides["sourceSHA256"]) \
++                    or not isinstance(guides.get("byPoseID"),dict) or set(guides["byPoseID"])!=set(poses) \
++                    or solver.get("sectionPlane")!="anchor" or solver.get("supportDirection",1)!=1 \
++                    or "tightening" in solver or any(x["kind"]!="lead" for x in strands):
++                raise ManifestError("native grooveGuides requires exact source/pose bindings and independent anchor-plane leads")
++            identifiers={x["id"] for x in strands}
++            for selections in guides["byPoseID"].values():
++                if not isinstance(selections,dict) or set(selections)!=identifiers:
++                    raise ManifestError("native grooveGuides must select every strand in every pose")
++                for identifier,selection in selections.items():
++                    if not isinstance(selection,dict) or set(selection)!={"feature","boreFeature","exitSign"} \
++                            or any(not isinstance(selection.get(key),str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",selection[key]) for key in ("feature","boreFeature")) \
++                            or isinstance(selection.get("exitSign"),bool) or selection.get("exitSign") not in (-1,1) \
++                            or "mouthAxis" not in solver["terminalsByStrandID"][identifier]:
++                        raise ManifestError("native grooveGuides requires native feature names, finite exit choice and mouth axes")
+         if "tightening" in solver and (solver.get("sectionPlane", "fixed") != "anchor" or any(
+                 strand["kind"] != "lead" or "mouthAxis" not in solver["terminalsByStrandID"][strand["id"]]
+                 for strand in strands)):
+diff --git a/docs/HANGBOARD_CORD_AUTHORING.md b/docs/HANGBOARD_CORD_AUTHORING.md
+index 999ef4223..78982b1aa 100644
+--- a/docs/HANGBOARD_CORD_AUTHORING.md
++++ b/docs/HANGBOARD_CORD_AUTHORING.md
+@@ -352,8 +352,88 @@ of global minimum or physical equilibrium; no authored route cache seeds the
+ solve. The setting is authoring-only, accepts only this value and topology, and
+ its omission preserves the existing section solver exactly.
+ 
+-The default `"fixed"` uses the selected section plane. Both modes certify every
+-visible segment against the full closed CAD solid using adaptive signed-distance
++For an evidenced open adjustment groove that guides a lead into a separate
++visible bore, the optional `ropeSolver.grooveGuides` contract selects existing
++native cylinder features, never route points. It is restricted to independent
++leads in anchor sections and cannot be combined with `tightening`. Its
++`sourceSHA256` must match the actual collider/CAD source. `byPoseID` must name
++every canonical pose and every strand; each selection contains only `feature`
++(the groove), `boreFeature`, and `exitSign` (`-1` or `1` along the native groove
++axis). Different native groove choices, pose pitches and anchor offsets require
++an explicit evidence/estimate disposition; they are not manufacturer facts.
++
++Export that offline collider with `HANGTEN_ROPE_GROOVE_FEATURES` and
++`HANGTEN_ROPE_BORE_FEATURES` set to comma-separated existing cylinder names.
++The exporter records finite final-solid wall faces, exact geometry-only axial
++bounds and the actual local bore aperture plane. A cutting cylinder's overshoot
++is not an exterior mouth. The plane must meet that bore's finite outer wall
++boundary, and its finite face must be adjacent to the aperture circle. Opposite
++coaxial bores remain separate. With neither variable set, the exporter keeps
++its original output exactly. Unsupported cylinder orientations fail explicitly.
++
++When a selected longitudinal guide merges with a transverse notch and bore,
++the circular rim may end inward from the exterior side plane. The extractor
++then requires intersecting perpendicular native tools, shared final bore/guide
++wall edges, a connected native void, an outward exterior face adjacent to the
++guide, and zero-material aperture-disk and finite axis-crossing witnesses.
++The recorded exterior mouth remains that actual side plane; the separately
++recorded cylindrical-wall extent is not substituted for it. Missing or opposite
++guides and remote parallel planes cannot certify this merged opening.
++
++When the selected guide and bore axes, terminal and fixed support are
++analytically coplanar, the bounded search retains that native axis-aligned
++plane for its first search phase to avoid numerical drift in an unnecessary
++degree of freedom. The plane is then always released and the native-derived
++seed is checked and settled in full 3D. A bounded unit-tension chain Jacobian
++step can correct small residuals from the independently reconstructed actual
++facet forces:
++endpoints stay fixed, at most five corrections of at most 10 micrometres are
++allowed, and every trial recomputes full 3D clearance and material support.
++These are numerical search bounds, not relaxed acceptance tolerances. Parallel,
++inconsistent and noncoplanar cases retain the full 3D search from the start.
++This search constraint is not a physical certificate: the final full 3D
++solid/tube, seating, entry and actual-facet force gates still apply unchanged.
++
++The guide solver generates section seeds through the selected native groove,
++then releases those seed stations during bounded three-dimensional shortening
++and hanging-height settling. It never reads an existing route cache as a seed.
++The final nine-decimal cache must pass the unchanged full-radius continuous
++solid and tube checks, finite groove traversal, finite bore/end-cap entry,
++settled length and an active-material reaction check. An endpoint touch or a
++clear route outside the groove is insufficient. If evidence authorizes entry
++into an existing visible bore, a terminal may be inset only within its audited
++finite clearance interval; no connection beyond its native display cutoff is
++implied.
++
++Different presentation rotations can resolve to exactly the same native
++support origin and height direction. The solver may reuse that calculation
++within one fresh invocation when the guide selections also match, but it
++independently recertifies every output pose. It never uses a saved route cache
++for this calculation. Reports distinguish presentation rotations from the
++distinct native physics frames.
++
++The reaction check is discrete frictionless feasibility at the numerical cord
++offset, not an exact continuous rope model, global minimum, friction model or
++safety claim. Its force scale is unit tension. Contacts contribute only to their
++own segment endpoints with barycentric weights. The contact envelope is the
++actual radius plus the existing 20 micrometre proposal margin and 10 micrometre
++numerical allowance. A separate 10 micrometre closest-feature tie allowance
++accounts for opposing triangulated junction features. Every direction needs a
++nonempty cone of actual incident outward facet normals; nearby triangle radial
++vectors alone are not material normals. The solver independently recomputes
++both cone and nodal residuals and rejects unsupported forces. It additionally
++recomposes the fitted forces from actual incident-facet cone coefficients,
++checks that nodal residual at the same limit, and records the force-weighted
++cone-error bound. Both the reconstructed nodal residual and the weighted bound
++must be at most 1e-5; cancelling direction errors cannot hide amplified force
++errors. Reports retain facet IDs, closest-distance gaps, cone coefficients and active contact forces
++so those claims can be checked against the exact retained collision mesh.
++All guide metadata remains authoring-only and is removed from generated
++`board.json`; runtime still reads ordinary `cadRoutedCord`/`wrappedRoutes`.
++
++Without groove guidance, the default `tightening: "fixed"` uses the selected
++section plane. Every route mode certifies visible segments against the full
++closed CAD solid using adaptive signed-distance
+ Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.
+ Uncertifiable intervals fail. The same check covers the rounded runtime cache,
+ its actual terminal and reconstructed fixed support. Self-crossings, retracing

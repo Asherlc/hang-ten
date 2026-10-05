@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "open",
+    "-a",
+    "Simulator",
+    "--args",
+    "-CurrentDeviceUDID",
+    "9B0B559E-0E57-4C3F-9685-E5892BC41E30"
+  ],
+  "exitStatus": 0,
+  "epoch": 1790948948.753461,
+  "reason": "Open frontend for exact owned device while system app startup completes; no shared termination or service change"
+}

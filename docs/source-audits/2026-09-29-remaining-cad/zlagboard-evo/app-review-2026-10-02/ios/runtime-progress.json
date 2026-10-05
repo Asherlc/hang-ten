@@ -1,0 +1,20 @@
+{
+  "boardID": "zlagboard.evo",
+  "status": "package and portrait checks passed; first landscape rest color transition unresolved",
+  "coverage": "capture-coverage.json",
+  "physicalProbes": "physical-probes/validation.json",
+  "focusedRetrySummary": "tests-retry-summary.json",
+  "focusedRetryCleanup": "test-retry-cleanup.json",
+  "portraitWorkout": "workout-correct-route/validation.json",
+  "landscapeFirstRestRed": [
+    "workout-landscape/following-rest-settled.png",
+    "workout-landscape-longer-settle/following-rest-settled.png"
+  ],
+  "laterLandscapeRestBlue": "landscape-rest-update-probe/before-orbit.png",
+  "elevatedJugCoverage": "Astra passed both gentle elevated whole-board images; earlier clipped views retained",
+  "packageParity": "captures/package-parity.json",
+  "binaryParity": "captures/binary-parity.json",
+  "liveSimulatorUUID": "1684856E-FC2D-4407-8063-9B343B99CAD6",
+  "lifecycle": "97415 waiting cleanup-requested; root instructed hold pending shared-renderer issue review",
+  "humanAcceptance": "pending"
+}

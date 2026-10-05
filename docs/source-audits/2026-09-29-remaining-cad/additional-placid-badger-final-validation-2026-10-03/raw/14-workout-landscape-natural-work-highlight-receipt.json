@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "FAEA0F64-3EAE-4B4D-86F3-765AB5AE57E1",
+  "launch": {
+    "number": 14,
+    "boardID": "tension.flash-board",
+    "package": "tension-flash-board",
+    "contactID": null,
+    "planID": "research.abrahangs",
+    "flags": {
+      "BOARD_ID": "tension.flash-board",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "LANDSCAPE": "1",
+      "PLAN": "1",
+      "PLAN_ID": "research.abrahangs",
+      "STEP": "17"
+    },
+    "launchedAt": 1791080509.9150348
+  },
+  "image": "14-workout-landscape-natural-work-highlight.png",
+  "imageSHA256": "6cab5c20fcfaf4a624403eda632f9a6fa4ba639fc49dbbfd848e917e82804ffd",
+  "accessibilitySHA256": "2ec4cab7ed7369d39fd0821e1bcb79caa615eaa05573edefa8c24fff4314fcfb",
+  "binarySHA256": "36fdf093a45c7357d6768218356c8bf1f315f39765b4925e1b610ca37202368f",
+  "installedProvenanceSHA256": "b9dc21302641bbff22192bc2f7bc064e7a008536db4b1015efd5253e4de3ea0d",
+  "rendererDiagnostic": "revision=1;rootActive=true;cameraActive=true;sameScene=true;azimuth=0.0;elevation=0.0;cameraPitch=0.0;cameraSettled=true;selection=three-edge-left,three-edge-right;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "rawFailureCapture": false
+}

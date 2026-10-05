@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "xcode": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Build/HangTen.app/Hangboards/tension-flash-board",
+    "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+    "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "sourceAndSidecarAbsent": true
+  },
+  "android": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards/tension-flash-board",
+    "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+    "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "sourceAndSidecarAbsent": true
+  },
+  "xcodeODRAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Derived/HangTenModelODR/tension-flash-board/Hangboards/tension-flash-board/assets/primary.usdz",
+  "androidInlineAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards/tension-flash-board/assets/primary.usdz",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+}

@@ -1,0 +1,141 @@
+{
+  "owner": "placid-badger",
+  "recordedAtUTC": "2026-10-01T18:54:04.761828+00:00",
+  "status": "stopped compiler diagnostics; source and compiler unchanged; no geometry rejection",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "sourceStillEligibleForFinalGates": true,
+  "humanAcceptance": "pending review #8",
+  "reason": "Parent stopped three first exports to diagnose one legacy-normal mismatch. Exact actual-owner evidence subsequently resolves the neighboring-face heuristic error, with raw review-required result retained and no tolerance widening. Ancillary native grasp/normal jobs had already exited0; these are not labeled stopped or failed geometry.",
+  "stoppedJobs": [
+    {
+      "name": "compile",
+      "ownedProcessGroup": 93219,
+      "exitCode": -15,
+      "groupAbsent": true,
+      "tempAbsent": true
+    },
+    {
+      "name": "compile-check",
+      "ownedProcessGroup": 93218,
+      "exitCode": -15,
+      "groupAbsent": true,
+      "tempAbsent": true
+    },
+    {
+      "name": "reproduce",
+      "ownedProcessGroup": 93220,
+      "exitCode": -15,
+      "groupAbsent": true,
+      "tempAbsent": true
+    }
+  ],
+  "completedAncillaryJobs": [
+    {
+      "name": "fresh-native-grasp",
+      "exitCode": 0
+    },
+    {
+      "name": "normal-comparison",
+      "exitCode": 0
+    }
+  ],
+  "rawCopies": [
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/compare_final_uv_normals.py",
+      "retained": "raw/compare_final_uv_normals.py",
+      "sha256": "bea9a38851c3d930b11be531c1a8a6c1a60421cad8e894bdf83187e0c368d8ce",
+      "bytes": 2573
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/compile-check-ownership.json",
+      "retained": "raw/compile-check-ownership.json",
+      "sha256": "aa61d88722afc1d2dfae0cb0a878983b7bee0b650b319e7840f5e4617211c924",
+      "bytes": 775
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/compile-check.log",
+      "retained": "raw/compile-check.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/compile-ownership.json",
+      "retained": "raw/compile-ownership.json",
+      "sha256": "fb6dd29c4f36c94434aff44b42cb55169ae9f897f59ed05fb41e705b4a10ed64",
+      "bytes": 757
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/compile.log",
+      "retained": "raw/compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/final-normal-comparison.json",
+      "retained": "raw/final-normal-comparison.json",
+      "sha256": "2be544aefb3e9da417118cea2318f13af082075ef0dfc4afdd6ea21d876ce295",
+      "bytes": 25165
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/fresh-native-grasp-ownership.json",
+      "retained": "raw/fresh-native-grasp-ownership.json",
+      "sha256": "a4cdbe9235acc7c82acf78ab8a2d99b0c979bfdedcb1c7ec884319b7c181f279",
+      "bytes": 378
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/fresh-native-grasp.log",
+      "retained": "raw/fresh-native-grasp.log",
+      "sha256": "a52d2aed0b4d4786eb0d41d0222c1639baeeef978dab315d841ad2bff9f9d6a0",
+      "bytes": 654
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/normal-comparison-ownership.json",
+      "retained": "raw/normal-comparison-ownership.json",
+      "sha256": "73f49ab24f0a3713ac86820d1928bb0904d859ef8439395eaee87b2ecb2153fe",
+      "bytes": 371
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/normal-comparison.log",
+      "retained": "raw/normal-comparison.log",
+      "sha256": "55bed3cab4493bf1da3c40a5628f7e711ef973bd8546cbf1cce45133aa6558c6",
+      "bytes": 613
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/reproduce-ownership.json",
+      "retained": "raw/reproduce-ownership.json",
+      "sha256": "86843e83170bfc0664adb24edf96801012b38495d53ab57474af5b4c308152b5",
+      "bytes": 760
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/reproduce.log",
+      "retained": "raw/reproduce.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/superseded-export-stop.json",
+      "retained": "raw/superseded-export-stop.json",
+      "sha256": "68e67cc35b4a3e704ec97451eeecfdcc2e7a16e3a9db441ff6a939812c5e0e9b",
+      "bytes": 599
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-export-cleanup.json",
+      "retained": "root-proof/superseded-export-cleanup.json",
+      "sha256": "82af481d215b5acceeffec8bc55889721e64859ce8c105fb7389c62454bba311",
+      "bytes": 2552
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-export-stop.json",
+      "retained": "root-proof/superseded-export-stop.json",
+      "sha256": "68e67cc35b4a3e704ec97451eeecfdcc2e7a16e3a9db441ff6a939812c5e0e9b",
+      "bytes": 599
+    },
+    {
+      "source": ".context/placid-badger/metolius-simulator-3d-front-fairing/normal-comparison-disposition.json",
+      "retained": "root-proof/normal-comparison-disposition.json",
+      "sha256": "0fb5fbc5ba14e96be1fff22e7e8251d7c60d13af336668a64bbca4e89e26a2cc",
+      "bytes": 2309
+    }
+  ]
+}

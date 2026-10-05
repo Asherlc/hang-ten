@@ -1,0 +1,17 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcrun",
+    "simctl",
+    "list",
+    "devices",
+    "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "--json"
+  ],
+  "boundSeconds": 20.0,
+  "timedOut": false,
+  "interruptedBySignal": null,
+  "exitStatus": 0,
+  "elapsedSeconds": 0.5867771249904763
+}

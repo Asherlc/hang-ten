@@ -1,0 +1,9 @@
+{
+  "owner": "placid-badger",
+  "image": "10-portrait-workout-unresponsive-raw.png",
+  "imageSHA256": "45a11192f4ec800f442e76471cc5fdc510903915f40df96fc97a67766c430ae1",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "commandReceipt": "../capture-traces/commands/portrait-raw-sim-shot.json",
+  "accessibilitySnapshotAvailable": false,
+  "scope": "Whole direct Simulator screenshot after bounded AX timeout; no matched accessibility or readiness assertion."
+}

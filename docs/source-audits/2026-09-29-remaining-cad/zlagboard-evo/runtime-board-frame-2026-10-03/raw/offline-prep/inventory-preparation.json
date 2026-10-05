@@ -1,0 +1,16 @@
+{
+  "preparedOnly": true,
+  "copyExecuted": false,
+  "onDemandRawRead": false,
+  "frozenFiles": 406,
+  "frozenBytes": 32890511,
+  "inventorySHA256": "0a278fbc98b25c448098b1e36ddd6440a4d61a2ae446202060e870d8f919f381",
+  "copyRecipeV2SHA256": "2750140ac9785996ea15f10ce04d9e6d24590de8fdeb31d020c5330ed30f7b03",
+  "pythonASTPassed": true,
+  "cleanupRequired": "Exact root-supplied final cleanup file with passed/simulatorDeleted/exact3paths absent, UUID/owner/errors checked; no assumption of future deletion.",
+  "limits": [
+    "Partial stopped/failed controls stay preserved without completion requirement; includedCompletedArmPaths should list only completed control-ready/on-demand.",
+    "Final inventory must add frozen on-demand, reviews and future cleanup explicitly.",
+    "Full final source/restoration scope remains root-authored; no current source/runtime reads for this task."
+  ]
+}

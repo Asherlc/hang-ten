@@ -1,0 +1,165 @@
+{
+  "method": "Complete rectangles; uniform aspect-fit and letterboxing only. No crop, registration, tracing, pixel measurements or content edits.",
+  "placements": [
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/before-front.png",
+      "inputSHA256": "3913d18a5538ca9c41bb7b7a23798df434aa8fc191ff02e8d2f15508787f93ed",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/after-front.png",
+      "inputSHA256": "8746bc3b05cce598a4c5742e8505dee6fa2e35847f67ba3064c147ffc3f07443",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        164
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/before-side.png",
+      "inputSHA256": "493e52aea256f7cdd5a470f0206eafbfc7cd816bb0f918a6dd87556abedf3556",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/after-side.png",
+      "inputSHA256": "0cff71e6a0db501f5e9cfeb4d556aa6ba1891c93d8b246c9c432d5b44130606c",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        776
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/before-top.png",
+      "inputSHA256": "68fd221d54454ff9aced6726d15cbacf880c03f30b60dca4dad0f5a6ab0df860",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        24,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "front-side-top-comparison.png",
+      "input": "previews/after-top.png",
+      "inputSHA256": "2acb1cb6e393b86840c04f2534f8464290143161b0baf6ceebc194a5e8c5c862",
+      "originalSize": [
+        1200,
+        650
+      ],
+      "placedSize": [
+        900,
+        488
+      ],
+      "position": [
+        948,
+        1388
+      ],
+      "uniformScale": 0.75,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "app/before/jug-left-orbit.png",
+      "inputSHA256": "c78d6b653f69b869a63d5feb688127b00a378bd0ea5420ed54c563dc159396ca",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        24,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    },
+    {
+      "output": "app-before-after.png",
+      "input": "app/after/jug-left-orbit.png",
+      "inputSHA256": "3986ab7e59a6d5c8b34175f9a98012c0a7fa69193ba6ed0914894452068c016d",
+      "originalSize": [
+        1206,
+        2622
+      ],
+      "placedSize": [
+        699,
+        1520
+      ],
+      "position": [
+        748,
+        138
+      ],
+      "uniformScale": 0.5797101449275363,
+      "crop": false,
+      "registration": false
+    }
+  ]
+}

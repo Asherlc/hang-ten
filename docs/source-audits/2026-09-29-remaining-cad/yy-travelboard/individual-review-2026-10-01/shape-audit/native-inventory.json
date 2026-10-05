@@ -1,0 +1,314 @@
+[
+  {
+    "name": "BodyOutline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "BodyOutline"
+  },
+  {
+    "name": "BodyExtrusion",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "BodyExtrusion"
+  },
+  {
+    "name": "OuterRimRound",
+    "type": "Part::Fillet",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "OuterRimRound"
+  },
+  {
+    "name": "LeftMonoCircle",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftMonoCircle"
+  },
+  {
+    "name": "LeftMonoThroughOpening",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftMonoThroughOpening"
+  },
+  {
+    "name": "LeftMonoCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftMonoCut"
+  },
+  {
+    "name": "RightMonoCircle",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightMonoCircle"
+  },
+  {
+    "name": "RightMonoThroughOpening",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightMonoThroughOpening"
+  },
+  {
+    "name": "RightMonoCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightMonoCut"
+  },
+  {
+    "name": "Front25Outline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front25Outline"
+  },
+  {
+    "name": "Front25Cutter",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front25Cutter"
+  },
+  {
+    "name": "Front25Pocket",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front25Pocket"
+  },
+  {
+    "name": "Front15Outline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front15Outline"
+  },
+  {
+    "name": "Front15Cutter",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front15Cutter"
+  },
+  {
+    "name": "Front15Pocket",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Front15Pocket"
+  },
+  {
+    "name": "Back10Outline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Back10Outline"
+  },
+  {
+    "name": "Back10Cutter",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Back10Cutter"
+  },
+  {
+    "name": "Back10Pocket",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "Back10Pocket"
+  },
+  {
+    "name": "CavityMouthRounds",
+    "type": "Part::Fillet",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "CavityMouthRounds"
+  },
+  {
+    "name": "LeftCordEntryOutline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftCordEntryOutline"
+  },
+  {
+    "name": "LeftCordEntryWell",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftCordEntryWell"
+  },
+  {
+    "name": "LeftCordEntryCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftCordEntryCut"
+  },
+  {
+    "name": "RightCordEntryOutline",
+    "type": "Sketcher::SketchObject",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightCordEntryOutline"
+  },
+  {
+    "name": "RightCordEntryWell",
+    "type": "Part::Extrusion",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightCordEntryWell"
+  },
+  {
+    "name": "RightCordEntryCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightCordEntryCut"
+  },
+  {
+    "name": "LeftUpperCordMouth",
+    "type": "Part::Cylinder",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftUpperCordMouth"
+  },
+  {
+    "name": "LeftUpperCordMouthCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftUpperCordMouthCut"
+  },
+  {
+    "name": "LeftLowerCordMouth",
+    "type": "Part::Cylinder",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftLowerCordMouth"
+  },
+  {
+    "name": "LeftLowerCordMouthCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "LeftLowerCordMouthCut"
+  },
+  {
+    "name": "RightUpperCordMouth",
+    "type": "Part::Cylinder",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightUpperCordMouth"
+  },
+  {
+    "name": "RightUpperCordMouthCut",
+    "type": "Part::Cut",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightUpperCordMouthCut"
+  },
+  {
+    "name": "RightLowerCordMouth",
+    "type": "Part::Cylinder",
+    "nodeID": null,
+    "role": null,
+    "support": "",
+    "label": "RightLowerCordMouth"
+  },
+  {
+    "name": "RightLowerCordMouthCut",
+    "type": "Part::Cut",
+    "nodeID": "yy_body",
+    "role": "body",
+    "support": "",
+    "label": "RightLowerCordMouthCut"
+  },
+  {
+    "name": "yy_tray",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_tray",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face9', 'Face43', 'Face67'))]",
+    "label": "yy_tray"
+  },
+  {
+    "name": "yy_edge_25",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_edge_25",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face84', 'Face87', 'Face88', 'Face91', 'Face100', 'Face101', 'Face102', 'Face103', 'Face104', 'Face105', 'Face106', 'Face107', 'Face109'))]",
+    "label": "yy_edge_25"
+  },
+  {
+    "name": "yy_edge_15",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_edge_15",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face76', 'Face79', 'Face80', 'Face83', 'Face92', 'Face93', 'Face94', 'Face95', 'Face96', 'Face97', 'Face98', 'Face99', 'Face108'))]",
+    "label": "yy_edge_15"
+  },
+  {
+    "name": "yy_edge_10",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_edge_10",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face20', 'Face21', 'Face24', 'Face25', 'Face46', 'Face47', 'Face48', 'Face49', 'Face50', 'Face51', 'Face52', 'Face53', 'Face69'))]",
+    "label": "yy_edge_10"
+  },
+  {
+    "name": "yy_mono_left",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_mono_left",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face10', 'Face44', 'Face68'))]",
+    "label": "yy_mono_left"
+  },
+  {
+    "name": "yy_mono_right",
+    "type": "PartDesign::SubShapeBinder",
+    "nodeID": "yy_mono_right",
+    "role": "contact",
+    "support": "[(<Part::Feature>, ('Face27', 'Face54', 'Face70'))]",
+    "label": "yy_mono_right"
+  }
+]

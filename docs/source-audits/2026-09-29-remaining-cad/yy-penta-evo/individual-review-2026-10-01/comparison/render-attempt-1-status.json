@@ -1,0 +1,7 @@
+{
+  "status": "failed",
+  "exitCode": 1,
+  "error": "FileNotFoundError saving original/front.png: missing output directory",
+  "toolSessionID": 73611,
+  "noFinalFramesProduced": true
+}

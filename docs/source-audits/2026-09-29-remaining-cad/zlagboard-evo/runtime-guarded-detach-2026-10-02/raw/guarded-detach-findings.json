@@ -1,0 +1,308 @@
+{
+  "status": "Completed bounded control/detach comparison; both validly reproduced color failure",
+  "debugDylibSHA256": "66a1bd90a99a9226dc96b6ec12b8b3325d3a054baf5930009ccdc6808b2c5723",
+  "arms": {
+    "control": {
+      "valid": true,
+      "visualFailure": true,
+      "visualSequence": {
+        "initialHang": [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        "rest": [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        "nextHang": [
+          "blue",
+          "blue",
+          "blue",
+          "blue"
+        ]
+      },
+      "traceRecords": 152,
+      "actualPhaseIntervals": [
+        7.287416934967041,
+        179.49057388305664
+      ],
+      "postActionObservationCount": 138,
+      "checks": {
+        "structural-correspondence.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/structural-correspondence.json",
+          "sha256": "1fc8700ac5b373a67c3916a50352a338a8cf211b54bd3bba5509ee5fb51ae6da",
+          "checks": {
+            "completeContiguous": true,
+            "captures12": true,
+            "allCPUBrackets": true,
+            "sameScene": true,
+            "naturalFirstHang": true,
+            "naturalRest": true,
+            "freshSession": true,
+            "boundaryAppActive": true,
+            "boundaryWindowActive": true,
+            "boundaryLandscape": true,
+            "lateBoundaryCensus": true,
+            "noAXOrTouch": true
+          }
+        },
+        "hand-lifetime-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/hand-lifetime-validation.json",
+          "sha256": "db3eb72d7f153e9b8cb7a987f5cfd45980c5c586a12640b840538ec7c08f8f3a",
+          "checks": {
+            "completeOpeningStream": true,
+            "instrumentationVersion": true,
+            "suppressionFlagCorrect": true,
+            "allFourCountsOnEveryRecord": true,
+            "openingCountsZero": true,
+            "countsMonotonic": true,
+            "finalMarkerAfterLastCapture": true,
+            "noRecorderErrorOrCap": true,
+            "strictOFFZeroAllFourLifetimeCounts": true
+          }
+        },
+        "strict-absence-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/strict-absence-validation.json",
+          "sha256": "4a0406b134e8ac16d0ed75593c5f4b6f716dbf13929bf8b68c80c442bf41cfef",
+          "checks": {
+            "strictFlagEnabled": true,
+            "perspectiveFlagAbsent": true,
+            "openingStrictEnabled": true,
+            "allFourCountsZeroThroughout": true,
+            "noHandLifecycleEvents": true,
+            "noHandCameraEvents": true
+          }
+        },
+        "normal-host-frame-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/normal-host-frame-validation.json",
+          "sha256": "7fa4aed7a5da4482a5492e4a5dda86e96099b318aa4705aa570d68c35e21552a",
+          "checks": {
+            "workoutSceneFromCountdown": true,
+            "hostObserved": true,
+            "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+            "sameHost": true,
+            "sameActualScene": true,
+            "rootCameraActiveSameScene": true,
+            "hostVisible": true,
+            "sampledFramesOnMonotoneOwnEndpointPath": true,
+            "allPostFirstCaptureCensusesFinal": true
+          }
+        },
+        "train-constructor-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/train-constructor-validation.json",
+          "sha256": "da58b0e898b53f4a3094bec6e8d797b4db78dbc7f25c134ef7e0583651c2aa6c",
+          "checks": {
+            "completeContiguous": true,
+            "openingBeforeConstructors": true,
+            "uniqueConstructorTokens": true,
+            "exactlyOneWorkoutConstructor": true,
+            "exactlyOneWorkoutMake": true,
+            "allSceneRecordsHaveConstructor": true,
+            "markerGateMatches": true,
+            "strictHandsEnabled": true,
+            "observedPredecessorConstruction": true
+          }
+        },
+        "guarded-detach-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/guarded-detach-validation.json",
+          "sha256": "6fdec2611893b9447db95522fed7cef97e24e4d463dc750ed390b769082ec6a5",
+          "checks": {
+            "commonTrial": true,
+            "normalTrainPresentHandsOff": true,
+            "exactTwoConstructorsAndMakes": true,
+            "oneBeforeAfterTrainOnly": true,
+            "actionFlagCorrect": true,
+            "allHostsRetainedCurrentValid": true,
+            "tagMatchesExactPredecessor": true,
+            "oneStableOwnerPerHost": true,
+            "beforeOwnershipObserved": true,
+            "actionBeforeFirstHang": true,
+            "exactEnvironmentAllowlist": true,
+            "postActionEveryTrialHasPredecessor": true,
+            "bothHostsPresentFromFirstHang": true,
+            "workoutAttachedUnmarkedUnchanged": true,
+            "expectedPredecessorAttachmentThroughout": true,
+            "weakPredecessorAliveEveryPostObservation": true,
+            "weakMembershipMatchesAction": true,
+            "weakEntityIDsPreserved": true,
+            "observationsThroughTail": true
+          }
+        }
+      },
+      "visualReview": {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-control-landscape/visual-review.json",
+        "sha256": "a25f64b019908273c1bcacdc3a3e7ef761d2bc35207662bc9b7f22c9a281ebae"
+      }
+    },
+    "detach": {
+      "valid": true,
+      "visualFailure": true,
+      "visualSequence": {
+        "initialHang": [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        "rest": [
+          "red",
+          "red",
+          "red",
+          "red"
+        ],
+        "nextHang": [
+          "blue",
+          "blue",
+          "blue",
+          "blue"
+        ]
+      },
+      "traceRecords": 153,
+      "actualPhaseIntervals": [
+        7.021130084991455,
+        180.0565891265869
+      ],
+      "postActionObservationCount": 139,
+      "checks": {
+        "structural-correspondence.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/structural-correspondence.json",
+          "sha256": "fe61e9348e68615c4870c9ce35966e3dfa94523fffb800f5be9a4667cb9e3bee",
+          "checks": {
+            "completeContiguous": true,
+            "captures12": true,
+            "allCPUBrackets": true,
+            "sameScene": true,
+            "naturalFirstHang": true,
+            "naturalRest": true,
+            "freshSession": true,
+            "boundaryAppActive": true,
+            "boundaryWindowActive": true,
+            "boundaryLandscape": true,
+            "lateBoundaryCensus": true,
+            "noAXOrTouch": true
+          }
+        },
+        "hand-lifetime-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/hand-lifetime-validation.json",
+          "sha256": "37fbaae487b9322b2dc83ddb4ffd06a99ca0cd7ce3b5563994946b8e6a80a410",
+          "checks": {
+            "completeOpeningStream": true,
+            "instrumentationVersion": true,
+            "suppressionFlagCorrect": true,
+            "allFourCountsOnEveryRecord": true,
+            "openingCountsZero": true,
+            "countsMonotonic": true,
+            "finalMarkerAfterLastCapture": true,
+            "noRecorderErrorOrCap": true,
+            "strictOFFZeroAllFourLifetimeCounts": true
+          }
+        },
+        "strict-absence-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/strict-absence-validation.json",
+          "sha256": "249cbbf0f30b633a6c7de4fd66eea0e814fd78bb377936ab400067a26e910e3b",
+          "checks": {
+            "strictFlagEnabled": true,
+            "perspectiveFlagAbsent": true,
+            "openingStrictEnabled": true,
+            "allFourCountsZeroThroughout": true,
+            "noHandLifecycleEvents": true,
+            "noHandCameraEvents": true
+          }
+        },
+        "normal-host-frame-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/normal-host-frame-validation.json",
+          "sha256": "e118c6372f0554c9c5b49fb5ef900f74058756e7394624639f1fc5ef67b09710",
+          "checks": {
+            "workoutSceneFromCountdown": true,
+            "hostObserved": true,
+            "everyPostAttachmentCensusExactlyOneIntendedARView": true,
+            "sameHost": true,
+            "sameActualScene": true,
+            "rootCameraActiveSameScene": true,
+            "hostVisible": true,
+            "sampledFramesOnMonotoneOwnEndpointPath": true,
+            "allPostFirstCaptureCensusesFinal": true
+          }
+        },
+        "train-constructor-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/train-constructor-validation.json",
+          "sha256": "5057fde18e29051b3076eacc0981eb3bda1121ddf4df747f6da45ac490e68bde",
+          "checks": {
+            "completeContiguous": true,
+            "openingBeforeConstructors": true,
+            "uniqueConstructorTokens": true,
+            "exactlyOneWorkoutConstructor": true,
+            "exactlyOneWorkoutMake": true,
+            "allSceneRecordsHaveConstructor": true,
+            "markerGateMatches": true,
+            "strictHandsEnabled": true,
+            "observedPredecessorConstruction": true
+          }
+        },
+        "guarded-detach-validation.json": {
+          "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/guarded-detach-validation.json",
+          "sha256": "9aff01607c6cf8d13542896bfb328a99815db37407d908db5bd6d84f27bea649",
+          "checks": {
+            "commonTrial": true,
+            "normalTrainPresentHandsOff": true,
+            "exactTwoConstructorsAndMakes": true,
+            "oneBeforeAfterTrainOnly": true,
+            "actionFlagCorrect": true,
+            "allHostsRetainedCurrentValid": true,
+            "tagMatchesExactPredecessor": true,
+            "oneStableOwnerPerHost": true,
+            "beforeOwnershipObserved": true,
+            "actionBeforeFirstHang": true,
+            "exactEnvironmentAllowlist": true,
+            "postActionEveryTrialHasPredecessor": true,
+            "bothHostsPresentFromFirstHang": true,
+            "workoutAttachedUnmarkedUnchanged": true,
+            "expectedPredecessorAttachmentThroughout": true,
+            "weakPredecessorAliveEveryPostObservation": true,
+            "weakMembershipMatchesAction": true,
+            "weakEntityIDsPreserved": true,
+            "observationsThroughTail": true
+          }
+        }
+      },
+      "visualReview": {
+        "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-detach-landscape/visual-review.json",
+        "sha256": "d2c628b9eb3167a0b20b538b660beb04ca8bc2e3d33b5eea0fc136e76fe15591"
+      }
+    }
+  },
+  "conclusion": "Guarded removal of the disappearing Train root and camera from their recorded parent/actual scene was not sufficient to prevent the observed stale workout highlights. The action left both entities and their wrapper alive with nil parent/scene throughout all 139 recorded post-action observations. The common retained-model control kept the predecessor attached throughout 138 observations. No production fix is demonstrated.",
+  "crossArmComparison": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-arm-comparison.json",
+    "sha256": "6831fc060362a981912b3d7792678d883f737f68555f354591127e6cfe0476c4"
+  },
+  "finalParity": {
+    "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/guarded-detach-final-parity.json",
+    "sha256": "7fbbc20d670ac5abc66a7b1b3e5c305248549358d702dd46b23130caa50ccbed",
+    "all27Equal": true
+  },
+  "limitations": [
+    "This two-arm diagnostic intentionally retains scene models/resource leases in both arms. It does not prove generic lifecycle cleanup behavior or GPU host destruction.",
+    "Only root and camera entities were removed; the surrounding RealityView host was not replaced or removed.",
+    "Attachment observations are sparse points, not continuous rendering evidence. Existing sampler stops at120 seconds; late phase-boundary census retained.",
+    "Train construction and exact attachment were recorded, but no separate Train screenshot or placeholder slot measurement was added.",
+    "No assertion of identical animation timing. Actual frame histories and same endpoint/path gates retained.",
+    "Frontend history remains uncertain; no frontend actions, shared service resets or headless/isolation claim.",
+    "Actual initial detach-arm +5 timer was00:01; raw timestamps and labels retained. No claims about unsampled frames."
+  ],
+  "productionFix": false,
+  "appWorkflowPassed": false,
+  "additionalRuns": false,
+  "handback": {
+    "owner": "/root",
+    "deviceUUID": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+    "controllerSession": 90373,
+    "deviceAndDDRemainLive": true,
+    "diagnosticAppTerminated": true,
+    "sourceFrozen": true
+  }
+}

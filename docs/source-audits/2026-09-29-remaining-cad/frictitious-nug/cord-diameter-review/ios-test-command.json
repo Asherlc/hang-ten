@@ -1,0 +1,32 @@
+{
+  "owner": "placid-badger",
+  "simulator": "388959CA-8599-413C-8ABE-79CA573F50AD",
+  "command": [
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=388959CA-8599-413C-8ABE-79CA573F50AD",
+    "-derivedDataPath",
+    ".context/DerivedData",
+    "-parallel-testing-enabled",
+    "NO",
+    "-only-testing:HangTenTests/SuspendedBoardPresentationTests",
+    "-only-testing:HangTenTests/BoardModelTests",
+    "-only-testing:HangTenTests/BoardModelRealityTests",
+    "-only-testing:HangTenTests/BoardPackageStoreTests",
+    "-collect-test-diagnostics",
+    "never",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-review/placid-badger-nug-cord-diameter-tests.xcresult",
+    "test-without-building"
+  ],
+  "timeoutSeconds": 540,
+  "resultBundle": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-review/placid-badger-nug-cord-diameter-tests.xcresult",
+  "exitCode": 0,
+  "elapsedSeconds": 19.215515792020597
+}

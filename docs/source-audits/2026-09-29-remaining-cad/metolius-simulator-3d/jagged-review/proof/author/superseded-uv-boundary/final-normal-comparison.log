@@ -1,0 +1,19 @@
+{
+  "status": "review-required",
+  "sourceSHA256": "8fa07c203943d849101ba80926fb6c1d69c2ace7dff982a68f6e8a6476f618f7",
+  "compilerSHA256": "0f3c473cd36aaff03cfc701043e7d5272abd66eda27a7d3b8f8658916c85e815",
+  "trianglesCompared": 71,
+  "cornersCompared": 213,
+  "allPositionsExact": true,
+  "maxNormalAngleDegrees": 124.36592020836653,
+  "legacySeconds": 0.6725095000001602,
+  "uvSeconds": 11.987367208988871,
+  "categoryCounts": {
+    "legacy fallback boundary": 72,
+    "heavy-face interior": 60,
+    "heavy-face spatial boundary": 81
+  }
+}
+
+								
+								

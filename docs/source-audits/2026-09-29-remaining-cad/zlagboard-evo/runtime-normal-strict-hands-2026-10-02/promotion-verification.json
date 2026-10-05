@@ -1,0 +1,27 @@
+{
+  "allRawBytesExact": true,
+  "originalFreezeFilesVerified": 72,
+  "rawFilesIncludingFreeze": 73,
+  "sourceBuildReferencesVerified": 10,
+  "priorPacketsVerifiedBeforeAndAfter": [
+    {
+      "packet": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-strict-hands-2026-10-02",
+      "verifiedFiles": 308,
+      "manifestSHA256": "af6d057a8ee98cbad53d6667339b2f9d8aaa9f876d97574079ea35bc7ea6c3d8"
+    },
+    {
+      "packet": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-normal-all-hand-projection-2026-10-02",
+      "verifiedFiles": 142,
+      "manifestSHA256": "3428d57d420c9ff7d7ea36b81f99ed008f57a1fe36c0266b1e35bbc507b249bb"
+    },
+    {
+      "packet": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/runtime-all-hand-projection-2026-10-02",
+      "verifiedFiles": 331,
+      "manifestSHA256": "ac8d281fe200badfc6a3ac993e1d3e0cb165d015d9c0305129ddf484e4221954"
+    }
+  ],
+  "priorPacketListedFilesVerified": 781,
+  "appBundleDuplicated": false,
+  "stagedOrCommitted": false,
+  "runtimeActions": false
+}

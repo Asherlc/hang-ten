@@ -1,0 +1,1298 @@
+[
+  {
+    "type": "Application",
+    "AXLabel": "Hang Ten",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 402,
+      "x": 0,
+      "height": 874,
+      "y": 0
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "Hold specs",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "width": 402,
+      "height": 54,
+      "x": 0
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Back",
+    "AXUniqueId": "BackButton",
+    "AXValue": null,
+    "frame": {
+      "y": 62,
+      "width": 44,
+      "height": 44,
+      "x": 16
+    }
+  },
+  {
+    "type": "Heading",
+    "AXLabel": "Hold specs",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 73.66666666666666,
+      "width": 88.66666666666666,
+      "height": 20.66666666666667,
+      "x": 156.66666666666666
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "width": 36,
+      "height": 36,
+      "x": 346
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Report a problem",
+    "AXUniqueId": "boardDetail.reportProblem",
+    "AXValue": null,
+    "frame": {
+      "y": 66,
+      "width": 33.333333333333314,
+      "height": 36,
+      "x": 347.3333333333333
+    }
+  },
+  {
+    "type": "ScrollArea",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.screen",
+    "AXValue": null,
+    "frame": {
+      "y": 0,
+      "width": 402,
+      "height": 874,
+      "x": 0
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": null,
+    "AXUniqueId": "AdditionalDimmingOverlay",
+    "AXValue": null,
+    "frame": {
+      "y": 731,
+      "width": 642,
+      "height": 286,
+      "x": -120
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "ZLAGBOARD",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 134,
+      "width": 83.33333333333333,
+      "height": 13.333333333333343,
+      "x": 20
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Zlagboard.Pro 2.0",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 152.33333333333331,
+      "width": 236,
+      "height": 33.666666666666686,
+      "x": 20
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left top jug",
+    "AXUniqueId": "boardModel.contact.top-jug-left",
+    "AXValue": null,
+    "frame": {
+      "y": 211,
+      "width": 44,
+      "height": 44,
+      "x": 67.33333333333336
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-30-left",
+    "AXValue": null,
+    "frame": {
+      "y": 224.33333333333331,
+      "width": 44,
+      "height": 44,
+      "x": 79.00000000000003
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 32-degree top sloper",
+    "AXUniqueId": "boardModel.contact.top-sloper-32-left",
+    "AXValue": null,
+    "frame": {
+      "y": 212.66666666666666,
+      "width": 44,
+      "height": 43.99999999999997,
+      "x": 99.66666666666669
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 30 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-30-left",
+    "AXValue": null,
+    "frame": {
+      "y": 223.66666666666666,
+      "width": 44,
+      "height": 43.99999999999997,
+      "x": 116.00000000000003
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 20-degree top sloper",
+    "AXUniqueId": "boardModel.contact.top-sloper-20-left",
+    "AXValue": null,
+    "frame": {
+      "y": 210.66666666666666,
+      "width": 44,
+      "height": 44,
+      "x": 129.66666666666669
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 25 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-25-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "y": 224,
+      "x": 143.66666666666669,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center top sloper jug",
+    "AXUniqueId": "boardModel.contact.top-sloper-jug-center",
+    "AXValue": null,
+    "frame": {
+      "y": 209.33333333333331,
+      "height": 44,
+      "x": 179.00000000000003,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center 35 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-35-center",
+    "AXValue": null,
+    "frame": {
+      "y": 224,
+      "width": 44,
+      "x": 179.00000000000003,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 25 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-25-right",
+    "AXValue": null,
+    "frame": {
+      "y": 224,
+      "height": 44,
+      "x": 214.33333333333334,
+      "width": 44.00000000000003
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 20-degree top sloper",
+    "AXUniqueId": "boardModel.contact.top-sloper-20-right",
+    "AXValue": null,
+    "frame": {
+      "width": 44.00000000000003,
+      "y": 210.66666666666666,
+      "x": 228.33333333333334,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 30 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 223.66666666666666,
+      "width": 43.99999999999997,
+      "x": 242.00000000000003,
+      "height": 43.99999999999997
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 32-degree top sloper",
+    "AXUniqueId": "boardModel.contact.top-sloper-32-right",
+    "AXValue": null,
+    "frame": {
+      "y": 212.66666666666666,
+      "height": 43.99999999999997,
+      "x": 258.33333333333337,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 224.33333333333331,
+      "width": 44,
+      "x": 279,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right top jug",
+    "AXUniqueId": "boardModel.contact.top-jug-right",
+    "AXValue": null,
+    "frame": {
+      "y": 211,
+      "height": 44,
+      "x": 290.66666666666663,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 20 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-20-left",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "y": 238.33333333333331,
+      "x": 81.33333333333336,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Lower left 25 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-25-lower-left",
+    "AXValue": null,
+    "frame": {
+      "width": 44,
+      "y": 237.33333333333331,
+      "x": 118.00000000000003,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Inner left 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-30-inner-left",
+    "AXValue": null,
+    "frame": {
+      "y": 237.66666666666666,
+      "height": 43.99999999999997,
+      "x": 145.33333333333334,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center 30 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-30-center",
+    "AXValue": null,
+    "frame": {
+      "y": 237,
+      "height": 44,
+      "x": 179.00000000000003,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Inner right 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-30-inner-right",
+    "AXValue": null,
+    "frame": {
+      "y": 237.66666666666666,
+      "height": 43.99999999999997,
+      "x": 212.66666666666669,
+      "width": 43.99999999999994
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Lower right 25 mm sloper edge",
+    "AXUniqueId": "boardModel.contact.sloper-edge-25-lower-right",
+    "AXValue": null,
+    "frame": {
+      "y": 237.33333333333331,
+      "width": 43.99999999999997,
+      "x": 240.00000000000003,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 20 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-20-right",
+    "AXValue": null,
+    "frame": {
+      "y": 238.33333333333331,
+      "height": 44,
+      "x": 276.66666666666663,
+      "width": 44
+    }
+  },
+  {
+    "type": "GenericElement",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.map",
+    "AXValue": null,
+    "frame": {
+      "y": 220,
+      "height": 72,
+      "x": 34.00000000000003,
+      "width": 334
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left incut 15 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-incut-15-left",
+    "AXValue": null,
+    "frame": {
+      "y": 251,
+      "height": 44,
+      "x": 84.00000000000003,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Left 15 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-15-left",
+    "AXValue": null,
+    "frame": {
+      "height": 44,
+      "y": 251,
+      "x": 119.33333333333336,
+      "width": 44.000000000000014
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Inner left incut 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-incut-30-left",
+    "AXValue": null,
+    "frame": {
+      "y": 250,
+      "width": 44,
+      "x": 146.33333333333334,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Center incut 10 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-incut-10-center",
+    "AXValue": null,
+    "frame": {
+      "y": 251.33333333333331,
+      "height": 44,
+      "x": 179.00000000000003,
+      "width": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Inner right incut 30 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-incut-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 250,
+      "width": 44,
+      "x": 211.66666666666669,
+      "height": 44
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right 15 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-15-right",
+    "AXValue": null,
+    "frame": {
+      "y": 251,
+      "height": 44,
+      "x": 238.66666666666669,
+      "width": 43.99999999999994
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Right incut 15 mm edge",
+    "AXUniqueId": "boardModel.contact.edge-incut-15-right",
+    "AXValue": null,
+    "frame": {
+      "y": 251,
+      "width": 44,
+      "x": 274,
+      "height": 44
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": null,
+    "AXUniqueId": "boardDetail.selectedHold.edge-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 303.5,
+      "width": 335,
+      "x": 33.50000000000003,
+      "height": 151.6666717529297
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "SELECTED HOLD",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 322.0113475177305,
+      "width": 111.66666666666666,
+      "x": 52,
+      "height": 13.333333333333314
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 30 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 349.3446808510638,
+      "height": 25.33333333333337,
+      "x": 52,
+      "width": 180.33333333333331
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Kind",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 27.666666666666657,
+      "y": 389.67801418439717,
+      "x": 52,
+      "height": 15.666666666666686
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 17,
+      "y": 388.67801418439717,
+      "x": 315.33333333333337,
+      "width": 34.66666666666663
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Depth",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "width": 37.33333333333333,
+      "y": 420.67801418439717,
+      "x": 52,
+      "height": 15.666666666666686
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "30 mm",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 419.67801418439717,
+      "height": 17,
+      "x": 302.66666666666674,
+      "width": 47.33333333333326
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "HOLD MAP",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 13.333333333333314,
+      "width": 72,
+      "y": 466.67801418439717,
+      "x": 34
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 1: Left top jug",
+    "AXUniqueId": "boardDetail.holdLegend.top-jug-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 492,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "1",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 6.333333333333336,
+      "y": 503.8446808510638,
+      "x": 50.833333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left top jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 70.66666666666666,
+      "y": 503.17801418439717,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 2: Right top jug",
+    "AXUniqueId": "boardDetail.holdLegend.top-jug-right",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 492,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "2",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8,
+      "y": 503.8446808510638,
+      "x": 221
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right top jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 79,
+      "y": 503.17801418439717,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 3: Left 32-degree top sloper",
+    "AXUniqueId": "boardDetail.holdLegend.top-sloper-32-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 538,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "3",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.333333333333336,
+      "y": 549.8446808510638,
+      "x": 49.833333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 32-degree top sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 105,
+      "y": 549.1780141843972,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 4: Right 32-degree top sloper",
+    "AXUniqueId": "boardDetail.holdLegend.top-sloper-32-right",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 538,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "4",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.333333333333343,
+      "y": 549.8446808510638,
+      "x": 220.83333333333334
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 32-degree top sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 105.66666666666663,
+      "y": 549.1780141843972,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 5: Left 20-degree top sloper",
+    "AXUniqueId": "boardDetail.holdLegend.top-sloper-20-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 584,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "5",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.333333333333336,
+      "y": 595.8446808510638,
+      "x": 49.833333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 20-degree top sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 105,
+      "y": 595.1780141843972,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 6: Right 20-degree top sloper",
+    "AXUniqueId": "boardDetail.holdLegend.top-sloper-20-right",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 584,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "6",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.333333333333343,
+      "y": 595.8446808510638,
+      "x": 220.83333333333334
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 20-degree top sloper",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666742,
+      "width": 105.66666666666663,
+      "y": 595.1780141843972,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 7: Center top sloper jug",
+    "AXUniqueId": "boardDetail.holdLegend.top-sloper-jug-center",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 630,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "7",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 7.666666666666664,
+      "y": 641.8446808510638,
+      "x": 50.16666666666667
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center top sloper jug",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "width": 106,
+      "y": 641.1780141843971,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 8: Left 30 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-30-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 630,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "8",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.666666666666657,
+      "y": 641.8446808510638,
+      "x": 220.66666666666666
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 30 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "width": 105.33333333333337,
+      "y": 641.1780141843971,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 9: Left 30 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-30-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 676,
+      "x": 34.00000000000003
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "9",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 8.333333333333336,
+      "y": 687.8446808510638,
+      "x": 49.833333333333336
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 30 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "width": 103.33333333333334,
+      "y": 687.1780141843971,
+      "x": 74
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 10: Left 25 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-25-left",
+    "AXValue": null,
+    "frame": {
+      "height": 38,
+      "width": 163,
+      "y": 676,
+      "x": 205
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "10",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 15,
+      "y": 687.8446808510638,
+      "x": 217.5
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 25 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 15.666666666666629,
+      "width": 102.66666666666663,
+      "y": 687.1780141843971,
+      "x": 245
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 11: Center 35 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-35-center",
+    "AXValue": null,
+    "frame": {
+      "y": 722,
+      "width": 163,
+      "x": 34.00000000000003,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "11",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "height": 14.333333333333371,
+      "width": 12.666666666666664,
+      "y": 733.8446808510638,
+      "x": 47.666666666666664
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center 35 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 733.1780141843971,
+      "width": 99,
+      "x": 74,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 12: Right 25 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-25-right",
+    "AXValue": null,
+    "frame": {
+      "y": 722,
+      "width": 163,
+      "x": 205,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "12",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 733.8446808510638,
+      "width": 14.333333333333343,
+      "x": 217.83333333333334,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 25 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 733.1780141843971,
+      "width": 103,
+      "x": 245,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 13: Right 30 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 768,
+      "width": 163,
+      "x": 34.00000000000003,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "13",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 779.8446808510638,
+      "width": 14.666666666666664,
+      "x": 46.666666666666664,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 30 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 779.1780141843971,
+      "width": 103.66666666666666,
+      "x": 74,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 14: Right 30 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-30-right",
+    "AXValue": null,
+    "frame": {
+      "y": 768,
+      "width": 163,
+      "x": 205,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "14",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 779.8446808510638,
+      "width": 14.666666666666657,
+      "x": 217.66666666666666,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Right 30 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 779.1780141843971,
+      "width": 100.66666666666663,
+      "x": 245,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 15: Left 20 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-20-left",
+    "AXValue": null,
+    "frame": {
+      "y": 814,
+      "width": 163,
+      "x": 34.00000000000003,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "15",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 825.8446808510638,
+      "width": 14.666666666666664,
+      "x": 46.666666666666664,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Left 20 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 825.1780141843971,
+      "width": 105,
+      "x": 74,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 16: Lower left 25 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-25-lower-left",
+    "AXValue": null,
+    "frame": {
+      "y": 814,
+      "width": 163,
+      "x": 205,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "16",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 825.8446808510638,
+      "width": 14.666666666666657,
+      "x": 217.66666666666666,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Lower left 25 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 825.1780141843971,
+      "width": 107,
+      "x": 245,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 17: Inner left 30 mm edge",
+    "AXUniqueId": "boardDetail.holdLegend.edge-30-inner-left",
+    "AXValue": null,
+    "frame": {
+      "y": 860,
+      "width": 163,
+      "x": 34.00000000000003,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "17",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 871.8446808510638,
+      "width": 14,
+      "x": 47,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Inner left 30 mm edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 871.1780141843971,
+      "width": 101.66666666666666,
+      "x": 74,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Button",
+    "AXLabel": "Hold 18: Center 30 mm sloper edge",
+    "AXUniqueId": "boardDetail.holdLegend.sloper-edge-30-center",
+    "AXValue": null,
+    "frame": {
+      "y": 860,
+      "width": 163,
+      "x": 205,
+      "height": 38
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "18",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 871.8446808510638,
+      "width": 14.666666666666657,
+      "x": 217.66666666666666,
+      "height": 14.333333333333371
+    }
+  },
+  {
+    "type": "StaticText",
+    "AXLabel": "Center 30 mm sloper edge",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 871.1780141843971,
+      "width": 99.33333333333337,
+      "x": 245,
+      "height": 15.666666666666629
+    }
+  },
+  {
+    "type": "Group",
+    "AXLabel": "Tab Bar",
+    "AXUniqueId": null,
+    "AXValue": null,
+    "frame": {
+      "y": 791,
+      "width": 402,
+      "x": 0,
+      "height": 83
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Train",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": 1,
+    "frame": {
+      "x": 68,
+      "height": 54,
+      "y": 795,
+      "width": 94
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "figure.climbing",
+    "AXUniqueId": "figure.climbing",
+    "AXValue": null,
+    "frame": {
+      "x": 100,
+      "height": 35.66666666666663,
+      "y": 797,
+      "width": 30
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "Plans",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": 0,
+    "frame": {
+      "x": 154,
+      "height": 54,
+      "width": 94,
+      "y": 795
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "list.bullet.rectangle.portrait.fill",
+    "AXUniqueId": "list.bullet.rectangle.portrait.fill",
+    "AXValue": null,
+    "frame": {
+      "x": 188,
+      "height": 28.66666666666663,
+      "y": 800.6666666666666,
+      "width": 25.333333333333343
+    }
+  },
+  {
+    "type": "RadioButton",
+    "AXLabel": "History",
+    "AXUniqueId": "clock.arrow.circlepath",
+    "AXValue": 0,
+    "frame": {
+      "x": 240,
+      "height": 54,
+      "y": 795,
+      "width": 94
+    }
+  },
+  {
+    "type": "Image",
+    "AXLabel": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXUniqueId": "clock.arrow.trianglehead.counterclockwise.rotate.90",
+    "AXValue": null,
+    "frame": {
+      "x": 272.66666666666663,
+      "height": 27.33333333333337,
+      "y": 801.3333333333334,
+      "width": 27.666666666666686
+    }
+  }
+]

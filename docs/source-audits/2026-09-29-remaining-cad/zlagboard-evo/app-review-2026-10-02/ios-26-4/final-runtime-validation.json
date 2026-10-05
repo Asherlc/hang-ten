@@ -1,0 +1,87 @@
+{
+  "boardID": "zlagboard.evo",
+  "runtime": "iOS26.4",
+  "status": "Board geometry/selection review ready; workout phase highlight transition FAILED and remains unresolved. No overall appPASS.",
+  "appWorkflowPassed": false,
+  "humanAccepted": false,
+  "humanAcceptance": "pending user reply; validation does not accept board",
+  "sourceAndCode": {
+    "baselineSource": "baseline-source-parity.json",
+    "allFiveMachOPayloads": "code-parity/mach-o-parity.json",
+    "debugDylibSHA256": "872970cc1b183e34f3edac1337df30ea142e0e72897b7de4caf412d9964bcdfb",
+    "preservedAppCopy": "preserved-app-sha256.json",
+    "packageParity": "package-parity.json",
+    "finalProductionAndDiagnosticTests": "All experimental production changes and diagnostic test additions restored exactly to HEAD. Earlier26.5 aggregate recorded tests retained at its freeze; baseline-source-parity.json documents subsequent restoration."
+  },
+  "geometrySelection": {
+    "contacts": 21,
+    "wholePhoneViews": 22,
+    "coverage": "capture-coverage.json",
+    "raw": "captures/validation.json",
+    "selectionSheets": "review-montages/selections-1.png through selections-7.png",
+    "default": "captures/default.png",
+    "leftJug": "elevated-jugs-gentle/left-elevated.png",
+    "rightJug": "elevated-jugs-gentle/right-elevated.png",
+    "physical": "physical-probes/final-validation.json",
+    "physicalRawFailure": "physical-probes/validation.json retained failed initial empty-loading-frame comparison; supplemental final-validation uses readycanonical21contactAX proof",
+    "cords": "not applicable: fixedwallboard has no suspension",
+    "rootVisualReview": "Root inspected all7 selection sheets, both gentlejugs and03reset: geometrycontacts/wood pass; workout failure separatelyconfirmed"
+  },
+  "workout": {
+    "routine": "research.max-hangs, existing bundledroutine unchanged; runtime integration only",
+    "firstAttempt": "baseline-a-landscape/validation.json (no workout reached; landscape systemOpen confirmation AX coordinates mismatched)",
+    "systemConfirmationRecovery": "open-confirmation-recovery/tap-command.json",
+    "actualSequence": "baseline-b-landscape/validation.json",
+    "active": "baseline-b-landscape/active-settled.png",
+    "failedRest": "baseline-b-landscape/following-rest-settled.png",
+    "nextActive": "baseline-b-landscape/next-active-timed-2.png",
+    "finding": "STEP2 Rest02:55 boardpockets remainred rather thanblue. STEP3Hang00:06 red. Root independently confirmed failure. No furtherworkout/codeexperiments performed.",
+    "workerImageHashes": "worker-visual-review.json",
+    "priorRuntime": {
+      "scratchRelative": "../ios-resume-2026-10-02/final-runtime-validation.json",
+      "retainedPacketRelative": "../ios/final-runtime-validation.json",
+      "description": "Corresponding26.5 failures and discardedcandidates retained undercanonicalpacket siblingios"
+    }
+  },
+  "tests": "No additional tests on26.4; historical26.5 tests and rawfailures retained. Passing tests did not establish actual workout correctness.",
+  "cleanup": {
+    "uuid": "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1",
+    "simulatorDeleted": true,
+    "preservedProductsDeleted": true,
+    "derivedDataCreated": false,
+    "resultBundleCreated": false,
+    "commands": [
+      {
+        "command": [
+          "rtk",
+          "proxy",
+          "xcrun",
+          "simctl",
+          "shutdown",
+          "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+        ],
+        "exitStatus": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "rtk",
+          "proxy",
+          "xcrun",
+          "simctl",
+          "delete",
+          "2B59D1CD-9ABA-47A7-9543-4F1EC8454DB1"
+        ],
+        "exitStatus": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    ]
+  },
+  "limits": [
+    "Display reconstruction only; no manufacturing/ergonomic accuracy claim.",
+    "Cross-runtime workoutphase defect unresolved; successful contact selection and geometry views do not erase it.",
+    "All rawpasses, failures, misreadcorrection and supersededexperiments remain retained."
+  ]
+}

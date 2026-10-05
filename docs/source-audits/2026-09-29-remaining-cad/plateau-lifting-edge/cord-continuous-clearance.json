@@ -1,0 +1,64 @@
+{
+  "package": "plateau-lifting-edge",
+  "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "sidecarSHA256": "accd4b12ac09f4de1213c06b783de736117fd44e94b12918b38c86467dd2aa9f",
+  "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+  "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+  "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+  "numericalToleranceMM": 0.01,
+  "runtimeSupportReconstructed": true,
+  "presentations": {
+    "depth-18mm": {
+      "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "collisionFixtureSHA256": "1f63b262a2d23edc299c34405487d8afd508b6018747980bcb2d8d8eaaf64e2a",
+      "poses": {
+        "depth-18mm": {
+          "strands": {
+            "curl-loop": {
+              "certifiedMinimumClearanceMM": 2.0023670868258923,
+              "radiusMM": 2.0,
+              "runtimeRouteLengthMM": 419.9999938274051,
+              "restLengthMM": 420.0,
+              "vertexCountWithSupport": 11
+            }
+          }
+        }
+      }
+    },
+    "depth-15mm": {
+      "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "collisionFixtureSHA256": "9e23d8aec286a331bc2d94c4c6377e7575476c33bada9cf7e9919d20dfe6ade1",
+      "poses": {
+        "depth-15mm": {
+          "strands": {
+            "curl-loop": {
+              "certifiedMinimumClearanceMM": 2.0023670868258923,
+              "radiusMM": 2.0,
+              "runtimeRouteLengthMM": 419.9999938274051,
+              "restLengthMM": 420.0,
+              "vertexCountWithSupport": 11
+            }
+          }
+        }
+      }
+    },
+    "depth-10mm": {
+      "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "collisionFixtureSHA256": "83fe9d6c31e6c1abedfb8f212d8d1bc9676eaef4d50ffb905f536d636584dfde",
+      "poses": {
+        "depth-10mm": {
+          "strands": {
+            "curl-loop": {
+              "certifiedMinimumClearanceMM": 2.0023670868258923,
+              "radiusMM": 2.0,
+              "runtimeRouteLengthMM": 419.9999938274051,
+              "restLengthMM": 420.0,
+              "vertexCountWithSupport": 11
+            }
+          }
+        }
+      }
+    }
+  },
+  "minimumCertifiedClearanceMM": 2.0023670868258923
+}

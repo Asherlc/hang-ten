@@ -1,0 +1,509 @@
+[
+  {
+    "assetPath": "Hangboards/plateau-lifting-edge/assets/depth-10mm.usdz",
+    "sha256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+    "members": [
+      "stage.usdc"
+    ],
+    "stageUpAxis": "Y",
+    "metersPerUnit": 1.0,
+    "meshes": [
+      {
+        "path": "/root/plateau_body",
+        "name": "plateau_body",
+        "pointCount": 904,
+        "faceCount": 882,
+        "triangleCount": 882,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.020997202023863792,
+            -0.03999999910593033
+          ],
+          "max": [
+            0.05000000074505806,
+            0.003000000026077032,
+            0.03999999910593033
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          "max": [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      },
+      {
+        "path": "/root/plateau_edge_18",
+        "name": "plateau_edge_18",
+        "pointCount": 68,
+        "faceCount": 66,
+        "triangleCount": 66,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.017999999225139618,
+            0.019999999552965164
+          ],
+          "max": [
+            0.05000000074505806,
+            -0.00800000037997961,
+            0.023000000044703484
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            0.01999999955296516,
+            0.008000000379979616
+          ],
+          "max": [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      }
+    ],
+    "otherPrims": [
+      {
+        "path": "/root",
+        "type": "Xform"
+      }
+    ],
+    "materialPrims": [],
+    "shaderPrims": []
+  },
+  {
+    "assetPath": "Hangboards/plateau-lifting-edge/assets/depth-15mm.usdz",
+    "sha256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+    "members": [
+      "stage.usdc"
+    ],
+    "stageUpAxis": "Y",
+    "metersPerUnit": 1.0,
+    "meshes": [
+      {
+        "path": "/root/plateau_body",
+        "name": "plateau_body",
+        "pointCount": 904,
+        "faceCount": 882,
+        "triangleCount": 882,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.020997202023863792,
+            -0.03999999910593033
+          ],
+          "max": [
+            0.05000000074505806,
+            0.003000000026077032,
+            0.03999999910593033
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          "max": [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      },
+      {
+        "path": "/root/plateau_edge_18",
+        "name": "plateau_edge_18",
+        "pointCount": 68,
+        "faceCount": 66,
+        "triangleCount": 66,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.017999999225139618,
+            0.019999999552965164
+          ],
+          "max": [
+            0.05000000074505806,
+            -0.003000000026077032,
+            0.023000000044703484
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            0.01999999955296516,
+            0.0030000000260770364
+          ],
+          "max": [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      }
+    ],
+    "otherPrims": [
+      {
+        "path": "/root",
+        "type": "Xform"
+      }
+    ],
+    "materialPrims": [],
+    "shaderPrims": []
+  },
+  {
+    "assetPath": "Hangboards/plateau-lifting-edge/assets/primary.usdz",
+    "sha256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+    "members": [
+      "stage.usdc"
+    ],
+    "stageUpAxis": "Y",
+    "metersPerUnit": 1.0,
+    "meshes": [
+      {
+        "path": "/root/plateau_body",
+        "name": "plateau_body",
+        "pointCount": 876,
+        "faceCount": 858,
+        "triangleCount": 858,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.020997202023863792,
+            -0.03999999910593033
+          ],
+          "max": [
+            0.05000000074505806,
+            0.003000000026077032,
+            0.03999999910593033
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.03999999910593033,
+            -0.0030000000260770377
+          ],
+          "max": [
+            0.05000000074505806,
+            0.03999999910593033,
+            0.020997202023863785
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      },
+      {
+        "path": "/root/plateau_edge_18",
+        "name": "plateau_edge_18",
+        "pointCount": 68,
+        "faceCount": 66,
+        "triangleCount": 66,
+        "faceVertexCounts": [
+          3
+        ],
+        "localBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            -0.017999999225139618,
+            0.019999999552965164
+          ],
+          "max": [
+            0.05000000074505806,
+            0.0,
+            0.023000000044703484
+          ]
+        },
+        "worldBoundsMetres": {
+          "min": [
+            -0.05000000074505806,
+            0.01999999955296516,
+            4.440891999238953e-18
+          ],
+          "max": [
+            0.05000000074505806,
+            0.02300000004470348,
+            0.01799999922513962
+          ]
+        },
+        "localToWorld": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            2.220446049250313e-16,
+            -1.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            2.220446049250313e-16,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "materialBinding": null,
+        "relationships": {},
+        "authoredPrimvarNames": [
+          "primvars:st"
+        ],
+        "displayPrimvars": {
+          "primvars:displayColor": {
+            "authored": false,
+            "value": "None"
+          },
+          "primvars:displayOpacity": {
+            "authored": false,
+            "value": "None"
+          }
+        }
+      }
+    ],
+    "otherPrims": [
+      {
+        "path": "/root",
+        "type": "Xform"
+      }
+    ],
+    "materialPrims": [],
+    "shaderPrims": []
+  }
+]

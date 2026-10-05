@@ -1,0 +1,17 @@
+{
+  "preparedOnly": true,
+  "noRuntimeOrSourceEdits": true,
+  "syntax": "All Python AST parse PASS; no execution",
+  "actualCadence": "10/180/10 with3s initial countdown; historical7 not preserved because Main source changed",
+  "files": {
+    "validator.diff": "c9870eedd5b4a0513f299c18086ddcaf207906aaccb307885192d98537035c59",
+    "routine-reference.json": "ed3655bf12b217326324bb5f461cdaee0db28f018e0e593a995c49f5b084e601",
+    "README.md": "b632418466eac7172850c10b73b271e56960bb72d281d8f8335069b755d5bef6",
+    "validate-completed.py": "61692888473892874b6da5847185ed7920e69f802a2f0592fa3ad280997f6e4b",
+    "capture.py": "094d27e0dcd20b042a41979390fa78d254dd511b84dd2133d72c8b223a70d7d8",
+    "capture.diff": "d26df53b8860e13c8b25c46e7b39d759f9a757b707791147d11f4d61390c845b",
+    "capture-original.py": "3fc04051847e945614905aa5cd76b04246c069410c3dccb369cda895a737dfde",
+    "schedule.json": "26b19c6c9273432d96bf9a34be0f5796e6d8af197b8ca017766ea8123d0f45b2",
+    "validate-completed.original.py": "bd95d351f41c4557418ab387a7389a26b6e8e15c888ff35983e8b4ff9cf7bb06"
+  }
+}

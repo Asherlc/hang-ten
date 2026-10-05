@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "sourceSnapshotSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "readOnlyInMemoryMetadataOnly": true,
+  "savedSource": false,
+  "bodyBrepUnchanged": true,
+  "singleExportNodeInventory": 7,
+  "depthsMM": {
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "edge-8": 8.0,
+    "edge-13": 13.0,
+    "jug-40": 40.0,
+    "pinch-60": 60.0
+  },
+  "pinchNodes": [
+    "nug_jug_40",
+    "nug_pinch_60"
+  ],
+  "jugNodes": [
+    "nug_jug_40"
+  ],
+  "pinchBounds": {
+    "min": [
+      0.138461538,
+      0.0
+    ],
+    "max": [
+      0.861538462,
+      1.0
+    ]
+  },
+  "nativeAdditionalPropertyType": "App::PropertyStringList"
+}

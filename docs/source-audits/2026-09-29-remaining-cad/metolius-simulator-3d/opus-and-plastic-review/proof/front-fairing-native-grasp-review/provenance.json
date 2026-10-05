@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "sourcePath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/candidate/metolius-simulator-3d.FCStd",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "sectionsPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/native-sections.json",
+  "sectionsSHA256": "cc8b048f281b2c96c5db9264cedb6d76d7ba199d9ec87573fa1e4956122cbc15",
+  "nativeBodyMeshPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/grasp-review/native-body-mesh.json",
+  "nativeBodyMeshSHA256": "7d5e212155ad184a77946b0074ef166b0997a86ddf11e4a6521c54388716b495",
+  "images": {
+    "grasp-review/high-front.png": "f62f2e7408d475dfdb12a9722c3575f36933fbeb6a0ac184ce024f65e8a99b64",
+    "grasp-review/native-grasp-sections.png": "15896ff4336f5bba024727b917c3e284dfb7d1f7632d2b96e20611842ccb3e4f",
+    "grasp-review/rear-center.png": "17736b0c09b88552b5f03b71191194f8cb2e25d77ef2f0d1f12f1a6dce05b8dc",
+    "grasp-review/rear-oblique.png": "0545bc3b832b91c1201987f9bb6a7bed20f4163ee6131a973cb2415b186221c5"
+  },
+  "method": "Fresh read-only frozen native final-body and all tagged contact sections; orange is actual tagged top contact. Whole native BodySolid mesh views; no source-image processing.",
+  "independentFunctionalEvidence": {
+    "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/functional-sections-b722.json",
+    "sha256": "fb0763cad6099e54d2a9cf2bb673131a446d1a64463f38a877652012b17edbf5"
+  }
+}

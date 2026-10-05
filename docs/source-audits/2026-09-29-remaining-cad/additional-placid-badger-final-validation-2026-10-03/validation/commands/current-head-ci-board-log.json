@@ -1,0 +1,20 @@
+{
+  "owner": "placid-badger",
+  "label": "current-head-ci-board-log",
+  "command": [
+    "gh",
+    "run",
+    "view",
+    "37168487925",
+    "--job",
+    "111336571841",
+    "--log"
+  ],
+  "timeoutSeconds": 60.0,
+  "ownedProcessGroup": 64280,
+  "launchAttempted": true,
+  "cleanupVerified": true,
+  "ownedProcessGroupAbsent": true,
+  "exitCode": 0,
+  "elapsedSeconds": 4.473709332989529
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-contact/individual-review/fresh-app/proof/generated-board.json",
+    "preservedSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+    "discardedRenameMergeSHA256": "d9676321afc73a99fff39315414b5d9169397c0d83b251e95d042fc36e8cc6d4",
+    "reason": "Historical raw generated manifest is immutable; Main canonical metadata integrated through native source instead"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/jagged-review/before/generated-board.json",
+    "preservedSHA256": "c57e419c5676a51ddb6bafe26926aaa21345d0d885abfc3d83c86784af00b4f0",
+    "discardedRenameMergeSHA256": "fbe433398e37c91c4b8b1364dae4104eeeac23cf765665e2654a34a7fb5ec8ba",
+    "reason": "Historical raw generated manifest is immutable; Main canonical metadata integrated through native source instead"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/individual-review-2026-10-01/initial/package-checks/published-generated-board.json",
+    "preservedSHA256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d",
+    "discardedRenameMergeSHA256": "0a3b28223346c70fe21514af2f3fe94b59af8c18f4d8de8af89c012329c5e08b",
+    "reason": "Historical raw generated manifest is immutable; Main canonical metadata integrated through native source instead"
+  },
+  {
+    "path": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-pro/individual-review-2026-10-02/promotion/manifest-before.json",
+    "preservedSHA256": "ee8f779269fe40604f56fb4068066ab3f18e7c5cd217d5e9ca2e8178a77907aa",
+    "discardedRenameMergeSHA256": "a739824e2d1de2b55339d1f011d0fdb65d346377d7c3431d53a099fc3bf779fb",
+    "reason": "Historical raw generated manifest is immutable; Main canonical metadata integrated through native source instead"
+  }
+]

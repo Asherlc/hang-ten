@@ -1,0 +1,80 @@
+{
+  "scope": "H0a constant siblings",
+  "fiveFinalWholeImagesIndividuallyViewed": true,
+  "visualSequence": [
+    "clear",
+    "red",
+    "blue",
+    "red",
+    "blue"
+  ],
+  "timer": "00:08 constant",
+  "progress": "empty constant",
+  "boardAndPanelVisiblyNonOverlapping": true,
+  "finalImages": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-0-clear-plus-7.png",
+      "targetEpoch": 1790977597.2380068,
+      "startEpoch": 1790977597.248092,
+      "endEpoch": 1790977597.810378,
+      "phase": "clear",
+      "phaseIndex": 0,
+      "offset": 7,
+      "sha256": "74806097ac1bf26199a1c79c7f55d310396400213340d0a8f14ddf68d0a308a2"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-1-active-plus-7.png",
+      "targetEpoch": 1790977605.2380068,
+      "startEpoch": 1790977605.248032,
+      "endEpoch": 1790977605.765383,
+      "phase": "active",
+      "phaseIndex": 1,
+      "offset": 7,
+      "sha256": "6132f0d7c1c6fae8c8e923ef0a4ec6532f4bc4a97dfcc87aa7d9f4624ad034a5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-2-preview-plus-7.png",
+      "targetEpoch": 1790977613.2380068,
+      "startEpoch": 1790977613.24739,
+      "endEpoch": 1790977613.789519,
+      "phase": "preview",
+      "phaseIndex": 2,
+      "offset": 7,
+      "sha256": "d816e3034376cd84d3e6a7335a1dadde69ef550b16ee281cfe6fb37fe2d35227"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-3-active-plus-7.png",
+      "targetEpoch": 1790977621.2380068,
+      "startEpoch": 1790977621.247589,
+      "endEpoch": 1790977621.7765481,
+      "phase": "active",
+      "phaseIndex": 3,
+      "offset": 7,
+      "sha256": "6132f0d7c1c6fae8c8e923ef0a4ec6532f4bc4a97dfcc87aa7d9f4624ad034a5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-4-preview-plus-7.png",
+      "targetEpoch": 1790977629.2380068,
+      "startEpoch": 1790977629.248031,
+      "endEpoch": 1790977629.7195609,
+      "phase": "preview",
+      "phaseIndex": 4,
+      "offset": 7,
+      "sha256": "d816e3034376cd84d3e6a7335a1dadde69ef550b16ee281cfe6fb37fe2d35227"
+    }
+  ],
+  "otherImagesMatchOwnViewedPhaseFinal": false,
+  "differentImages": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/sibling-h0a/phase-0-clear-plus-0.25.png",
+      "targetEpoch": 1790977590.4880068,
+      "startEpoch": 1790977590.498067,
+      "endEpoch": 1790977591.040284,
+      "phase": "clear",
+      "phaseIndex": 0,
+      "offset": 0.25,
+      "sha256": "0af9ab776e0e9a8323589b48a37fd0c46d096821d3ed85b187f23eb7a01575c2"
+    }
+  ],
+  "humanAcceptance": false
+}

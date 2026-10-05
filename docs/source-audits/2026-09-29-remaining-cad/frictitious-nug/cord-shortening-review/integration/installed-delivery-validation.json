@@ -1,0 +1,819 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "simulator": "20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+  "packages": [
+    {
+      "package": "aelith-cyclops-011",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "ff0966bd87fb80ab39a08e9c5df60af927a5b97364579704c9d42e11c1fb9c8e",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+          "descriptorSHA256": "33d6dd4256955ea603098f98f1d8ae95dab4ec15df7f3e042db3439c344a0ef7"
+        }
+      ]
+    },
+    {
+      "package": "beastmaker-1000",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2c35dfa0cb4c171563872b0d19f81c1b8b5e184b9f8e6a1490c7d11195a8f238",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7",
+          "descriptorSHA256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a"
+        }
+      ]
+    },
+    {
+      "package": "beastmaker-2000",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "52a117654b5fa1dfc8584e7dbbc318a116572cc10abd495e8ee65fa682c6a4c4",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
+          "descriptorSHA256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d"
+        }
+      ]
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "13c588a09f81a5ba2c7529e211fc6fdf610a948e5cdcf01b70a1ee19bd958ef4",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+          "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+        }
+      ]
+    },
+    {
+      "package": "captain-fingerfood-pocket",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "3cca713f9471dc927d0209cb52f020cedd61242c7c0b756901be9deeb67909c6",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "cea629d95bcef7fe9270a2b44114588193fb136706d1bfc17b3276437d9f45c9",
+          "descriptorSHA256": "4d85ca566ef83d8dbad2b6e5f9677f98e5e4559fe1e2b20f0152450f51747b28"
+        }
+      ]
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "34678d8121b0795267fe0468fd8ef6337c469fdb46d2e216b080a71f4ef3db07",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+          "descriptorSHA256": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+        }
+      ]
+    },
+    {
+      "package": "clavellium-training-block",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "56cbf46fd60cde6559f20d5327b30d80350a123db1f73332cebf3f49f663bebd",
+      "models": [
+        {
+          "presentationID": "front",
+          "modelSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
+          "descriptorSHA256": "ed5f2cd1420b71613344048804fed21d4a6924b92b1594b7a8422e5ebf7cb754"
+        }
+      ]
+    },
+    {
+      "package": "crimptonite-helium-mobile",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "d379eb985010ab54d1396f9a0ca1d5760cce28a2a3c7b0ece1a1e555cadcb20c",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+          "descriptorSHA256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911"
+        }
+      ]
+    },
+    {
+      "package": "dewoodstok-woodbord",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2b96653b503cbe8876bfeda523c0b4a6448ce96888a3170dd3ff0faef02d9a50",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52",
+          "descriptorSHA256": "f81201b61af8ffb544af5687708c720ad2ebca7b80b9e1daf23e34cce01977ae"
+        }
+      ]
+    },
+    {
+      "package": "escape-beta-22",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "e8fd28ae031dd58c132827112d1e3f42c105373870f57b16257f533666893ffc",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+          "descriptorSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e"
+        }
+      ]
+    },
+    {
+      "package": "escape-unlimited",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "1f9d7f6d9d8f3f1d38d377eda45e47e389e98ce5730cb14d879718d3a88bb29f",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
+          "descriptorSHA256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3"
+        }
+      ]
+    },
+    {
+      "package": "evolv-kilter-basic-long",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "e10be2b6be5077837612ea44a2ac5ae7f920a25fa196e4591e7f0dddab99149b",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700",
+          "descriptorSHA256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46"
+        }
+      ]
+    },
+    {
+      "package": "frictitious-doormount-pro-7",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "fdd12aa50b79aabaffe8eb92184a63af857811dcfa080bb51c3531a64745bb85",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777",
+          "descriptorSHA256": "e78def2362000903d34a4fa09b8afb3e4ae629bef45dab28d6e68844352d576d"
+        }
+      ]
+    },
+    {
+      "package": "frictitious-megalith",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "963d7ced94a5752cee468df0a999e693ff50ea5b8edbf0ee939391b661f710c0",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+          "descriptorSHA256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27"
+        }
+      ]
+    },
+    {
+      "package": "frictitious-nug",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "6ad516d15e1ecb839c3e57f3e2476866b83347cfdca18c70a44f79a5416c5303",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+          "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e"
+        }
+      ]
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "1519abaaa5be2452b322c0be29d3fb5ffa2cb299975bbf40debe97be6bc211ad",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+          "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1"
+        }
+      ]
+    },
+    {
+      "package": "j-bryant-ftg-32",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "1fb814ff9668c7291bae9902eb8a480ab25b8637f315eba10eb3b9f4491dcff2",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+          "descriptorSHA256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8"
+        }
+      ]
+    },
+    {
+      "package": "lattice-mini-bar",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "c167b7eade8956baf0272c3c9192d15abb9c58ab74dee040132c443d088602e4",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
+          "descriptorSHA256": "aa7353ce7ae0e72c2b1cd8b31fedde0bd4e16f05ec24de23eca3f9d5b4533f8e"
+        }
+      ]
+    },
+    {
+      "package": "lattice-mxedge-lift-large",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "ff0804fa1bcdc286016db3126892229440c0ceb66b2b981019a791bc135482b6",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "9b4af116becef393118923d91be2c42f46c9538b7e61679c4e908d7e6ac017b9",
+          "descriptorSHA256": "1ca240e56f63b6cb6aabf19c3a7b99e02c07a4611c05ac82f2123dc89f74ba63"
+        }
+      ]
+    },
+    {
+      "package": "lattice-mxedge-lift-small",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "f934536e47ed9601a87f615e9fa05d65bd9e368f5ae231cfa1f56bce5ae740f3",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "8f78fb29efb6f10ab72fdbbc7fbeca8accf60cce757ff8e2183f5dd9f582fc8e",
+          "descriptorSHA256": "041bf64dcafe95c9ddd84a3dc48cf9e54905be5e9d7f0deca70132a2a46181dd"
+        }
+      ]
+    },
+    {
+      "package": "lattice-triple-rung",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "9015164a286d98fdf4d4cc8f5ff7cd1240a94710f8cc459656aacf1b4893b8b3",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "05aab8f7aba9bd97acb7ae14b9026d53a698d7a162de56b2115d95232ec89d3c",
+          "descriptorSHA256": "3080f13c98c959e0d6e162ce8ba8f55f5b4357f18e151a64e0a225dcc755ac8d"
+        }
+      ]
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2ed1a693febce9a5e4884e95c539c54ae0b2f7f4fb7bc8e587e266db836dbc37",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "c79b5561c618bf7f1f819218d325db54ddf59de38a5000b0e42f5131e0457e54",
+          "descriptorSHA256": "b92676a9b4a81cc3db9714e2e27d8cd4593b6d9d13b846b942a00bff5833bc46"
+        }
+      ]
+    },
+    {
+      "package": "metolius-climbers-edge",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "57a5a3a53063b9312d477d244036a63b71c424ff66fd50f2d7d07b28cd7629d1",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
+          "descriptorSHA256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce"
+        }
+      ]
+    },
+    {
+      "package": "metolius-contact",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+          "descriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7"
+        }
+      ]
+    },
+    {
+      "package": "metolius-foundry",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2b734c0b9a6bd64c288bf55137a096e94b7dcea5077b05a7fc58ad136d489630",
+      "models": [
+        {
+          "presentationID": "front",
+          "modelSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
+          "descriptorSHA256": "39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d"
+        }
+      ]
+    },
+    {
+      "package": "metolius-light-rail-2",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "a6a98cfeec55a718295306b8188da4b12c139e63b86c9dbc13e8c9616c8469f4",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
+          "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e"
+        }
+      ]
+    },
+    {
+      "package": "metolius-prime-rib",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "00396dbed2e36a11af7440eb42803a9a7245495693b43d17ade3c1e83463fc42",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "66a8f958b3b6dde6766a70c547d336a11969c6ec3b1e9fefa5fd2972f49c6125",
+          "descriptorSHA256": "5a90c32758ed7521a86dabe85e655ddb6b62925b17fe6e6d822b0c5610a72ecb"
+        }
+      ]
+    },
+    {
+      "package": "metolius-project",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "0d75f45243f0a447cdbbb07de358a9a59167ff0406f3012d33a770fbff34e44a",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
+          "descriptorSHA256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78"
+        }
+      ]
+    },
+    {
+      "package": "metolius-rock-rings-3d",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "25d3cfae42adab251336d2fd3d88648cee616c8ec407c9b765ddec48932a775b",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "41a9c06643e9d636a2d9ab1aa2ae16ca5d478d0bf3b28b84ce31da07efb0b74c",
+          "descriptorSHA256": "ee3ae88875cf7541a0feb5a4c72d4c9c156c6a1ff01e369ffd8a901c23e86bcd"
+        }
+      ]
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "c57e419c5676a51ddb6bafe26926aaa21345d0d885abfc3d83c86784af00b4f0",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
+          "descriptorSHA256": "1c485ce852b600cb69eb1bf4036f73245b03cb88715e46f8ee789f3601f5115e"
+        }
+      ]
+    },
+    {
+      "package": "metolius-wood-grips-compact-ii",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "efbb609e8c1f08f3d7b4b219beae5e268fc0179b907675405c4dc47860c1de26",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "2f90c3e3e0d97dba8c771391fa63659156ab954facbbfa1a74750a57615f40fa",
+          "descriptorSHA256": "132f23e40eef8e0fcbd642b0e6c3da2ab46f3c4d11fc61cb0ef8544b94073588"
+        }
+      ]
+    },
+    {
+      "package": "metolius-wood-grips-deluxe-ii",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "bcf8b9ad3973196eb19a7f9c6f56b37fc0136514d77fc1b2fbbc290c59bfa47f",
+      "models": [
+        {
+          "presentationID": "front",
+          "modelSHA256": "1225ab7bbf8261e69b57401bcba1d26985614ad8db8468b0526dc35286c6b391",
+          "descriptorSHA256": "4dc67f2f95351e6320aa9ce2fbec68b0d3a6df03475b3d15b8fbee2ebb12b8c0"
+        }
+      ]
+    },
+    {
+      "package": "moon-armstrong",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2ce5d90060ac5361f443d8088d91e79dfef96ed0d4258c65001cffd3feb6a3b2",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+          "descriptorSHA256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11"
+        }
+      ]
+    },
+    {
+      "package": "nature-stoak-board-iii",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "51cb2ff5ce299285554be543e6023d21466c4b578a8c7739cd13f2c5a3691315",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
+          "descriptorSHA256": "225a2c5282e5dfdac09c20ac96abc5a976f71ce8644283114199f0a414b5e142"
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2fabae2e65bec30b274d587b994a6e86df627510b117e68be52ab8444d3482a3",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+          "descriptorSHA256": "ff7c0b0d4d5e2dfe2f0ce7018a284269923809f02936545692cc9b16b3d4b10c"
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "02fc2937f1cca238e2bb33bbd04c378a0a6014b2b8033b7f56611ac81dcee3ea",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+          "descriptorSHA256": "92d5de2c86c0d938f36667a6c1b84607fb7b202ab567cde9b1fc162eb4f14e35"
+        }
+      ]
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "bc887bbf775a751f7d289025837d1ff34fe9f81af9acd10135d4ec979313d981",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+          "descriptorSHA256": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4"
+        }
+      ]
+    },
+    {
+      "package": "owl-climb-poker",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "337c3f6fb5d23b2fc4b155c810d71c36712c8d0257eb63504de1b56b1871656a",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+          "descriptorSHA256": "0aa7cd7265bb68e839da70203fffb7804fadea2ed4b133e6941ecf5eb8de19ac"
+        }
+      ]
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "1ee55d14fdadc6ebc38373d2c059eaa3c82d25a45eca4ede028378b4552b3b94",
+      "models": [
+        {
+          "presentationID": "depth-18mm",
+          "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+          "descriptorSHA256": "b027b1dbb9755d4adf1a5ace64a6ecd0f46fc4d3c10d8f701fd7bc6ceeefc5ee"
+        },
+        {
+          "presentationID": "depth-15mm",
+          "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+          "descriptorSHA256": "0b95368fd98cb514241d688a864ee89f5a0ae7f9b74181e7b16dab555103a477"
+        },
+        {
+          "presentationID": "depth-10mm",
+          "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+          "descriptorSHA256": "3537b48c39b0dd81be2b493b452d942b9417ada2dcb3ea6ca3a006d48e85aa7e"
+        }
+      ]
+    },
+    {
+      "package": "soill-iron-palm-2",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "4fda94b79df2df7689dc4cc3495af4d2d4ecea52fc41231701643a72abd4dfda",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "851e8d66a5fb82909212c7f135862aaded63948dbc14ba392a932e565382877f",
+          "descriptorSHA256": "d3fede4f790c74dce3192ac7f05a864819a8a5aa1d9dceaf46bd0cf7591e1329"
+        }
+      ]
+    },
+    {
+      "package": "soill-split-palm",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "6b8dcce54b85ee1a4d9b67a6be2dc155f0000084f94f74d227ce0cf250f0402e",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "6efb970ca86f280db52e174dcd862e15a33bf28fb8ffd938140f224838eba32f",
+          "descriptorSHA256": "dd97b633165e1add83cff26c422f816c94a357c2e681400eae944f6aa990eb85"
+        }
+      ]
+    },
+    {
+      "package": "soill-training-tiles",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "59d397fa31a6924ada590bef8722f9361176512eb4d60d8d116029587af2d945",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "0e137f91f2cc0283c144a19d052bbd7b8a89bd1706fa7b1b29677deaa3c33cbb",
+          "descriptorSHA256": "77e09d850ee66d2f50bbbd2c2709121a64f54d834af6d5d2fd49ff8a8fa78a7d"
+        }
+      ]
+    },
+    {
+      "package": "target10a-linebreaker-base",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "f27161a4ad64a2bc8dd103c6f376b9ee83129f6877c0bb87f602f17326e1a53a",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df",
+          "descriptorSHA256": "69cb77178c02bb78ebdbe612ebc61285a634f1c409a3d32869b7d671be1dfba1"
+        }
+      ]
+    },
+    {
+      "package": "tension-flash-board",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "ca407fa7e6c3bb33dfaa348e91c9543ca723190628505b08792b1151111b4804",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
+          "descriptorSHA256": "4811eca2ed0197c11e0fb6740f12f2e2f2dcd260f516540d19504bb0ce13b12e"
+        }
+      ]
+    },
+    {
+      "package": "tension-grindstone",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "12b7d55a6f8ad5ec70ed12443b0ad1ab7b927b486295153f08b416591d38e2ca",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495",
+          "descriptorSHA256": "2527466044e82c32bf5271cc48f4a909eb303146d8f951215d248a1ae18ef0d4"
+        }
+      ]
+    },
+    {
+      "package": "tension-grindstone-original",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "90d29ab756a84fe220d39a8f4981135a32b95e017a429b37a150777fa309ab47",
+      "models": []
+    },
+    {
+      "package": "tension-grindstone-pro",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "1443c0f72c09fde8a8c0a70c3d9e98516654e4be9e1b8cbd009286b2ebd23a17",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
+          "descriptorSHA256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98"
+        }
+      ]
+    },
+    {
+      "package": "tension-honestone",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "234aaa19421227c248e38ba6a06ad3e156d8b9549c9971e14123b9a7a2ac1726",
+      "models": []
+    },
+    {
+      "package": "tension-whetstone",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "bab4c68eec7202248a1b73ab506304462e87754f944dadaa8232e5dc2eb8e6ea",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "2e93891153367ca3921bcbbd562571cd14a9f8c7b91da60e32b0fc1a9c4604ca",
+          "descriptorSHA256": "76af62059693284df52bb25afbf48c6fab6bdb48667a87ae6abba63dd2e41f62"
+        }
+      ]
+    },
+    {
+      "package": "the-hangboard",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2f852416ec50ed8834bcba3769b6da61722dc25514b4142fe8f64acc452ca64f",
+      "models": [
+        {
+          "presentationID": "front",
+          "modelSHA256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
+          "descriptorSHA256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b"
+        }
+      ]
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "502203cb9d6498ac96c9748fab442bb0bfcfc9f5b3105fea25f7ddf871deec86",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+          "descriptorSHA256": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
+        }
+      ]
+    },
+    {
+      "package": "trango-rock-prodigy-natural",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "2e6f7231c49f8ba1140e208277eb1d0d95fc235ac05f5f86ffd547aff160ea52",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "f913ecd901834c9e000ecc660144625c70e453856e150de9dd119b5bf6a0f17e",
+          "descriptorSHA256": "7b888ca64b2065530c1953003f5ab662f6075518456879b331e5342d984d2ac8"
+        }
+      ]
+    },
+    {
+      "package": "trango-rock-prodigy-pivot",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "61b4552c70721c89f2ff67c53ecb5e39794a9777a5d452c7076fa34fc09d2fbb",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
+          "descriptorSHA256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005"
+        }
+      ]
+    },
+    {
+      "package": "trango-rock-prodigy-training-center",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "aae206ba84c8aea2d7cf91452baa6055a4b4497f13a743dfb43a918f4eccb86e",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
+          "descriptorSHA256": "3fba542de1faff90f9f3699fcdedad0a68ac847250ad1baf7c1dbd5929d2534a"
+        }
+      ]
+    },
+    {
+      "package": "yy-baguette",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "de80461a38c10cbf12bc4fc6abfbe05f09b157104c9697a131f5dfb713b829ea",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+          "descriptorSHA256": "b3acd588c0227761ada26fd3bd126406a6f920483f1cdb7408c568a2fd229fc5"
+        }
+      ]
+    },
+    {
+      "package": "yy-baguette-evo",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "813977a9130b8aedec68179a1ff434140d4571f3187a39e8c87394d22d68d7c9",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+          "descriptorSHA256": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+        }
+      ]
+    },
+    {
+      "package": "yy-penta-evo",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "a6fb884c194f39bf3dfd10796cbb7faca46264f825aea585889601aa25629e89",
+      "models": [
+        {
+          "presentationID": "front-pair",
+          "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+          "descriptorSHA256": "b0cd578994a9290d8bd52441ac615c3d8b20b059144b2dadcb85b733c566d764"
+        }
+      ]
+    },
+    {
+      "package": "yy-travelboard",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "321d998f6e829e6d966d1a6fec4ff37cf15faec5c4c829998da07df1b0d76aa5",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+          "descriptorSHA256": "f762552b6cee535cf4551f9934a512d3b17d0f4297b8359789a6189b9e6dcd69"
+        }
+      ]
+    },
+    {
+      "package": "yy-verticalboard-evo",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "9525f93a05bf0cdfea3aebab1efd4e79c4f32a11934e30b37638b8e081e484fd",
+      "models": []
+    },
+    {
+      "package": "yy-verticalboard-first",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "4a47711d390c3ff6fd3b682eccf14e1ef84404cbdb0a09f69b4efac90dd1fe57",
+      "models": []
+    },
+    {
+      "package": "yy-verticalboard-light",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "0ce4cd64aff6c090b5d91d4f315aa21caebdf0c1b31dc1150096875cb157d630",
+      "models": []
+    },
+    {
+      "package": "yy-verticalboard-one",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "bcfef81a04c90b57bb453400555fda562af215e8bd2ee3dbb505fbf1bcb84465",
+      "models": []
+    },
+    {
+      "package": "zlagboard-evo",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+          "descriptorSHA256": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383"
+        }
+      ]
+    },
+    {
+      "package": "zlagboard-pro",
+      "generatedManifestMatchesCurrentSource": true,
+      "generatedBytesMatch": true,
+      "manifestSHA256": "ee8f779269fe40604f56fb4068066ab3f18e7c5cd217d5e9ca2e8178a77907aa",
+      "models": [
+        {
+          "presentationID": "primary",
+          "modelSHA256": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+          "descriptorSHA256": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82"
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "authoringSourcesNotBundled": true
+}

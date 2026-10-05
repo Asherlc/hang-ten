@@ -1,0 +1,188 @@
+{
+  "boardID": "nature.stone-hanger-mini-karma8a",
+  "revision": "KARMA8A 105 x 60 x 30 mm",
+  "authority": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini-karma8a/sources.json",
+  "visualEvidence": [
+    {
+      "ref": "NK-2",
+      "publisher": "Nature Climbing \u2014 front visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Untitled_design_a3abac48-3dbc-4913-bc3e-15c8b2a9e85d.png?v=1774607004",
+      "sha256": "3267c96f30e9576b1b66f769d83722cac6c55322c9ad6491cda82ea3910f7743",
+      "wholeImagePath": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/evidence/front-original.png",
+      "existingExactVisualApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-3",
+      "publisher": "Nature Climbing \u2014 reverse visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Untitled_design_1.png?v=1774607067",
+      "sha256": "412059dc91cb4b564d450b4065fdf467618d1d981c9568cb5346983ae7653de0",
+      "wholeImagePath": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/evidence/reverse-original.png",
+      "existingExactVisualApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-4",
+      "publisher": "Nature Climbing \u2014 oblique/side visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/P11_efb30f02-ff67-4d8d-a247-80a40873e358.jpg?v=1774607067",
+      "sha256": "95292e0c642c3a3de255e66e0c09cd8b8ddcd6802a724a8bbd429d7647b58cbf",
+      "wholeImagePath": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/evidence/oblique-original.jpg",
+      "existingExactVisualApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NK-5",
+      "publisher": "Nature Climbing \u2014 in-use visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/2_8414fdb3-da87-4e09-bfd7-acd77452106c.png?v=1774607067",
+      "sha256": "a962fc997461aed38bfaee08071681b27b12f671406c216947f7b21ce6bb2df8",
+      "wholeImagePath": ".context/placid-badger/karma8a-review11/refinement-2026-10-02/evidence/in-use-original.png",
+      "existingExactVisualApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ],
+  "sourceFacts": [
+    {
+      "field": "dimensions; factual contact inventory",
+      "facts": "105 x 60 x 30 mm; 15 mm wood; 15 mm granite; 60 mm pinch; no separate jug",
+      "sourceRefs": [
+        "NK-1"
+      ],
+      "sourceURL": "https://natureclimbing.com/products/mini-hanger",
+      "disposition": "Preserved byte/value identical in native manifest. Pinch gate selects native Z = 60 mm instead of thickness Y = 30 mm."
+    },
+    {
+      "field": "media.display.surfaceFinish; media.display.graniteNodeIDs",
+      "facts": "Wood body and granite insert are visible distinct materials",
+      "sourceRefs": [
+        "NK-2",
+        "NK-4"
+      ],
+      "adaptation": "Use existing runtime wood finish, override every actually exposed insert face by nature_stone. USDZ remains unbound, without materials or textures."
+    },
+    {
+      "field": "lower insert fit",
+      "facts": "Front and oblique show granite seated directly against surrounding lower wooden rail",
+      "sourceRefs": [
+        "NK-2",
+        "NK-4"
+      ],
+      "adaptation": "Correct an actual native overlap and unsupported cavity-mouth gap using the existing exact insert and a local analytic lower rail; no pixel measurement or copied source geometry."
+    },
+    {
+      "field": "suspension type, stations and topology",
+      "facts": "Exposed leads in open side grooves with transverse exterior returns; no evidenced hidden connection",
+      "sourceRefs": [
+        "NK-3",
+        "NK-4",
+        "NK-5"
+      ],
+      "disposition": "Retain cadRoutedCord, all native groove voids, terminal stations, three pose IDs, pose rotations and cameras. No new bore, hardware or jug."
+    }
+  ],
+  "displayEstimates": [
+    {
+      "field": "GraniteSeatLowerRailFill",
+      "nativeMM": {
+        "size": [
+          83,
+          15,
+          11
+        ],
+        "base": [
+          -41.5,
+          -15,
+          -21
+        ]
+      },
+      "rationale": "Width/depth follow existing insert native bounds. Fill top Z=-10 follows lower boundary of preserved upper wood region; lower bound remains inside existing rail. The exact native insert is subtracted from the fused wood. Only 34.4355888628 mm3 is added to the combined body; no original material is removed."
+    },
+    {
+      "field": "native unmodified body, recess, granite insert, rounds and grooves",
+      "rationale": "Retain audited September29 unpublished display estimates. Published 105/60/30 and 15/15/60 facts remain exact."
+    },
+    {
+      "field": "lead restLength",
+      "priorMeters": 0.2,
+      "currentMeters": 0.11,
+      "rationale": "Operator-requested compact display estimate; native solver regenerates every route and settled height."
+    },
+    {
+      "field": "anchor.offsetFromBoardBounds",
+      "priorMeters": [
+        0,
+        0.1,
+        0
+      ],
+      "currentMeters": [
+        0,
+        0.015,
+        0
+      ],
+      "rationale": "Compact initial support estimate, coordinated with lead length; settled height generated, not authored."
+    },
+    {
+      "field": "cord radius and cross-return lengths",
+      "radiusMeters": 0.001,
+      "crossReturnRestLengthMeters": 0.04,
+      "rationale": "Preserved display estimates. Cross returns are finite exterior segments; actual solved length 15 mm, declared restLength remains an existing upper allowance. Free leads, not the return allowance, determine settled height."
+    }
+  ],
+  "nativeCorrection": {
+    "priorWoodStoneOverlapMM3": 377.7731918859495,
+    "finalWoodStoneOverlapMM3": 0,
+    "gapWitness": {
+      "baseMM": [
+        -31,
+        -14.9,
+        -19
+      ],
+      "sizeMM": [
+        62,
+        1,
+        1
+      ],
+      "boundsMM": [
+        -31,
+        31,
+        -14.9,
+        -13.9,
+        -19,
+        -18
+      ],
+      "volumeMM3": 62,
+      "priorMaterialMM3": 39.567615068065166,
+      "finalMaterialMM3": 62
+    },
+    "woodBefore": "RightCrossGrooveCut",
+    "fill": "GraniteSeatLowerRailFill",
+    "woodWithRail": "WoodWithGraniteLowerRail",
+    "finalWoodSeat": "GraniteFittedSeat",
+    "unchangedStone": "GraniteInsert",
+    "fusedFinalBody": "FinalSolid"
+  },
+  "noTrainingContentChanged": true,
+  "positionsUnchanged": true,
+  "notClaimed": [
+    "Manufacturer measurements for unpublished display geometry or cord length",
+    "Hidden cord connection",
+    "Extra jug",
+    "Human acceptance",
+    "In-app validation"
+  ]
+}

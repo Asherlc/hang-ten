@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "normal-comparison",
+  "script": ".context/placid-badger/metolius-simulator-3d-front-fairing/compare_final_uv_normals.py",
+  "timeoutSeconds": 300,
+  "startedUTC": "2026-10-01T18:32:30.351512+00:00",
+  "ownedProcessGroup": 93357,
+  "elapsedSeconds": 5.614446374995168,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

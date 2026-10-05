@@ -1,0 +1,31 @@
+{
+  "command": [
+    "rtk",
+    "proxy",
+    "xcodebuild",
+    "-project",
+    "HangTen.xcodeproj",
+    "-scheme",
+    "HangTen",
+    "-configuration",
+    "Debug",
+    "-destination",
+    "platform=iOS Simulator,id=055BDCE2-3263-470D-89DF-04B967EF7790",
+    "-derivedDataPath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/DerivedData-placid-badger-cad-second-half",
+    "-resultBundlePath",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/combined-integration-2026-10-03/ios/tests-placid-badger-cad-second-half-final-integrated-validation.xcresult",
+    "-parallel-testing-enabled",
+    "NO",
+    "-collect-test-diagnostics",
+    "never",
+    "-maximum-concurrent-test-simulator-destinations",
+    "1",
+    "-only-testing:HangTenTests",
+    "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests",
+    "test-without-building"
+  ],
+  "pid": 84928,
+  "boundSeconds": 1800,
+  "startedEpoch": 1791076521.366536
+}

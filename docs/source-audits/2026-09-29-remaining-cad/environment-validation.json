@@ -1,0 +1,14 @@
+{
+  "workspaceOwned": true,
+  "meshoptimizer": {
+    "officialSource": "https://github.com/zeux/meshoptimizer/tree/v1.0",
+    "version": "1.0",
+    "artifacts": {
+      ".context/placid-badger/deps/meshoptimizer-v1.0.tar.gz": "30d1c3651986b2074e847b17223a7269c9612ab7f148b944250f81214fed4993",
+      ".context/placid-badger/deps/meshoptimizer-build/libmeshoptimizer.dylib": "0743a9ce1b521e1eb215964c72016d2a3f1b895f1412bdf2f0e59cefa803b569"
+    }
+  },
+  "numba": "0.65.1",
+  "llvmlite": "0.47.0",
+  "numpy": "2.2.6"
+}

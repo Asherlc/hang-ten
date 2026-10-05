@@ -1,0 +1,44 @@
+{
+  "status": "resolved-by-native-face-evidence",
+  "sourceSHA256": "b7223032abe4b5c00a8b16d8ddcafed8b836d806795f1d37bbffab80ce5560ef",
+  "compilerSHA256": "f4c0d4c2a9c79c02d349be2f71a14962fde3c5c2fa13b24b0b34d425272fc50d",
+  "compilerOrSourceChanged": false,
+  "rawComparison": {
+    "triangles": 64,
+    "corners": 192,
+    "legacyMismatchesAboveUnchangedAngularGate": 1,
+    "maximumDegrees": 7.161516093117819,
+    "rawStatusPreserved": "review-required"
+  },
+  "disposition": "The opt-in UV result uses the exact owning native facet. The legacy centroid heuristic chooses an adjacent face for one triangle. Agreement with that wrong neighboring normal is not the quality criterion. Parent approved retaining the unchanged compiler and source; independent supplemental actual-owner verification passes all 192 corners without widening angular or position gates.",
+  "failedWitness": {
+    "triangleIndex": 37634,
+    "cornerIndex": 1,
+    "actualFaceOneBased": 53,
+    "legacyFaceOneBased": 26,
+    "actualInversePositionResidualMM": 3.1776437161565096e-14,
+    "actualUVAndInverseNormalAngleDegrees": 0.0,
+    "legacyProjectionResidualMM": 0.20090866127100676
+  },
+  "gatesUnchanged": true,
+  "evidence": {
+    "superseded-uv-boundary/final-normal-comparison.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-uv-boundary/final-normal-comparison.json",
+      "sha256": "2be544aefb3e9da417118cea2318f13af082075ef0dfc4afdd6ea21d876ce295"
+    },
+    "independent-validation/uv-normal-b722-diagnosis.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/uv-normal-b722-diagnosis.json",
+      "sha256": "cd40edadf90e6df49e960da3a087ce5f39c967d22b73371ac1cc09c759cf6e7f"
+    },
+    "superseded-export-cleanup.json": {
+      "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/superseded-export-cleanup.json",
+      "sha256": "82af481d215b5acceeffec8bc55889721e64859ce8c105fb7389c62454bba311"
+    }
+  },
+  "actualOwnerSupplement": {
+    "path": ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/actual-owner-normal-supplement-b722.json",
+    "sha256": "a216a909ef9705ff6db7bc286866e7efe2d3663612188aa6297b4ea3e7254e13",
+    "status": "pass",
+    "corners": 192
+  }
+}

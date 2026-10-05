@@ -1,0 +1,9 @@
+{
+  "name": "placid-badger-mini-independent-export",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nature-stone-mini-review10/completion/root/check_export_mesh.py"
+  ],
+  "timeoutSeconds": 300,
+  "environment": {}
+}

@@ -1,0 +1,46 @@
+{
+  "approvalStatus": "approved",
+  "revisionNotes": "Manufacturer photograph and independent numbered depth diagram establish broad arc shell taper, outer and center jugs, top slopers, long second-row edges, lower pocket pairs and four central pockets. Published envelope 28 x 8.75 in. Preserve current split left/right flat sloper and combined center round sloper identity. Another active PR #516 concerns handCapacity only.",
+  "sources": [
+    {
+      "slug": "metolius-simulator-3d",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Simulator-black-white.jpg?v=1759460469",
+      "publisher": "Metolius",
+      "sha256": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+      "bytes": 274938,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-simulator-3d",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-03.jpg",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
+      "publisher": "Metolius",
+      "sha256": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+      "bytes": 120962,
+      "support": "Manufacturer product gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "metolius-simulator-3d",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-page.html",
+      "url": "https://www.metoliusclimbing.com/products/simulator-training-board",
+      "publisher": "Metolius",
+      "sha256": "bbd4d8371e1e9a31dc1adc6d16250618facbce264e0f87eaf2adfdc83a151eb4",
+      "bytes": 242707,
+      "support": "Manufacturer product identity and published overall dimensions",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer supplementary fact source"
+    }
+  ],
+  "approval": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "method": "direct conversation",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "consolidatedReview": ".context/placid-badger/source-review.json"
+  }
+}

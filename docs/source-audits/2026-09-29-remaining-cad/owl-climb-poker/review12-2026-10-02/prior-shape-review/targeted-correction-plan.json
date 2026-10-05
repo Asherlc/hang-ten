@@ -1,0 +1,73 @@
+{
+  "status": "Proposed only; no native or canonical mutation authorized/performed in this review",
+  "finding": "POKER-A-RELIEF-EXTENT",
+  "nativeFeatureChain": {
+    "left": [
+      "S_b_leftProfile -> S_b_leftCutter -> Cut28",
+      "S_b_leftBearing -> S_b_leftWall",
+      "S_b_leftProfile/S_b_leftEndProfile -> S_b_leftEnd0/S_b_leftEnd1",
+      "S_b_leftWall + S_b_leftEnd0 + S_b_leftEnd1 -> S_b_leftSurface",
+      "Cut33 common S_b_leftSurface -> Contact_face_b_left_deep_sloper"
+    ],
+    "right": [
+      "S_b_rightProfile -> S_b_rightCutter -> Cut31",
+      "matching right Bearing/Wall/EndProfile/End0/End1/Surface",
+      "Cut33 common S_b_rightSurface -> Contact_face_b_right_deep_sloper"
+    ]
+  },
+  "currentMeasuredCADFacts": {
+    "profilePlane": "local sketch X,Y maps to native Y,Z",
+    "firstPoleNativeYZ": [
+      -50,
+      9.2933
+    ],
+    "secondPoleNativeYZ": [
+      -46.21219456023154,
+      10.50020709398756
+    ],
+    "lastPoleNativeYZ": [
+      36,
+      50
+    ],
+    "degree": 3,
+    "poleCount": 10,
+    "leftXSpan": [
+      -198,
+      -66
+    ],
+    "rightXSpan": [
+      66,
+      198
+    ],
+    "monoDuoCenterNativeZ": -20
+  },
+  "smallestCorrectionProposal": [
+    "Work on a scratch copy pinned to b6c53624..., keeping source metadata byte-identical; preserve the six-station pocket features and all C/D profiles.",
+    "Edit only the paired B relief analytic profile and corresponding native semantic-surface copies (Profile, Bearing and EndProfile for each side). Retain cubic B-spline form, far endpoint (36,50), fixed X spans and as much of the existing interior curve as the local smooth transition permits.",
+    "Move the front endpoint down toward the existing mono/duo-row height on Face A. A concrete initial display candidate is native (Y,Z)=(-50,-20) mm, chosen by the operator to express the photographed row relationship, NOT measured from pixels or a published dimension. A first tangent control point at (-50,-12) mm is an operator-selected starting estimate for a smooth vertical entry from the front plane. Do not claim those coordinates are manufacturer facts; inspect the complete A/B views before accepting them.",
+    "Keep all curve portions within the beam, no self-intersection or overshoot, and close the cutting wire outside the wood. Synchronize the associated bearing/end profiles so native contact ownership follows the modified B surface.",
+    "Recompute to one valid solid; the two B sloper contact IDs retain their identity but their resolved areas/bounds change. A's seven pockets and B's seven pockets stay separate and unchanged. C/D native profiles and their shared junction are untouched; verify actual exported C/D ray/depth/seam results again.",
+    "Compile scratch assets with unchanged retained compiler; verify 34 identities, descriptor binding, published pocket depths, exact 660x100x100 envelope, unbound materials, factual metadata parity, native meaningful edit/restore, all-four-face whole source/current/candidate views and front/side/top prior comparison before any promotion."
+  ],
+  "contactImplications": {
+    "affected": [
+      "face-b-left-deep-sloper",
+      "face-b-right-deep-sloper",
+      "poker_body_001 surface partition"
+    ],
+    "visuallyAffectedFaces": [
+      "A relief extent/transition",
+      "B deep-sloper curvature at A/B edge"
+    ],
+    "fixed": [
+      "all 28 pocket contacts",
+      "face-c-left-shallow-half-round",
+      "face-c-right-shallow-half-round",
+      "face-d-left-deep-rounded-recess",
+      "face-d-right-deep-rounded-recess",
+      "all 34 IDs and factual metadata",
+      "C/D common endpoint (42,-48) and corrected tangent"
+    ]
+  },
+  "humanGate": "The photo establishes the discrepancy qualitatively; new exact profile dimensions remain labeled display estimates. A targeted candidate can be reviewed without redoing the rest of the migration."
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "name": "compile",
+    "ownedProcessGroup": 93219,
+    "reason": "Superseded by fresh192-corner normal comparison failure; source and compiler remain frozen",
+    "signal": "SIGTERM"
+  },
+  {
+    "name": "compile-check",
+    "ownedProcessGroup": 93218,
+    "reason": "Superseded by fresh192-corner normal comparison failure; source and compiler remain frozen",
+    "signal": "SIGTERM"
+  },
+  {
+    "name": "reproduce",
+    "ownedProcessGroup": 93220,
+    "reason": "Superseded by fresh192-corner normal comparison failure; source and compiler remain frozen",
+    "signal": "SIGTERM"
+  }
+]

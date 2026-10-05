@@ -1,0 +1,213 @@
+{
+  "createdAt": "2026-09-30T21:14:19.743095+00:00",
+  "status": "passed technical follow-up; visual human acceptance pending",
+  "reviewer": "cad_wall_boards",
+  "package": "frictitious-nug",
+  "blockingFindings": [],
+  "resolvedFindings": [
+    {
+      "id": "NUG-CORD-DIAMETER",
+      "resolution": "All4 lead radii now3mm match explicit manufacturer6mm diameter. All4 provenance strings cite source and preserve300mm estimated length."
+    }
+  ],
+  "humanAcceptance": "pending",
+  "preservation": {
+    "unchangedPackageFiles": 205,
+    "changedPackageFiles": [
+      "Hangboards/frictitious-nug/suspension.json"
+    ],
+    "nativeSourceModelDescriptorByteIdentical": true,
+    "metadataNormalizationEqualsBefore": true,
+    "onlyAllowedChanges": [
+      "four radii",
+      "four provenance strings",
+      "generated wrappedRoutes",
+      "generated translationY"
+    ],
+    "explicitlyPreserved": [
+      "all6 rotations",
+      "all6 cameras",
+      "anchor",
+      "mouth terminals",
+      "rest lengths",
+      "native source",
+      "model",
+      "descriptor",
+      "hold metadata",
+      "solver authoring settings"
+    ]
+  },
+  "certification": {
+    "sourceBoundNativeSolidSHA256": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+    "reviewScope": "Inspected source-bound continuous solid certificates; independently reconstructed all24 complete runtime paths and replayed original whole-path tube validator and terminal/length calculations. No heavy native solve or test suite.",
+    "poses": 6,
+    "strandPoseCases": 24,
+    "fullTubeReplay": "passed",
+    "minimumReportedContinuousClearanceMM": 3.008067984374991,
+    "radiusMM": 3,
+    "continuousToleranceMM": 0.01,
+    "runtimeRoundingDecimals": 9,
+    "poseMetrics": {
+      "front-25": {
+        "left-front": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432263
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749945
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432245
+        },
+        "right-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        }
+      },
+      "front-inverted-20": {
+        "left-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0127898910447906
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749927
+        },
+        "right-rear": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432285
+        }
+      },
+      "reverse-13": {
+        "left-front": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432263
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749945
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432245
+        },
+        "right-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        }
+      },
+      "reverse-inverted-8": {
+        "left-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0127898910447906
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749927
+        },
+        "right-rear": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432285
+        }
+      },
+      "outer-upper": {
+        "left-front": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432263
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749945
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432245
+        },
+        "right-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        }
+      },
+      "outer-lower": {
+        "left-front": {
+          "lengthMM": 299.99999951932057,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432263
+        },
+        "left-rear": {
+          "lengthMM": 299.9999995193231,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0080679843749945
+        },
+        "right-front": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.0126949254432245
+        },
+        "right-rear": {
+          "lengthMM": 299.9999995193206,
+          "outwardMouthProjectionMM": 1.7778250000000002,
+          "certificateClearanceMM": 3.008067984374991
+        }
+      }
+    }
+  },
+  "freshRegeneration": {
+    "allSixPosesPassed": true,
+    "applyCheckByteIdentical": true,
+    "reportSHA256": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194"
+  },
+  "practicalLimits": [
+    "300mm per-lead rest length remains a display estimate.",
+    "Four exterior leads do not establish hidden threading connectivity; shallow entrance well sizes remain estimated.",
+    "No equilibrium or global optimum claim.",
+    "Updated-radius technical/app screenshots were not inspected in this follow-up; root owns visual presentation and human acceptance.",
+    "Original source review remains historical evidence of the corrected3mm-diameter defect."
+  ],
+  "fileSHA256": {
+    "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+    "Hangboards/frictitious-nug/frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "Hangboards/frictitious-nug/assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "Hangboards/frictitious-nug/assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "docs/source-audits/2026-09-29-remaining-cad/frictitious-nug/evidence/product-page-current.html": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+    ".context/placid-badger/cad-raster-boards/frictitious-nug/solid-primary.json": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+    "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+    ".context/placid-badger/nug-review/native-cord/fresh-native-apply-report.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    ".context/placid-badger/nug-review/native-cord/fresh-native-check-report.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    ".context/placid-badger/nug-review/native-cord/fresh-reproducibility-result.json": "255673b33585bf105b7daddd74489356320c8a57bbaf81b7332e8dad98a3dd98",
+    ".context/placid-badger/nug-review/native-cord/post-apply-native-certificates.json": "f5fa3ab21ae361af93ef5d8e921d1485020d411e3306b283118b44f67f50e626",
+    ".context/placid-badger/nug-review/native-cord/worker-final-ownership-and-hashes.json": "76d564dee66dd3ea6a32d78bb5f2a417e310a486bc5edb5d9d1a21aa3f506a54",
+    ".context/placid-badger/nug-review/native-cord/all-package-baseline-hashes.json": "aa3a508ed24b91a618826a369bb731a8f26bf2ebeed79ee9916db87c4c071b44",
+    ".context/placid-badger/nug-review/native-cord/HEAD-package/suspension.json": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088"
+  }
+}

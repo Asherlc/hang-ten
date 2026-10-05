@@ -1,0 +1,11 @@
+{
+  "timestampUTC": "2026-10-02T04:19:00.629178+00:00",
+  "simulatorUUIDVerifiedAbsent": "71029F02-AF9E-46C2-920B-394C8837ECF2",
+  "exactArtifactPathsVerifiedAbsent": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/DerivedData-placid-badger-cad-second-half",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/build-placid-badger-cad-second-half.xcresult",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-evo/ios-after-service-restart/tests-placid-badger-cad-second-half.xcresult"
+  ],
+  "deviceListSHA256": "87ef20e155d4e8bd278abe112537ee7fb4e3a99877eb6d91ae44f06ded9275c0",
+  "lateScreenshotViewed": "Apple startup logo/progress, not Hang Ten app"
+}

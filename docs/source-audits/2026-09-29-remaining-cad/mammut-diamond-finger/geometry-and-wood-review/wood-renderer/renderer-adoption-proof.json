@@ -1,0 +1,13 @@
+{
+  "upstreamCommit": "6126228e8",
+  "shaderByteIdentical": true,
+  "shaderSHA256": "caf524e2b7a548510f607a1ac7e61ff79671e5543d21ecf892b22ead7a95e8f7",
+  "reusedMaterialMethodsByteIdentical": true,
+  "sharedContactFunctionsPreserved": [
+    "    func highlight(",
+    "    private func buildContactEntities("
+  ],
+  "cadRoutedCordPreserved": true,
+  "neutralMaterialUnchanged": true,
+  "scope": "Existing generic finish system reused; no board assets or facts changed by renderer integration."
+}

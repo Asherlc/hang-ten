@@ -1,0 +1,35 @@
+{
+  "approvalStatus": "approved",
+  "revisionNotes": "Current compact lime-wood Evo revision: two seven-pocket rows below seven top surfaces. Manufacturer photo gives cavity and top profile form; materially distinct annotated hold chart gives 20/32 degree top surfaces and 20/25/30/35 mm rows. Preserve all 21 contact IDs. Phone/mounting plate/hardware omitted. Overall dimensions are absent from current package and must remain estimated unless supported separately.",
+  "sources": [
+    {
+      "slug": "zlagboard-evo",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-01.png",
+      "url": "https://zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "sha256": "fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f",
+      "bytes": 587027,
+      "support": "Manufacturer gallery",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    },
+    {
+      "slug": "zlagboard-evo",
+      "file": "docs/source-audits/2026-09-29-remaining-cad/zlagboard-evo/sources/product-02.png",
+      "url": "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "sha256": "00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10",
+      "bytes": 116118,
+      "support": "Manufacturer hold chart",
+      "retainedAt": "2026-09-29",
+      "classification": "primary manufacturer"
+    }
+  ],
+  "approval": {
+    "reviewer": "asherlc",
+    "date": "2026-09-29",
+    "method": "direct conversation",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "consolidatedReview": ".context/placid-badger/source-review.json"
+  }
+}

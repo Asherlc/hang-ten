@@ -1,0 +1,86 @@
+{
+  "readOnly": true,
+  "simulatorInteractions": 0,
+  "capturedPairs": {
+    "straight-lip-inverted": {
+      "wholeImagePixelsDiffer": 0,
+      "boardMapPixelsDiffer": 0,
+      "mapRectPoints": [
+        34,
+        242,
+        334,
+        334
+      ],
+      "imageScale": 3
+    },
+    "curved-lip-front": {
+      "wholeImagePixelsDiffer": 0,
+      "boardMapPixelsDiffer": 0,
+      "mapRectPoints": [
+        34,
+        242,
+        334,
+        334
+      ],
+      "imageScale": 3
+    },
+    "exterior-jug-back": {
+      "wholeImagePixelsDiffer": 525,
+      "boardMapPixelsDiffer": 0,
+      "mapRectPoints": [
+        34,
+        242,
+        334,
+        334
+      ],
+      "imageScale": 3
+    },
+    "left-pocket-vertical": {
+      "wholeImagePixelsDiffer": 0,
+      "boardMapPixelsDiffer": 0,
+      "mapRectPoints": [
+        34,
+        242,
+        334,
+        334
+      ],
+      "imageScale": 3
+    }
+  },
+  "currentAttempt": {
+    "tool": "axe swipe",
+    "startPoints": [
+      165,
+      360
+    ],
+    "endPoints": [
+      285,
+      365
+    ],
+    "issue": "Starts in empty space above the native board; retained wood contact centers are approximately y504\u2013543."
+  },
+  "recommendedCurrentBinaryAttempt": {
+    "tool": "axe drag",
+    "startPoints": [
+      201,
+      504
+    ],
+    "endPoints": [
+      340,
+      470
+    ],
+    "durationSeconds": 1,
+    "steps": 90,
+    "postDelaySeconds": 0.6,
+    "expectedAzimuthDeltaRadians": -0.37455089820359283,
+    "expectedElevationDeltaRadians": 0.06616766467065868,
+    "status": "Recommendation only; not executed during root test suite"
+  },
+  "sourceFindings": [
+    "BoardModelView.swift:185\u2013187 installs drag, simultaneous magnify, and targeted tap; no rectangular contentShape is declared on the RealityView.",
+    "BoardModelView.swift:244\u2013254 orbit applies incremental drag translations and only clears the drag accumulator on ended.",
+    "BoardModelRealityTypes.swift:460 returns early for the same active position; frame(in:) does not reset orbit.",
+    "BoardModelView.swift:238 resets camera on recognized contact taps; capture immediately after drag without tap/reselection."
+  ],
+  "limits": "Read-only evidence identifies a poor swipe origin and more explicit input method, not a proven gesture-recognizer cause. If wood-start drag also fails, mark orbit capture unverified; do not relabel unchanged canonical images oblique."
+}

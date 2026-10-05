@@ -3,7 +3,7 @@ import SwiftUI
 /// Entry for free-workout log mode: resume/discard an active log, or start Empty / Last / Template.
 struct FreeWorkoutStartSheet: View {
     @EnvironmentObject private var store: AppStore
-    @Environment(\.dismiss) private var dismiss
+    @Binding var isPresented: Bool
 
     @State private var activeLog: FreeWorkoutLog?
     @State private var latest: FreeWorkoutLog?
@@ -22,7 +22,7 @@ struct FreeWorkoutStartSheet: View {
             .background(Color.hangBackground)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") { isPresented = false }
                 }
             }
             .navigationTitle("Free workout")
@@ -31,7 +31,7 @@ struct FreeWorkoutStartSheet: View {
                 switch route {
                 case .session:
                     FreeWorkoutLogSessionView(
-                        onFinished: { dismiss() },
+                        onFinished: { isPresented = false },
                         onClose: {
                             path.removeAll()
                             activeLog = ActiveFreeWorkoutStore.load()
@@ -49,11 +49,11 @@ struct FreeWorkoutStartSheet: View {
             VStack(alignment: .leading, spacing: 8) {
                 SectionLabel(title: "In progress")
                 Text("You have a free workout in progress.")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(.callout, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 if let activeLog {
                     Text(resumeSubtitle(for: activeLog))
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                 }
             }
@@ -108,7 +108,7 @@ struct FreeWorkoutStartSheet: View {
                 Text("Start")
             } footer: {
                 if latest == nil {
-                    Text("Finish a free workout to unlock Last workout.")
+                    Text("Your last completed free workout will appear here.")
                 }
             }
 
@@ -120,10 +120,10 @@ struct FreeWorkoutStartSheet: View {
                         } label: {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(template.name)
-                                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                                    .font(.system(.callout, design: .rounded, weight: .semibold))
                                     .foregroundStyle(Color.hangInk)
                                 Text(templateSubtitle(template))
-                                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                                    .font(.system(.footnote, design: .rounded, weight: .medium))
                                     .foregroundStyle(Color.hangMuted)
                             }
                         }

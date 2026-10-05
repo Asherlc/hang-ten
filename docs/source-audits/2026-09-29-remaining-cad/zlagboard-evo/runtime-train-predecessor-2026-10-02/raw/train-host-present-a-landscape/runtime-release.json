@@ -1,0 +1,10 @@
+{
+  "runtimeAuthorized": true,
+  "authorization": "Parent explicit source/build/runtime release; first PRESENT control only, conditional arms gated by evidence.",
+  "arm": "present-a",
+  "helperSHA256": "d55f5f555f4f823e055a8ec4112d4b70d923c61dc1ca07a849fd4869040c31cb",
+  "binarySHA256": "aa0cecfd9423ee73bda5884fac0793c11dc5ae7207ad5083bae6eba115202062",
+  "constructorMarkerAuditReady": true,
+  "previousArmGatePassed": true,
+  "previousArmGateMeaning": "First control; no prior visual gate required. Root gate and completed compile/parity authorize first arm."
+}

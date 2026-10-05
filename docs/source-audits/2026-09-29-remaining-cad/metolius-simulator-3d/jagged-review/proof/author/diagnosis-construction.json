@@ -1,0 +1,612 @@
+[
+  {
+    "name": "SculptedSilhouetteEnvelope",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -1.77636e-15, 355.5, 4.85545e-14, 222)",
+    "volume": 10402086.387798682,
+    "solidCount": 1
+  },
+  {
+    "name": "ReliefPrism",
+    "type": "Part::Extrusion",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-600, -94, -4, 600, 0, 222)",
+    "volume": 15243000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "UnpocketedShell",
+    "type": "Part::Common",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 4.85545e-14, 222)",
+    "volume": 6390800.253424966,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundSloperRoof",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (47, -80, 145, 148, 0, 188)",
+    "volume": 243435.25,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundSloperRoofLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-148, -80, 145, -47, 0, 188)",
+    "volume": 243435.25,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundSloperReplacementBounds",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (47, -120, 145, 148, 0, 245)",
+    "volume": 1212000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundSloperReplacementBoundsLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-148, -120, 145, -47, 0, 245)",
+    "volume": 1212000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "FlatSloperRoof",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (148, -90, 135, 258, 2.83e-15, 178)",
+    "volume": 236087.5,
+    "solidCount": 1
+  },
+  {
+    "name": "FlatSloperRoofLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-258, -90, 135, -148, 2.83e-15, 178)",
+    "volume": 236087.5,
+    "solidCount": 1
+  },
+  {
+    "name": "FlatSloperReplacementBounds",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (148, -120, 135, 258, 0, 235)",
+    "volume": 1320000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "FlatSloperReplacementBoundsLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-258, -120, 135, -148, 0, 235)",
+    "volume": 1320000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "ShoulderRemovalBounds",
+    "type": "Part::Compound",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-258, -120, 135, 258, 0, 245)",
+    "volume": 5064000.0,
+    "solidCount": 4
+  },
+  {
+    "name": "ShoulderTopsRemoved",
+    "type": "Part::Cut",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 4.85545e-14, 222)",
+    "volume": 5189297.2456560675,
+    "solidCount": 1
+  },
+  {
+    "name": "ShellWithDistinctSlopers",
+    "type": "Part::MultiFuse",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 4.85545e-14, 222)",
+    "volume": 6148342.744005161,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_4_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-325.039, -86.4459, 121.981, -260.961, -50.0063, 156.019)",
+    "volume": 44398.73822780192,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_4_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (260.961, -86.4459, 121.981, 325.039, -50.0063, 156.019)",
+    "volume": 44398.738212533324,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_5_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-311.623, -67.1933, 77.7712, -228.377, -40.0906, 120.229)",
+    "volume": 48730.96468865891,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_5_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (228.377, -67.1933, 77.7712, 311.623, -40.0906, 120.229)",
+    "volume": 48730.964835916275,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_6_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-218.803, -72.7699, 94.0984, -137.197, -50.3534, 131.902)",
+    "volume": 39369.568575964644,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_6_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (137.197, -72.7699, 94.0984, 218.803, -50.3534, 131.902)",
+    "volume": 39369.56820253705,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_7_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-130.301, -76.0614, 106.284, -49.6994, -37.5947, 139.716)",
+    "volume": 66228.23986231408,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_7_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (49.6994, -76.0614, 106.284, 130.301, -37.5947, 139.716)",
+    "volume": 66228.23986205239,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_8_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-272.999, -53.5133, 40.6152, -209.001, -34.7267, 75.3848)",
+    "volume": 23125.766050177717,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_8_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (209.001, -53.5133, 40.6152, 272.999, -34.7267, 75.3848)",
+    "volume": 23125.76491577415,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_9_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-193.639, -56.4324, 57.5321, -130.361, -20.0064, 88.4679)",
+    "volume": 43611.04466335898,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_9_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (130.361, -56.4324, 57.5321, 193.639, -20.0064, 88.4679)",
+    "volume": 43611.04487172246,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_10_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-112.627, -59.7749, 70.1458, -53.3731, -40.167, 97.8542)",
+    "volume": 22024.916795434227,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_10_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (53.3731, -59.7749, 70.1458, 112.627, -40.167, 97.8542)",
+    "volume": 22024.916803758835,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_11_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-229.137, -39.8874, 10.8132, -156.863, -22.3319, 43.1868)",
+    "volume": 23673.762616243177,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_edge_11_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (156.863, -39.8874, 10.8132, 229.137, -22.3319, 43.1868)",
+    "volume": 23673.76262990378,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_12_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-145.698, -44.3248, 25.3116, -102.302, -11.851, 52.6884)",
+    "volume": 25165.521929281582,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_12_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (102.302, -44.3248, 25.3116, 145.698, -11.851, 52.6884)",
+    "volume": 25165.52193413666,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_13_left",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-89.1158, -44.9931, 30.9277, -46.8842, -29.7701, 57.0723)",
+    "volume": 11658.765487472974,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_13_right",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (46.8842, -44.9931, 30.9277, 89.1158, -29.7701, 57.0723)",
+    "volume": 11658.765482577786,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_15_center",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-30.5, -95, 155.5, 30.5, -44, 182.5)",
+    "volume": 63789.88704160432,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_16_center",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-30, -73.3901, 107.5, 30, -33.8883, 134.5)",
+    "volume": 48600.33464611459,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_17_center",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-28.5, -57.04, 66, 28.5, -27.3888, 92)",
+    "volume": 32954.84649837692,
+    "solidCount": 1
+  },
+  {
+    "name": "Cutter_pocket_18_center",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-26, -43.125, 25.5, 26, -8.76237, 50.5)",
+    "volume": 32653.44850930973,
+    "solidCount": 1
+  },
+  {
+    "name": "PocketCutters",
+    "type": "Part::Compound",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-325.039, -95, 10.8132, 325.039, -8.76237, 182.5)",
+    "volume": 873973.0933430265,
+    "solidCount": 24
+  },
+  {
+    "name": "BodySolid",
+    "type": "Part::Cut",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 1.53998, 222)",
+    "volume": 5536784.326160741,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderTransitionBounds",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (35, -110, 145, 65, 10, 265)",
+    "volume": 432000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderTransitionLoft",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (35, -95.6567, 144.677, 65, 4.26326e-14, 195.198)",
+    "volume": 91419.56897179315,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderTransitionClip",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-400, -94, -1, 400, 0, 299)",
+    "volume": 22560000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderBoundedTransition",
+    "type": "Part::Common",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (35, -95.6567, 144.677, 65, 4.26326e-14, 195.198)",
+    "volume": 92417.95476965717,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderTransitionLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-65, -95.6567, 144.677, -35, 4.26326e-14, 195.198)",
+    "volume": 92417.95476965717,
+    "solidCount": 1
+  },
+  {
+    "name": "CenterShoulderTransitionBoundsLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-65, -110, 145, -35, 10, 265)",
+    "volume": 432000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatTransitionBounds",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (130, -110, 135, 166, 10, 255)",
+    "volume": 518400.0,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatTransitionLoft",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (130, -90.9273, 134.235, 166, 1.53998, 179.782)",
+    "volume": 90436.48477736545,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatTransitionClip",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-400, -94, -1, 400, 0, 299)",
+    "volume": 22560000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatBoundedTransition",
+    "type": "Part::Common",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (130, -90.9273, 134.235, 166, 1.53998, 179.782)",
+    "volume": 90436.48477736545,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatTransitionLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-166, -90.9273, 134.235, -130, 1.53998, 179.782)",
+    "volume": 90436.48477736545,
+    "solidCount": 1
+  },
+  {
+    "name": "RoundFlatTransitionBoundsLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-166, -110, 135, -130, 10, 255)",
+    "volume": 518400.0,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderTransitionBounds",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (238, -110, 135, 278, 10, 255)",
+    "volume": 576000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderTransitionLoft",
+    "type": "Part::Loft",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (238, -95.1908, 133.993, 278, 4.05841e-14, 174.728)",
+    "volume": 92684.33577535878,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderTransitionClip",
+    "type": "Part::Box",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-400, -94, -1, 400, 0, 299)",
+    "volume": 22560000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderBoundedTransition",
+    "type": "Part::Common",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (238, -95.1908, 133.993, 278, 4.05841e-14, 174.728)",
+    "volume": 92928.71671964519,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderTransitionLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-278, -95.1908, 133.993, -238, 4.05841e-14, 174.728)",
+    "volume": 92928.71671964519,
+    "solidCount": 1
+  },
+  {
+    "name": "OuterShoulderTransitionBoundsLeft",
+    "type": "Part::Mirroring",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-278, -110, 135, -238, 10, 255)",
+    "volume": 576000.0,
+    "solidCount": 1
+  },
+  {
+    "name": "ShoulderTransitionRemovalBounds",
+    "type": "Part::Compound",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-278, -110, 135, 278, 10, 265)",
+    "volume": 3052800.0,
+    "solidCount": 6
+  },
+  {
+    "name": "ShoulderTransitionBandsRemoved",
+    "type": "Part::Cut",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 4.85545e-14, 222)",
+    "volume": 5580912.0103378855,
+    "solidCount": 1
+  },
+  {
+    "name": "ShellWithContinuousShoulders",
+    "type": "Part::MultiFuse",
+    "state": [
+      "Up-to-date"
+    ],
+    "bounds": "BoundBox (-355.5, -96.27, -3.55271e-15, 355.5, 1.53998, 222)",
+    "volume": 6149594.3420539545,
+    "solidCount": 1
+  }
+]

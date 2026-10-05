@@ -1,0 +1,12 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "originalOwnedSessionPID": 66257,
+  "extensionGuardianPID": 64120,
+  "originalCleanupTrap": "ios-session.zsh",
+  "startedAt": 1791052746.6013298,
+  "maximumExtensionSeconds": 5400,
+  "originalSessionPaused": true,
+  "cleanupResumed": true,
+  "finishedAt": 1791057538.178657
+}

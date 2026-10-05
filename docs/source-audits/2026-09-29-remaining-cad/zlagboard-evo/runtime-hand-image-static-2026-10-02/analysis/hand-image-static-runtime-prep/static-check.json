@@ -1,0 +1,10 @@
+{
+  "status": "DRAFT_NOT_RUN_SCHEMA_PENDING",
+  "pythonASTPass": true,
+  "schemaReady": false,
+  "files": {
+    "capture.py": "4b5b39559177a7c804699fa85583bfbec580cd71c5ca7ba01fdb8d6ae5e461a3",
+    "protocol.md": "dbee5faeaa03152e6d24260aecf6ed664757372b597b69648e260b7d93fc23ff",
+    "prototype_schema.py": "d1060eceabe6916e1ea5308a3fb4829aae71d51c2906dd708eb4c690a0663dfb"
+  }
+}

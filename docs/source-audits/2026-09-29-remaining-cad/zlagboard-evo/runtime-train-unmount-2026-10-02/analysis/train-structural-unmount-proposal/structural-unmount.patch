@@ -1,0 +1,78 @@
+--- a/HangTen/Views/TrainView.swift
++++ b/HangTen/Views/TrainView.swift
+@@ -96,6 +96,11 @@
+                     noCompatiblePlan
+                 }
+             }
++            #if DEBUG
++            .onChange(of: showsDeepLinkedWorkout, initial: true) { _, showsWorkout in
++                recordDiagnosticTrainNavigation(showsWorkout: showsWorkout)
++            }
++            #endif
+             .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
+                 guard boardID != nil else { return }
+                 showsDeepLinkedBoardDetail = true
+@@ -136,14 +141,33 @@
+         store.featuredPlan
+     }
+ 
++    #if DEBUG
++    private var diagnosticTrainClearSlotRequested: Bool {
++        let env = ProcessInfo.processInfo.environment
++        return BoardHighlightDiagnostic.isEnabled
++            && store.selectedBoard.id == "zlagboard.evo"
++            && store.selectedBoard.presentations.count == 1
++            && (env["HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1"
++                || (BoardHighlightDiagnostic.boardDetachTrial
++                    && env["HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT"] == "1"
++                    && showsDeepLinkedWorkout))
++    }
++
++    private func recordDiagnosticTrainNavigation(showsWorkout: Bool) {
++        guard BoardHighlightDiagnostic.boardDetachTrial else { return }
++        BoardHighlightDiagnostic.shared.trainNavigation(stage: "workout-navigation-state",
++            boardID: store.selectedBoard.id, planID: deepLinkedWorkoutPlan?.id,
++            presentationCount: store.selectedBoard.presentations.count,
++            showsWorkout: showsWorkout,
++            clearSlotRequested: diagnosticTrainClearSlotRequested)
++    }
++    #endif
++
+     private var selectedBoardCard: some View {
+         VStack(alignment: .leading, spacing: 16) {
+             Group {
+                 #if DEBUG
+-                if BoardHighlightDiagnostic.isEnabled,
+-                   ProcessInfo.processInfo.environment["HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1",
+-                   store.selectedBoard.id == "zlagboard.evo",
+-                   store.selectedBoard.presentations.count == 1 {
++                if diagnosticTrainClearSlotRequested {
+                     // This diagnostic targets only Evo's one-presentation model card.
+                     // Resolve its exact normal slot without constructing BoardMapView.
+                     VStack(spacing: 8) {
+--- a/HangTen/Models/BoardModelRealityTypes.swift
++++ b/HangTen/Models/BoardModelRealityTypes.swift
+@@ -1645,6 +1645,23 @@
+         emit(value)
+     }
+ 
++    /// Sparse actual navigation-state observation; no body logging or mutation.
++    func trainNavigation(stage: String, boardID: String, planID: String?,
++                         presentationCount: Int, showsWorkout: Bool,
++                         clearSlotRequested: Bool) {
++        guard Self.boardDetachTrial else { return }
++        let env = ProcessInfo.processInfo.environment
++        emit(["event": "train-navigation-source", "stage": stage,
++            "boardID": boardID, "planID": planID ?? "nil",
++            "presentationCount": presentationCount,
++            "showsDeepLinkedWorkout": showsWorkout,
++            "sourceBranchRequested": clearSlotRequested ? "clear-slot" : "board-map",
++            "unmountTrainForWorkoutRequested": env["HANGTEN_REVIEW_UNMOUNT_TRAIN_FOR_WORKOUT"] == "1",
++            "initialTrainSuppressionRequested": env["HANGTEN_REVIEW_SUPPRESS_TRAIN_BOARD_HOST"] == "1",
++            "detachRequested": Self.detachesTrainHost,
++            "trialHosts": trialHostSnapshot()])
++    }
++
+     /// Once per native board scene init, before its asynchronous USDZ load.
+     func boardSceneConstructed(scene: BoardModelRealityScene) {
+         guard enabled else { return }

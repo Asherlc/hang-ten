@@ -1,0 +1,9 @@
+# Exact native surface-domain reduction advice
+
+The geometric operation is `copiedSurface.segment(u1, u2, v1, v2)`: FreeCAD directly calls OCCT surface segmentation, which changes the underlying pole/knot domain. Splitting existing U-knot bands targets the heavy 486-pole direction. A trimmed `Part.Face` can keep the expensive original surface. [FreeCAD implementation](https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Part/App/BSplineSurfacePyImp.cpp), [OCCT API](https://occt3d.com/dev/doc/refman/html/class_geom___b_spline_surface.html).
+
+I did not identify a standard recomputing document feature for this exact operation. `Part::Spline` is only a base class, `Surface::Cut` is a boolean, and `Surface::Extend` samples/refits. Storing a segmented BRep in a static feature therefore does not meet the current native-parametric requirement. [Spline](https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Part/App/FeaturePartSpline.cpp), [Cut](https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Surface/App/FeatureCut.cpp), [Extend](https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Mod/Surface/App/FeatureExtend.cpp).
+
+The existing fan-sector probe has 4/4/5 solids and materially reduced volumes, so it is not equivalent to the original loft. Splitting each input by its own normalized parameter then independently lofting does not establish common surface correspondence. Exact post-loft UV segmentation avoids that geometric ambiguity, but still needs a native recomputing feature to become the deliverable.
+
+A new construction using smaller corresponding native loft sections remains the practical author-owned path. Treat it as revised geometry: verify single-solid union, joins, bounds, depths, local deviation and edit/restore anew. Keep compiler quality settings unchanged. No native jobs, geometry changes or resources were created for this advice.

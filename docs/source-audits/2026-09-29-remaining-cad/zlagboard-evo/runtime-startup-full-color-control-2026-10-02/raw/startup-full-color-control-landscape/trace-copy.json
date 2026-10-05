@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/88CD05BA-2DFB-4BD6-9661-B582C1740475/Documents/HighlightDiagnostic-placid-badger-cad-second-half-startup-full-color-control/events-1997F51F-2511-469C-9EFF-FEB92DD28D75.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/startup-full-color-control-landscape/events-1997F51F-2511-469C-9EFF-FEB92DD28D75.jsonl",
+      "sha256": "5987710aae1a7c33171a2e6c122db1d62aa1141056ea4d8e226bfe3b625b7bc7"
+    }
+  ],
+  "records": 195,
+  "completeContiguous": true,
+  "copiedEpoch": 1791002936.3255198,
+  "includesSamplerEnd": true
+}

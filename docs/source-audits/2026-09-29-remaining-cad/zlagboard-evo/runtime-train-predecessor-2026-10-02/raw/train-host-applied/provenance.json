@@ -1,0 +1,30 @@
+{
+  "status": "SCRATCH_ONLY_RESERVATION_AND_ROOT_GATE_REQUIRED_BEFORE_APPLY",
+  "patches": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-host-suppression-proposal/train-slot-gate.patch",
+      "sha256": "a29f89a2dff704a3184d2eb339ce3a124b5f37e410304c02621610e7e07328a9",
+      "lines": 38,
+      "applyCheckExit": 0
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-host-suppression-proposal/board-constructor-marker.patch",
+      "sha256": "79f93b8cf295c120f1c8f98749502f33c2cb510098edc33097aa958406cd224b",
+      "lines": 46,
+      "applyCheckExit": 0
+    }
+  ],
+  "inputs": [
+    {
+      "path": "HangTen/Views/TrainView.swift",
+      "sha256": "e6311461ffc6cb3fa765c022867b94acc0dce43a09c8b77cef7b70e2b8497b99"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "sha256": "eb00001d1215aa25f02f62e80340bc905203f0deecd730fbff02fd276fc638e6"
+    }
+  ],
+  "trackedInputsRemainExact": true,
+  "parseBuildTestDeviceOperations": false,
+  "streamOpening": "Existing recorder initialized immediately before the only app BoardModelRealityScene constructor call; no extra emitted loader event. Init marker remains once per successful native init."
+}

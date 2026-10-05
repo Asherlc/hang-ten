@@ -14,8 +14,10 @@ avoid repeating the same detours.
   with a hash-bound descriptor, so shipping needs the whole pipeline — but only
   **once**, at the end.
 - **Lean inner loop:** edit the throwaway FCStd-authoring script (under
-  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run the pytest suites, the delivery lock, and
-  `compare_exports` as a release gate, not per tweak.
+  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run
+  the pytest suites and package validation as release gates, not per tweak.
+  Use `compare_exports` as an optional diagnostic; authors may skip it when
+  the descriptor and renders agree (§14).
 - Triage the reference **first**: is it a constant cross-section (extruded
   profile -> reproduces exactly) or a genuinely sculpted closed shell (rounded
   lip, scooped pockets -> a solid native model cannot match it)? If sculpted,
@@ -236,9 +238,8 @@ coincident-surface trap in lesson 6:
   native-check scripts are maintenance overhead. The six
   `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
-  manifest); their provenance lives in
-  `the delivery lock`, each naming the
-  commit the script can be recovered from. A new board's authoring script is a
+  manifest); their provenance is recoverable from Git history, including the
+  commit containing each script. A new board's authoring script is a
   throwaway under `.context/`; the committed FCStd, its embedded manifest, and
   a dated provenance record are what survive.
   The framework is justified only by the repo's hard contracts (hash-pinned
@@ -329,8 +330,8 @@ triangle count.
 - Prefer the retired sibling author scripts for Small and Large, and their
   authoring notes, as the structural precedent for partitioned troughs — not
   the constant-section `lattice-triple-rung` pad clone. The notes are preserved
-  in `the delivery lock`
-  and `…-lattice-mxedge-lift-large-cad-provenance.md`, which also give the
+  in Git history
+  and `…-lattice-mxedge-lift-large-cad-provenance.md`, which give the
   commit to `git show` the code from. Large-specific measurement traps are in
   §11.
 
@@ -362,10 +363,9 @@ Cord dots on the top view were mouths, not through-holes: radius 3.4 mm,
 3 mm deep. `board.json` already said the interior was omitted. A dark lambert
 top hides them; confirm with a point query. Keep them n-gons.
 
-Once an `FCStd` exists, the delivery lock hashes descriptor + source, not the
-USDZ or `board.json` (which is generated from the source at build time), so the
-package contributes two files. Park the old digest in
-`supersededSha256Manifest`. That alignment test now runs in CI's Python job.
+Once an `FCStd` exists, the source owns the generated `board.json`; package
+validation checks that no stale on-disk copy remains. The descriptor binds the
+compiled USDZ by its model SHA-256.
 Do not claim `native_source_checks` edit propagation for a cut-body source;
 that suite is the sketch-and-pad checker.
 
@@ -400,8 +400,8 @@ a second screenshot pass is a full rebuild.
   committed assets for all five boards. Linux is fine for before/after
   comparisons on one platform (the manifest migration compiled byte-identically
   before and after), but rebuild comparisons against committed assets require
-  the pinned macOS toolchain. Use `verify_reproducible.py` locally for that
-  comparison.
+  the pinned macOS toolchain. Use `prepare_assets.py` locally to check the
+  rebuilt descriptor and model hash against the committed pair.
 - FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
   pointers and every CAD tool (and the freshness check) refuses them.
 
@@ -471,8 +471,8 @@ needed no FreeCAD run: `set_board_manifest.py` embedded the existing
 `board.json`, `board_manifest.py` regenerated it byte-identically on the first
 try, and only `Document.xml` changed in the FCStd, so the USDZ and descriptor
 bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
-the script's provenance into a dated `the delivery locks/` record, and delete
-the script.
+the script's provenance into a dated board provenance record, and delete the
+script.
 
 ## 15. Vector-primitive profiles
 (`metolius-prime-rib`; applies to any constant-section board)

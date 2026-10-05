@@ -1,0 +1,89 @@
+{
+  "owner": "placid-badger",
+  "simulatorUUID": "2BF25C47-7A34-4ABA-9B43-6D52F8CBCB8E",
+  "launch": {
+    "number": 14,
+    "boardID": "tension.flash-board",
+    "package": "tension-flash-board",
+    "contactID": "two-edge-left",
+    "planID": null,
+    "flags": {
+      "BOARD_ID": "tension.flash-board",
+      "BOARD_DIAGNOSTICS": "1",
+      "MODEL_DIAGNOSTICS": "1",
+      "PORTRAIT": "1",
+      "BOARD_DETAIL": "1",
+      "BOARD_HOLD_ID": "two-edge-left",
+      "BOARD_TELEPHOTO": "1"
+    },
+    "launchedAt": 1791056072.078395
+  },
+  "image": "14-live-horizontal-orbit-3.png",
+  "imageSHA256": "ae8b49ab21ee8bd369c854e01e5dde4f246cac991e7072825ce163439198d4ee",
+  "accessibilitySHA256": "9fb53b178ed11ff8ab88f2d7c9549baebf3bd6ccb088008e78b97ad355e1c3f6",
+  "binarySHA256": "7aca0429a95c54572cec9367f5120c7873e8f53bceb97cc09f27cd5906e3bbca",
+  "installedProvenanceSHA256": "0f378ff2f58a27921251399ed035ab357ae993cf517569527390ac30d016232f",
+  "rendererDiagnostic": "revision=13;rootActive=true;cameraActive=true;sameScene=true;azimuth=-1.6221557;elevation=0.29321805;cameraPitch=0.2932181;cameraSettled=true;selection=two-edge-left;tapRevision=0;pickedContact=",
+  "visualInspection": "Pending whole-frame inspection",
+  "actualPhysicalOrbit": true,
+  "projectedBefore": {
+    "boardModel.contact.three-edge-center": [
+      0.47405189620758476,
+      0.7534766118836915
+    ],
+    "boardModel.contact.three-edge-left": [
+      0.5558882235528941,
+      0.7104930467762326
+    ],
+    "boardModel.contact.small-crimp-left": [
+      0.5818363273453093,
+      0.695322376738306
+    ],
+    "boardModel.contact.three-edge-right": [
+      0.38822355289421157,
+      0.7977243994943111
+    ],
+    "boardModel.contact.two-edge-right": [
+      0.4481037924151696,
+      0.8065739570164349
+    ],
+    "boardModel.contact.small-crimp-right": [
+      0.4780439121756487,
+      0.7496839443742098
+    ],
+    "boardModel.contact.two-edge-left": [
+      0.5968063872255488,
+      0.7269279393173198
+    ]
+  },
+  "projectedAfter": {
+    "boardModel.contact.three-edge-left": [
+      0.4650698602794411,
+      0.6675094816687738
+    ],
+    "boardModel.contact.three-edge-center": [
+      0.47305389221556887,
+      0.729456384323641
+    ],
+    "boardModel.contact.two-edge-left": [
+      0.5169660678642715,
+      0.6776232616940581
+    ],
+    "boardModel.contact.small-crimp-left": [
+      0.5259481037924152,
+      0.654867256637168
+    ],
+    "boardModel.contact.three-edge-right": [
+      0.4810379241516966,
+      0.7951959544879899
+    ],
+    "boardModel.contact.two-edge-right": [
+      0.5329341317365269,
+      0.7926675094816689
+    ],
+    "boardModel.contact.small-crimp-right": [
+      0.5369261477045908,
+      0.7345132743362831
+    ]
+  }
+}

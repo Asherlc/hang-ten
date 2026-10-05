@@ -1,0 +1,6 @@
+{
+  "owner": "placid-badger",
+  "scope": "Read-only failures, native Mini and Metolius Contact metadata, related runtime/test dependencies",
+  "externalResources": [],
+  "cleanup": "No persistent resources started; no resource trap needed"
+}

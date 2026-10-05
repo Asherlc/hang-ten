@@ -1,0 +1,27 @@
+{
+  "owner": "placid-badger",
+  "helpers": [
+    {
+      "original": ".context/placid-badger/flash-board-review14/independent-shape/crossed-display-review/placid-badger-crossed-depth-review.py",
+      "originalSHA256": "b6158261a0e9e1f0f16f68a599106e3a7fd3fe9f17d14a95b9b47a2f3c190d4c",
+      "functions": [
+        "render"
+      ],
+      "retained": "renderer-helper-snapshots/per-pixel-depth-function.py",
+      "sha256": "4813f62cecf013dda9b7e3345ac9747b01934bf751dfd6300a865ae3e22d2466",
+      "method": "Verbatim named top-level function source; no renderer behavior changes."
+    },
+    {
+      "original": ".context/placid-badger/flash-board-review14/post-handoff-preparation/render-cord-views.py",
+      "originalSHA256": "48d44cbee7d98156866e2602c6193145584b6b638b8b0c6b4ec2a7fb940888b4",
+      "functions": [
+        "rotate",
+        "tube_triangles"
+      ],
+      "retained": "renderer-helper-snapshots/pose-and-tube-functions.py",
+      "sha256": "33248f5cdc6a07d6018a262dc169b305a1e11540a3faa9dbc931f823d648a5e4",
+      "method": "Verbatim named top-level function source; no renderer behavior changes."
+    }
+  ],
+  "usage": "Historical renderer dependencies retained as exact function text. Raw render scripts preserve their original workspace paths. Production readers and pose helper are pinned by preview-provenance.json."
+}

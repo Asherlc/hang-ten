@@ -1,0 +1,1 @@
+Self-check opened the same FCStd path twice: FreeCAD returned the same document instance. Cleanup attempted to close it twice and raised ReferenceError: Cannot access attribute Name of deleted object. Fixed harness to capture unique document names before closing. No source save occurred.

@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "8e734298d1cd44dca533073becaa95eb2a039b87e1706b193d5fd7de48f040de",
+  "modelBounds": {
+    "min": [
+      -0.052499998,
+      -0.029999999,
+      -0.015
+    ],
+    "max": [
+      0.052499998,
+      0.029999999,
+      0.015
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "nature_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "nature_pinch",
+      "role": "contact",
+      "contactID": "pinch-60"
+    },
+    {
+      "nodeID": "nature_pinch_pressure",
+      "role": "contact",
+      "contactID": "pinch-60"
+    },
+    {
+      "nodeID": "nature_stone",
+      "role": "contact",
+      "contactID": "granite-edge-15"
+    },
+    {
+      "nodeID": "nature_wood",
+      "role": "contact",
+      "contactID": "wood-edge-15"
+    }
+  ],
+  "contacts": {
+    "granite-edge-15": {
+      "nodeIDs": [
+        "nature_stone"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.104761907,
+          0.200000006
+        ],
+        "max": [
+          0.895238093,
+          0.366666657
+        ]
+      },
+      "center": [
+        0.5,
+        0.283333332
+      ]
+    },
+    "pinch-60": {
+      "nodeIDs": [
+        "nature_pinch",
+        "nature_pinch_pressure"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.0
+        ],
+        "max": [
+          1.0,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "wood-edge-15": {
+      "nodeIDs": [
+        "nature_wood"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.090476164,
+          0.333333333
+        ],
+        "max": [
+          0.909523836,
+          0.825000014
+        ]
+      },
+      "center": [
+        0.5,
+        0.579166674
+      ]
+    }
+  }
+}

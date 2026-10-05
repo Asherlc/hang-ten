@@ -1,0 +1,6 @@
+{
+  "status": "superseded",
+  "problem": "Rear rotation used runtime axes after preview._triangles had already converted to native axes, so the last row showed an upside-down front. Original bytes retained.",
+  "correctedAsset": "original-prior-corrected-views.png",
+  "frontSideTopFramesUnchanged": true
+}

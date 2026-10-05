@@ -1,0 +1,31 @@
+{
+  "owner": "placid-badger",
+  "package": "trango-rock-prodigy-forge",
+  "reviewNumber": 15,
+  "advisor": "Claude Opus 5.5",
+  "agentId": "4c95fae2-5c9d-4734-b3f5-a47ad77aeaa7",
+  "status": "pass for shown CAD geometry; no source-backed blocker",
+  "blockingFindings": [],
+  "sourceAndExportIdentity": {
+    "sourceSHA256": "4f970f46263bbf8e3cc4a1995fe48f4c3c6f638f65b816c9fb0a95a65843dc4e",
+    "modelSHA256": "6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61",
+    "descriptorSHA256": "ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6",
+    "generatedManifestSHA256": "2a8d9e959dbc7f09544049d8523d2cf1ee1a37f1da8fdaea157a51b40c714d6a"
+  },
+  "rawActivitySHA256": "7ab00998f4fda4ff5bdfa15bff5c8c282f74c1bb9f754010c09662636e569ecf",
+  "fullVerdictSHA256": "a830ae0380a7aea1c8ee254c473599ea9e83db104938c47e37940fb22b624e5a",
+  "rootDecision": "Record the human y acceptance of the shown CAD shape. Keep current app validation pending. No geometry change.",
+  "nativeMirrorConclusion": "One authored right unit, live native left mirror; all ten left contacts also mirror the right. The recess cut is upstream of the physical-unit mirror.",
+  "cosmeticAndEditabilityLimits": [
+    "The recess back is squarer than the scooped maker photos; optional larger back roll is unsourced and not needed to close this review.",
+    "The inherited rounded outer end only approximates the boxier maker end and lower-lip step.",
+    "Photo and hold-chart lip placement differ; maker photographs govern.",
+    "Sketch coordinates use Block constraints, so editing dimensions requires unblocking the relevant sketch geometry."
+  ],
+  "runtimeVerified": false,
+  "currentAppFrames": 0,
+  "iOSUnitCasesExecuted": 0,
+  "noSourceOrAssetChanges": true,
+  "advisorArchivedAndClosed": true,
+  "parallelWorkspaceInspectedOrMerged": false
+}

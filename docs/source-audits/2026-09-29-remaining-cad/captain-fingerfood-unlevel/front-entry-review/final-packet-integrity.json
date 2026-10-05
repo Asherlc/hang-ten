@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "independentEvidenceFiles": 55,
+  "retainedEvidenceCopies": 18,
+  "technicalComparisons": 24,
+  "shownImageHashes": 8,
+  "changedPackageFiles": [
+    "Hangboards/captain-fingerfood-unlevel/suspension.json"
+  ],
+  "preservedPackageFiles": 205,
+  "reviewNumber": 3,
+  "humanAcceptance": "pending",
+  "ownedExternalResourcesDeleted": true,
+  "modelDeliveryDigest": "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
+  "independentIntegrationReviewSHA256": "8418df2b78c94756058a57c437c317ec4a01e0fae1f9f0ade4256e4ce7c1123a"
+}

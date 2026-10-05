@@ -1,0 +1,222 @@
+{
+  "sourceSHA256": "5e06a1e7ae4f6bee8391605f61395ff86807e4234a54d6b8b2d46c015fa4ddd8",
+  "validSolidCount": 1,
+  "contactCount": 16,
+  "fullyConstrainedSketchCount": 39,
+  "allContactsOnNativeBody": true,
+  "noRearContactFaces": true,
+  "pairwiseContactOverlapChecked": true,
+  "overlapPairs": [
+    [
+      "mam-upper-open-bay-r",
+      "mam-mono-r",
+      0.0
+    ],
+    [
+      "mam-upper-pocket-r",
+      "mam-upper-inset-r",
+      0.0
+    ],
+    [
+      "mam-upper-pocket-r",
+      "mam-mid-edge-c",
+      0.0
+    ],
+    [
+      "mam-lateral-ledge-r",
+      "mam-lower-edge-c",
+      0.0
+    ],
+    [
+      "mam-upper-open-bay-l",
+      "mam-mono-l",
+      0.0
+    ],
+    [
+      "mam-upper-pocket-l",
+      "mam-upper-inset-l",
+      0.0
+    ],
+    [
+      "mam-upper-pocket-l",
+      "mam-mid-edge-c",
+      0.0
+    ],
+    [
+      "mam-lateral-ledge-l",
+      "mam-lower-edge-c",
+      0.0
+    ],
+    [
+      "mam-upper-pocket-c",
+      "mam-mid-edge-c",
+      0.0
+    ]
+  ],
+  "nativeMirrorDifferenceVolumeMM3": 0.0,
+  "nativeEdit": {
+    "parameter": "Depth_mam_mono_r",
+    "before": 42.0,
+    "after": 44.0,
+    "changedContacts": [
+      "mam-mono-r",
+      "mam-mono-l"
+    ],
+    "volumeBefore": 7447672.686106519,
+    "volumeAfter": 7444816.1156720305,
+    "restored": true,
+    "restoredDifferenceVolumeMM3": 0.0,
+    "restoredIntegrationVolumeDeltaMM3": 1.5661120414733887e-05
+  },
+  "contactBoundsMM": {
+    "mam-upper-open-bay-r": [
+      213.294644,
+      -75.494606,
+      19.505394,
+      425.0,
+      -34.0,
+      77.632915
+    ],
+    "mam-mono-r": [
+      239.0,
+      -62.0,
+      26.0,
+      281.0,
+      -20.0,
+      48.0
+    ],
+    "mam-upper-pocket-r": [
+      123.664501,
+      -64.0,
+      21.0,
+      206.335499,
+      -35.0,
+      53.0
+    ],
+    "mam-upper-inset-r": [
+      158.0,
+      -35.0,
+      24.0,
+      190.0,
+      -30.0,
+      32.0
+    ],
+    "mam-lateral-ledge-r": [
+      177.369301,
+      -78.0,
+      -29.588281,
+      370.888699,
+      -25.873135,
+      17.823874
+    ],
+    "mam-upper-open-bay-l": [
+      -425.0,
+      -75.494606,
+      19.505394,
+      -213.294644,
+      -34.0,
+      77.632915
+    ],
+    "mam-mono-l": [
+      -281.0,
+      -62.0,
+      26.0,
+      -239.0,
+      -20.0,
+      48.0
+    ],
+    "mam-upper-pocket-l": [
+      -206.335499,
+      -64.0,
+      21.0,
+      -123.664501,
+      -35.0,
+      53.0
+    ],
+    "mam-upper-inset-l": [
+      -190.0,
+      -35.0,
+      24.0,
+      -158.0,
+      -30.0,
+      32.0
+    ],
+    "mam-lateral-ledge-l": [
+      -370.888699,
+      -78.0,
+      -29.588281,
+      -177.369301,
+      -25.873135,
+      17.823874
+    ],
+    "mam-upper-pocket-c": [
+      -77.35845,
+      -64.0,
+      20.0,
+      77.35845,
+      -28.0,
+      53.0
+    ],
+    "mam-lower-edge-c": [
+      -177.266191,
+      -62.0,
+      -54.0,
+      177.266191,
+      -26.597739,
+      -13.0
+    ],
+    "mam-sloper-c": [
+      -189.686471,
+      -62.0,
+      74.380242,
+      189.686471,
+      0.0,
+      91.0
+    ],
+    "mam-jug-l": [
+      -404.469822,
+      -73.530212,
+      85.031228,
+      -217.701511,
+      0.0,
+      100.0
+    ],
+    "mam-jug-r": [
+      217.701511,
+      -73.530212,
+      85.031228,
+      404.469822,
+      0.0,
+      100.0
+    ],
+    "mam-mid-edge-c": [
+      -165.0,
+      -78.0,
+      3.0,
+      165.0,
+      -62.0,
+      21.733333
+    ]
+  },
+  "contactAreasMM2": {
+    "mam-upper-open-bay-r": 21565.04264473143,
+    "mam-mono-r": 5080.134325498859,
+    "mam-upper-pocket-r": 7567.299682649146,
+    "mam-upper-inset-r": 607.9291886010282,
+    "mam-lateral-ledge-r": 18341.129087097004,
+    "mam-upper-open-bay-l": 21565.042600111636,
+    "mam-mono-l": 5080.134325498859,
+    "mam-upper-pocket-l": 7567.299682649146,
+    "mam-upper-inset-l": 607.9291886010282,
+    "mam-lateral-ledge-l": 18341.129087105583,
+    "mam-upper-pocket-c": 16693.651144742013,
+    "mam-lower-edge-c": 29122.101644461076,
+    "mam-sloper-c": 24446.40757023974,
+    "mam-jug-l": 13365.59567425686,
+    "mam-jug-r": 13365.594955863813,
+    "mam-mid-edge-c": 10345.010740850561
+  },
+  "manifestExact": true,
+  "livePackageUnchanged": true,
+  "savedSourceUnchangedAfterReopenRecomputeEditRestore": true
+}

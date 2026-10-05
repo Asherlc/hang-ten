@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "solid-clip-probe",
+  "script": ".context/placid-badger/metolius-simulator-3d-functional-lip-correction/probe_solid_clip.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T16:52:59.188878+00:00",
+  "ownedProcessGroup": 17625,
+  "elapsedSeconds": 1.325028250052128,
+  "exitCode": 3,
+  "ownedProcessGroupExited": true
+}

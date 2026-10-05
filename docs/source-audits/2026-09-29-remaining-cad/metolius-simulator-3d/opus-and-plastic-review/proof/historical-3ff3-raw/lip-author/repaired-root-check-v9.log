@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/repaired-root-check-v9-tmp/hangten-freecad-d9m6rpfr/run.py", line 5, in <module>
+    exec(compile(open(path).read(), path, 'exec'), {'__name__': '__main__', '__file__': path})
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-lip-correction/check_repaired_root.py", line 11, in <module>
+    s=shape.common(box);r['solidClip']={'valid':s.isValid(),'solids':len(s.Solids),'volume':s.Volume,'bounds':str(s.optimalBoundingBox()) if s.Faces else None};r['status']='pass' if all(x['bopCheck']=='pass' and x['clipArea']>1 for x in r['faces']) and len(s.Solids)==1 and s.Volume>0 else 'fail';(w/'repaired-root-check.json').write_text(json.dumps(r,indent=2));print(json.dumps(r));assert r['status']=='pass'
+                                                                                                                                                                                                                                                                                                                                                                                                       ^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+{"sourceSHA256": "d4f4c07d5c17afce79350100c3f694ce30043a97ce45a9920e8654355cdb1692", "faces": [{"face": 4, "bounds": "BoundBox (45.5, -80, 179.197, 61, 1e-07, 193.451)", "bopCheck": "BOP check found the following errors:\nError in Edge: BOPAlgo_InvalidCurveOnSurface\nError in Face: BOPAlgo_InvalidCurveOnSurface\n", "clipArea": 205.8954427133862, "clipBounds": "BoundBox (45.5, -80, 187.826, 47, -0.0009999, 193.451)", "clipValid": true}, {"face": 9, "bounds": "BoundBox (45.5, -94, 169.601, 61, -80, 192.367)", "bopCheck": "pass", "clipArea": 29.792385566956384, "clipBounds": "BoundBox (45.5, -91.3552, 187.001, 47, -80, 192.367)", "clipValid": true}], "solidClip": {"valid": true, "solids": 1, "volume": 111463.41151931499, "bounds": "BoundBox (-47, -93.0479, 187.001, 47, -0.0009999, 222)"}, "status": "fail"}
+
+								
+								
+								

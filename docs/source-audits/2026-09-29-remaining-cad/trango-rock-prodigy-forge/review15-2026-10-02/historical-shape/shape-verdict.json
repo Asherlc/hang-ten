@@ -1,0 +1,188 @@
+{
+  "status": "fail",
+  "scope": "Independent physical-shape review of unchanged existing Forge migration; no new build/native solve/app run.",
+  "candidatePackage": "Hangboards/trango-rock-prodigy-forge",
+  "files": {
+    "trango-rock-prodigy-forge.FCStd": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+    "assets/primary.usdz": "4b70e9231cf3c4b26cf9e69271cb1d6d91a1e3f31d001fe4f0456092cd8ea1f4",
+    "assets/primary.model.json": "9f5fc4e0c07cb2e745e54007b303c9b10018d5c49c9e060ed77fea85c2bbe2ef"
+  },
+  "blockers": [
+    {
+      "id": "outer-wing-recess-and-lower-lip",
+      "severity": "physical-shape",
+      "finding": "Each outer wing is a continuous chamfered block, omitting the visible recessed band and distinct projecting lower pinch lip below the broad outer sloper/pinch projection.",
+      "sourceEvidence": [
+        "sources/product-03.png",
+        "sources/product-04.png",
+        "sources/hold-chart-page-1.png",
+        "sources/depth-guide-page-1.png"
+      ],
+      "assetEvidence": [
+        "review/cad-side.png",
+        "review/cad-front.png",
+        "app-review/default.png",
+        "authored-design.json:nativeRightSections[2]"
+      ],
+      "reason": "Primary alternate views and the official pinch diagram establish this exposed shape. The native authored outer section is a single chamfered envelope, consistent with the silhouette and retained app frame; this mismatch is not an interior painter-order artifact.",
+      "minimumCorrection": "Author the exposed outer-wing recess and distinct lower projecting lip from whole primary evidence, preserving mirrored units and existing twenty contact identities/facts. Keep unspecified radii and transition dimensions labeled estimates. This is a shape correction, not permission to add pinch contacts or unseen geometry."
+    }
+  ],
+  "sourceImages": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-01.jpg",
+      "sha256": "838e2a95316508157a6f85c12c665511e797ae5bfb21e9917e3ed67c92ed80c4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-03.png",
+      "sha256": "a2a4e18e3fe3c716c171f2726fe0b3d9ef653cc77ad7c30b56e304476cec1914"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-04.png",
+      "sha256": "678688bbf11a66fc5d77961e80d5af6b5a35548548c69bbd25588389f6fba136"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-05.png",
+      "sha256": "ce64d24741944997302ad503882eeaee958cca57a5cf4f80b23a6436bad6487f"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/product-06.png",
+      "sha256": "de38abd8ebf79dda10a2f3e9f7f0a77a34f81a314d3e3afa02b69eb7e6bc80c2"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/hold-chart-page-1.png",
+      "sha256": "eb51572eee1034b774872e44ded8bd3bdf20a0e023e0dc0673f5c75afb263c66"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources/depth-guide-page-1.png",
+      "sha256": "b3ba2fab2375f30d2f1c60cabcc30ce77241313d02824288adbf5301d64b2808"
+    }
+  ],
+  "viewedRenderFiles": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/comparison-front.png",
+      "sha256": "e80487c65909914ef95d0aa7b0b977e4419a8fc8b150acaa57e69706597dfaf0"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/comparison-side.png",
+      "sha256": "484998fd2e9db80ceb061ac94e6a85c0e8547d41346f08c61af4a35942558480"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/comparison-top.png",
+      "sha256": "6472fca73c01b37239a8dda18720209c05f435eae392f7377a623b4d4d8781c9"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/cad-front.png",
+      "sha256": "ba0a9fb48a5786166c8adbcd4f5b7279cc75ebee0833dd91f4f6c80b6c1731e7"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/cad-side.png",
+      "sha256": "38e0c05b44609a8050457eabbacc13ccd2450e1fef8cb353ea650b1d9cd2e392"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/review/cad-top.png",
+      "sha256": "4549441218dbbc22f41dbb5746515345ca736adfb3d5d48f433bd793b9ce043f"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/app-review/default.png",
+      "sha256": "39986d690d1f361ca8838fa35851f3915740af98ad2cd07d53d7a863c662d7fb"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/app-review/contact-selection.png",
+      "sha256": "f1e0126779de3b49134c2ed47cd42df04bf729a314a01dfb3ea1e46c34d654a0"
+    }
+  ],
+  "evidenceReports": [
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/source-audit.md",
+      "sha256": "577c861f0a614af05c62ddf415a299c0ce7e273ea4a01e60608f27ce6d8bb0f4"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/sources.json",
+      "sha256": "32ac6be553d1155e2b3ea0d11f8a643dbbf11a26b0551e0cd9ac517b7ce41fa3"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/authored-design.json",
+      "sha256": "22ce97584f488d8a59b90ff3fd5e1bb4154a4f0edb531ef43f4081f5e71acb95"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/compile.json",
+      "sha256": "b52b6a872bc420edbbe24b69147c2e7322be167363ba163a55cc0691af9d0f91"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/native-check.json",
+      "sha256": "1a20673c87559250e1cf63281b6aa5511bb3b93c66c772bf378ef320b2a61654"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/reproducibility-final.json",
+      "sha256": "c597531e43cbb29917c3bc190ffa8b396541ab878babe01585f291ac2309e348"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/package-verification.json",
+      "sha256": "1c5ab8922a4aaa08ff9a035e9f2c58d321df851d7567799668d0fab036fabcbc"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/metadata-preservation.json",
+      "sha256": "db4ef3a786b9fd96214dd4ebb5b8cecec1b548cc6078c32bf9f63eec804e15bb"
+    },
+    {
+      "path": "docs/source-audits/2026-09-29-remaining-cad/trango-rock-prodigy-forge/app-review/validation.json",
+      "sha256": "be6b22cd27e5b61fa19af8b192ff9ab27bc04a015c9ccfa73b55171023a984c9"
+    }
+  ],
+  "registeredSourceHashesVerified": true,
+  "technicalEvidence": {
+    "existingCompile": "Exact current source and USDZ; 19504 triangles, 21 nodes, 20 contacts.",
+    "existingNative": "Exact current source; two valid solids, 29 constrained sketches, contacts on body, no rear contact faces/overlap, mirrored closed-crimp edit and restore reported.",
+    "existingReproducibility": "2026-09-30 retained fresh-build report binds byte-identical current source, USDZ and complete descriptor. Not rerun in this review.",
+    "existingPackage": "Exact current three-file hashes; reports zero materials and zero shaders.",
+    "descriptor": "Read current descriptor: twenty left/right contact IDs and one body node; exact current USDZ hash."
+  },
+  "physicalObservations": {
+    "symmetry": "Mirrored ten-contact sets and paired visible features retained. Broad slopers, diagonal rails, two stacked MR pockets, stepped closed crimp and shared IM cavity occupy source-supported relative locations.",
+    "closedCrimp": "Stepped opening and thumb-side return are present, with source-supported 7.5 mm depth in source-bound native report. Rounded drafting is simplified; no separate demonstrated blocker beyond outer wing.",
+    "largeFlatEdge": "Upper inner-wing edge location matches the hold chart. Its front projection collapses to a line because the ledge faces upward; this alone is not a missing contact. Its 8 mm modeled extent is an estimate, not a published hold depth.",
+    "contacts": "Retained native report supports actual body surfaces and separate IM shallow/deep ownership; the two app selections visually correspond to left outer sloper and right inner half of the bottom cavity. Current runtime tapping of every contact was not exercised.",
+    "rendererLimit": "CPU flat normals/mean-depth painter can misorder interior faces; triangulated shading and dark patches are not geometry findings. The wing blocker uses actual outer silhouette, authored section and historical exact-asset app view, independently of prior geometry."
+  },
+  "factsAndEstimates": {
+    "published": [
+      "12.75 by 5.25 inches per unit",
+      "30 and 40 degree slopers",
+      "7\u201320 mm variable rail",
+      "7.5 mm closed crimp",
+      "25 and 15 mm MR pockets",
+      "19\u201331 mm IMR range in depth guide; existing IM metadata intentionally retains no structured numeric depth"
+    ],
+    "estimated": [
+      "Unpublished opening dimensions and roundovers",
+      "Wing transitions, contour radii and unit spacing",
+      "Rail opening angle",
+      "Large-flat-edge 8 mm and slopey-crimper 4 mm model extents"
+    ],
+    "limits": "Depth-like compiler extents for slopers are geometric axis extents, not new manufacturer depth facts. Missing mounting hardware follows project display policy. Source pinch widths/names do not authorize adding contacts during this review."
+  },
+  "materialSelector": {
+    "embeddedSurfaceFinish": null,
+    "disposition": "Current native manifest has no surfaceFinish override; exported meshes are unbound per exact-hash package report. Existing captures show neutral default appearance. No wood selector or manufacturer-green material is authored."
+  },
+  "appEvidence": {
+    "retainedFrames": 2,
+    "freshFrames": 0,
+    "retainedValidationBindsExactCurrentAsset": true,
+    "capturedSelections": [
+      "sloper-30-left",
+      "im-shallow-right"
+    ],
+    "sufficientForExistingAssetIdentityAndTheseSelections": true,
+    "sufficientForFullPhysicalAcceptance": false,
+    "currentParentTipRuntimeVerified": false,
+    "limits": "Validation names exact current three asset hashes and isolated iPhone 17 Pro/iOS 26.5; lacks a current parent-tip app build identity. Historical captures supplement shape review only."
+  },
+  "humanAcceptance": "pending",
+  "worktreeChanges": "Only independent-shape scratch review files; no canonical/shared edits.",
+  "resourceLifecycle": {
+    "externalResourcesCreated": [],
+    "cleanupRequired": false
+  }
+}

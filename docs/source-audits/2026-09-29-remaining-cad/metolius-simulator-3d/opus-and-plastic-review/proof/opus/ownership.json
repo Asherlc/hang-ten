@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger",
+  "advisorAgentID": "918cc0e7-961d-4672-9f95-b4f2918098b7",
+  "provider": "claude/claude-opus-5-5",
+  "currentReview": 8,
+  "cleanup": "archive_agent after finished response"
+}

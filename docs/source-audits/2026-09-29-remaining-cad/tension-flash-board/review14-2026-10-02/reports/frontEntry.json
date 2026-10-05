@@ -1,0 +1,438 @@
+{
+  "sourceSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+  "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+  "sidecarSHA256": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+  "method": "unchanged full runtime lead cache; source cylinder radial interval + evidenced native mouth slab intersection; no routes altered",
+  "nativeBores": [
+    {
+      "nativeFeature": "LeftOuterBore",
+      "radiusM": 0.003,
+      "frontMouth": [
+        0.017,
+        0.048,
+        0.0746606055596
+      ],
+      "rearMouth": [
+        0.017,
+        0.048,
+        0.0013393944404
+      ],
+      "outwardFrontAxis": [
+        0,
+        0,
+        1
+      ],
+      "nativeBoreAxisRuntime": [
+        0.0,
+        2.220446049250313e-16,
+        -1.0
+      ]
+    },
+    {
+      "nativeFeature": "LeftInnerBore",
+      "radiusM": 0.003,
+      "frontMouth": [
+        0.031,
+        0.048,
+        0.0746606055596
+      ],
+      "rearMouth": [
+        0.031,
+        0.048,
+        0.0013393944404
+      ],
+      "outwardFrontAxis": [
+        0,
+        0,
+        1
+      ],
+      "nativeBoreAxisRuntime": [
+        0.0,
+        2.220446049250313e-16,
+        -1.0
+      ]
+    },
+    {
+      "nativeFeature": "RightInnerBore",
+      "radiusM": 0.003,
+      "frontMouth": [
+        0.469,
+        0.048,
+        0.0746606055596
+      ],
+      "rearMouth": [
+        0.469,
+        0.048,
+        0.0013393944404
+      ],
+      "outwardFrontAxis": [
+        0,
+        0,
+        1
+      ],
+      "nativeBoreAxisRuntime": [
+        0.0,
+        2.220446049250313e-16,
+        -1.0
+      ]
+    },
+    {
+      "nativeFeature": "RightOuterBore",
+      "radiusM": 0.003,
+      "frontMouth": [
+        0.483,
+        0.048,
+        0.0746606055596
+      ],
+      "rearMouth": [
+        0.483,
+        0.048,
+        0.0013393944404
+      ],
+      "outwardFrontAxis": [
+        0,
+        0,
+        1
+      ],
+      "nativeBoreAxisRuntime": [
+        0.0,
+        2.220446049250313e-16,
+        -1.0
+      ]
+    }
+  ],
+  "interiorAxialToleranceM": 1e-06,
+  "limit": "Checks front-entry representation, not physical equilibrium. Bore radii are native estimates, not maker dimensions.",
+  "poses": {
+    "three-edge-upright": {
+      "mouth-1-lead": {
+        "mouth": [
+          0.017,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.017567859,
+          0.046953719,
+          0.076498157
+        ],
+        "previousMinusMouth": [
+          0.0005678590000000004,
+          -0.001046281000000003,
+          0.001837551440400001
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-2-lead": {
+        "mouth": [
+          0.031,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.031541216,
+          0.046940909,
+          0.076506487
+        ],
+        "previousMinusMouth": [
+          0.0005412159999999971,
+          -0.0010590909999999981,
+          0.0018458814404000018
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-3-lead": {
+        "mouth": [
+          0.469,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.468458691,
+          0.04694074,
+          0.076506681
+        ],
+        "previousMinusMouth": [
+          -0.0005413089999999898,
+          -0.0010592599999999994,
+          0.0018460754404000107
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-4-lead": {
+        "mouth": [
+          0.483,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.48243194,
+          0.046953393,
+          0.076498388
+        ],
+        "previousMinusMouth": [
+          -0.0005680599999999814,
+          -0.001046606999999998,
+          0.0018377824404000043
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      }
+    },
+    "three-edge-inverted": {
+      "mouth-1-lead": {
+        "mouth": [
+          0.017,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.017567834,
+          0.046953703,
+          0.076498157
+        ],
+        "previousMinusMouth": [
+          0.0005678339999999997,
+          -0.0010462970000000016,
+          0.001837551440400001
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-2-lead": {
+        "mouth": [
+          0.031,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.031541192,
+          0.046940894,
+          0.076506487
+        ],
+        "previousMinusMouth": [
+          0.0005411920000000028,
+          -0.001059106000000004,
+          0.0018458814404000018
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-3-lead": {
+        "mouth": [
+          0.469,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.468458715,
+          0.046940725,
+          0.076506681
+        ],
+        "previousMinusMouth": [
+          -0.000541284999999947,
+          -0.0010592749999999984,
+          0.0018460754404000107
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-4-lead": {
+        "mouth": [
+          0.483,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.482431965,
+          0.046953377,
+          0.076498388
+        ],
+        "previousMinusMouth": [
+          -0.0005680349999999668,
+          -0.0010466230000000035,
+          0.0018377824404000043
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      }
+    },
+    "two-edge-upright": {
+      "mouth-1-lead": {
+        "mouth": [
+          0.017,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.017976369,
+          0.049587733,
+          0.075775309
+        ],
+        "previousMinusMouth": [
+          0.0009763689999999978,
+          0.001587733000000001,
+          0.0011147034404000028
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-2-lead": {
+        "mouth": [
+          0.031,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.031938244,
+          0.049619335,
+          0.075763027
+        ],
+        "previousMinusMouth": [
+          0.0009382439999999978,
+          0.0016193349999999995,
+          0.0011024214404000005
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-3-lead": {
+        "mouth": [
+          0.469,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.468061941,
+          0.049619055,
+          0.075763184
+        ],
+        "previousMinusMouth": [
+          -0.0009380589999999911,
+          0.0016190550000000012,
+          0.001102578440400001
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-4-lead": {
+        "mouth": [
+          0.483,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.482023431,
+          0.049588018,
+          0.075775159
+        ],
+        "previousMinusMouth": [
+          -0.0009765689999999827,
+          0.0015880179999999966,
+          0.0011145534403999985
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      }
+    },
+    "two-edge-inverted": {
+      "mouth-1-lead": {
+        "mouth": [
+          0.017,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.017976385,
+          0.049587722,
+          0.075775309
+        ],
+        "previousMinusMouth": [
+          0.0009763849999999998,
+          0.0015877219999999997,
+          0.0011147034404000028
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-2-lead": {
+        "mouth": [
+          0.031,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.031938259,
+          0.049619325,
+          0.075763027
+        ],
+        "previousMinusMouth": [
+          0.0009382589999999968,
+          0.0016193249999999978,
+          0.0011024214404000005
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-3-lead": {
+        "mouth": [
+          0.469,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.468061926,
+          0.049619046,
+          0.075763184
+        ],
+        "previousMinusMouth": [
+          -0.0009380739999999554,
+          0.001619045999999999,
+          0.001102578440400001
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      },
+      "mouth-4-lead": {
+        "mouth": [
+          0.483,
+          0.048,
+          0.0746606055596
+        ],
+        "previousPoint": [
+          0.482023414,
+          0.049588008,
+          0.075775159
+        ],
+        "previousMinusMouth": [
+          -0.0009765860000000015,
+          0.0015880080000000019,
+          0.0011145534403999985
+        ],
+        "outwardHalfSpacePassed": true,
+        "visibleCenterlineBoreInteriorIntervals": [],
+        "frontEntryPassed": true
+      }
+    }
+  },
+  "frontEntryPassed": true
+}

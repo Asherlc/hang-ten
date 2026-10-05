@@ -1,0 +1,493 @@
+{
+  "owner": "placid-badger",
+  "task": "flash-board-review14/task3",
+  "status": "passed_static_and_compile_gates_runtime_unverified",
+  "runtimeVerified": false,
+  "currentAppFrames": 0,
+  "swiftUnitTestsExecuted": 0,
+  "simulatorStarted": false,
+  "serverStarted": false,
+  "canonicalPackageSHA256": {
+    "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+    "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+    "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+    "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+  },
+  "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+  "deliveryLockFileSHA256": "db045c8125015bc93fc2b3c6487b8bca3611677c0eb3b2adbd884020adc52db0",
+  "reservedPathSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "a3bb80ba1da8a5341f7f9992803047d6f10ec03ddbe32b49c025b2b5b3f884d5",
+    "HangTen/Views/BoardModelView.swift": "4aa528e8ac79e9491932bbe6cc2d74ad8bfdba8aca76928968d5014dfc7dc8a8",
+    "HangTen/Views/RootView.swift": "2c2db844da13f30756fa1ff7aa2cb896910528ee87527ee3857faaed8ae7bf0b",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1",
+    "HangTenTests/BoardModelTests.swift": "89d5778a9b85181315bf281921f493ec771c6c8ddd92ef1106ec643fd6ec1fd7",
+    "HangTen/Views/GripHandModelView.swift": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc"
+  },
+  "authorizationSHA256": "2700e5c07c27ec06879b776107745bba10024fdefdaa44bf0317f89723f5ba3c",
+  "commands": [
+    {
+      "phase": "git-head",
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:52:59.815321+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/git-head.log",
+      "ownedProcessGroup": 50117,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:52:59.956865+00:00",
+      "logSHA256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+    },
+    {
+      "phase": "package-validation",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "hangboard_packages.cli",
+        "validate",
+        "--root",
+        "Hangboards",
+        "--final-inventory"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:52:59.957492+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/package-validation.log",
+      "ownedProcessGroup": 50121,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:02.305550+00:00",
+      "logSHA256": "ee45060ea7c425d99767a758c225dff769be6ff7485401dd6116367ac5cc4dcc"
+    },
+    {
+      "phase": "delivery-validation",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/verify-model-delivery.py",
+        "--root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--report",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/delivery-validation.json"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:02.306198+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/delivery-validation.log",
+      "ownedProcessGroup": 50127,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:06.268123+00:00",
+      "logSHA256": "be4404e0e56ef226382ce6fce07cc4d6c8b2e1316e9212287ee8868be56df5a2"
+    },
+    {
+      "phase": "xcode-staging",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Build/HangTen.app/Hangboards",
+        "--target",
+        "xcode"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:06.268832+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/xcode-staging.log",
+      "ownedProcessGroup": 50185,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:08.711743+00:00",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "phase": "android-staging",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/scripts/stage-board-packages.py",
+        "--repository-root",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+        "--destination",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards",
+        "--target",
+        "android"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:08.711985+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/android-staging.log",
+      "ownedProcessGroup": 50218,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:11.152711+00:00",
+      "logSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "phase": "focused-python-tests",
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight",
+        "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_source_backed_mouth_axis_does_not_bypass_full_solid_clearance",
+        "Tools/HangboardPackages/tests/test_cad_routed_cord.py",
+        "Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits",
+        "--basetemp=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-tmp/pytest",
+        "-o",
+        "cache_dir=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-cache/pytest",
+        "--junitxml=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/python-junit.xml"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:11.155202+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/focused-python-tests.log",
+      "ownedProcessGroup": 50225,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:11.994266+00:00",
+      "logSHA256": "a14914756c778ccbc89808363fcd2d5ba8027db266eee366a311024d2abd9ab4"
+    },
+    {
+      "phase": "build-time-git-head",
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:11.995051+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-head.log",
+      "ownedProcessGroup": 50230,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:12.127811+00:00",
+      "logSHA256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+    },
+    {
+      "phase": "build-time-git-status",
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "status",
+        "--porcelain=v2",
+        "-z",
+        "--untracked-files=all"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:12.253589+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-status.log",
+      "ownedProcessGroup": 50246,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:12.391463+00:00",
+      "logSHA256": "eb51c3f13e6bca2c75ffcb452329141fc5d321e5274d66f5604685d3396d17a7"
+    },
+    {
+      "phase": "build-time-git-binary-diff",
+      "argv": [
+        "rtk",
+        "proxy",
+        "git",
+        "diff",
+        "--binary",
+        "--no-ext-diff",
+        "--no-textconv",
+        "HEAD",
+        "--"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:12.392093+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-binary-diff.log",
+      "ownedProcessGroup": 50250,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:53:12.582682+00:00",
+      "logSHA256": "ac6f3970d41df7b0a9f8d1dafe7b42acb41eefb4605ea00c703a633655561e93"
+    },
+    {
+      "phase": "generic-ios-build",
+      "argv": [
+        "rtk",
+        "proxy",
+        "xcodebuild",
+        "-project",
+        "HangTen.xcodeproj",
+        "-scheme",
+        "HangTen",
+        "-configuration",
+        "Debug",
+        "-destination",
+        "generic/platform=iOS Simulator",
+        "-derivedDataPath",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD",
+        "build-for-testing"
+      ],
+      "cwd": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger",
+      "startedAt": "2026-10-02T22:53:12.583461+00:00",
+      "log": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/generic-ios-build.log",
+      "ownedProcessGroup": 50265,
+      "exitCode": 0,
+      "endedAt": "2026-10-02T22:54:01.112653+00:00",
+      "logSHA256": "8fee8365e9a86ec6a294586ffad972b62d0810ef22e0ab290be42d55a2e39e24"
+    }
+  ],
+  "sourceHEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+  "canonicalPackagesValidated": 64,
+  "canonicalPackageIDs": [
+    "aelith.cyclops-011",
+    "beastmaker-1000",
+    "beastmaker-2000",
+    "captain-fingerfood.dual",
+    "captain-fingerfood.pocket",
+    "captain-fingerfood.unlevel",
+    "clavellium-training-block",
+    "crimptonite.helium-mobile",
+    "dewoodstok-woodbord",
+    "escape-beta-22",
+    "escape.unlimited",
+    "evolv-kilter-basic-long",
+    "frictitious.doormount-pro-7",
+    "frictitious.port-a-board",
+    "frictitious.megalith",
+    "frictitious.nug",
+    "j-bryant.ftg-32",
+    "lattice.mini-bar",
+    "lattice.mxedge-lift-large",
+    "lattice.mxedge-lift-small",
+    "lattice-triple-rung",
+    "mammut.diamond-finger",
+    "metolius.climbers-edge",
+    "metolius.contact",
+    "metolius.foundry",
+    "metolius.light-rail-2",
+    "metolius.prime-rib",
+    "metolius.project",
+    "metolius.rock-rings-3d",
+    "metolius.simulator-3d",
+    "metolius.wood-grips-compact-ii",
+    "metolius.wood-grips-deluxe-ii",
+    "moon.armstrong",
+    "nature.stoak-board-iii",
+    "nature.stone-hanger",
+    "nature.stone-hanger-mini",
+    "nature.stone-hanger-mini-karma8a",
+    "owl-climb.poker",
+    "plateau.lifting-edge",
+    "soill.iron-palm-2",
+    "soill.split-palm",
+    "soill.training-tiles",
+    "target10a.linebreaker-base",
+    "tension.flash-board",
+    "tension.grindstone-original",
+    "tension.grindstone",
+    "tension.grindstone-pro",
+    "tension.honestone",
+    "tension.whetstone",
+    "the-hangboard.the-hangboard",
+    "trango.rock-prodigy-forge",
+    "trango.rock-prodigy-natural",
+    "trango.rock-prodigy-pivot",
+    "trango.rock-prodigy-training-center",
+    "yy.baguette-evo",
+    "yy.baguette",
+    "yy.penta-evo",
+    "yy.travelboard",
+    "yy.verticalboard-evo",
+    "yy.verticalboard-first",
+    "yy.verticalboard-light",
+    "yy.verticalboard-one",
+    "zlagboard.evo",
+    "zlagboard.pro"
+  ],
+  "deliveryValidation": {
+    "passed": true,
+    "models": 58,
+    "files": 135,
+    "sourceBacked": [
+      "aelith-cyclops-011",
+      "beastmaker-1000",
+      "beastmaker-2000",
+      "captain-fingerfood-dual",
+      "captain-fingerfood-pocket",
+      "captain-fingerfood-unlevel",
+      "clavellium-training-block",
+      "crimptonite-helium-mobile",
+      "dewoodstok-woodbord",
+      "escape-beta-22",
+      "escape-unlimited",
+      "evolv-kilter-basic-long",
+      "frictitious-doormount-pro-7",
+      "frictitious-megalith",
+      "frictitious-nug",
+      "frictitious-port-a-board",
+      "j-bryant-ftg-32",
+      "lattice-mini-bar",
+      "lattice-mxedge-lift-large",
+      "lattice-mxedge-lift-small",
+      "lattice-triple-rung",
+      "mammut-diamond-finger",
+      "metolius-climbers-edge",
+      "metolius-contact",
+      "metolius-foundry",
+      "metolius-light-rail-2",
+      "metolius-prime-rib",
+      "metolius-project",
+      "metolius-rock-rings-3d",
+      "metolius-simulator-3d",
+      "metolius-wood-grips-compact-ii",
+      "metolius-wood-grips-deluxe-ii",
+      "moon-armstrong",
+      "nature-stoak-board-iii",
+      "nature-stone-hanger",
+      "nature-stone-hanger-mini",
+      "nature-stone-hanger-mini-karma8a",
+      "owl-climb-poker",
+      "plateau-lifting-edge",
+      "soill-iron-palm-2",
+      "soill-split-palm",
+      "soill-training-tiles",
+      "target10a-linebreaker-base",
+      "tension-flash-board",
+      "tension-grindstone",
+      "tension-grindstone-pro",
+      "tension-whetstone",
+      "the-hangboard",
+      "trango-rock-prodigy-forge",
+      "trango-rock-prodigy-pivot",
+      "trango-rock-prodigy-training-center",
+      "yy-baguette",
+      "yy-baguette-evo",
+      "yy-penta-evo",
+      "yy-travelboard",
+      "zlagboard-evo",
+      "zlagboard-pro"
+    ],
+    "sha256Manifest": "5d9950bab01d9004754a96f4130b10403509306618b4d65c6e8757f5499f91d1",
+    "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
+    "scope": "exact-file identity for committed files; a source-backed board pins its compiled asset through descriptor modelSHA256 and its build-time board.json through the locked FCStd and optional suspension sidecar"
+  },
+  "stagingParity": {
+    "passed": true,
+    "xcode": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Build/HangTen.app/Hangboards/tension-flash-board",
+      "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "sourceAndSidecarAbsent": true
+    },
+    "android": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards/tension-flash-board",
+      "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "sourceAndSidecarAbsent": true
+    },
+    "xcodeODRAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-xcode-stage/Derived/HangTenModelODR/tension-flash-board/Hangboards/tension-flash-board/assets/primary.usdz",
+    "androidInlineAsset": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-android-stage/Hangboards/tension-flash-board/assets/primary.usdz",
+    "modelSHA256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+  },
+  "pythonJUnit": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/python-junit.xml",
+    "sha256": "098dd49af80a51cbe5fd580782eab1d0fce7eb58c2d8813213ed6177f4dd4b9b",
+    "tests": 9,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "buildTimeSourceSnapshot": {
+    "HEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+    "artifacts": {
+      "build-time-git-head": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-head.log",
+        "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+      },
+      "build-time-git-status": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-status.log",
+        "sha256": "eb51c3f13e6bca2c75ffcb452329141fc5d321e5274d66f5604685d3396d17a7"
+      },
+      "build-time-git-binary-diff": {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-binary-diff.log",
+        "sha256": "ac6f3970d41df7b0a9f8d1dafe7b42acb41eefb4605ea00c703a633655561e93"
+      }
+    },
+    "diffMode": "binary tracked working tree against HEAD; no textconv; untracked paths retained in NUL status",
+    "canonicalPackageSHA256": {
+      "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    }
+  },
+  "buildProvenance": {
+    "passed": true,
+    "sourceHEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+    "pinnedCanonicalWorkingTreeFiles": {
+      "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+      "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+      "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+    },
+    "app": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app",
+    "selectedPackageParity": {
+      "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/Hangboards/tension-flash-board",
+      "generatedBoardSHA256": "9285d4a38d703c80e9109553e688ea3e94095021207f02ef26001471cb98bc7e",
+      "descriptorSHA256": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+      "sourceAndSidecarAbsent": true
+    },
+    "binary": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/HangTen",
+    "binarySHA256": "f90b660af410923c0744af5d8d41b51c37fd92aa3b2729f46351dad596c385a5",
+    "testBundlePresencePassed": true,
+    "testBundles": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/PlugIns/HangTenTests.xctest",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTenUITests-Runner.app/PlugIns/HangTenUITests.xctest"
+    ],
+    "buildTimeSourceSnapshot": {
+      "HEAD": "eb283a5ff69f04a96b5589497950ab6e3568c83b",
+      "artifacts": {
+        "build-time-git-head": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-head.log",
+          "sha256": "4e0f1904b0273bb38d24d06dccdd7e2a94ff423d34d8844634befe694dc23218"
+        },
+        "build-time-git-status": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-status.log",
+          "sha256": "eb51c3f13e6bca2c75ffcb452329141fc5d321e5274d66f5604685d3396d17a7"
+        },
+        "build-time-git-binary-diff": {
+          "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/build-time-git-binary-diff.log",
+          "sha256": "ac6f3970d41df7b0a9f8d1dafe7b42acb41eefb4605ea00c703a633655561e93"
+        }
+      },
+      "diffMode": "binary tracked working tree against HEAD; no textconv; untracked paths retained in NUL status",
+      "canonicalPackageSHA256": {
+        "Hangboards/tension-flash-board/assets/primary.model.json": "cb4918b545ba392fa37137c707531599b9725aa2068602af5ef102b337e83755",
+        "Hangboards/tension-flash-board/assets/primary.usdz": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b",
+        "Hangboards/tension-flash-board/suspension.json": "58cedbe7dfd1411e0f91bc7104e0121aa74249a824264aab84dbe7ced2423f17",
+        "Hangboards/tension-flash-board/tension-flash-board.FCStd": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53"
+      }
+    },
+    "modelAssets": [
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Intermediates.noindex/HangTen.build/Debug-iphonesimulator/HangTen.build/DerivedSources/HangTenModelODR/tension-flash-board/Hangboards/tension-flash-board/assets/primary.usdz",
+        "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+      },
+      {
+        "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/placid-badger-flash14-ios-DD/Build/Products/Debug-iphonesimulator/HangTen.app/OnDemandResources/com.hangten.training.hang-ten-model-tension-flash-board-b53967689e380bd9357de5fa5aabf43f.assetpack/Hangboards/tension-flash-board/assets/primary.usdz",
+        "sha256": "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
+      }
+    ],
+    "mode": "generic build-for-testing; compilation only; no install, launch, or test execution"
+  },
+  "canonicalFourAndGeneratedManifestUnchangedAfterValidation": true,
+  "ownershipReceipt": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/ownership.json",
+    "sha256": "1df1d8647a1e149deaf974e8f7ea3a520505139b0d5f879972168e5d9c22204b"
+  },
+  "cleanupReceipt": {
+    "path": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/flash-board-review14/jobs/placid-badger-flash14-final-validation-20261002T155259/cleanup-receipt.json",
+    "sha256": "3ce08b8e133e30398c2515aa6a9550c9cf96782da0a818b288a90ba8d06e5645"
+  }
+}

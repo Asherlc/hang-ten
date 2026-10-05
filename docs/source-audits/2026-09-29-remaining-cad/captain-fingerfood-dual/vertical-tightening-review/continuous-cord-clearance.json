@@ -1,0 +1,102 @@
+{
+  "status": "passed",
+  "authoredMetadataUnchanged": true,
+  "changedPackageFiles": [
+    "Hangboards/captain-fingerfood-dual/suspension.json"
+  ],
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+  "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+  "sidecarSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "poses": {
+    "curved-lip-front": {
+      "height": -0.198244267,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-lead": {
+          "vertices": 12,
+          "certifiedClearance": 0.0019900946945274165,
+          "length": 0.40000000048444595,
+          "lengthRatio": 1.0000000012111148,
+          "frontEntryDot": 0.019600545,
+          "actualMouthPreserved": true
+        },
+        "right-lead": {
+          "vertices": 12,
+          "certifiedClearance": 0.0019900946945274165,
+          "length": 0.40000000048444595,
+          "lengthRatio": 1.0000000012111148,
+          "frontEntryDot": 0.019600545,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "exterior-jug-back": {
+      "height": -0.209048812,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-lead": {
+          "vertices": 7,
+          "certifiedClearance": 0.00199008760989274,
+          "length": 0.4000000001689372,
+          "lengthRatio": 1.000000000422343,
+          "frontEntryDot": 0.019175987,
+          "actualMouthPreserved": true
+        },
+        "right-lead": {
+          "vertices": 7,
+          "certifiedClearance": 0.0019901322161759963,
+          "length": 0.39999884748891595,
+          "lengthRatio": 0.9999971187222898,
+          "frontEntryDot": 0.019522818,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "left-pocket-vertical": {
+      "height": -0.17420943,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-lead": {
+          "vertices": 14,
+          "certifiedClearance": 0.001990101936764046,
+          "length": 0.3999999997344768,
+          "lengthRatio": 0.999999999336192,
+          "frontEntryDot": 0.0016312140000000002,
+          "actualMouthPreserved": true
+        },
+        "right-lead": {
+          "vertices": 15,
+          "certifiedClearance": 0.0019904105817682505,
+          "length": 0.35232838229596913,
+          "lengthRatio": 0.8808209557399228,
+          "frontEntryDot": 0.003607244,
+          "actualMouthPreserved": true
+        }
+      }
+    },
+    "straight-lip-inverted": {
+      "height": -0.195993343,
+      "wholeTubeGate": "passed",
+      "strands": {
+        "left-lead": {
+          "vertices": 11,
+          "certifiedClearance": 0.001990103544524604,
+          "length": 0.39999999980027706,
+          "lengthRatio": 0.9999999995006926,
+          "frontEntryDot": 0.019431194,
+          "actualMouthPreserved": true
+        },
+        "right-lead": {
+          "vertices": 11,
+          "certifiedClearance": 0.001990102631960677,
+          "length": 0.3999980833481951,
+          "lengthRatio": 0.9999952083704877,
+          "frontEntryDot": 0.019535625,
+          "actualMouthPreserved": true
+        }
+      }
+    }
+  }
+}

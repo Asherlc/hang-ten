@@ -1,0 +1,11 @@
+{
+  "workspaceOwner": "placid-badger",
+  "name": "native-relief",
+  "script": ".context/placid-badger/metolius-simulator-3d-wavy-diagnosis/probe.py",
+  "timeoutSeconds": 120,
+  "startedUTC": "2026-10-01T18:00:39.863103+00:00",
+  "ownedProcessGroup": 29691,
+  "elapsedSeconds": 2.7030063749989495,
+  "exitCode": 0,
+  "ownedProcessGroupExited": true
+}

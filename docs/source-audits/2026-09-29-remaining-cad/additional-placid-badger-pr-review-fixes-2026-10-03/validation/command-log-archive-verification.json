@@ -1,0 +1,45 @@
+{
+  "archive": "raw/command-logs.zip",
+  "archiveSHA256": "13030704488f5d1dc38bd53e5d66348f27541c728e2fed41d5fca273b271036f",
+  "memberCount": 9,
+  "members": {
+    "commands/archive-and-verify-review-results.log": {
+      "sha256": "07e9e365bb01278cf12b09bd8d01cfe1364768fe46aa19200c304a810834d95a",
+      "size": 814
+    },
+    "commands/bootstatus.log": {
+      "sha256": "2aaa1a88816caa2c8d248899192aa06f2d67170e412ad9634365943758bb5322",
+      "size": 30122
+    },
+    "commands/green-affected-unit-tests.log": {
+      "sha256": "290e2e2090453570415eb548e493b95384f9192ca59377de650122e1f0d0a472",
+      "size": 55147
+    },
+    "commands/green-pose-camera-tests.log": {
+      "sha256": "ba89e7ee517225a31efb87dc3124950e1fb497dd8e8b6dc8344409fd3198724a",
+      "size": 100
+    },
+    "commands/green-review-build.log": {
+      "sha256": "1eed6feb1d359b6767671e0ad9a89ae7197917ab4f174fc628d05eafe28360fe",
+      "size": 242754
+    },
+    "commands/green-viewport-ui-tests.log": {
+      "sha256": "89fd3d31faf9540a4e49473f72161ab8e99ef626d468b3a4cbbe7c6aeafb3f66",
+      "size": 29344
+    },
+    "commands/red-review-build.log": {
+      "sha256": "ced982cac72e6c3a9b3a3db71edac59d384e36147e055fdb651e6442a8392e52",
+      "size": 718296
+    },
+    "commands/red-selection-regressions.log": {
+      "sha256": "e4a43b39100cd1e1482a412dc38197227d8be3d959f614e3286ae09eb6f0a88d",
+      "size": 7138
+    },
+    "commands/show-owned-simulator.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size": 0
+    }
+  },
+  "allOriginalMembersVerified": true,
+  "rawCompilerWhitespacePreserved": true
+}

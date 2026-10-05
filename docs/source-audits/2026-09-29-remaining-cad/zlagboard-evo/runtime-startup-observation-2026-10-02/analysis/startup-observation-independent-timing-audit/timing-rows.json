@@ -1,0 +1,421 @@
+[
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "uptime": 85129.80258250001,
+    "epoch": 1791002055.251087,
+    "loadAttempt": "68E4DF1A-AEBF-4065-BF7D-297D44C46B4C",
+    "taskCancelled": false,
+    "secondsFromAppearance": -1.3324360833357787
+  },
+  {
+    "sequence": 4,
+    "event": "board-scene-constructed",
+    "uptime": 85130.03934195834,
+    "epoch": 1791002055.487846,
+    "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+    "secondsFromAppearance": -1.0956766250019427
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "uptime": 85130.53930633333,
+    "epoch": 1791002055.987809,
+    "loadAttempt": "68E4DF1A-AEBF-4065-BF7D-297D44C46B4C",
+    "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+    "taskCancelled": false,
+    "secondsFromAppearance": -0.5957122500112746
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "uptime": 85130.53950937501,
+    "epoch": 1791002055.9880118,
+    "loadAttempt": "68E4DF1A-AEBF-4065-BF7D-297D44C46B4C",
+    "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+    "secondsFromAppearance": -0.5955092083313502
+  },
+  {
+    "sequence": 9,
+    "event": "highlight-after",
+    "uptime": 85130.78906579167,
+    "epoch": 1791002056.237567,
+    "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+    "cachedMode": "active",
+    "requestedMode": "active",
+    "selectedIDs": [],
+    "secondsFromAppearance": -0.3459527916711522
+  },
+  {
+    "sequence": 10,
+    "event": "view-make",
+    "uptime": 85130.79162083333,
+    "epoch": 1791002056.240123,
+    "sceneLifecycleToken": "7EFF6E4C-5A7E-47D1-9AA7-09DD57BB4786",
+    "cachedMode": "active",
+    "requestedMode": "active",
+    "selectedIDs": [],
+    "secondsFromAppearance": -0.343397750009899
+  },
+  {
+    "sequence": 15,
+    "event": "workout-prestart-hand-state",
+    "uptime": 85131.13383479168,
+    "epoch": 1791002056.582335,
+    "state": "flag=true;routineStartedIsNil=true;suppressed=true;countdown=0",
+    "secondsFromAppearance": -0.0011837916681542993
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "uptime": 85131.13405387501,
+    "epoch": 1791002056.582555,
+    "secondsFromAppearance": -0.0009647083352319896
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "uptime": 85131.13501858334,
+    "epoch": 1791002056.58352,
+    "state": "plan=research.max-hangs;board=zlagboard.evo;pausedElapsed=0.0;activeStartIsNil=true;routineStartedIsNil=true;prestartHandFlag=true;prestartHandsSuppressed=true",
+    "secondsFromAppearance": 0.0
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "uptime": 85131.143124625,
+    "epoch": 1791002056.591625,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.008106041655992158
+  },
+  {
+    "sequence": 19,
+    "event": "startup-audio-prepare-before",
+    "uptime": 85131.14330745833,
+    "epoch": 1791002056.591809,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.008288874989375472
+  },
+  {
+    "sequence": 20,
+    "event": "startup-audio-prepare-after",
+    "uptime": 85131.269536875,
+    "epoch": 1791002056.7180362,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.13451829165569507
+  },
+  {
+    "sequence": 21,
+    "event": "startup-audio-arm-before",
+    "uptime": 85131.26984779167,
+    "epoch": 1791002056.718349,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.13482920832757372
+  },
+  {
+    "sequence": 22,
+    "event": "startup-audio-arm-after",
+    "uptime": 85131.29532345834,
+    "epoch": 1791002056.743825,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.1603048749966547
+  },
+  {
+    "sequence": 23,
+    "event": "startup-cancellation-requested",
+    "uptime": 85131.29547695834,
+    "epoch": 1791002056.743978,
+    "associationValid": true,
+    "secondsFromAppearance": 0.1604583750013262
+  },
+  {
+    "sequence": 24,
+    "event": "startup-board-load-call",
+    "uptime": 85131.29561016668,
+    "epoch": 1791002056.744111,
+    "loadAttempt": "F2E4C22A-61AE-4AA0-AE66-98E290000472",
+    "taskCancelled": false,
+    "secondsFromAppearance": 0.16059158333519008
+  },
+  {
+    "sequence": 25,
+    "event": "startup-audio-preparation-change",
+    "uptime": 85131.31293070834,
+    "epoch": 1791002056.76143,
+    "attemptID": null,
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.17791212500014808
+  },
+  {
+    "sequence": 26,
+    "event": "startup-arm-task-enter",
+    "uptime": 85131.39277983333,
+    "epoch": 1791002056.841278,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.257761249988107
+  },
+  {
+    "sequence": 27,
+    "event": "startup-arm-task-resumed",
+    "uptime": 85131.39914412501,
+    "epoch": 1791002056.8476439,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.26412554166745394
+  },
+  {
+    "sequence": 28,
+    "event": "startup-visible-countdown-before",
+    "uptime": 85131.39931495834,
+    "epoch": 1791002056.847816,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": null,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.26429637499677483
+  },
+  {
+    "sequence": 29,
+    "event": "startup-visible-countdown-after",
+    "uptime": 85131.40293991668,
+    "epoch": 1791002056.851439,
+    "attemptID": "2A14961A-9D2E-4E02-B7F5-BA2FFAB9D398",
+    "parentAttemptID": null,
+    "armUptime": 85131.36966404167,
+    "activeStartUptime": 85134.36966404167,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 0.2679213333321968
+  },
+  {
+    "sequence": 30,
+    "event": "workout-prestart-hand-state",
+    "uptime": 85131.41302420833,
+    "epoch": 1791002056.861524,
+    "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=3",
+    "secondsFromAppearance": 0.2780056249903282
+  },
+  {
+    "sequence": 31,
+    "event": "board-scene-constructed",
+    "uptime": 85131.42488504168,
+    "epoch": 1791002056.873385,
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "secondsFromAppearance": 0.28986645833356306
+  },
+  {
+    "sequence": 32,
+    "event": "startup-board-load-return",
+    "uptime": 85131.51801737501,
+    "epoch": 1791002056.966518,
+    "loadAttempt": "F2E4C22A-61AE-4AA0-AE66-98E290000472",
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "taskCancelled": false,
+    "secondsFromAppearance": 0.3829987916687969
+  },
+  {
+    "sequence": 33,
+    "event": "startup-board-ready-published",
+    "uptime": 85131.518228625,
+    "epoch": 1791002056.9667292,
+    "loadAttempt": "F2E4C22A-61AE-4AA0-AE66-98E290000472",
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "secondsFromAppearance": 0.38321004166209605
+  },
+  {
+    "sequence": 36,
+    "event": "highlight-after",
+    "uptime": 85131.59418516667,
+    "epoch": 1791002057.0426831,
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "cachedMode": "active",
+    "requestedMode": "active",
+    "selectedIDs": [],
+    "secondsFromAppearance": 0.45916658332862426
+  },
+  {
+    "sequence": 37,
+    "event": "view-make",
+    "uptime": 85131.59589045834,
+    "epoch": 1791002057.0443912,
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "cachedMode": "active",
+    "requestedMode": "active",
+    "selectedIDs": [],
+    "secondsFromAppearance": 0.460871874995064
+  },
+  {
+    "sequence": 38,
+    "event": "workout-prestart-hand-state",
+    "uptime": 85132.42154908334,
+    "epoch": 1791002057.8700461,
+    "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=2",
+    "secondsFromAppearance": 1.2865305000013905
+  },
+  {
+    "sequence": 40,
+    "event": "workout-prestart-hand-state",
+    "uptime": 85133.420402,
+    "epoch": 1791002058.868898,
+    "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=1",
+    "secondsFromAppearance": 2.285383416659897
+  },
+  {
+    "sequence": 43,
+    "event": "highlight-after",
+    "uptime": 85134.47974562501,
+    "epoch": 1791002059.9282389,
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "cachedMode": "active",
+    "requestedMode": "active",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "secondsFromAppearance": 3.3447270416654646
+  },
+  {
+    "sequence": 45,
+    "event": "workout-prestart-hand-state",
+    "uptime": 85134.48293154167,
+    "epoch": 1791002059.931425,
+    "state": "flag=true;routineStartedIsNil=false;suppressed=false;countdown=0",
+    "secondsFromAppearance": 3.3479129583283793
+  },
+  {
+    "sequence": 47,
+    "event": "hand-view-lifecycle",
+    "uptime": 85134.48318229167,
+    "epoch": 1791002059.931676,
+    "secondsFromAppearance": 3.3481637083314126
+  },
+  {
+    "sequence": 48,
+    "event": "hand-lifecycle",
+    "uptime": 85135.21574716667,
+    "epoch": 1791002060.664238,
+    "lifecycleEvent": "constructor-entry",
+    "handLifetimeToken": "8DD61CE3-2782-4D4C-8E94-A4EE6226C683",
+    "secondsFromAppearance": 4.0807285833288915
+  },
+  {
+    "sequence": 49,
+    "event": "hand-camera",
+    "uptime": 85135.21590070834,
+    "epoch": 1791002060.664393,
+    "handLifetimeToken": "8DD61CE3-2782-4D4C-8E94-A4EE6226C683",
+    "cameraEvent": "configured",
+    "secondsFromAppearance": 4.080882124995696
+  },
+  {
+    "sequence": 50,
+    "event": "hand-lifecycle",
+    "uptime": 85135.23578579166,
+    "epoch": 1791002060.6842752,
+    "lifecycleEvent": "make-entry",
+    "handLifetimeToken": "8DD61CE3-2782-4D4C-8E94-A4EE6226C683",
+    "secondsFromAppearance": 4.100767208321486
+  },
+  {
+    "sequence": 51,
+    "event": "hand-camera",
+    "uptime": 85135.29493479167,
+    "epoch": 1791002060.743423,
+    "handLifetimeToken": "8DD61CE3-2782-4D4C-8E94-A4EE6226C683",
+    "cameraEvent": "reset-fitted",
+    "secondsFromAppearance": 4.159916208329378
+  },
+  {
+    "sequence": 53,
+    "event": "startup-audio-preparation-change",
+    "uptime": 85135.31607866667,
+    "epoch": 1791002060.76457,
+    "attemptID": null,
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": 85134.36966404167,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 4.181060083326884
+  },
+  {
+    "sequence": 56,
+    "event": "startup-audio-preparation-change",
+    "uptime": 85137.59255429167,
+    "epoch": 1791002063.04104,
+    "attemptID": null,
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": 85134.36966404167,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 6.457535708323121
+  },
+  {
+    "sequence": 61,
+    "event": "highlight-after",
+    "uptime": 85141.61729820834,
+    "epoch": 1791002067.065775,
+    "sceneLifecycleToken": "CC5E430E-5C61-49D3-9392-F9549E571121",
+    "cachedMode": "preview",
+    "requestedMode": "preview",
+    "selectedIDs": [
+      "edge-20-left",
+      "edge-20-right"
+    ],
+    "secondsFromAppearance": 10.48227962499368
+  },
+  {
+    "sequence": 65,
+    "event": "startup-audio-preparation-change",
+    "uptime": 85141.64004254167,
+    "epoch": 1791002067.088519,
+    "attemptID": null,
+    "parentAttemptID": null,
+    "armUptime": null,
+    "activeStartUptime": 85134.36966404167,
+    "taskCancelled": false,
+    "associationValid": true,
+    "secondsFromAppearance": 10.505023958321544
+  }
+]

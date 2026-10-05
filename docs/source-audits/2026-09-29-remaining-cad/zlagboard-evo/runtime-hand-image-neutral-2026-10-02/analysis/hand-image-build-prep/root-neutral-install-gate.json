@@ -1,0 +1,17 @@
+{
+  "authorizedByParent": true,
+  "exclusiveBuildInstallOwnership": true,
+  "owner": "placid-badger-cad-second-half",
+  "simulator": "BDCA0D77-94C2-4A97-900B-443F75C64691",
+  "controllerPID": 96137,
+  "sourceSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "37f32c3c9e45b85da06978aca49cb0f1066f092d3b62a1ac114e1dd3a90cf361",
+    "HangTen/Views/BoardModelView.swift": "0b68a0b978513702bded159c5b8128563bb0374b1d2ced7eb547e4dc347ffe97",
+    "HangTen/Views/RootView.swift": "e2aa84b189ef2b5a4682f3ea12c52fdfa3e8afafae19efc18a0e06025200b09d",
+    "HangTen/Views/TrainView.swift": "8951ecb3fdd164311bbf04a9f2467902e480355fa43191c462da804a24dc9fba",
+    "HangTen/Views/GripHandModelView.swift": "66f77336b6bc1533e467c6165d7c35d330b1a817afddf8229f3b2bb7090fb542"
+  },
+  "sourceProvenance": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-neutral-applied/source",
+  "note": "Root started the only build separately. This install/parity helper never invokes xcodebuild; root must bind its completed successful record and exclusive ownership.",
+  "completedBuildRecordSHA256": "144e4de3d0f8fbcfdaff6e669dc158c949d434b84e395edfec7603131a6eae54"
+}

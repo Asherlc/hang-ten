@@ -1,0 +1,29 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "phase": "Additional immutable Mini phase 2 packaging only",
+  "rawStatusesUnchanged": true,
+  "groups": {
+    "runtime-mini-automatic-source-tasks-fresh": "INVALID_CAPTURE_DEADLINE; exactly one screenshot and its captured1 review retained. Raw completion captureCompleted=false and visualResult=PENDING_WHOLE_IMAGE_REVIEW remain unchanged.",
+    "runtime-mini-source-tasks-spaced": "14 of 14 captures and unchanged helper cleanup record retained. Independent all14 report at supplied SHA is now final and included separately; raw completion visualResult=PENDING_WHOLE_IMAGE_REVIEW remains unchanged."
+  },
+  "protocolQualification": "Frozen offsetSeconds list is authoritative for 14 samples; additive qualification preserves inherited inaccurate all58 prose rather than modifying schedule bytes.",
+  "miniReviewLimits": [
+    "Very small board limits fine geometry inspection.",
+    "Only one board rendered despite instruction to use two physical boards.",
+    "Unidentified black left-edge pill at +190 seconds is retained; no blanket clean-screen pass.",
+    "All13 sampled Hang/Rest images report both hands and expected contact colors; no continuous visibility or exact phase-onset proof.",
+    "No physical-device, CPU/GPU bracket, or new human geometry acceptance claim."
+  ],
+  "additionalAssessmentsRetained": [
+    "runtime-evo-pro-final-assessment.json",
+    "published-parent-source-correspondence.json"
+  ],
+  "preparedHelpers": "Frozen auto and spaced capture/prepare/schedule versions preserved by exact byte copy or prior hash reuse. Packaging itself executes none.",
+  "excluded": [
+    "Active final-integrated-validation tests and mutable ios registry",
+    "DerivedData/app bundles and current active result directories",
+    "Unrequested pending final assessment/global cleanup records"
+  ],
+  "priorPacketHistory": "All five prior packet file sets and bytes remain unchanged. Phase 1 exclusion wording remains a historical preparation-phase statement.",
+  "proofScope": "File/hash packaging preparation only; no fresh build/test/runtime execution, resource query/action, overall readiness, PR acceptance, or global cleanup claim."
+}

@@ -1,0 +1,8 @@
+{
+  "beforeSHA256": "003741b6be2c5631bb271880e184da0bff91028b0e9c56c8f478d3273979b450",
+  "afterSHA256": "cc549b0ea2021c3b40a864e7936e880c8b43b3cd4b7220a66e9a4090caba8a53",
+  "changedArchiveMembers": [
+    "Document.xml"
+  ],
+  "onlyManifestFieldChange": "primary.media.display.surfaceFinish=wood"
+}

@@ -1,0 +1,37 @@
+{
+  "owner": "placid-badger",
+  "task": "mini-review10-resume/read-only-offline-preview",
+  "recordedAt": "2026-10-03T03:02:59.014674+00:00",
+  "outputScope": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker",
+  "canonicalOrProductionMutation": false,
+  "runtimeVerified": false,
+  "externalResources": [],
+  "temporaryResources": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-config",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-cache",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/placid-badger-tmp"
+  ],
+  "processGroups": [
+    {
+      "pid": 17613,
+      "pgid": 17613,
+      "argv": [
+        "rtk",
+        "proxy",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-review10-resume/preview-worker/render-mini-current.py"
+      ]
+    }
+  ],
+  "resourceName": "placid-badger-mini10-offline-preview",
+  "inputs": {
+    "package": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards/nature-stone-hanger-mini",
+    "canonical4": {
+      "nature-stone-hanger-mini.FCStd": "98be4aedf59f1574cf767d9707bc68fd6292482cbf4760f17fcf3ef2b7aab2c0",
+      "assets/primary.usdz": "66dd0a356e000eb97d7bf0641a97b209f4e5f15c3f7452c690dda708fa246d57",
+      "assets/primary.model.json": "c98dac579bdbc5d0be4092fe521cb9c53e2bfdbaf257120b5097b437837abb71",
+      "suspension.json": "c28c51616a11d6ea6c0afb7a4db90592da035df26d1be99cb3dbf4de4bb5ed9e"
+    },
+    "generatedManifestSHA256": "2125d52a00ff55777505b3ca28777c5dc499955d05f6aaf441226a0d1275b76f"
+  }
+}

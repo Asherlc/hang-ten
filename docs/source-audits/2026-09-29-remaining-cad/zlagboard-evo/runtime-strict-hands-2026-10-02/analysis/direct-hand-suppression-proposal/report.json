@@ -1,0 +1,69 @@
+{
+  "status": "PROSPECTIVE_SCRATCH_ONLY_NOT_APPLIED_NOT_COMPILED_NOT_RUNTIME_AUTHORIZED",
+  "activationGate": [
+    "Both short and long timing arms pass their full structural and visual gates.",
+    "Parent separately authorizes one build of this prospective diagnostic.",
+    "Fresh direct-workout hands-ON launch in that same binary reproduces failure before strict OFF is attempted."
+  ],
+  "patch": {
+    "scope": "SCRATCH ONLY, prospective DEBUG diagnostic; not applied, not compiled, not authorized for execution",
+    "files": [
+      {
+        "path": "HangTen/Views/GripHandModelView.swift",
+        "beforeSHA256": "17425c280a2e82d96b54eefc2859dc125911b80e2fd922f7cec32a22efde28fc",
+        "proposedSHA256": "aeeddc661f6b88d1f29bdb58639ba0cc735a3437357d155ce86f291d28146ea5"
+      },
+      {
+        "path": "HangTen/Models/BoardModelRealityTypes.swift",
+        "beforeSHA256": "008de5d3854b809fb452b9455d3d1d018da8649d48ece7d1d8a7b14120372eb5",
+        "proposedSHA256": "6f9fcd3da0677d79c411cf4cf053ae06a88b60f58f2b37522924f91570c3be25"
+      }
+    ],
+    "patchSHA256": "90032b935acc1d4b16b1f9f5371f4c715cc34814f805904cd25aa64d12a49598",
+    "gitApplyCheckExit": 0
+  },
+  "launchFlag": "HANGTEN_REVIEW_SUPPRESS_ALL_HAND_HOSTS=1 (also requires HANGTEN_REVIEW_HIGHLIGHT_DIAGNOSTIC=1)",
+  "control": "Same new binary with strict flag absent; old landscape hand-OFF flag absent in both arms. No standalone, sampler, counter, alternate host, navigation or explicit AUTOSTART flags inherited. Preserve the current natural 7-second Hang / 180-second Rest, actual direct-root route and existing launch policy.",
+  "scope": [
+    "GripHandModelView.swift: both early body gates and both scene-constructor / RealityView-make entry hooks.",
+    "BoardModelRealityTypes.swift: existing DEBUG recorder adds immutable suppression flag, sparse hand lifecycle method, cumulative counts on existing records.",
+    "No RootView, BoardMapView, model geometry, canonical package, test or renderer production fix."
+  ],
+  "bodyGate": "Both model views evaluate a launch-constant condition before evaluating handContent, accessing sceneStorage.scene, constructing GeometryReader/RealityView, or constructing gestures. OFF returns flexible Color.clear with hit testing and accessibility disabled. The outer cue card, text and caller modifiers are untouched. ON invokes the prior exact GeometryReader content plus sparse make instrumentation. Release delegates directly to that original content; helper extraction is not a claimed rendering fix.",
+  "lifetimeProof": {
+    "instrumentedEntryPoints": [
+      "GripHandRealityScene.init",
+      "GripHandRealityPairScene.init",
+      "GripHandModelView RealityView make",
+      "GripHandPairModelView RealityView make"
+    ],
+    "counts": [
+      "single.constructor-entry",
+      "single.make-entry",
+      "pair.constructor-entry",
+      "pair.make-entry"
+    ],
+    "openRecord": "Version 1, process ID, strict suppression value and all four zero counters. Any constructor before first board observation initializes the same recorder and immediately records its constructor count.",
+    "everyExistingRecord": "Cumulative counters included without adding observers, periodic work or SwiftUI state writes.",
+    "offRequired": "Fresh process, exact binary/source parity and launch flags, complete contiguous stream beginning recorder-open, no recorder errors/event limit, final existing completion marker after last screenshot, all four counts remain zero and no hand-lifecycle records. Sparse public host census additionally verifies actual board host/layout; it is not used to infer absence of past hand construction.",
+    "onRequired": "Positive hand constructor and make observations establish instrumentation reaches actual used paths. It need not exercise both single/pair paths; unused paths remain statically instrumented.",
+    "coverageLimit": "Counters prove these two app hand scene/host entry points through the final retained marker, not all framework GPU activity or all future process lifetime. They do not assert deallocation or that a retained object is active."
+  },
+  "layoutGate": "Compare actual board viewport/frame, root/camera transforms, surrounding cue/text placement and screenshot phase offsets across same-binary arms. Flexible clear is intended to preserve proposed size, but matching actual layout must be measured by existing sparse census and whole-image inspection. Do not add compensating frames to force equality.",
+  "limitations": [
+    "Constructor default argument GripHandAsset.bundled and stored entity initializers evaluate before constructor-body logging. Normal OFF body gate prevents the lazy scene constructor invocation; any externally injected scene has already been created and must appear in lifetime counts. Do not claim suppression of arbitrary direct scene construction elsewhere.",
+    "This diagnostic suppresses both scene creation and hand rendering together; an outcome cannot distinguish their mechanisms.",
+    "Sparse synchronous file writes can perturb timing. ON and OFF share instrumentation; fresh ON failure is a required gate, not historical evidence from another binary.",
+    "No typecheck, build, Simulator run or visual comparison was performed for this scratch patch. git apply --check establishes only applicability against the SHA-bound inputs.",
+    "Timing-arm outcome does not by itself authorize this next experiment."
+  ],
+  "staticAssertions": {
+    "bothBodyGatesBeforeLazyAccess": true,
+    "twoConstructorHooks": true,
+    "twoMakeHooks": true,
+    "noBodyLogging": true,
+    "noNewTimersTasksObservers": true,
+    "noSwiftUIStateWritesAdded": true,
+    "currentTrackedSourceUnchangedByPreparation": true
+  }
+}

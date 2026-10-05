@@ -1,0 +1,101 @@
+[
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "install",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/main-sync-2026-10-03/ios/DerivedData-placid-badger-cad-second-half/Build/Products/Debug-iphonesimulator/HangTen.app"
+    ],
+    "startUTC": 1791042322.495362,
+    "endUTC": 1791042323.262269,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training",
+      "app"
+    ],
+    "startUTC": 1791042323.2624729,
+    "endUTC": 1791042323.4778361,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "terminate",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042323.5153868,
+    "endUTC": 1791042323.69246,
+    "exitStatus": 3
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "launch",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042323.6927848,
+    "endUTC": 1791042323.973614,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/main-sync-2026-10-03/app-smoke/zlagboard.evo.png"
+    ],
+    "startUTC": 1791042328.982611,
+    "endUTC": 1791042329.452954,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "terminate",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042329.453182,
+    "endUTC": 1791042329.6720052,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "launch",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "com.hangten.training"
+    ],
+    "startUTC": 1791042329.6724238,
+    "endUTC": 1791042329.99048,
+    "exitStatus": 0
+  },
+  {
+    "args": [
+      "xcrun",
+      "simctl",
+      "io",
+      "0C1CF662-98B1-43FF-9405-7AC58CD2132A",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/main-sync-2026-10-03/app-smoke/zlagboard.pro-2.png"
+    ],
+    "startUTC": 1791042334.9940212,
+    "endUTC": 1791042335.4756649,
+    "exitStatus": 0
+  }
+]

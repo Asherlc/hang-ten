@@ -1,0 +1,115 @@
+{
+  "createdAt": "2026-09-30T20:51:55.725526+00:00",
+  "scope": "Read-only promoted UNLEVEL documentation/provenance closure; original independent snapshot unchanged.",
+  "blockingFindings": [],
+  "fileSHA256": {
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/runtime-validation.json": "5d7e86dc7429cc339ecd7805fa453c4ab0ad4ec726af929ddcab48deccd6bbcf",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/verification.json": "690832bf531d9c309fe9cd459495f1d4f007a1f32715a9b1967944f729ada703",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/final-independent-review.json": "dd951e246a0c27134160509f671700ef69790d91f729922ee45b7fdd9510af0d",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/fresh-reproducibility-result.json": "c99a09a0dd9d6f9a4113f2745487215e396ae89a7905243778d7371b4d3d77a4",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/resource-cleanup.json": "d63ee0281baee9b81eaae4d6a19a7fafa12f0f2c39ee75cd53476c6a546aa545",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/human-review.json": "79083d44dc454c077ff6e6e75fbc4786be999e955ef9f61274130c033c8512b9",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/README.md": "68c15ddb82b8ac14ef01405c7e0ba5e2666b50cc5af5297f81d192371fc5ed07",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/final-hash-closure.json": "19a5e12464f4779f2928e8903821620a53f8b91a83a931fcfe7221704509821e",
+    "docs/source-audits/2026-09-29-remaining-cad/review-queue.json": "eaa8e638c5e076d1f3bfe9fdfb68124dbf9d684069e9d9f8864aa6512a1df3d6",
+    "docs/source-audits/2026-09-29-remaining-cad/index.md": "2f05ed62d8c7abda5c527102d51160a2d6c66853d8363ae479a20cea2c7db33f",
+    "docs/source-audits/2026-09-29-remaining-cad/index.html": "4467a740ffe5ba77f1d8b3ecf6e5bd4fcca5730818f3e0c7a5ff425c4669d063",
+    "docs/source-audits/2026-09-29-remaining-cad/validation-notes.md": "8af6de4d05ca72adb7df3eba7372cb3a67225ca74a99c269146c68206b8dd8a1",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/review.md": "603c67fd8276e015d7b89241d4e78411d7a294818c5a56b9fea39f94848c6c72",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/native-route-report.json": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/native-route-check.json": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/package-validation.json": "06964d05adeeb927daeacebc14c85070fb513f3941c75c84354b614c328a124e",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/ios-summary.json": "ba687afa83b5a8bb4a7599eddcc2bf25d06848420a377e793f3265420278e1b5",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/ios-tests.log": "b117348d751b3b554dd92659e4b77c399d24597273aaf57a77db304066676750",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/app-review/validation.json": "3192a020a4234b5d045309cfcdb03415bdb7ce9208cb5f152665c1d93fb700f1"
+  },
+  "checks": {
+    "runtimeEvidenceDigestsVerified": [
+      "verification.json",
+      "native-route-report.json",
+      "native-route-check.json",
+      "package-validation.json",
+      "ios-summary.json",
+      "ios-tests.log",
+      "resource-cleanup.json",
+      "app-review/validation.json",
+      "final-independent-review.json",
+      "fresh-reproducibility-result.json"
+    ],
+    "sourceSidecarHashCurrent": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+    "promotedIndependentSnapshotByteIdentical": true,
+    "exactApplyCheckByteIdentical": true,
+    "humanAcceptance": "pending",
+    "reviewQueueNumber": 3,
+    "markdownRelativeLinksVerified": 61,
+    "runtimeCounts": {
+      "passed": 1258,
+      "skipped": 3,
+      "failed": 0,
+      "total": 1261,
+      "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+      "device": "iPhone 17 Pro",
+      "runtime": "iOS 26.5",
+      "buildCommand": [
+        "xcodebuild",
+        "-project",
+        "HangTen.xcodeproj",
+        "-scheme",
+        "HangTen",
+        "-configuration",
+        "Debug",
+        "-destination",
+        "platform=iOS Simulator,id=5E4F7561-42C9-488E-A4C2-638A628BE300",
+        "-derivedDataPath",
+        ".context/DerivedData",
+        "build-for-testing"
+      ],
+      "testCommand": [
+        "xcodebuild",
+        "-project",
+        "HangTen.xcodeproj",
+        "-scheme",
+        "HangTen",
+        "-configuration",
+        "Debug",
+        "-destination",
+        "platform=iOS Simulator,id=5E4F7561-42C9-488E-A4C2-638A628BE300",
+        "-derivedDataPath",
+        ".context/DerivedData",
+        "-parallel-testing-enabled",
+        "NO",
+        "-only-testing:HangTenTests",
+        "-collect-test-diagnostics",
+        "never",
+        "-resultBundlePath",
+        "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/unlevel-review/placid-badger-unlevel-front-entry-tests.xcresult",
+        "test-without-building"
+      ],
+      "xcodebuildExitCode": 0
+    },
+    "cleanup": {
+      "simulator": "5E4F7561-42C9-488E-A4C2-638A628BE300",
+      "cleanupStatus": 0,
+      "derivedDataRemoved": true,
+      "simulatorDeletionVerified": true,
+      "resultBundleRemoved": true
+    },
+    "limitsConsistent": "No equilibrium/global optimum/orbit claim; omitted52.14551mm slack and1.645micrometer broader-cut qualification retained.",
+    "batchEntryPoints": "Both Markdown and HTML now link current UNLEVEL cord comparison/app views, retaining body review separately. Status is verified and awaiting human review.",
+    "deliveryValidationReportedByRoot": {
+      "modelPackages": 58,
+      "nativeCADSources": 57,
+      "lockedFiles": 135,
+      "sha256Manifest": "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
+      "scope": "Root reran delivery validator; this documentation review did not repeat native/archive validation."
+    }
+  },
+  "status": "passed",
+  "resolvedFindings": [
+    {
+      "file": "docs/source-audits/2026-09-29-remaining-cad/index.md",
+      "issue": "Current batch entry-point points to historical UNLEVEL app images, not front-entry-review/app-review.",
+      "requestedChange": "Link current UNLEVEL front-entry review/app packet; update being-prepared status."
+    }
+  ]
+}

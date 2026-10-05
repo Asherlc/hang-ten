@@ -1,0 +1,15 @@
+{
+  "recordedChildPID": 14857,
+  "childStatus": 0,
+  "child": "14857 14855 rtk proxy python3 /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/capture.py /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/root-live-c-release.json\n",
+  "pgrepStatus": 0,
+  "descendants": [
+    {
+      "pid": 14858,
+      "stdout": "14858 14857 /opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/capture.py /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/hand-image-workout-awake-prep/root-live-c-release.json\n",
+      "stderr": "",
+      "status": 0
+    }
+  ],
+  "epoch": 1791021052.2799842
+}

@@ -1,0 +1,329 @@
+{
+  "owner": "placid-badger",
+  "beforeSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18",
+  "afterSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "afterPath": "Hangboards/captain-fingerfood-unlevel/suspension.json",
+  "immutablePackageFiles": {
+    "captain-fingerfood-unlevel.FCStd": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+    "assets/primary.usdz": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+    "assets/primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
+  },
+  "rendererSourceSHA256": "8856b754f0e31523420e9b2c5c686516d5323650aa6edad0825ebff9f09dabb1",
+  "nativeZBufferHelperSHA256": "e90232263554453be7412f6f5421828187a71fdc59a09be7a1d8a8ea2e4f9cea",
+  "canonicalPoseComparisons": [
+    {
+      "poseID": "edge20-front",
+      "view": "front",
+      "mode": "detail",
+      "image": "edge20-front-front-detail.png",
+      "sha256": "48342afa40b8351994d514778cd991aa958a99c29bb1a8756d10b7a3bc79ee22",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -52.11350741358824,
+        52.11350741358824
+      ]
+    },
+    {
+      "poseID": "edge20-front",
+      "view": "front",
+      "mode": "full",
+      "image": "edge20-front-front-full.png",
+      "sha256": "d4505b4917dcf8f98705d757576a7b4d18f3913b2fc5583acb516f58fa8ca2ae",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -37.11350741358824,
+        396.78496095049354
+      ]
+    },
+    {
+      "poseID": "edge20-front",
+      "view": "side",
+      "mode": "detail",
+      "image": "edge20-front-side-detail.png",
+      "sha256": "364ea578f839677c70d99c109342aaee68602ffb08b52328ba92e1899fbfae60",
+      "commonViewportLimitsMM": [
+        -41.977330290540266,
+        41.977330290540266,
+        -52.11350741358824,
+        52.11350741358824
+      ]
+    },
+    {
+      "poseID": "edge20-front",
+      "view": "side",
+      "mode": "full",
+      "image": "edge20-front-side-full.png",
+      "sha256": "5268a0b00aef95491623a228b0b7cdaad4fc1bdc84eed253a4c85319f7767cfc",
+      "commonViewportLimitsMM": [
+        -30.9921849901546,
+        26.97733029054027,
+        -37.11350741358824,
+        396.78496095049354
+      ]
+    },
+    {
+      "poseID": "edge20-front",
+      "view": "top",
+      "mode": "detail",
+      "image": "edge20-front-top-detail.png",
+      "sha256": "ec6ee70a9edad3d34d17ce61d09d93023618b7609a2f66a8f9113d7298255c8b",
+      "commonViewportLimitsMM": [
+        -74.99999865889549,
+        74.99999865889549,
+        -41.977330290540266,
+        41.977330290540266
+      ]
+    },
+    {
+      "poseID": "edge20-front",
+      "view": "top",
+      "mode": "full",
+      "image": "edge20-front-top-full.png",
+      "sha256": "ccd4680495e5e4a7f28d1cc01abfdb42b501123807b42453044d1328c1dff3d2",
+      "commonViewportLimitsMM": [
+        -59.99999865889549,
+        59.99999865889549,
+        -30.9921849901546,
+        26.97733029054027
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "front",
+      "mode": "detail",
+      "image": "edge25-inverted-front-detail.png",
+      "sha256": "70103678905eaa93fe68fd4b7fd2a8928304ceed13498d136ea8d5bc0c027a72",
+      "commonViewportLimitsMM": [
+        -75.00000102100952,
+        75.00000102100952,
+        -52.113511585463435,
+        52.113511585463435
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "front",
+      "mode": "full",
+      "image": "edge25-inverted-front-full.png",
+      "sha256": "049f15c3b3835912a1bf360707ae182c47a6e9554c2a1168567b1597a3de5a1e",
+      "commonViewportLimitsMM": [
+        -60.000001021009524,
+        60.000001021009524,
+        -37.113511585463435,
+        396.7849549528464
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "side",
+      "mode": "detail",
+      "image": "edge25-inverted-side-detail.png",
+      "sha256": "5d4cca2de87fd67403eb36dcbdadaef0037fb38ad94c2264cc8f24473eb2ed04",
+      "commonViewportLimitsMM": [
+        -41.97733213586751,
+        41.97733213586751,
+        -52.113511585463435,
+        52.113511585463435
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "side",
+      "mode": "full",
+      "image": "edge25-inverted-side-full.png",
+      "sha256": "5c32c775d9312967e1268c0e24fddbf6d9b867585df3e47b33872c9cfb51a990",
+      "commonViewportLimitsMM": [
+        -31.01190647072561,
+        26.977332135867513,
+        -37.113511585463435,
+        396.7849549528464
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "top",
+      "mode": "detail",
+      "image": "edge25-inverted-top-detail.png",
+      "sha256": "da9c1ca023e2b6526311d256b3b108674d7d83f048b7fb182a3b2c8dc0c3b6d4",
+      "commonViewportLimitsMM": [
+        -75.00000102100952,
+        75.00000102100952,
+        -41.97733213586751,
+        41.97733213586751
+      ]
+    },
+    {
+      "poseID": "edge25-inverted",
+      "view": "top",
+      "mode": "full",
+      "image": "edge25-inverted-top-full.png",
+      "sha256": "2d8f01d579a68c56bdc57bae0a754cd58f7bc91684fd397a40fc3d141424481c",
+      "commonViewportLimitsMM": [
+        -60.000001021009524,
+        60.000001021009524,
+        -31.01190647072561,
+        26.977332135867513
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "front",
+      "mode": "detail",
+      "image": "jug-reverse-front-detail.png",
+      "sha256": "c444e9828cccb09ca96208d312fe96a48afa59f78cf03bbf20210d81a3fe5c5c",
+      "commonViewportLimitsMM": [
+        -74.99999970716911,
+        74.99999970716911,
+        -52.113509258915514,
+        52.113509258915514
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "front",
+      "mode": "full",
+      "image": "jug-reverse-front-full.png",
+      "sha256": "719cfcb3ca04f95befa92ed7bb6bc893396b814693c3a7a5fc21082de927043c",
+      "commonViewportLimitsMM": [
+        -59.99999970716912,
+        59.99999970716912,
+        -37.113509258915514,
+        394.0065217675354
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "side",
+      "mode": "detail",
+      "image": "jug-reverse-side-detail.png",
+      "sha256": "0196b2aa0de21b0ccf066d023931da8b06e865d1b9703fbbb3379918c53ff0a7",
+      "commonViewportLimitsMM": [
+        -41.977334466907074,
+        41.977334466907074,
+        -52.113509258915514,
+        52.113509258915514
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "side",
+      "mode": "full",
+      "image": "jug-reverse-side-full.png",
+      "sha256": "a312cef9380dfa665416596b10b16aa9a283911d3add56b1a196dfdc2669e52c",
+      "commonViewportLimitsMM": [
+        -26.977334466907074,
+        26.977334466907074,
+        -37.113509258915514,
+        394.0065217675354
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "top",
+      "mode": "detail",
+      "image": "jug-reverse-top-detail.png",
+      "sha256": "dc787a88b41f2e30ecdd661cb72ae0cfb643b84ce4584d77136f2522b290369f",
+      "commonViewportLimitsMM": [
+        -74.99999970716911,
+        74.99999970716911,
+        -41.977334466907074,
+        41.977334466907074
+      ]
+    },
+    {
+      "poseID": "jug-reverse",
+      "view": "top",
+      "mode": "full",
+      "image": "jug-reverse-top-full.png",
+      "sha256": "efbb3e47ce866ce16d554a41dbee89acaa68a41ee78be070d0e8f82e0d5ffa24",
+      "commonViewportLimitsMM": [
+        -59.99999970716912,
+        59.99999970716912,
+        -26.977334466907074,
+        26.977334466907074
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "front",
+      "mode": "detail",
+      "image": "pocket-right-end-front-detail.png",
+      "sha256": "cae5c2ae675d476127300191649442acb92e80bdcc6d7f4601001e19003fad1c",
+      "commonViewportLimitsMM": [
+        -50.00000466189345,
+        50.00000466189345,
+        -74.95214459257045,
+        74.95214459257045
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "front",
+      "mode": "full",
+      "image": "pocket-right-end-front-full.png",
+      "sha256": "cf8d56c66f49064bbf3dfa10c9c6893888bc70d1cd65742212cc60831561d71d",
+      "commonViewportLimitsMM": [
+        -35.00000466189345,
+        35.00000466189345,
+        -59.95214459257045,
+        370.7144606714167
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "side",
+      "mode": "detail",
+      "image": "pocket-right-end-side-detail.png",
+      "sha256": "c04a12b2f09f9fbf6d8e8d5e08d8c0b0346bdee3d7c4b93733df7fd3fae27ee0",
+      "commonViewportLimitsMM": [
+        -52.1457481527752,
+        52.1457481527752,
+        -74.95214459257045,
+        74.95214459257045
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "side",
+      "mode": "full",
+      "image": "pocket-right-end-side-full.png",
+      "sha256": "69e42538226b4005b056ac5106f80c5f7826c63ac51016356246493eb7471018",
+      "commonViewportLimitsMM": [
+        -41.172583636576924,
+        37.1457481527752,
+        -59.95214459257045,
+        370.7144606714167
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "top",
+      "mode": "detail",
+      "image": "pocket-right-end-top-detail.png",
+      "sha256": "ac93fe5d52de2db36d086778c61ba2e353afc6ef60ae88f266573aa64fce9b79",
+      "commonViewportLimitsMM": [
+        -50.00000466189345,
+        50.00000466189345,
+        -52.1457481527752,
+        52.1457481527752
+      ]
+    },
+    {
+      "poseID": "pocket-right-end",
+      "view": "top",
+      "mode": "full",
+      "image": "pocket-right-end-top-full.png",
+      "sha256": "ec0d71e014409918087ded33910eaede15c324eb90ac4a71016a1a66fcbc8a9b",
+      "commonViewportLimitsMM": [
+        -35.00000466189345,
+        35.00000466189345,
+        -41.172583636576924,
+        37.1457481527752
+      ]
+    }
+  ],
+  "method": "Actual unchanged USDZ triangles and exact cached cord paths, including fixed world support. Numeric native z-buffer projections, body-centered identical paired scales. No reference-image tracing, processing or registration.",
+  "humanApproval": "Native candidate authorized for rendering; final user visual acceptance is separate."
+}

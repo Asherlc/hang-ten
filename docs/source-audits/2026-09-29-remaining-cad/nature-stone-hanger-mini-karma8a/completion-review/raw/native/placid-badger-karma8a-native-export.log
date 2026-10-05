@@ -1,0 +1,11 @@
+<TopoShape> TopoShapeExpansion.cpp(922): hasher mismatch
+<TopoShape> TopoShapeExpansion.cpp(983): hasher mismatch
+
+{"status": "pass", "owner": "placid-badger", "sourceSHA256": "073aaac4e34245d95dbb66a7f02a2941c27cc8cf5924af08967a5438a82fd4a8", "priorSourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4", "modelSHA256": "4d802665c7aa8946c74689a7b1a5ca799332f3d80bec9cee15f50adeda91318d", "descriptorSHA256": "ec468f5ab7682a25ba7234e4d85df9ca19bfe39a38ff1ad8de0ba22bc8cc3c6c", "sidecarSHA256": "f9621b73300e6c1afdc0ececc37cd87284be291af1a7aa584cefc65069778daf", "nativeEnvelopeMM": [105.0000002, 30.00000020000001, 60.00000020000002], "priorWoodStoneOverlapMM3": 377.7731918859495, "correctedWoodStoneOverlapMM3": 0.0, "removedCombinedMaterialMM3": 0.0, "addedCombinedMaterialMM3": 34.43558886282475, "gapWitnessVolumeMM3": 62.0, "gapWitnessMaterialMM3": 62.0, "otherTwoContactsPreserved": true, "contacts": {"wood-edge-15": {"areaMM2": 4168.152596645971, "symmetricDifferenceAreasMM2": [0.0, 0.0], "YExtentMM": 15.0, "ZExtentMM": 29.5}, "granite-edge-15": {"areaMM2": 2111.6471076205385, "symmetricDifferenceAreasMM2": [0.0, 926.6471076205387], "YExtentMM": 15.000000000000002, "ZExtentMM": 10.000000000000002}, "pinch-60": {"areaMM2": 5848.008730847458, "symmetricDifferenceAreasMM2": [0.0, 0.0], "YExtentMM": 30.000000000000014, "ZExtentMM": 60.0}}, "logicalContactsPreserved": true, "allExposedStoneAssignedToGranite": true, "nativeSketchesConstrained": true, "outerCordBearingSlabsPreserved": true, "graniteVertexMaximumErrorMM": 1.6941264281553788e-06, "graniteVerticesChecked": 294}
+
+								
+								
+								
+								
+								
+								

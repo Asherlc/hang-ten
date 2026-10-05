@@ -1,0 +1,9 @@
+{
+  "reviewer": "/root",
+  "scope": "One additional whole image directly viewed; earlier Rest+5 report separate.",
+  "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-postboot-control-landscape/phase-2-active-plus-5.png",
+  "sha256": "ab8874f90ad3ea34e1fbe6fabf6d61636ac0e368b99fe902db441c0c47a37d67",
+  "color": "blue",
+  "expected": "red",
+  "timer": "00:02"
+}

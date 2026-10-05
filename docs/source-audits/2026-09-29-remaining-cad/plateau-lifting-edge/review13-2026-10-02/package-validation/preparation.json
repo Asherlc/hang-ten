@@ -1,0 +1,44 @@
+{
+  "owner": "placid-badger",
+  "status": "prepared-not-executed",
+  "preparedUTC": "2026-10-02T19:10:50.888850+00:00",
+  "scopes": {
+    "MODEL_TESTS": [
+      "Tools/HangboardModels/test_contact_model_descriptor.py",
+      "Tools/HangboardModels/test_contact_model_package.py"
+    ],
+    "PACKAGE_TESTS": [
+      "Tools/HangboardCAD/tests/test_board_manifest.py",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "Tools/HangboardPackages/tests/test_board_catalog.py",
+      "Tools/HangboardPackages/tests/test_pose_camera_facing.py"
+    ],
+    "NATIVE_ROUTE_TESTS": [
+      "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_exterior_wrap_uses_the_closed_solid_and_clearance",
+      "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_a_terminal_inside_wood_cannot_be_promoted_to_a_cord_route",
+      "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_clearance_certifies_thin_obstacles_between_sample_locations",
+      "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_noncoplanar_support_keeps_an_unobstructed_free_span_straight",
+      "Tools/HangboardCAD/tests/test_native_cord_routes.py::test_independent_loop_legs_cannot_retrace_each_other"
+    ]
+  },
+  "frozenFileCountRequired": 8,
+  "mergedGeneratedManifestHashRequired": true,
+  "canonicalCLIPackagesExpected": 64,
+  "platformDelivery": "All3 Android inline models/descriptors and all3 actual built iOS ODR models/bundled descriptors; same merged manifest",
+  "genericIOSBuildAttemptsAllowed": 1,
+  "SimulatorGuestOperationsAllowed": 0,
+  "currentAppFrames": 0,
+  "IOSUnitCasesExecuted": 0,
+  "testsRun": 0,
+  "buildsRun": 0,
+  "syntaxParsedOnly": true,
+  "scriptSHA256": {
+    "validation_support.py": "a6f0750b4d8dfd93ed61e440fb64f62571e3815dc847b591bf87b19dbd941048",
+    "run_validation.py": "794b117a0496dfc0ff1774184663be3fd1b5b6f669872f2df81973728e37d345",
+    "ios-build/build.py": "039c3fd1928f7cfb56358d1aab79716d69ed38515ed1a35fd62e12ca1f5c7e13"
+  },
+  "baselineGeneratedManifestSHA256": "1ee55d14fdadc6ebc38373d2c059eaa3c82d25a45eca4ede028378b4552b3b94",
+  "initialResourcesAllocated": [],
+  "executionCommand": "rtk proxy env PYTHONDONTWRITEBYTECODE=1 .context/placid-badger/venv/bin/python .context/placid-badger/plateau-review13/package-validation-2026-10-02/run_validation.py --frozen-input .context/placid-badger/plateau-review13/package-validation-2026-10-02/frozen-input.json",
+  "limits": "Wait for root promotion+all8 hashes+exact merged manifest SHA; no native compile, package test, platform staging or iOS build has been run in this validation lane."
+}

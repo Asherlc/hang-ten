@@ -1,0 +1,34 @@
+{
+  "owner": "placid-badger",
+  "simulator": "43FADF46-7A23-4A88-8EF8-20E572101661",
+  "device": "iPhone 17 Pro",
+  "runtime": "iOS 26.5",
+  "boardID": "frictitious.port-a-board",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "suspensionSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "presentations": {
+    "primary": {
+      "descriptorSHA256": "a288bf5f3bac977ee79910a1138f92dd19ea3700de2a914c99dade91617f34e1",
+      "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273"
+    }
+  },
+  "builtBinarySHA256": "531e63113dd8c5322745182ce69f25996aed2231ad2501c5c72ee30dc72e86ce",
+  "checks": [
+    {
+      "positionID": "front-upright",
+      "contactID": "edge-30",
+      "front": "front-upright-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    },
+    {
+      "positionID": "pinch-side",
+      "contactID": "pinch-body",
+      "front": "pinch-side-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true
+    }
+  ],
+  "humanGeometryAcceptance": "prior committed routing rejected for false bend; current review #5",
+  "limits": "App screenshots and accessibility checks establish current-source rendering; manufacturer fidelity remains under individual human review. Physical Port-A-Board orbit capture remains unverified; only these canonical views are claimed."
+}

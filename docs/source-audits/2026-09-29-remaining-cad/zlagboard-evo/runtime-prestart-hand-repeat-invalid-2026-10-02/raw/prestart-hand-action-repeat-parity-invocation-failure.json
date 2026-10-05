@@ -1,0 +1,4 @@
+{
+  "error": "Initial checker argument incorrectly supplied full relative path; checker prepends E. FileNotFoundError occurred writing duplicate E/E path; no output created, no runtime action.",
+  "correction": "Use basename as required by unchanged checker."
+}

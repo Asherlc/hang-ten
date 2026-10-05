@@ -1,0 +1,29 @@
+{
+  "package": "nature-stone-hanger-mini-karma8a",
+  "beforeSidecarSHA256": "d85666f769af3a17cbc05f44e796604f40b1601b5fce7c886ce8016dece245fe",
+  "afterSidecarSHA256": "8f3b0cefd2f926409e8311d7a5c333d0ef17272c062233c32d7f695fccc6717e",
+  "changes": [
+    {
+      "presentationID": "primary",
+      "positionID": "wood-inverted",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        0.3,
+        -1
+      ]
+    }
+  ],
+  "allNonCameraSidecarValuesIdentical": true,
+  "immutableNativeAndModelFilesSHA256": {
+    "nature-stone-hanger-mini-karma8a.FCStd": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+    "assets/primary.usdz": "6d098e92b1bb9b92acc90b9cd18cc56f661646da9c2a2a06dca2d0f372e6ea46",
+    "assets/primary.model.json": "8c40a62d639bfa02b01eac040dd230afaf132e53c897449a3ca3db353d6463b4"
+  },
+  "reason": "Canonical camera directions are native-local and rotate with the board. Front/rear mouth selection and underside visibility must be expressed before the pose rotation.",
+  "unchangedNumericRoutesSHA256": "bb371dcacdcceb3ec88ad3cc599cb3adcf9cc5b6cd3729050c7ee761d0659f05"
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_rear_correspondence.py", line 8, in <module>
+    for prim in Usd.Stage.Open(str(asset)).Traverse():
+RuntimeError: Invalid range starting with expired 'Xform' prim </root> 

@@ -1,0 +1,47 @@
+{
+  "status": "STATIC_TECHNICAL_PASS_VISUAL_FAIL",
+  "binarySHA256": "f6c9dd2cc35c65a07f3c9a04883cfcb38b8ea4c138276a3137e21961e41dcd30",
+  "wholeImagesReviewed": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-b/whole-app.png",
+      "sha256": "f8ba6fd64fc37c44d443f7794c1089ea44bec46911f66c275cbb0cb865e4b6d5"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-b/whole-app.png",
+      "sha256": "32a2946e4c563673ff8792282f339a12c3bec63fc5d40ea9b5fd794fcdfa90cf"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-b/generated-hand.png",
+      "sha256": "5659af63210e11ac8f3e51c90b69b86e85a3771677254dac6357da129911d995"
+    }
+  ],
+  "observations": [
+    "Image pair is vertically inverted relative to live, left/right arrangement preserved",
+    "Image hands much darker, especially left; selected fingers visibly red but appearance not equivalent",
+    "No obvious geometry clipping; background cream visible around hand contours",
+    "Technical gate passed completed revision2, no live hand make, no public ARView at publication; not GPU-activity proof"
+  ],
+  "viewportEvidence": {
+    "initialPoints": [
+      120,
+      0
+    ],
+    "laterPoints": [
+      370,
+      462.3333333333335
+    ],
+    "displayScale": 3,
+    "initialConsumedWithoutSceneConstruction": true
+  },
+  "alphaMetadata": {
+    "cgAlphaInfo": 1,
+    "cgBitsPerComponent": 8,
+    "colorSpace": "kCGColorSpaceSRGB"
+  },
+  "limits": [
+    "Original initial failed trial dimensions were absent; new values do not retroactively prove its cause",
+    "Cream-only view does not establish all transparency cases",
+    "No workout or production repair result"
+  ],
+  "next": "Coordinate conversion and lighting audit; do not advance to workout"
+}

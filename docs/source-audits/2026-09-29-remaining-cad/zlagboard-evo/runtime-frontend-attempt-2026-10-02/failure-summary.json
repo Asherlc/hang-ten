@@ -1,0 +1,34 @@
+{
+  "status": "ABORTED_FRONTEND_SETUP_NO_WORKOUT_MEASUREMENT",
+  "oldPathRevision2": {
+    "status": "assert BIN.is_file failed before spawn",
+    "resourceCreated": false,
+    "originalCleanupPassed": true,
+    "proof": "raw/frontend-boundary/revision-2-launch-attempt.json"
+  },
+  "deviceHubAttempt1": {
+    "ownedPID": 40262,
+    "controllerPID": 40249,
+    "status": "Launched then aborted by identity guard",
+    "originalCleanupPassed": false,
+    "reason": "Darwin ps comm truncation made executable-name/path matching miss the process. Original empty filtered snapshots and guard failures remain exact.",
+    "recovery": "Root verified exact executable argv plus unique owner marker; TERM/KILL targeted only owned40262; recovery report says exactOwnedPIDAbsent=true, unknownDeviceHubUntouched=true, deviceAndDDUntouched=true.",
+    "proof": "raw/frontend-boundary/devicehub-attempt-1/cleanup-recovery.json"
+  },
+  "unknownFrontend": {
+    "pid": 89674,
+    "observationSource": "raw/frontend-boundary/devicehub-attempt-1/full-argv-discovery-tool-result.json (explicitly transcribed tool response) plus new raw post-recovery exact-PID query.",
+    "touched": false,
+    "implication": "Name-only preflight also missed this unknown existing frontend; historical headless rendering claim is withdrawn.",
+    "postRecovery": "Only unknown89674 remains in exact-PID query; owned40262 absent. No GUI inspection or signalling of unknown PID."
+  },
+  "measurement": {
+    "skyAppQuery": false,
+    "UIActions": false,
+    "workoutRun": false,
+    "newAppBuildOrInstall": false,
+    "renderingConclusion": null
+  },
+  "resourceScope": "Only attempted owned desktop frontend was recovered/deleted. Existing owned Simulator/DD/controller remain under root; unknown/shared resources untouched.",
+  "historicalRecords": "Original cleanup FAIL and older empty filtered process arrays are not rewritten as passes."
+}

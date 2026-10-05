@@ -1,0 +1,9 @@
+{
+  "name": "placid-badger-flash14-envelope-check",
+  "command": [
+    "python3",
+    "Tools/HangboardCAD/run_freecad.py",
+    ".context/placid-badger/flash-board-review14/shape-review/native-refinement/check_envelope.py"
+  ],
+  "timeoutSeconds": 60
+}

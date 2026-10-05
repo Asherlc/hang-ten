@@ -1,0 +1,16 @@
+{
+  "createdAt": "2026-10-01T03:25:43.316052+00:00",
+  "state": "test ready; production selector logic unfixed; awaiting parent red run",
+  "testSelector": "HangTenTests/BoardModelRealityTests/testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood",
+  "testScope": "Two synthetic instance roots, Group/Left relative wood selector, unnamed-child inheritance, Group/Hardware forced-neutral under boardwood, shared inventory highlight/restore. No source/package/resource fixture creation.",
+  "productionChangeBeforeRed": "Only internal no-argument applyBoardMaterials wrapper and load call to it; wrapper invokes original root traversal unchanged. No selector fix yet.",
+  "fileSHA256": {
+    "HangTen/Models/BoardModelRealityTypes.swift": "7cf085deaea76a470a977e73f9feb8a9b053cecb9f140aa3ecc98e35e1c7a7aa",
+    "HangTenTests/BoardModelRealityTests.swift": "ba4c459811f99ad58ccac004628c042724bc3d061a058a7b89cf1fe0b60ea2d1"
+  },
+  "checks": {
+    "swiftSyntaxParse": "passed",
+    "scopedDiffWhitespace": "passed",
+    "XCTest": "pending root-owned red run"
+  }
+}

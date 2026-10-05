@@ -1,0 +1,14 @@
+<ElementMap> check_native_candidate.py(11): No hasherRef
+
+Native envelope, depths, contact shell and overlaps checked
+{
+  "status": "pass",
+  "failures": [],
+  "report": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/metolius-simulator-3d-functional-correction/independent-validation/native-check.json"
+}
+
+								
+								
+								
+								
+								

@@ -1,0 +1,61 @@
+{
+  "arm": "retained-detach",
+  "binarySHA256": "192112d7c16c876094c4a4d1edec76d21d9ec9e3ff3d02801e7fa5f57cdb599c",
+  "allRequiredGatesPassed": true,
+  "checks": {
+    "cpuSemantics": true,
+    "frames": true,
+    "constructors": true,
+    "handsAbsent": true,
+    "ownership": true,
+    "navigation": true,
+    "visual12": true,
+    "packageAndCodeParity": true
+  },
+  "proofs": {
+    "cpuSemantics": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-correspondence.json",
+      "sha256": "edc54690a696604bab79e97628d755a6bb570d53d69b1f109aff841a0fc79263"
+    },
+    "frames": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/normal-host-frame-validation.json",
+      "sha256": "9dee09ce687d11e2156cd5c7ab07aa4be5339e71db0808669ad5ea8c5251c877"
+    },
+    "constructors": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/train-constructor-validation.json",
+      "sha256": "c8702618ccb1d2a0a9a51584a61a1a8730dae7d298975f03587934b03e59472d"
+    },
+    "handsAbsent": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/strict-absence-validation.json",
+      "sha256": "f365bcadab6873aec5cc5f798959540d95d7c1a94319bed90879ae29a16036f5"
+    },
+    "ownership": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-dependency-ownership.json",
+      "sha256": "5e8fa24dd7ac0dbd3959efc4f7137bfadbcaafa6fc46c640cec397c98b84a8ed"
+    },
+    "navigation": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/structural-dependency-navigation.json",
+      "sha256": "06ab5e0d54f7ca1dd43c041a236dbbf86e5b3ee2caecb786306b78d9d217f11d"
+    },
+    "visual12": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-retained-detach-landscape/visual-review.json",
+      "sha256": "326e6238e06139ad612a279002b2e926a994f1da95f80754fbf13e1187ca92d3"
+    },
+    "packageAndCodeParity": {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/structural-dependency-reference-parity.json",
+      "sha256": "16951668967afa0195b9d7d34ee211d1a4c005fd71af02a073ebf7988d36216e"
+    }
+  },
+  "rootVerificationEpoch": 1790993198.71121,
+  "rootVisualScope": [
+    "phase-1-preview-plus-5.png: blue correct02:55",
+    "phase-2-active-plus-0.25.png: red correct00:07",
+    "phase-2-active-plus-5.png: red correct00:02"
+  ],
+  "completeVisualScope": "worker directwhole review12; root limited3",
+  "limitations": [
+    "Diagnosticpassonly: handsOFF, startupreadiness, retaineddetachedreference; no productionorhumanacceptance",
+    "BlackcapsuleininitialHang+5 retained inworkerreview; no mechanismclaim"
+  ],
+  "nextAction": "exactlyoneordinaryarm, unchangedbinary/source, bothUNMOUNTon; nointentionalretentionorexplicitdetach"
+}

@@ -1,0 +1,509 @@
+{
+  "immutableCommit": null,
+  "sourceSHA256": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777",
+  "expectedPackageSHA256": {
+    "metolius-simulator-3d.FCStd": "3c516ec27da90e124fd8397470cbba0f127d5929a1fa49c62c4c611992570777",
+    "assets/primary.usdz": "c87d2acf4226a3f31ce11fd2e086b891b3608bef58e74f40d50c82f2318e8628",
+    "assets/primary.model.json": "3aba3cf597f09d23339940711b6a13efe008431a60a8f84d292c173335c7da9d"
+  },
+  "rawManifestSHA256": "07d2eb6277beee925f45c15d561f1e124c687914ce0f2e933c33e4446dd46bf1",
+  "contacts": [
+    {
+      "id": "jug-1-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #1 outer jug",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "flat-sloper-2-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #2 55 mm flat sloper",
+      "kind": "sloper",
+      "shape": "flat",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "round-sloper-3-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #3 65 mm round sloper",
+      "kind": "sloper",
+      "shape": "round",
+      "gripTypes": []
+    },
+    {
+      "id": "jug-14-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #14 jug",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "flat-sloper-2-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #2 55 mm flat sloper",
+      "kind": "sloper",
+      "shape": "flat",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "jug-1-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #1 outer jug",
+      "kind": "jug",
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-4-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #4 30 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-5-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #5 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-6-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #6 19 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 19,
+          "maximum": 19
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-7-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #7 36 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 36,
+          "maximum": 36
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-8-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #8 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-9-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #9 35 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-10-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #10 17 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 17
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-11-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #11 14 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-12-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #12 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-13-left",
+      "equipmentObjectID": "primary",
+      "name": "Left #13 14 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-15-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #15 50 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 50,
+          "maximum": 50
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-16-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #16 37 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 37,
+          "maximum": 37
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-17-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #17 28 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 28
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-18-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #18 32 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 32,
+          "maximum": 32
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-13-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #13 14 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-12-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #12 30 mm 2-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 2,
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "twoFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-11-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #11 14 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-10-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #10 17 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 17
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-9-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #9 35 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "pocket-8-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #8 15 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    },
+    {
+      "id": "edge-7-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #7 36 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 36,
+          "maximum": 36
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-6-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #6 19 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 19,
+          "maximum": 19
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "edge-5-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #5 25 mm edge",
+      "kind": "edge",
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "gripTypes": []
+    },
+    {
+      "id": "pocket-4-right",
+      "equipmentObjectID": "primary",
+      "name": "Right #4 30 mm 3-finger pocket",
+      "kind": "pocket",
+      "fingerCapacity": 3,
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "gripTypes": [
+        "threeFingerPocket"
+      ]
+    }
+  ],
+  "publishedDepthsMm": {
+    "pocket-4-left": 30,
+    "edge-5-left": 25,
+    "edge-6-left": 19,
+    "edge-7-left": 36,
+    "pocket-8-left": 15,
+    "pocket-9-left": 35,
+    "pocket-10-left": 17,
+    "edge-11-left": 14,
+    "pocket-12-left": 30,
+    "pocket-13-left": 14,
+    "pocket-15-center": 50,
+    "pocket-16-center": 37,
+    "pocket-17-center": 28,
+    "pocket-18-center": 32,
+    "pocket-13-right": 14,
+    "pocket-12-right": 30,
+    "edge-11-right": 14,
+    "pocket-10-right": 17,
+    "pocket-9-right": 35,
+    "pocket-8-right": 15,
+    "edge-7-right": 36,
+    "edge-6-right": 19,
+    "edge-5-right": 25,
+    "pocket-4-right": 30,
+    "flat-sloper-2-left": 55,
+    "flat-sloper-2-right": 55,
+    "round-sloper-3-center": 65
+  },
+  "faceEnvelopeMM": [
+    711,
+    222
+  ],
+  "estimatedDisplayDepthMM": 94,
+  "otherPackageFiles": 203,
+  "sourceEvidence": {
+    "approvalStatus": "approved",
+    "revisionNotes": "Manufacturer photograph and independent numbered depth diagram establish broad arc shell taper, outer and center jugs, top slopers, long second-row edges, lower pocket pairs and four central pockets. Published envelope 28 x 8.75 in. Preserve current split left/right flat sloper and combined center round sloper identity. Another active PR #516 concerns handCapacity only.",
+    "sources": [
+      {
+        "slug": "metolius-simulator-3d",
+        "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-01.jpg",
+        "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Simulator-black-white.jpg?v=1759460469",
+        "publisher": "Metolius",
+        "sha256": "5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9",
+        "bytes": 274938,
+        "support": "Manufacturer product gallery",
+        "retainedAt": "2026-09-29",
+        "classification": "primary manufacturer"
+      },
+      {
+        "slug": "metolius-simulator-3d",
+        "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-03.jpg",
+        "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
+        "publisher": "Metolius",
+        "sha256": "e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a",
+        "bytes": 120962,
+        "support": "Manufacturer product gallery",
+        "retainedAt": "2026-09-29",
+        "classification": "primary manufacturer"
+      },
+      {
+        "slug": "metolius-simulator-3d",
+        "file": "docs/source-audits/2026-09-29-remaining-cad/metolius-simulator-3d/sources/product-page.html",
+        "url": "https://www.metoliusclimbing.com/products/simulator-training-board",
+        "publisher": "Metolius",
+        "sha256": "bbd4d8371e1e9a31dc1adc6d16250618facbce264e0f87eaf2adfdc83a151eb4",
+        "bytes": 242707,
+        "support": "Manufacturer product identity and published overall dimensions",
+        "retainedAt": "2026-09-29",
+        "classification": "primary manufacturer supplementary fact source"
+      }
+    ],
+    "approval": {
+      "reviewer": "asherlc",
+      "date": "2026-09-29",
+      "method": "direct conversation",
+      "quote": "those are fine, feel free to use more searches for individual boards as needed",
+      "consolidatedReview": ".context/placid-badger/source-review.json"
+    }
+  },
+  "preservationPolicy": "Preserve original capacity/finger metadata exactly; unrelated PR516 is excluded.",
+  "capture": "Canonical plastic metadata revision before Opus geometry correction",
+  "recordedAtUTC": "2026-10-01T15:39:37.434017+00:00",
+  "surfaceFinish": "plastic",
+  "originalDomeReference": {
+    "source": "original-9449.FCStd",
+    "sha256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+    "immutableCommit": "ca5024c3b62f5ecc87e669e1ecab398e650b3890"
+  }
+}

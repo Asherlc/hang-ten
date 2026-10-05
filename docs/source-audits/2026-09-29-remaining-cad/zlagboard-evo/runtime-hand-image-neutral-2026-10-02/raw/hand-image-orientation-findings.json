@@ -1,0 +1,33 @@
+{
+  "status": "ORIENTATION_PASS_APPEARANCE_STILL_FAIL",
+  "binarySHA256": "aa9b77b58f01853d0e4964b7d58642a51e9cdc5d573e4512384b7edc7c7184f0",
+  "wholeImagesReviewed": [
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-c/whole-app.png",
+      "sha256": "57a113a0e9d869d6a6783959718648d88820e82008e0fb01c608af58773ef80f"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/whole-app.png",
+      "sha256": "45ea32ab480e14768360bab818a6cbde066d5b6ed2358ffec1930ee13b6b5e7a"
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-image-c/generated-hand.png",
+      "sha256": "39a7c47c37955c768abfd83e2c023804434ed9416c57c8d730543bdf67823c61"
+    }
+  ],
+  "observations": [
+    "Hands upright after fixed vertical coordinate normalization, mirrored left/right arrangement preserved",
+    "Image hand shading still much darker than live; left fingers difficult to read",
+    "No obvious clipping; cream visible around outlines"
+  ],
+  "lightingObservation": {
+    "resourcePresent": false,
+    "intensityExponent": 0
+  },
+  "limits": [
+    "Nil offscreen environment resource is observed; live system resource and sole cause of darkness not established",
+    "No gamma correction justified by primary-source audit",
+    "No workout/production/acceptance result"
+  ],
+  "next": "One fixed neutral runtime IBL appearance adaptation, separately reviewed and tested"
+}

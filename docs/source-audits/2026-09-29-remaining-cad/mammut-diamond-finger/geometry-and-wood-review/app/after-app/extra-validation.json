@@ -1,0 +1,152 @@
+{
+  "owner": "placid-badger",
+  "simulator": "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+  "status": "captured",
+  "method": "Existing Train card without a selection; existing detail route and real AXe drag gestures from live map bounds. Complete simulator frames, no cropping.",
+  "selectedContactOnOrbits": "mam-upper-inset-r",
+  "selectionPreserved": true,
+  "projectedContactFramesChangedAfterEachDrag": true,
+  "mapFrameBeforeOrbit": {
+    "width": 334,
+    "y": 242,
+    "x": 34,
+    "height": 77
+  },
+  "commands": [
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/after-app/wood-unselected.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+      "com.hangten.training"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "201.0",
+      "--start-y",
+      "288.5",
+      "--end-x",
+      "243.0",
+      "--end-y",
+      "250.5",
+      "--duration",
+      "0.9",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/after-app/wood-orbit-left.png"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "swipe",
+      "--start-x",
+      "243.0",
+      "--start-y",
+      "280.5",
+      "--end-x",
+      "159.0",
+      "--end-y",
+      "280.5",
+      "--duration",
+      "0.9",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "/opt/homebrew/bin/axe",
+      "describe-ui",
+      "--udid",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A"
+    ],
+    [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "2B43841B-18A2-46B4-8080-B4E90AA24F4A",
+      "screenshot",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mammut-wood-integration/after-app/wood-orbit-right.png"
+    ]
+  ],
+  "files": {
+    "wood-orbit-right-accessibility.json": "c26f225d27ae85fdcd880f758b1443217e75912398a29f952ebd8ead639d7888",
+    "wood-orbit-left-accessibility.json": "dd27e884a5354ca3e59a34529490be63a8be2333f553047d066657193c7e1937",
+    "wood-orbit-left.png": "885b3e4041b80479e7eea9e8e753bf70b0af7ca82077f6a159ea9e16f66bc2ee",
+    "wood-unselected-accessibility.json": "c92bafed1b7120412d81d8ebd24a0a8d72a820f1bc005327cb1b5b20e679529e",
+    "wood-orbit-right.png": "45efb85db69435248714b209cb7cf7d657669e8964dbc8c5b6a88332baead9da",
+    "wood-unselected.png": "c5f7a1c25f009bf024a39c25581fb4c75b0f97cdfc42ccc5c0ef10404763b460"
+  },
+  "packageSourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe"
+}

@@ -1,0 +1,15 @@
+{
+  "sourceRef": "PL-1",
+  "url": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+  "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/plateau-lifting-edge/evidence/product-page-current.html",
+  "retainedHTMLSHA256": "8638b5d9ede3bc42bc06e693e2586674253c39a766f5a2213cde71f4b483a3a7",
+  "lineNumber": 7210,
+  "exactShortPrimaryText": "6mm Edelrid PES Cord.",
+  "publishedCordDiameterMM": 6,
+  "publishedRadiusMM": 3,
+  "existingDisplayRadiusMM": 2,
+  "existingEstimatedRestLengthMM": 420,
+  "lengthStatus": "Display estimate; no exact primary length is stated in this retained source.",
+  "blockerExactShortPrimaryText": "3D printed edge blocker for 15/10mm lifting",
+  "blockerMaterialStatus": "Manufacturing method published; polymer and precise appearance are unspecified."
+}

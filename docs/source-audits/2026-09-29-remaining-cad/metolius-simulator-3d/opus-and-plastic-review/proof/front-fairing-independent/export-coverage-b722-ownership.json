@@ -1,0 +1,17 @@
+{
+  "owner": "placid-badger",
+  "name": "export-coverage-b722",
+  "timeoutSeconds": 240,
+  "command": [
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/check_export_coverage.py",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/candidate/assets/primary.usdz",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/final-native-body-mesh.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/native-preview-provenance.json",
+    ".context/placid-badger/metolius-simulator-3d-front-fairing/independent-validation/export-coverage-b722.json"
+  ],
+  "ownedProcessGroup": 22975,
+  "exitCode": 0,
+  "elapsedSeconds": 10.27634137502173,
+  "ownedGroupCleaned": true,
+  "tempRemoved": true
+}

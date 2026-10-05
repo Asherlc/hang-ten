@@ -1,0 +1,18 @@
+{
+  "name": "placid-badger-mini-final-package-validation",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "hangboard_packages.cli",
+    "validate",
+    "--root",
+    "Hangboards",
+    "--final-inventory"
+  ],
+  "timeoutSeconds": 300,
+  "environment": {
+    "HANGTEN_FREECAD_CMD": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+    "HANGTEN_CAD_PYTHONPATH": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/pxr311"
+  },
+  "scope": "Final package validation after delivery-record changes; native source and runtime files remain frozen."
+}

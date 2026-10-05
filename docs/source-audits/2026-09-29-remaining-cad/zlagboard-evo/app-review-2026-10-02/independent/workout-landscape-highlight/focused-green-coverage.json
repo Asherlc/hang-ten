@@ -1,0 +1,46 @@
+{
+  "atUTC": "2026-10-02T05:57:19.511968+00:00",
+  "focusedGreenSummary": ".context/placid-badger-cad-second-half/zlagboard-evo/ios-resume-2026-10-02/highlight-regression/green/summary.json",
+  "focusedGreenSummarySHA256": "bf4c7aeeea24a8d9eb660e821968e65443efd77b90b105d7ffa66a356ca3d11e",
+  "summary": {
+    "devicesAndConfigurations": [
+      {
+        "device": {
+          "architecture": "arm64",
+          "deviceId": "1684856E-FC2D-4407-8063-9B343B99CAD6",
+          "deviceName": "Hang Ten Paseo placid-badger-cad-second-half Review Zlagboard Evo Resume20261002",
+          "modelName": "iPhone 17 Pro",
+          "osBuildNumber": "23F77",
+          "osVersion": "26.5",
+          "platform": "iOS Simulator"
+        },
+        "expectedFailures": 0,
+        "failedTests": 0,
+        "passedTests": 4,
+        "skippedTests": 0,
+        "testPlanConfiguration": {
+          "configurationId": "1",
+          "configurationName": "Test Scheme Action"
+        }
+      }
+    ],
+    "environmentDescription": "HangTen \u00b7 Built with macOS 27.0.1",
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "finishTime": 1790920527.63,
+    "passedTests": 4,
+    "result": "Passed",
+    "runtimeWarnings": [],
+    "skippedTests": 0,
+    "startTime": 1790920503.154,
+    "statistics": [],
+    "testFailures": [],
+    "title": "Test - HangTen",
+    "topInsights": [],
+    "totalTestCount": 4
+  },
+  "productionPatchSHA256": "1f7b09f1dd957aaa8e9492ce558e1a82b589eb24eae98dbd5f8e8eca40d4905f",
+  "testPatchSHA256": "eaf1080e6eba341dad9352413bf444d77bd1a408e8c94ed9a3d95571499acd7e",
+  "testLimitation": "Hosted regressions passed before the fix. Actual intermittently stale app transitions supply failure evidence; focused tests ensure retained-host mode changes, material/picking, and package-finish behavior remain valid.",
+  "actualAfterFixRuntime": "pending worker capture; not claimed by this report"
+}

@@ -1,0 +1,1137 @@
+[
+  {
+    "name": "Parameters",
+    "type": "Part::Feature",
+    "bindings": {},
+    "topSixProperties": {
+      "TopSixDepth": [
+        {
+          "value": "6.0000000000000000"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Barrel",
+    "type": "Part::Cylinder",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "left10to20CutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "left10to20Cut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_10mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_10mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_20mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_20mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "left15to25CutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "left15to25Cut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_15mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_15mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_25mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_25mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftSixCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftSixCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_06mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_06mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftTwelveEightCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftTwelveEightCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_12mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_12mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_08mm_left_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_08mm_left_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftTrayArc",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "leftTraySurface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "right10to20CutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "right10to20Cut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_10mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_10mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_20mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_20mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "right15to25CutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "right15to25Cut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_15mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_15mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_25mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_25mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightSixCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightSixCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_06mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_06mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightTwelveEightCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightTwelveEightCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_12mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_12mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_08mm_right_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_edge_08mm_right_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightTrayArc",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "rightTraySurface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "CentralTwentySixCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "CentralTwentySixCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_20mm_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_20mm_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_06mm_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_06mm_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "CentralThirtyTwentyFiveCutProfile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "CentralThirtyTwentyFiveCut",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_30mm_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_30mm_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_25mm_mesh_001Profile",
+    "type": "Sketcher::SketchObject",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "hold_central_25mm_mesh_001Surface",
+    "type": "Part::Extrusion",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "LeftOuterBore",
+    "type": "Part::Cylinder",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "LeftInnerBore",
+    "type": "Part::Cylinder",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "RightInnerBore",
+    "type": "Part::Cylinder",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "RightOuterBore",
+    "type": "Part::Cylinder",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut0",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut1",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut2",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut3",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut4",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut5",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut6",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut7",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut8",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut9",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut10",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut11",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut12",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Cut13",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "FrontLipRoundover",
+    "type": "Part::Fillet",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_xm220",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_xm220",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_xm220",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_xm220",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_xm58_00001",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_xm58_00001",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_xm58_00001",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_xm58_00001",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_x58_00001",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_x58_00001",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_x58_00001",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_x58_00001",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_x220",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_x220",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_x220",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_x220",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_ym18",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_ym18",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_ym18",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_ym18",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_ym10",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_ym10",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_ym10",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_ym10",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_y0",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_y0",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_y0",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_y0",
+    "type": "Part::Fuse",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "SeamBox_z0",
+    "type": "Part::Box",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Lower_SeamBox_z0",
+    "type": "Part::Common",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Upper_SeamBox_z0",
+    "type": "Part::Cut",
+    "bindings": {},
+    "topSixProperties": {}
+  },
+  {
+    "name": "Joined_SeamBox_z0",
+    "type": "Part::Fuse",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "body_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "body"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_10mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_10mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-10-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_20mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_20mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-20-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_15mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_15mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-15-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_25mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_25mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-25-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_06mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_06mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-6-upper"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_12mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_12mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-12-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_08mm_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_08mm_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-8-left"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_rounded_left_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_rounded_left_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "rounded-tray"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_10mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_10mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-10-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_20mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_20mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-20-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_15mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_15mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-15-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_25mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_25mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-25-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_06mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_06mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-6-lower"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_12mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_12mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-12-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_edge_08mm_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_edge_08mm_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-8-right"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_rounded_right_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_rounded_right_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "rounded-tray"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_central_20mm_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_central_20mm_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-central-20"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_central_06mm_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_central_06mm_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-central-6"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_central_30mm_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_central_30mm_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-central-30"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  },
+  {
+    "name": "Region_hold_central_25mm_mesh_001",
+    "type": "Part::Common",
+    "bindings": {
+      "NodeID": [
+        {
+          "value": "hold_central_25mm_mesh_001"
+        }
+      ],
+      "NodeRole": [
+        {
+          "value": "contact"
+        }
+      ],
+      "ContactID": [
+        {
+          "value": "edge-central-25"
+        }
+      ]
+    },
+    "topSixProperties": {}
+  }
+]

@@ -1,0 +1,135 @@
+{
+  "scope": "13 complete images directly viewed at original detail: train-setup and elapsed 001,002,003,007,008,009,012,013,014,015,016,017 only. No crops or pixel measurement.",
+  "images": [
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/train-setup.png",
+      "sha256": "afdd21c81cc9097608fa4446ad603ec18422ecfa548373b3338474be646dc2c8",
+      "phase": "Train",
+      "visibleTimer": null,
+      "board": "neutral wood",
+      "pairedHandsVisible": false,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-001s.png",
+      "sha256": "ea531972587d0258ea3d427fea5e2fd22f7b19419e4be537b45020e542b5a3c9",
+      "phase": "Ready",
+      "visibleTimer": "00:02",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-002s.png",
+      "sha256": "0b8d6d38b8f00f4b1ba0d5a369499fee63dfe08a3b304fdf0720031e3309cad6",
+      "phase": "Ready",
+      "visibleTimer": "00:02",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-003s.png",
+      "sha256": "123bb018f0c96a54221abe6dc2680c14b7d849988bade1d29f2694e6541baaf2",
+      "phase": "Ready",
+      "visibleTimer": "00:01",
+      "board": "workout board not visible",
+      "pairedHandsVisible": false,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-007s.png",
+      "sha256": "1834f6e15bfbc9e1e602dfd83356c77d4aa5d1d3554bfd7535d4eb6f84eff09b",
+      "phase": "Hang set 1",
+      "visibleTimer": "00:03",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-008s.png",
+      "sha256": "6a3f16b1575fae543b1da2f0cbd3894ccc415f708cb133fdd3afedac7936acea",
+      "phase": "Hang set 1",
+      "visibleTimer": "00:02",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-009s.png",
+      "sha256": "8f02c3ddaa4e1c4da41dab40eeb5694d7973132e2d90176a3b46d0b61ed2f58c",
+      "phase": "Hang set 1",
+      "visibleTimer": "00:01",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-012s.png",
+      "sha256": "5353b003a3ddd6b5eb5528e5a05f9b5cc1141b10b9f4f04da8e872049575fb1a",
+      "phase": "Rest",
+      "visibleTimer": "02:58",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-013s.png",
+      "sha256": "c4a8be88e7d28f49e7754f19cb30d181fc883d31743af2aa2de924673eedf09e",
+      "phase": "Rest",
+      "visibleTimer": "02:57",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-014s.png",
+      "sha256": "c4a8be88e7d28f49e7754f19cb30d181fc883d31743af2aa2de924673eedf09e",
+      "phase": "Rest",
+      "visibleTimer": "02:57",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-015s.png",
+      "sha256": "c4a8be88e7d28f49e7754f19cb30d181fc883d31743af2aa2de924673eedf09e",
+      "phase": "Rest",
+      "visibleTimer": "02:57",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-016s.png",
+      "sha256": "962f5987a4892509283aa8e2422fa73673ebe555a21f8ecaf8ea78f683d36309",
+      "phase": "Rest",
+      "visibleTimer": "02:55",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    },
+    {
+      "file": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/train-only/control-a/elapsed-017s.png",
+      "sha256": "6a7ec6a65672d2af7b384e468ec23d31d0a13051a8d4248d4a951722c6b8a3da",
+      "phase": "Rest",
+      "visibleTimer": "02:54",
+      "board": "red selected lower outer pockets",
+      "pairedHandsVisible": true,
+      "directWholeImageViewed": true
+    }
+  ],
+  "findings": [
+    "Train setup visibly shows neutral Zlagboard.Evo.",
+    "Reviewed Hang 007/008/009 frames show correct red board selection with paired hands.",
+    "All six reviewed Rest frames 012 through 017 retain red board selection despite Rest and NEXT HOLD PREVIEW, a visible mismatch.",
+    "Root separately reports missing hands in 004/005; those frames were not independently opened for this report."
+  ],
+  "fullRunEvaluated": false,
+  "limitations": [
+    "Capture ongoing; tail not reviewed.",
+    "No CPU/scene timing inference from screenshots.",
+    "Filename elapsed values are capture labels, not exact semantic-transition times."
+  ],
+  "runtimeActionsPerformed": false
+}

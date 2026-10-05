@@ -50,6 +50,30 @@ and transient suspension-renderer path. ODR is a plausible boundary only when
 the model is unavailable, its resource URL cannot be resolved, its bytes do not
 match the descriptor, or RealityKit cannot decode it.
 
+## Cord-point display tilt
+
+The normal RealityKit viewer uses bundled suspension geometry without starting
+live rope simulation. Pitch rotates each corded board instance about the line
+through its authored cord attachments or passage centers. A single attachment uses the canonical view's
+horizontal axis through that point. Multiple points use their widest separation
+through their mean. Authored reflection is retained when calculating this axis.
+
+The entire cord stays in its canonical pose, including guides and free spans.
+Pitch changes only the board transform. The camera fits the board's local
+rotation envelope at rest and keeps the same transform during pitch, so the
+cord also stays fixed on screen. Yaw and manual zoom retain their existing
+camera interaction. Reset restores the exact canonical board transform.
+Automatic hold adjustment is calculated from the canonical pose to avoid
+accumulating tilt and animates over 0.28 seconds; Reduce Motion applies it
+immediately. Manual gestures and lifecycle changes cancel superseded animation.
+
+This is a geometric display hinge, without a rope collision or equilibrium
+solve. Canonical cords are not rerouted when the board turns. Uncorded boards
+retain camera pitch when all instances are uncorded. In a mixed scene,
+uncorded instances rotate about the framing target with the inverse of that
+camera pitch, preserving their pitch view alongside the fixed cord. The loader's `useLivePhysics` opt-in retains the existing
+solver integration test lane.
+
 ## Diagnose by symptom
 
 | Symptom | First boundary to inspect | Do not use as a shortcut |
@@ -91,15 +115,28 @@ safe for a particular load.
 
 Current validated `sourceFact`, retained evidence, and audit outcome are the
 decision authority. Older design documents are historical context, not a
-reason to reverse a later source-backed ruling. The current Baguette Evo record
-is the important regression example: `yy.baguette-evo` deliberately has
-`documentedSuspension`, a represented `twoBranchCord`, and retained
-exact-revision manufacturer evidence. Its model media may also retain
-orientation metadata; those fields are not mutually exclusive in the current
-schema. Do not remove its suspension because an older orientation design said
+reason to reverse a later source-backed ruling. Native `yy.baguette-evo` uses
+source-backed `cadRoutedCord` from its descriptor-bound `suspension.json`,
+authored with `ropeSolver.method: "nativeRoutes"`, alongside orientation
+metadata. Preserve that current contract; do not remove its suspension or
+restore a historical topology because an older orientation design said
 otherwise.
 
 ## Select the narrowest truthful topology
+
+For a CAD board, preserve the evidenced connection graph and follow
+[CAD cord authoring](HANGBOARD_CORD_AUTHORING.md). Connected internal mouth
+pairs use the standard CAD passage void, measured channel length and
+`twoBranchCord` (or `threadedLoopCord`) with `internalLoop`. Source-backed
+independent visible leads, exterior wraps and unknown interior joins use
+`cadRoutedCord` with authoring `ropeSolver.method: "nativeRoutes"`; do not
+invent a hidden connection. Generate every canonical pose against the actual
+native solid with `solve_threaded_rope.py --apply`, reproduce it with `--check`,
+and retain native-solid clearance, length, tube and topology checks. The table
+below governs older non-CAD packages; migrate their cords to the native method
+matching the evidence when they move to CAD. Do not retain hand-authored routes
+or `pairedLeadCord` on a CAD board; extend the solver with evidence and tests
+when the supported native methods do not fit.
 
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
@@ -123,10 +160,20 @@ mouths may hold generated settled-route caches; other point-only passages
 and single cords cannot use these overrides. Parsers validate the resolved route,
 including full length and distinct adjacent points.
 
-Captain pose-specific `attachmentPoints` delimit the visible cord at the
-selected upper channel. They are clipped display endpoints, not evidence for
-additional physical mouths or a hidden interior connection. Keep their ordered
-over-lip routes clear of selectable lips and the white floor apertures.
+Older non-CAD Captain pose-specific `attachmentPoints` delimit the visible
+cord at the selected upper channel. They are clipped display endpoints, not
+evidence for additional physical mouths or a hidden interior connection.
+Native revisions instead follow their current CAD source audit.
+
+For native Captain Fingerfood DUAL, the retained maker title photo shows both
+leads descending into the front cavity's two floor openings. Its existing CAD
+bores and front mouth centers are unchanged by the 2026-09-30 review correction.
+Each native lead declares authoring `mouthAxis: [0, 0, 1]` in the importer basis
+to fix the front entry side before native route generation. A path that reaches
+the front terminal through the rear mouth may pass collision checks while
+contradicting this observed threading. The two leads remain independent visible
+strands; no hidden rear connection is established. See the
+[DUAL source audit](source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/README.md).
 
 Convert retained source coordinates into the descriptor/importer basis before
 using them as model points. Baguette Evo's retained Blender markers are Z-up,
@@ -174,7 +221,7 @@ pose from the native solid and caches them in `suspension.json`; the renderer
 uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
 positions, channel and cord diameters, anchor offset,
 and clearance are labeled display estimates. A sidecar's `modelSHA256` must
-match its descriptor, and the delivery lock pins its bytes.
+match its descriptor; package validation checks that binding.
 
 ## Make an evidence-backed correction
 

@@ -1,0 +1,79 @@
+{
+  "kind": "fresh empty-stage Mini USDZ reimport and descriptor gate",
+  "passed": true,
+  "sourceSHA256": "1ff0b22347a1ae20d54e57a8a1a8c595dd63918b17f35cb9e009e82524f4cd51",
+  "modelSHA256": "1127b3523e411696541c4ff7c308a39af7468aa9d9af91f4813dc484cfcd1360",
+  "descriptorSHA256": "a273405ad25027df88deeb714451045e7e2e809512d16fb2ec77804de0223f95",
+  "duplicateTriangleCount": 0,
+  "priorTriangleCount": 28842,
+  "wholeTrianglePositionMultisetExact": false,
+  "changedTriangulationExpectedFromNativeSurfaceSeam": true,
+  "nativeClosedBodyUnchanged": true,
+  "logicalPinchTriangleUnionExact": true,
+  "flatPressureBandBoundaryCrossingBodyTriangles": 0,
+  "pressureNativeZMinMm": 19.82417330145836,
+  "emptyStageCreatedBeforeReference": true,
+  "materials": [],
+  "shaders": [],
+  "boundMeshes": [],
+  "materialBindingRelationships": [],
+  "archiveMembers": [
+    "stage.usdc"
+  ],
+  "nodeCount": 7,
+  "contactCount": 4,
+  "triangleCount": 29122,
+  "modelBounds": {
+    "min": [
+      -0.050000001,
+      -0.029999999,
+      -0.0125
+    ],
+    "max": [
+      0.050000001,
+      0.029999999,
+      0.0125
+    ]
+  },
+  "completeDescriptorRebuiltExactly": true,
+  "modelHashBound": true,
+  "normalsInterpolation": "vertex",
+  "meshInventory": {
+    "nature_body": {
+      "vertices": 8202,
+      "triangles": 12551,
+      "unbound": true
+    },
+    "nature_wood": {
+      "vertices": 3603,
+      "triangles": 6991,
+      "unbound": true
+    },
+    "nature_stone": {
+      "vertices": 270,
+      "triangles": 266,
+      "unbound": true
+    },
+    "nature_pinch": {
+      "vertices": 132,
+      "triangles": 130,
+      "unbound": true
+    },
+    "nature_jug": {
+      "vertices": 132,
+      "triangles": 130,
+      "unbound": true
+    },
+    "nature_jug_ends": {
+      "vertices": 4716,
+      "triangles": 8652,
+      "unbound": true
+    },
+    "nature_jug_pressure": {
+      "vertices": 410,
+      "triangles": 402,
+      "unbound": true
+    }
+  },
+  "meshDataSHA256": "f014161fd7945a93990c928276c3722218df16046b0fb4218688bb0cc6ef1046"
+}

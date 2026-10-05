@@ -1,0 +1,102 @@
+[
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "app"
+    ],
+    "startEpoch": 1791006566.954139,
+    "limitSeconds": 20,
+    "pid": 58739,
+    "exitStatus": 0,
+    "endEpoch": 1791006568.5739782
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "get_app_container",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training",
+      "data"
+    ],
+    "startEpoch": 1791006569.033799,
+    "limitSeconds": 20,
+    "pid": 58754,
+    "exitStatus": 0,
+    "endEpoch": 1791006570.398689
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "launch",
+      "--terminate-running-process",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791006570.4089978,
+    "limitSeconds": 20,
+    "pid": 58767,
+    "exitStatus": 0,
+    "endEpoch": 1791006572.6099598
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "io",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "screenshot",
+      ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/hand-image-static-live-a/whole-app.png"
+    ],
+    "startEpoch": 1791006586.622387,
+    "limitSeconds": 20,
+    "pid": 58888,
+    "exitStatus": 0,
+    "endEpoch": 1791006593.357266
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "xcrun",
+      "simctl",
+      "terminate",
+      "BDCA0D77-94C2-4A97-900B-443F75C64691",
+      "com.hangten.training"
+    ],
+    "startEpoch": 1791006596.3672671,
+    "limitSeconds": 10,
+    "pid": 58983,
+    "exitStatus": 0,
+    "endEpoch": 1791006597.314838
+  },
+  {
+    "command": [
+      "rtk",
+      "proxy",
+      "ps",
+      "-p",
+      "58790",
+      "-o",
+      "pid=,comm="
+    ],
+    "startEpoch": 1791006597.315789,
+    "limitSeconds": 3,
+    "pid": 59000,
+    "exitStatus": 1,
+    "endEpoch": 1791006597.379971
+  }
+]

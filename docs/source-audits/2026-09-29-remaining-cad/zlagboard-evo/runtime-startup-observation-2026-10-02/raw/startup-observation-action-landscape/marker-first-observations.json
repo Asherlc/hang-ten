@@ -1,0 +1,156 @@
+[
+  {
+    "sequence": 3,
+    "event": "startup-board-load-call",
+    "recordEpoch": 1791002055.251087,
+    "firstObservedEpoch": 1791002056.2604449,
+    "firstObservedMonotonic": 85130.811943041
+  },
+  {
+    "sequence": 5,
+    "event": "startup-board-load-return",
+    "recordEpoch": 1791002055.987809,
+    "firstObservedEpoch": 1791002056.2604449,
+    "firstObservedMonotonic": 85130.811943041
+  },
+  {
+    "sequence": 6,
+    "event": "startup-board-ready-published",
+    "recordEpoch": 1791002055.9880118,
+    "firstObservedEpoch": 1791002056.2604449,
+    "firstObservedMonotonic": 85130.811943041
+  },
+  {
+    "sequence": 16,
+    "event": "startup-context-appear",
+    "recordEpoch": 1791002056.582555,
+    "firstObservedEpoch": 1791002056.614673,
+    "firstObservedMonotonic": 85131.166172041
+  },
+  {
+    "sequence": 17,
+    "event": "workout-probe-appear-before-autostart",
+    "recordEpoch": 1791002056.58352,
+    "firstObservedEpoch": 1791002056.614673,
+    "firstObservedMonotonic": 85131.166172041
+  },
+  {
+    "sequence": 18,
+    "event": "startup-request-entry",
+    "recordEpoch": 1791002056.591625,
+    "firstObservedEpoch": 1791002056.614673,
+    "firstObservedMonotonic": 85131.166172041
+  },
+  {
+    "sequence": 19,
+    "event": "startup-audio-prepare-before",
+    "recordEpoch": 1791002056.591809,
+    "firstObservedEpoch": 1791002056.614673,
+    "firstObservedMonotonic": 85131.166172041
+  },
+  {
+    "sequence": 20,
+    "event": "startup-audio-prepare-after",
+    "recordEpoch": 1791002056.7180362,
+    "firstObservedEpoch": 1791002056.742962,
+    "firstObservedMonotonic": 85131.294460791
+  },
+  {
+    "sequence": 21,
+    "event": "startup-audio-arm-before",
+    "recordEpoch": 1791002056.718349,
+    "firstObservedEpoch": 1791002056.742962,
+    "firstObservedMonotonic": 85131.294460791
+  },
+  {
+    "sequence": 22,
+    "event": "startup-audio-arm-after",
+    "recordEpoch": 1791002056.743825,
+    "firstObservedEpoch": 1791002056.774795,
+    "firstObservedMonotonic": 85131.3262935
+  },
+  {
+    "sequence": 23,
+    "event": "startup-cancellation-requested",
+    "recordEpoch": 1791002056.743978,
+    "firstObservedEpoch": 1791002056.774795,
+    "firstObservedMonotonic": 85131.3262935
+  },
+  {
+    "sequence": 24,
+    "event": "startup-board-load-call",
+    "recordEpoch": 1791002056.744111,
+    "firstObservedEpoch": 1791002056.774795,
+    "firstObservedMonotonic": 85131.3262935
+  },
+  {
+    "sequence": 25,
+    "event": "startup-audio-preparation-change",
+    "recordEpoch": 1791002056.76143,
+    "firstObservedEpoch": 1791002056.774795,
+    "firstObservedMonotonic": 85131.3262935
+  },
+  {
+    "sequence": 26,
+    "event": "startup-arm-task-enter",
+    "recordEpoch": 1791002056.841278,
+    "firstObservedEpoch": 1791002056.871099,
+    "firstObservedMonotonic": 85131.422598083
+  },
+  {
+    "sequence": 27,
+    "event": "startup-arm-task-resumed",
+    "recordEpoch": 1791002056.8476439,
+    "firstObservedEpoch": 1791002056.871099,
+    "firstObservedMonotonic": 85131.422598083
+  },
+  {
+    "sequence": 28,
+    "event": "startup-visible-countdown-before",
+    "recordEpoch": 1791002056.847816,
+    "firstObservedEpoch": 1791002056.871099,
+    "firstObservedMonotonic": 85131.422598083
+  },
+  {
+    "sequence": 29,
+    "event": "startup-visible-countdown-after",
+    "recordEpoch": 1791002056.851439,
+    "firstObservedEpoch": 1791002056.871099,
+    "firstObservedMonotonic": 85131.422598083
+  },
+  {
+    "sequence": 32,
+    "event": "startup-board-load-return",
+    "recordEpoch": 1791002056.966518,
+    "firstObservedEpoch": 1791002056.967249,
+    "firstObservedMonotonic": 85131.518748458
+  },
+  {
+    "sequence": 33,
+    "event": "startup-board-ready-published",
+    "recordEpoch": 1791002056.9667292,
+    "firstObservedEpoch": 1791002056.9983401,
+    "firstObservedMonotonic": 85131.549839166
+  },
+  {
+    "sequence": 53,
+    "event": "startup-audio-preparation-change",
+    "recordEpoch": 1791002060.76457,
+    "firstObservedEpoch": 1791002060.784653,
+    "firstObservedMonotonic": 85135.336161125
+  },
+  {
+    "sequence": 56,
+    "event": "startup-audio-preparation-change",
+    "recordEpoch": 1791002063.04104,
+    "firstObservedEpoch": 1791002063.0511281,
+    "firstObservedMonotonic": 85137.6026415
+  },
+  {
+    "sequence": 65,
+    "event": "startup-audio-preparation-change",
+    "recordEpoch": 1791002067.088519,
+    "firstObservedEpoch": 1791002067.104853,
+    "firstObservedMonotonic": 85141.656376125
+  }
+]

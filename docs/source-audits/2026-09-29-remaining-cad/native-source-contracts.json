@@ -1,0 +1,152 @@
+{
+  "passed": true,
+  "packages": [
+    {
+      "package": "aelith-cyclops-011",
+      "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+      "archiveMembers": 40,
+      "sketches": 9,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+      "archiveMembers": 103,
+      "sketches": 22,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+      "archiveMembers": 118,
+      "sketches": 23,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "frictitious-nug",
+      "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "archiveMembers": 65,
+      "sketches": 3,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "frictitious-port-a-board",
+      "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+      "archiveMembers": 92,
+      "sketches": 5,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "mammut-diamond-finger",
+      "sourceSHA256": "06fb78ae8190d4ee90fdc343889940df1a33ddc552e5b866242eb55fae2158fe",
+      "archiveMembers": 214,
+      "sketches": 39,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "metolius-contact",
+      "sourceSHA256": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+      "archiveMembers": 565,
+      "sketches": 135,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "metolius-simulator-3d",
+      "sourceSHA256": "9449f932e98c23fc9115d7a2cd0cfe5aacb158fd574d7ba573287ef7c5b67222",
+      "archiveMembers": 545,
+      "sketches": 128,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "nature-stone-hanger",
+      "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+      "archiveMembers": 279,
+      "sketches": 62,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "nature-stone-hanger-mini",
+      "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+      "archiveMembers": 56,
+      "sketches": 4,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "nature-stone-hanger-mini-karma8a",
+      "sourceSHA256": "edbde3e0ff0e8824bbea4e49ff821d535f423b0b9e6dd136f9b15d1f288781d4",
+      "archiveMembers": 51,
+      "sketches": 3,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "owl-climb-poker",
+      "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+      "archiveMembers": 974,
+      "sketches": 187,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "plateau-lifting-edge",
+      "sourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "archiveMembers": 76,
+      "sketches": 0,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "tension-flash-board",
+      "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+      "archiveMembers": 177,
+      "sketches": 28,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "trango-rock-prodigy-forge",
+      "sourceSHA256": "8376c4a3ab15979ceb39c513f7533b5891240321a74dd4fd2894e8057059d75a",
+      "archiveMembers": 196,
+      "sketches": 29,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "yy-baguette",
+      "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+      "archiveMembers": 112,
+      "sketches": 8,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "yy-baguette-evo",
+      "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+      "archiveMembers": 285,
+      "sketches": 30,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "yy-penta-evo",
+      "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+      "archiveMembers": 228,
+      "sketches": 48,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "yy-travelboard",
+      "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+      "archiveMembers": 86,
+      "sketches": 8,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "zlagboard-evo",
+      "sourceSHA256": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+      "archiveMembers": 332,
+      "sketches": 78,
+      "embeddedMeshFeatures": 0
+    },
+    {
+      "package": "zlagboard-pro",
+      "sourceSHA256": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+      "archiveMembers": 465,
+      "sketches": 113,
+      "embeddedMeshFeatures": 0
+    }
+  ]
+}

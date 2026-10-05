@@ -1,0 +1,13 @@
+{
+  "copies": [
+    {
+      "source": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/BDCA0D77-94C2-4A97-900B-443F75C64691/data/Containers/Data/Application/BCC290FC-BA3C-4664-A641-4738F0749B34/Documents/HighlightDiagnostic-placid-badger-cad-second-half-train-host-suppressed/events-CE1A1B8F-D28C-49C6-989A-A8E6B517946B.jsonl",
+      "copy": ".context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/train-host-suppressed-landscape/events-CE1A1B8F-D28C-49C6-989A-A8E6B517946B.jsonl",
+      "sha256": "8ff8c5fd71b908fdedefdb3b8e4109c7677ae36abcfae06222573ecf5811e36b"
+    }
+  ],
+  "records": 144,
+  "completeContiguous": true,
+  "copiedEpoch": 1790988667.9170291,
+  "includesSamplerEnd": true
+}

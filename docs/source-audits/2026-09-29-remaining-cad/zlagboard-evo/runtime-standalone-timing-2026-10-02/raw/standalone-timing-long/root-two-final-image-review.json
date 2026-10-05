@@ -1,0 +1,23 @@
+{
+  "createdUTC": "2026-10-02T22:57:16.608938+00:00",
+  "reviewer": "/root",
+  "recordedBy": "/root/baguette_review_prep",
+  "basis": "Parent explicitly reported opening these two whole images and requested this separate hash-bound record. Recorder makes no independent image-review claim.",
+  "scope": "Two long-arm phase-final images only; not all 20 captures.",
+  "images": [
+    {
+      "path": "phase-3-active-plus-5.png",
+      "sha256": "2a583569930969f06a8dc2fe99a335ff6eb2e17ea8005c0876d28919b9f740ff",
+      "observedBoardColor": "red",
+      "correct": true
+    },
+    {
+      "path": "phase-4-preview-plus-5.png",
+      "sha256": "cda95adfaeef6df27e910ddd6b85f34b31f36e41a46476e77d7d69245a2259fe",
+      "observedBoardColor": "blue",
+      "correct": true
+    }
+  ],
+  "productionFix": false,
+  "actualWorkoutResolved": false
+}

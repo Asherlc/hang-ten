@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "finding": "Only explicit additionalContactIDs targets may aggregate native grip depths.",
+  "red": "red-unrelated-depth.log",
+  "redFailures": 3,
+  "redPasses": 15,
+  "green": "green-unrelated-depth-broader.log",
+  "greenPasses": 248,
+  "change": "For all other logical IDs retain one check per source object; skip shared-primary metadata agreement for those unrelated objects.",
+  "covered": [
+    "Two separated20 mm components cannot pass unrelated published60 mm depth after adding shared pinch",
+    "Independent unrelated primary axes retain their original successful checks",
+    "Shared conflicting primary axes still reject",
+    "Shared incomplete witness still rejects",
+    "All previous descriptor/compiler/package membership tests"
+  ],
+  "finalCompilerSHA256": "34b0a92874d739c70b6bb48c63e8730297b6fda6f610f34c90ccb895c23fe167",
+  "finalCADTestsSHA256": "896b26f48dc2b11cb092320d64bb54b10e157022f253598a16931ac858726015",
+  "packagesEdited": false
+}

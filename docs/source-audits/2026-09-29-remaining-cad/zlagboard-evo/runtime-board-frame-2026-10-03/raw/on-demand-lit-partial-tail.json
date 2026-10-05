@@ -1,0 +1,54 @@
+{
+  "reviewer": "baguette_review_prep",
+  "createdUTC": "2026-10-03T14:20:28.998949+00:00",
+  "scope": "Only two remaining completed whole images elapsed090 and183. No nonexistent later frames inferred.",
+  "images": [
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand-lit/elapsed-090s.png",
+      "sha256": "1d94a171a8aab691d8de987c0f213a50c3947d3dccf5152c956e34710a851bad",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step2 Rest",
+      "visibleTimer": "01:41",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "colorMatchesVisiblePhase": true,
+      "bothHandsVisible": true,
+      "appearance": "Whole warm wood board, legible cavity/top relief, full silhouette; both hands with red four-finger cues. No board blank."
+    },
+    {
+      "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand-lit/elapsed-183s.png",
+      "sha256": "4b1802705d9c89ef8e8d5691136fa44619c7fa13ae6f42e327fd77975e5e2d24",
+      "directWholeImageViewed": true,
+      "visiblePhase": "Step2 Rest",
+      "visibleTimer": "00:06",
+      "boardVisible": true,
+      "selectedContactColor": "blue",
+      "colorMatchesVisiblePhase": true,
+      "bothHandsVisible": true,
+      "appearance": "Whole warm wood board, legible cavity/top relief, full silhouette; both hands with red four-finger cues. No board blank."
+    }
+  ],
+  "runClassification": "INVALID_INCOMPLETE_20_OF_44",
+  "rawCompletion": {
+    "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand-lit/completion.json",
+    "sha256": "a05c1c899c862610c488bbe3c5374ff151f5bfd76670b08cac782dbcfa9cd1a0",
+    "captureCompleted": false,
+    "actualCaptures": 20,
+    "plannedCaptures": 44,
+    "visualResultRetained": "PENDING_WHOLE_IMAGE_REVIEW",
+    "errorsRetained": []
+  },
+  "parentReportedStop": "Fixed capture deadline after elapsed183; no full natural-cycle result. Original runtime failure remains authoritative and unchanged.",
+  "earlierReview": {
+    "path": ".context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/on-demand-lit-first-independent.json",
+    "sha256": "e132d089db60ee3f4389f7302f29f7f5b7abd4649c5bf75259c0832b4e0a2f3b",
+    "preservedFinding": "15 early active/rest board images correct; hands absent in initial Hang004/005, present006 onward."
+  },
+  "summary": "Both remaining Rest frames have correct blue contacts and legible board/hands. This does not establish following Hang or repair; capture protocol incomplete.",
+  "fullWorkflowPassed": false,
+  "repairEstablished": false,
+  "CPUBracketsAvailable": false,
+  "phaseTimingsKnown": false,
+  "sourceRuntimeRawEdited": false,
+  "humanAcceptanceChanged": false
+}

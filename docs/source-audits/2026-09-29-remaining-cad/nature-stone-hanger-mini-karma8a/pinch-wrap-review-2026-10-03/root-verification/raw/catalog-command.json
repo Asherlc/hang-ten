@@ -1,0 +1,11 @@
+{
+  "owner": "placid-badger",
+  "entrypoint": "hangboard_packages.cli.main",
+  "argv": [
+    "validate",
+    "--root",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/Hangboards",
+    "--final-inventory"
+  ],
+  "exitCode": 0
+}

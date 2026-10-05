@@ -1,0 +1,24 @@
+{
+  "files": [
+    {
+      "path": "HangTen/Views/RootView.swift",
+      "beforeSHA256": "4fdc38991e7904f37ed106bc74ed7320e1b6ca96f334938e09f669b2712b8554",
+      "afterSHA256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f",
+      "finalSHA256": "ce690c12d0182a57c659f3e4f01bf4b25c37c2dc6d98fbe9dafaa57686f4152f"
+    },
+    {
+      "path": "HangTen/Views/BoardModelView.swift",
+      "beforeSHA256": "9e5bf2e01d9686069201179e45f7e95266752efe37605c8ba841a36f1ae56312",
+      "afterSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c",
+      "finalSHA256": "40474cfd4b695d93b94a4ffa9b2d08f962539a4fbf9449c8c904e4cec9fe7e2c"
+    },
+    {
+      "path": "HangTen/Models/BoardModelRealityTypes.swift",
+      "beforeSHA256": "edc62a3db0a40b2c08ec6b13f05b78d5962768a5fb7fca83f84a07d592140cc4",
+      "afterSHA256": "f80b55405f331e3555404d545a75889043051f405dbfa94202b194fff93a44f1",
+      "finalSHA256": "48c2b5cc6a5d2c1b1b7912576b71f9ba1fca1e281b9655bdb5a46fa1cc684186"
+    }
+  ],
+  "patchSHA256": "7f143799e36ba403cb1ee7be9893046e8d752cf9e7838ea989b83330ad9f6536",
+  "scope": "Reviewed diagnostic plus retained two-field compile correction; no production adoption"
+}

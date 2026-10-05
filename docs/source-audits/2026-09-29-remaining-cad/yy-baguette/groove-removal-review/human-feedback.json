@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-01",
+  "boardNumber": 16,
+  "package": "yy-baguette",
+  "messages": [
+    "why ar trehre notches on the bottom",
+    "and there should be cords",
+    "cords go around the sides, not around the front",
+    "there are no grooves!",
+    "oh i guess the cords can be either way",
+    "nvm",
+    "but still, there are no grooves"
+  ],
+  "latestRuling": "Remove all grooves. Keep exterior cords; earlier wrap-direction objection was withdrawn. Use rounded native surfaces and retained manufacturer evidence.",
+  "implementation": "Removed eight groove tools and eight cuts; re-solved exterior cord routes against smooth native solid. Wood finish retained.",
+  "humanAcceptance": "pending corrected revision review",
+  "supersedes": "Grooved-end interpretation in original batch and initial wood-only review; not the retained maker image bytes."
+}

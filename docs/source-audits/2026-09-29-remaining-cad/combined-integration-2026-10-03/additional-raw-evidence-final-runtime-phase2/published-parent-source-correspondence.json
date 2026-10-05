@@ -1,0 +1,34 @@
+{
+  "ourRef": "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+  "publishedParentRef": "bad7500123243937db712f5b0139ab273e373836",
+  "command": [
+    "rtk",
+    "proxy",
+    "git",
+    "diff",
+    "--name-only",
+    "fa46c015bba7456f887ba46fc4049bdfcf697c24",
+    "bad7500123243937db712f5b0139ab273e373836",
+    "--",
+    "HangTen",
+    "HangTenTests",
+    "HangTenUITests",
+    "Hangboards",
+    "Tools",
+    "scripts",
+    "HangTen.xcodeproj"
+  ],
+  "paths": [
+    "HangTen",
+    "HangTenTests",
+    "HangTenUITests",
+    "Hangboards",
+    "Tools",
+    "scripts",
+    "HangTen.xcodeproj"
+  ],
+  "differentPaths": [],
+  "sourceTreesEqual": true,
+  "readOnlyPublishedRefs": true,
+  "noWorkspaceInspection": true
+}

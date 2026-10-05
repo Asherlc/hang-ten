@@ -1,0 +1,67 @@
+{
+  "status": "PROSPECTIVE_READ_ONLY_NO_TESTS_OR_EDITS",
+  "sources": {
+    "HangTen/Views/BoardModelView.swift": "1d256719a57fe4fa44ed419258f211fbd3193b7e7345080f920f839eaec9ab8a",
+    "HangTenTests/BoardModelRealityTests.swift": "b1ec2f9cff5ecc87487bd4bedc484ee7a7e16352cecd28979cb2607c10544d9c"
+  },
+  "existingCoverage": "Four cache<String> tests at BoardModelRealityTests.swift:7-58 cover lookup policy but never submit a GPU frame, convert an image, or exercise coordinator lifetime.",
+  "minimumAccessChange": {
+    "scope": "BoardModelView.swift only; tests in BoardModelRealityTests.swift",
+    "proposal": "Make BoardFrameCoordinator internal for @testable access. Add DEBUG internal read-only computed hasInFlightFrame and isIdle (frame/setup/pending nil) to gate real async boundaries. No new production counters, state writes, timers or fake completion path. Existing submit/image(for:)/disappear provide behavior surface.",
+    "warning": "isIdle may be true after disappear while setup pending only if definition is wrong; include setup in predicate. Tests must wait alternate-mode prefetch as well as requested frame."
+  },
+  "fixture": {
+    "source": "Reuse woodFixtureScene() at BoardModelRealityTests.swift:671-689: real small Mammut native resource and actual CustomMaterial path, nil positionID because fixture allowedPositionIDs is empty.",
+    "viewport": "160x96 points, scale1; unchanged contact membership from real fixture.",
+    "runtime": "Actual RealityRenderer/Metal completion; @MainActor async XCTest with bounded waiting/yielding. No UIImage pixel access, screenshot processing, image measurements, fake completion or manual model.highlight."
+  },
+  "threeTests": [
+    {
+      "name": "testBoardFrameCoordinatorPublishesAndReusesActualCompletedModes",
+      "steps": [
+        "Load real fixture; submit active nonempty contact input; await image(for:active) and idle so alternate preview prefetch completes.",
+        "Assert both actual UIImage.cgImage exist, expected160x96 dimensions and scale, distinct object identities; no color claim.",
+        "Submit preview then active and require immediate matching cached image object identity; await idle, repeat unchanged submit and require same objects."
+      ],
+      "proves": "GPU/CI conversion succeeds and current mode selects its completed image; existing cache identity tests alone do not prove this.",
+      "limit": "Does not prove red/blue pixels or actual SwiftUI display."
+    },
+    {
+      "name": "testBoardFrameCoordinatorLatestClearWinsDuringActualFlight",
+      "steps": [
+        "Submit active contact A; bounded-await hasInFlightFrame true before callback. In one uninterrupted MainActor turn submit another contact B then clear contacts with nil position.",
+        "Assert image(for:clear) initially nil, then await actual clear image and idle.",
+        "Assert old A and B lookups nil after clear publication and model state has no active position/transient cord. Image dimensions valid."
+      ],
+      "proves": "Latest pending request supersedes earlier semantic work; clear is not fulfilled by colored prior cache.",
+      "limit": "If no in-flight state is observed, fail with boundary-not-exercised; do not silently downgrade into sequential test. No stale-publication pixel assertion."
+    },
+    {
+      "name": "testBoardFrameCoordinatorDisappearRejectsLateFrameAndReappears",
+      "steps": [
+        "Submit active; wait actual flight, then disappear. Require current and alternate image lookups nil immediately.",
+        "Wait until setup/frame/pending all idle; cache still nil and unavailable false.",
+        "Resubmit same input on same coordinator, await actual image and idle; it must recover.",
+        "Disappear and drop strong coordinator reference; await weak coordinator release after actual outstanding work completes. Keep scene fixture separately only where needed, so do not mislabel scene retained by test as leak."
+      ],
+      "proves": "Late completion cannot repopulate disappeared cache, same-input reappearance works, eventual coordinator release.",
+      "limit": "Failure-to-complete is bounded test failure, not automatic proof of app leak; no injected driver/error path covered."
+    }
+  ],
+  "handReadinessAssessment": {
+    "retainedObservation": "Root reported real hand cues absent in firstHang004/005 in baseline and candidate snapshots; later visibility does not make initial cues valid.",
+    "sourceBoundary": "Board-frame forwarding replaces only non-pickable board surface; actual GripHandModelView hosts and lazy setup remain original.",
+    "claimAllowed": "Successful board color transition trial can support scoped board-frame repair only.",
+    "claimNotAllowed": [
+      "All workout hands valid",
+      "Board-frame change fixes initial hand latency",
+      "Precise hand construction/GPU latency from external screenshot offsets"
+    ],
+    "separateAcceptance": "Track initial missing cues explicitly in full workflow verdict. Existing externally timed captures show absence at sampled instants only; no causal/continuous-state inference."
+  },
+  "boundsAndLimits": [
+    "Only three proposed real-GPU tests plus existing four cache tests; no broader suite or new runtime matrix.",
+    "Actual normal-route whole screenshots still determine displayed board colors with real hands.",
+    "Source/error recovery improvements since prior review (resetCamera, failed environment Task cleared, synchronous render throw frame cleared) are visible, but no success inferred from source alone."
+  ]
+}

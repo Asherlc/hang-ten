@@ -1,0 +1,496 @@
+F.....F.....FF.....FFF........FFFFF                                      [100%]
+=================================== FAILURES ===================================
+______ test_model_display_wood_nodes_preserves_explicit_surface_selection ______
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_wood_nodes_0')
+
+    def test_model_display_wood_nodes_preserves_explicit_surface_selection(tmp_path: Path) -> None:
+        package = write_v3_model_package(tmp_path / "wood-display", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        document["presentations"][0]["media"]["display"]["woodNodeIDs"] = ["body", "edge-node"]
+        (package / "board.json").write_text(json.dumps(document))
+>       board = load_board_package(package).board
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1354: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'woodNodeIDs': ['body', 'edge-node']}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['woodNodeIDs']
+
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+____ test_model_display_plastic_nodes_preserves_explicit_surface_selection _____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_plastic_nod0')
+
+    def test_model_display_plastic_nodes_preserves_explicit_surface_selection(tmp_path: Path) -> None:
+        package = write_v3_model_package(tmp_path / "plastic-display", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        document["presentations"][0]["media"]["display"]["plasticNodeIDs"] = ["body", "edge-node"]
+        (package / "board.json").write_text(json.dumps(document))
+>       board = load_board_package(package).board
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1375: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'plasticNodeIDs': ['body', 'edge-node']}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['plasticNodeIDs']
+
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+___________ test_model_display_rejects_conflicting_surface_finishes ____________
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_rejects_con0')
+
+    def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> None:
+        package = write_v3_model_package(tmp_path / "mixed-display", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        display = document["presentations"][0]["media"]["display"]
+        display["woodNodeIDs"] = ["body"]
+        display["plasticNodeIDs"] = ["body", "edge-node"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="disjoint"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'disjoint'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['plasticNodeIDs', 'woodNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1398: AssertionError
+_________ test_model_display_granite_overrides_keep_board_wood_default _________
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_granite_ove0')
+
+    def test_model_display_granite_overrides_keep_board_wood_default(tmp_path: Path) -> None:
+        package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        display = document["presentations"][0]["media"]["display"]
+        display.update(surfaceFinish="wood", graniteNodeIDs=["edge-node"])
+        (package / "board.json").write_text(json.dumps(document))
+>       board = load_board_package(package).board
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1409: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'surfaceFinish': 'wood', 'graniteNodeIDs': ['edge-node']}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs', 'surfaceFinish']
+
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+_____ test_model_display_rejects_conflicting_granite_override[woodNodeIDs] _____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_rejects_con1')
+other = 'woodNodeIDs'
+
+    @pytest.mark.parametrize("other", ["woodNodeIDs", "plasticNodeIDs"])
+    def test_model_display_rejects_conflicting_granite_override(tmp_path: Path, other: str) -> None:
+        package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        display = document["presentations"][0]["media"]["display"]
+        display["graniteNodeIDs"] = ["edge-node"]
+        display[other] = ["edge-node"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="disjoint"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'disjoint'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs', 'woodNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1434: AssertionError
+___ test_model_display_rejects_conflicting_granite_override[plasticNodeIDs] ____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_rejects_con2')
+other = 'plasticNodeIDs'
+
+    @pytest.mark.parametrize("other", ["woodNodeIDs", "plasticNodeIDs"])
+    def test_model_display_rejects_conflicting_granite_override(tmp_path: Path, other: str) -> None:
+        package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+        document = json.loads((package / "board.json").read_text())
+        display = document["presentations"][0]["media"]["display"]
+        display["graniteNodeIDs"] = ["edge-node"]
+        display[other] = ["edge-node"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="disjoint"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'disjoint'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs', 'plasticNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1434: AssertionError
+_______ test_model_display_surface_finish_applies_without_node_inventory _______
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_surface_fin0')
+
+    def test_model_display_surface_finish_applies_without_node_inventory(tmp_path: Path) -> None:
+        package = write_v3_model_package(tmp_path / "board-finish", contacts=("edge",), body_nodes=("body", "new-body"))
+        document = json.loads((package / "board.json").read_text())
+        display = document["presentations"][0]["media"]["display"]
+        display["surfaceFinish"] = "wood"
+        (package / "board.json").write_text(json.dumps(document))
+>       board = load_board_package(package).board
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1445: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'surfaceFinish': 'wood'}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['surfaceFinish']
+
+Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+___ test_model_display_overrides_cannot_paint_attachment_nodes[woodNodeIDs] ____
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_overrides_c0')
+field = 'woodNodeIDs'
+
+    @pytest.mark.parametrize("field", ["woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"])
+    def test_model_display_overrides_cannot_paint_attachment_nodes(tmp_path: Path, field: str) -> None:
+        package = write_v3_model_package(tmp_path / "attachment-display", contacts=("edge",), body_nodes=("body",))
+        descriptor_path = package / "assets/primary.model.json"
+        descriptor = json.loads(descriptor_path.read_text())
+        descriptor["nodes"].append({"nodeID": "attachment", "role": "attachment"})
+        descriptor_path.write_text(json.dumps(descriptor))
+        document = json.loads((package / "board.json").read_text())
+        document["presentations"][0]["media"]["display"][field] = ["attachment"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="body or contact"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'body or contact'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['woodNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1490: AssertionError
+__ test_model_display_overrides_cannot_paint_attachment_nodes[plasticNodeIDs] __
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_overrides_c1')
+field = 'plasticNodeIDs'
+
+    @pytest.mark.parametrize("field", ["woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"])
+    def test_model_display_overrides_cannot_paint_attachment_nodes(tmp_path: Path, field: str) -> None:
+        package = write_v3_model_package(tmp_path / "attachment-display", contacts=("edge",), body_nodes=("body",))
+        descriptor_path = package / "assets/primary.model.json"
+        descriptor = json.loads(descriptor_path.read_text())
+        descriptor["nodes"].append({"nodeID": "attachment", "role": "attachment"})
+        descriptor_path.write_text(json.dumps(descriptor))
+        document = json.loads((package / "board.json").read_text())
+        document["presentations"][0]["media"]["display"][field] = ["attachment"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="body or contact"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'body or contact'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['plasticNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1490: AssertionError
+__ test_model_display_overrides_cannot_paint_attachment_nodes[graniteNodeIDs] __
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_model_display_overrides_c2')
+field = 'graniteNodeIDs'
+
+    @pytest.mark.parametrize("field", ["woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"])
+    def test_model_display_overrides_cannot_paint_attachment_nodes(tmp_path: Path, field: str) -> None:
+        package = write_v3_model_package(tmp_path / "attachment-display", contacts=("edge",), body_nodes=("body",))
+        descriptor_path = package / "assets/primary.model.json"
+        descriptor = json.loads(descriptor_path.read_text())
+        descriptor["nodes"].append({"nodeID": "attachment", "role": "attachment"})
+        descriptor_path.write_text(json.dumps(descriptor))
+        document = json.loads((package / "board.json").read_text())
+        document["presentations"][0]["media"]["display"][field] = ["attachment"]
+        (package / "board.json").write_text(json.dumps(document))
+>       with pytest.raises(ValueError, match="body or contact"):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'body or contact'
+E         Actual message: "board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs']"
+
+Tools/HangboardPackages/tests/test_model_first_packages.py:1490: AssertionError
+_ test_staging_preserves_package_authored_surface_finishes_without_model_edits[False] _
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b5a6c30>
+native = False
+
+    @pytest.mark.parametrize("native", [False, True])
+    def test_staging_preserves_package_authored_surface_finishes_without_model_edits(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native: bool
+    ) -> None:
+        repository_root = tmp_path / "repository"
+        source = make_v3_model_package(repository_root / "Hangboards" / "finish-fixture")
+        board_path = source / "board.json"
+        document = json.loads(board_path.read_text())
+        finish = {"surfaceFinish": "wood", "woodNodeIDs": ["Body"],
+                  "plasticNodeIDs": ["Right"], "graniteNodeIDs": ["Left"]}
+        document["presentations"][0]["media"]["display"].update(finish)
+        board_path.write_text(json.dumps(document))
+        if native:
+            write_cad_source(source)
+        shutil.copytree(
+            REPO_ROOT / "Tools/HangboardPackages/src/hangboard_packages",
+            repository_root / "Tools/HangboardPackages/src/hangboard_packages",
+        )
+        destination = tmp_path / "Build/HangTen.app/Hangboards"
+        configure_xcode_destination(monkeypatch, destination)
+>       load_staging_module().stage_board_packages(repository_root, destination)
+
+Tools/HangboardPackages/tests/test_board_package_staging.py:815: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/stage-board-packages.py:299: in stage_board_packages
+    inventory = package_module.discover_board_packages(
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3283: in discover_board_packages
+    package = load_board_package(entry)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'surfaceFinish': 'wood', 'woodNodeIDs': ['Body'], 'plasticNodeIDs': ['Right'], ...}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs', 'plasticNodeIDs', 'surfaceFinish', 'woodNodeIDs']
+
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package0/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+_ test_staging_preserves_package_authored_surface_finishes_without_model_edits[True] _
+
+tmp_path = PosixPath('/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b29e900>
+native = True
+
+    @pytest.mark.parametrize("native", [False, True])
+    def test_staging_preserves_package_authored_surface_finishes_without_model_edits(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch, native: bool
+    ) -> None:
+        repository_root = tmp_path / "repository"
+        source = make_v3_model_package(repository_root / "Hangboards" / "finish-fixture")
+        board_path = source / "board.json"
+        document = json.loads(board_path.read_text())
+        finish = {"surfaceFinish": "wood", "woodNodeIDs": ["Body"],
+                  "plasticNodeIDs": ["Right"], "graniteNodeIDs": ["Left"]}
+        document["presentations"][0]["media"]["display"].update(finish)
+        board_path.write_text(json.dumps(document))
+        if native:
+            write_cad_source(source)
+        shutil.copytree(
+            REPO_ROOT / "Tools/HangboardPackages/src/hangboard_packages",
+            repository_root / "Tools/HangboardPackages/src/hangboard_packages",
+        )
+        destination = tmp_path / "Build/HangTen.app/Hangboards"
+        configure_xcode_destination(monkeypatch, destination)
+>       load_staging_module().stage_board_packages(repository_root, destination)
+
+Tools/HangboardPackages/tests/test_board_package_staging.py:815: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+scripts/stage-board-packages.py:299: in stage_board_packages
+    inventory = package_module.discover_board_packages(
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3283: in discover_board_packages
+    package = load_board_package(entry)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:3174: in load_board_package
+    board = _load_board(_parse_board_document(raw_board, label))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1921: in _load_board
+    presentations = _load_presentations(value["presentations"], "board.json.presentations")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1715: in _load_presentations
+    presentations = tuple(
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1716: in <genexpr>
+    _load_presentation(item, f"{source}[{index}]")
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1376: in _load_presentation
+    media = _load_media(payload["media"], f"{source}.media")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1350: in _load_media
+    _load_model_display(payload["display"], f"{source}.display"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:1185: in _load_model_display
+    _closed(payload, {"camera"}, source)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+payload = {'camera': {'type': 'orthographic', 'viewDirection': [0, 0, -1], 'up': [0, 1, 0], 'fitPadding': 0.08}, 'surfaceFinish': 'wood', 'woodNodeIDs': ['Body'], 'plasticNodeIDs': ['Right'], ...}
+required = {'camera'}, source = 'board.json.presentations[0].media.display'
+optional = None
+
+    def _closed(
+        payload: Mapping[str, Any],
+        required: set[str],
+        source: str,
+        *,
+        optional: set[str] | None = None,
+    ) -> None:
+        allowed = required | (optional or set())
+        unknown = set(payload) - allowed
+        missing = required - set(payload)
+        if unknown:
+>           raise ValueError(f"{source} has unknown keys: {sorted(unknown)}")
+E           ValueError: board.json.presentations[0].media.display has unknown keys: ['graniteNodeIDs', 'plasticNodeIDs', 'surfaceFinish', 'woodNodeIDs']
+
+/private/var/folders/b4/95kqjtzd7zlc75ndbg2_svpr0000gp/T/pytest-of-asherlc/pytest-413/test_staging_preserves_package1/repository/Tools/HangboardPackages/src/hangboard_packages/board_catalog.py:97: ValueError
+=========================== short test summary info ============================
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_wood_nodes_preserves_explicit_surface_selection
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_plastic_nodes_preserves_explicit_surface_selection
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_rejects_conflicting_surface_finishes
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_granite_overrides_keep_board_wood_default
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_rejects_conflicting_granite_override[woodNodeIDs]
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_rejects_conflicting_granite_override[plasticNodeIDs]
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_surface_finish_applies_without_node_inventory
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_overrides_cannot_paint_attachment_nodes[woodNodeIDs]
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_overrides_cannot_paint_attachment_nodes[plasticNodeIDs]
+FAILED Tools/HangboardPackages/tests/test_model_first_packages.py::test_model_display_overrides_cannot_paint_attachment_nodes[graniteNodeIDs]
+FAILED Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits[False]
+FAILED Tools/HangboardPackages/tests/test_board_package_staging.py::test_staging_preserves_package_authored_surface_finishes_without_model_edits[True]
+12 failed, 23 passed, 173 deselected in 1.87s

@@ -1,0 +1,30 @@
+[
+  {
+    "beforeSequence": 90,
+    "afterSequence": 91,
+    "epochDelta": 261.2946820259094,
+    "uptimeDelta": 1.636135833337903,
+    "offsetChangeSeconds": 259.6585461925715
+  },
+  {
+    "beforeSequence": 101,
+    "afterSequence": 102,
+    "epochDelta": 927.9941160678864,
+    "uptimeDelta": 0.9990127083437983,
+    "offsetChangeSeconds": 926.9951033595426
+  },
+  {
+    "beforeSequence": 114,
+    "afterSequence": 115,
+    "epochDelta": 327.5832989215851,
+    "uptimeDelta": 1.0015169999969658,
+    "offsetChangeSeconds": 326.5817819215881
+  },
+  {
+    "beforeSequence": 172,
+    "afterSequence": 173,
+    "epochDelta": 788.764084815979,
+    "uptimeDelta": 52.617368625011295,
+    "offsetChangeSeconds": 736.1467161909677
+  }
+]

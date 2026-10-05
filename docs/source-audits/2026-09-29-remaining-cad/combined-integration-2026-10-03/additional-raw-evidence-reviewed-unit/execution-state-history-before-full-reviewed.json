@@ -1,0 +1,35 @@
+{
+  "owner": "placid-badger-cad-second-half",
+  "ownRef": "1ead8834f744fcaba2ce4d53b07545841b2d6927",
+  "parentRef": "4d010a76003a24c8f6d22f02e5b159eea1ee7d92",
+  "mergeInProgress": true,
+  "conflictsResolved": true,
+  "canonical81AndRows21Preserved": true,
+  "sourceDiffcheckPassed": true,
+  "pythonIntegrated": {
+    "passed": 881,
+    "failed": 1,
+    "failure": "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py stale primary equipment expectation; parent owns pending disjoint CI fix"
+  },
+  "runtimeValidation": "not started yet",
+  "pauseTest": "unchanged reproduction pending build",
+  "resourcePolicy": "lifecycle/prep traps beforecreation; resources exactUUID only; no resources createdyet",
+  "parentDisjointReservations": [
+    "Tools/HangboardPackages/tests/test_trango_mirrored_halves.py",
+    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift",
+    "HangTenTests/SuspendedBoardPresentationTests.swift::testSeatedPentaSourceLoadsInTheProductionScene"
+  ],
+  "evidenceMap": "historical-conflict-preservation.json",
+  "stageStatus": "allsemanticmergefilesstaged; source tests union reviewed; active deliverylock/reproducible script absentbothrefs retainedabsent",
+  "sharedSourceReview": "no substantive omissions; project logicalinventory equalparent",
+  "combinedPublishedRef": "0972d85585f763ebca8b37c483539f8a53d518e1",
+  "parentCIRef": "7e12907150374f722446a0e8725123d1bc52b650",
+  "correctedBuild": "build-retry",
+  "focusedPause": "Both scene and controller expectations failed; xcodebuild diagnostic collection still active; no repair claim",
+  "canonicalFilesPreserved": 81,
+  "nativeInstalledParity": 66,
+  "terminalUnavailableCorrection": "Three real mounted failure regressions built; pre-fix tests running. Production unchanged. Explicit three-state readiness proposal reviewed.",
+  "pauseDiagnosis": "Unchanged two original30s tests pass with optimization. ExistingCIrequiresoptimizedDebug+assertconfigDebug. All source diagnostics and600s exploratory wait bytes restored; no physical/lifecyclefix supported.",
+  "lastSuccessfulCIRecipeBuild": "build-terminal-red",
+  "remaining": "Terminalreadiness red/green; parentPlateaupublishedref reconciliation; fullunit+affectedUI+freshEvoProMini workflows; archivepushcleanupPR/handback"
+}

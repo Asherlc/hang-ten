@@ -1,0 +1,114 @@
+
+#if DEBUG
+/// Temporary host comparison; interactive boards retain the RealityView branch.
+@MainActor
+private struct BoardNonARHostProbe: UIViewRepresentable {
+    let model: BoardModelRealityScene
+    let viewToken: UUID
+    let selectedIDs: Set<String>
+    let mode: BoardHighlightMode
+    let synchronize: () -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(model: model, viewToken: viewToken) }
+
+    func makeUIView(context: Context) -> ARView {
+        let view = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
+        view.isOpaque = false
+        view.backgroundColor = .clear
+        view.environment.background = .color(.clear)
+        view.isUserInteractionEnabled = false
+        context.coordinator.anchor.addChild(model.root)
+        context.coordinator.anchor.addChild(model.camera)
+        view.scene.addAnchor(context.coordinator.anchor)
+        synchronize()
+        context.coordinator.record("view-make", view: view, ids: selectedIDs, mode: mode)
+        if BoardHighlightDiagnostic.isEnabled {
+            BoardHighlightDiagnostic.shared.startSamples(view: viewToken, scene: model)
+        }
+        return view
+    }
+
+    func updateUIView(_ view: ARView, context: Context) {
+        synchronize()
+        context.coordinator.record("view-update", view: view, ids: selectedIDs, mode: mode)
+    }
+
+    static func dismantleUIView(_ view: ARView, coordinator: Coordinator) {
+        coordinator.record("view-disappear", view: view, ids: [], mode: .active)
+        if BoardHighlightDiagnostic.isEnabled {
+            BoardHighlightDiagnostic.shared.disappear(view: coordinator.viewToken, scene: coordinator.model)
+        }
+        if coordinator.model.root.parent === coordinator.anchor { coordinator.model.root.removeFromParent() }
+        if coordinator.model.camera.parent === coordinator.anchor { coordinator.model.camera.removeFromParent() }
+        view.scene.removeAnchor(coordinator.anchor)
+    }
+
+    @MainActor
+    final class Coordinator {
+        let model: BoardModelRealityScene
+        let viewToken: UUID
+        let hostToken = UUID()
+        let anchor = AnchorEntity(world: .zero)
+        private var lastSignature: String?
+        private var sink: FileHandle?
+        private var sequence = 0
+
+        init(model: BoardModelRealityScene, viewToken: UUID) {
+            self.model = model
+            self.viewToken = viewToken
+        }
+
+        func record(_ event: String, view: ARView, ids: Set<String>, mode: BoardHighlightMode) {
+            guard BoardHighlightDiagnostic.isEnabled else { return }
+            let anchors = Array(view.scene.anchors)
+            let present = anchors.contains { $0 === anchor }
+            let children = present ? Array(anchor.children) : []
+            // Here roots means enumerated attachment-anchor children, not fabricated model references.
+            BoardHighlightDiagnostic.shared.capture(event, scene: model, view: viewToken,
+                                                      roots: children)
+            let identity: (AnyObject) -> String = { String(describing: ObjectIdentifier($0)) }
+            let signature = "\(ids.sorted())|\(mode)|\(present)|\(model.root.isActive)|\(model.camera.isActive)|\(view.bounds)"
+            if event == "view-update", signature == lastSignature { return }
+            lastSignature = signature
+            guard sequence < 256 else { return }
+            sequence += 1
+            let row: [String: Any] = [
+                "event": event, "sequence": sequence, "complete": true,
+                "epoch": Date().timeIntervalSince1970, "uptime": ProcessInfo.processInfo.systemUptime,
+                "hostToken": hostToken.uuidString, "viewToken": viewToken.uuidString,
+                "sceneLifecycleToken": model.diagnosticLifecycleToken.uuidString,
+                "arViewID": identity(view), "arSceneID": identity(view.scene),
+                "anchorID": identity(anchor), "sceneAnchorIDs": anchors.map(identity),
+                "anchorPresent": present, "anchorChildIDs": children.map(identity),
+                "rootID": identity(model.root), "cameraID": identity(model.camera),
+                "rootParentIsOwnedAnchor": model.root.parent === anchor,
+                "cameraParentIsOwnedAnchor": model.camera.parent === anchor,
+                "rootSceneIsHostScene": model.root.scene === view.scene,
+                "cameraSceneIsHostScene": model.camera.scene === view.scene,
+                "rootActive": model.root.isActive, "cameraActive": model.camera.isActive,
+                "bounds": [view.bounds.width, view.bounds.height],
+                "requestedIDs": ids.sorted(), "requestedMode": String(describing: mode),
+                "cameraMode": "nonAR", "contentRootIDScope": "actual owned attachmentAnchor.children"
+            ]
+            do {
+                if sink == nil {
+                    let raw = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_DIAGNOSTIC_RUN"] ?? "placid-badger-cad-second-half"
+                    let run = String(raw.filter { $0.isASCII && ($0.isLetter || $0.isNumber || $0 == "-" || $0 == "_") }.prefix(100))
+                    let folder = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+                        .appendingPathComponent("HighlightDiagnostic-\(run)", isDirectory: true)
+                    try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+                    let url = folder.appendingPathComponent("arview-host-\(hostToken.uuidString).jsonl")
+                    guard FileManager.default.createFile(atPath: url.path, contents: nil) else { throw CocoaError(.fileWriteUnknown) }
+                    sink = try FileHandle(forWritingTo: url)
+                }
+                var data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+                data.append(0x0a)
+                try sink?.write(contentsOf: data)
+                if event == "view-disappear" { try sink?.synchronize(); try sink?.close(); sink = nil }
+            } catch {
+                try? FileHandle.standardError.write(contentsOf: Data("ARView host diagnostic error: \(error)\n".utf8))
+            }
+        }
+    }
+}
+#endif
