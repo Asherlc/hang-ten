@@ -87,6 +87,7 @@ HangTen/Resources/CountdownAudio/countdown-1.mp3
 HangTen/Resources/CountdownAudio/countdown-2.mp3
 HangTen/Resources/CountdownAudio/countdown-3.mp3
 HangTen/Resources/HangTen.storekit
+HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
 HangTen/Views/BoardMapView.swift
 HangTen/Views/BoardModelView.swift
