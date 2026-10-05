@@ -203,3 +203,90 @@ def test_material_settling_rejects_oversize_paths_before_dense_work(monkeypatch)
     monkeypatch.setattr(native_cord_routes,"checked_clearance",forbidden)
     with pytest.raises(ValueError,match="vertex budget"):
         module.settle_material_forces(None,path,.0015)
+
+
+def _guided_optimizer_fixture(monkeypatch, *, feasible_seed=True):
+    from types import SimpleNamespace
+    import native_cord_guides as module
+    import native_cord_routes as routes
+    seed=np.array([[0,.1,0],[.04,.02,0],[.05,0,0]])
+    collision=seed.copy();collision[1,1]=-.01
+    accepted=seed.copy();accepted[1,1]=.01
+    starts=[];candidates=[]
+    monkeypatch.setattr(module,"_remove_free_bends",lambda mesh,path,*a,**kw:(path.copy(),0))
+    def clearance(mesh,path,radius):
+        if path[1,1]<0 or (not feasible_seed and np.array_equal(path,seed)):
+            raise ValueError("native CAD cord collision")
+        return .002
+    monkeypatch.setattr(routes,"checked_clearance",clearance)
+    def unsupported(*a):raise ValueError("seed has no material-equilibrium certificate")
+    monkeypatch.setattr(module,"settle_material_forces",unsupported)
+    monkeypatch.setattr(module,"certify_active_reactions",lambda *a:{"status":"pass"})
+    def optimize(objective,x,**kwargs):
+        starts.append(x.copy())
+        candidate=candidates.pop(0)
+        return SimpleNamespace(x=candidate[1:-1].ravel()*1000,success=False,
+                               message="Inequality constraints incompatible",nit=22)
+    monkeypatch.setattr(module,"minimize",optimize)
+    plane={"fixedCoordinate":2,"point":[0,0,0]}
+    return module,seed,collision,accepted,starts,candidates,plane
+
+
+def test_colliding_planar_and_3d_candidates_preserve_the_feasible_native_seed(monkeypatch):
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch)
+    candidates.extend([collision,collision,accepted])
+    result,proof=module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane)
+    np.testing.assert_array_equal(result,accepted)
+    assert len(starts)==3
+    for start in starts:
+        np.testing.assert_array_equal(start,seed[1:-1].ravel()*1000)
+    assert proof["reactions"]["status"]=="pass"
+
+
+def test_success_status_cannot_publish_a_colliding_guided_route(monkeypatch):
+    from types import SimpleNamespace
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch)
+    monkeypatch.setattr(module,"minimize",lambda *a,**kw:SimpleNamespace(
+        x=collision[1:-1].ravel()*1000,success=True,message="success",nit=1))
+    with pytest.raises(ValueError,match="bounded phases"):
+        module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane)
+
+
+def test_no_feasible_guided_candidate_still_fails_within_its_budget(monkeypatch):
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch,feasible_seed=False)
+    candidates.extend([collision]*4)
+    with pytest.raises(ValueError,match="bounded phases"):
+        module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane)
+    assert len(starts)==4
+
+
+def test_unsuccessful_optimizer_can_return_an_independently_certified_route(monkeypatch):
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch,feasible_seed=False)
+    candidates.append(accepted)
+    result,proof=module._optimize_lead(None,seed,.0015,[1,0,0])
+    np.testing.assert_array_equal(result,accepted)
+    assert proof["continuousClearanceLowerBound"]==pytest.approx(.002)
+
+
+def test_recovery_keeps_newer_feasible_progress_after_a_reaction_failure(monkeypatch):
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch)
+    final=accepted.copy();final[1,1]=.015
+    candidates.extend([seed,accepted,collision,final])
+    def reactions(mesh,path,radius):
+        if np.array_equal(path,accepted):raise ValueError("no active material support")
+        return {"status":"pass"}
+    monkeypatch.setattr(module,"certify_active_reactions",reactions)
+    result,_=module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane)
+    np.testing.assert_array_equal(result,final)
+    for start in starts[2:]:
+        np.testing.assert_array_equal(start,accepted[1:-1].ravel()*1000)
+
+
+def test_clearance_alone_cannot_publish_an_unsupported_guided_route(monkeypatch):
+    module,seed,collision,accepted,starts,candidates,plane=_guided_optimizer_fixture(monkeypatch)
+    candidates.extend([accepted]*4)
+    def unsupported(*a):raise ValueError("no active material support")
+    monkeypatch.setattr(module,"certify_active_reactions",unsupported)
+    with pytest.raises(ValueError,match="bounded phases"):
+        module._optimize_lead(None,seed,.0015,[1,0,0],plane=plane)
+    assert len(starts)==4

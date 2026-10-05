@@ -22,8 +22,8 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: false
-      # Standard Mac runners have 3 cores/7 GB; leave capacity for other jobs.
-      max-parallel: 4
+      # Keep two native workers per runner; use the standard five macOS slots.
+      max-parallel: 5
       matrix:
         # Offer the heaviest measured groups first; membership remains stable.
         shard: [5, 6, 4, 0, 3, 1, 2, 7]
@@ -103,13 +103,12 @@ jobs:
           python3 Tools/HangboardCAD/runtime_asset_catalog.py --manifest "$manifest_path" \
             --reports ".context/$owner-board-reports" --shard-count 8
           echo "manifest-path=$manifest_path" >> "$GITHUB_OUTPUT"
-          echo "artifact-name=$owner-board-assets-${GITHUB_RUN_ID}" >> "$GITHUB_OUTPUT"
+          echo "artifact-name=$owner-board-assets-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
 
       - name: Upload complete compiled catalog
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ${{ steps.catalog.outputs.artifact-name }}
-          overwrite: true
           path: |
             Hangboards/*/assets/*.usdz
             Hangboards/*/assets/*.model.json

@@ -68,12 +68,32 @@ jobs:
           name: ${{ needs.compile-manual-assets.outputs.artifact-name }}
           path: .
 
+      - name: Select immutable catalog from the successful CI attempt
+        if: github.event_name == 'workflow_run'
+        id: tested-catalog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_RUN_ID: ${{ github.event.workflow_run.id }}
+          CI_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          artifact_pages=".context/$owner-runtime-assets/artifact-pages.json"
+          job_pages=".context/$owner-runtime-assets/job-pages.json"
+          mkdir -p "$(dirname "$artifact_pages")"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/artifacts?per_page=100" > "$artifact_pages"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/jobs?filter=all&per_page=100" > "$job_pages"
+          artifact_id=$(python3 Tools/HangboardCAD/runtime_asset_catalog.py \
+            --artifact-pages "$artifact_pages" --job-pages "$job_pages" --owner "$owner" \
+            --run-id "$CI_RUN_ID" --run-attempt "$CI_RUN_ATTEMPT")
+          echo "artifact-id=$artifact_id" >> "$GITHUB_OUTPUT"
+
       - name: Restore the exact catalog tested by CI
         if: github.event_name == 'workflow_run'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          # Test-only retries preserve the original successful catalog producer.
-          name: ${{ steps.owner.outputs.owner }}-board-assets-${{ github.event.workflow_run.id }}
+          artifact-ids: ${{ steps.tested-catalog.outputs.artifact-id }}
+          merge-multiple: true
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: .

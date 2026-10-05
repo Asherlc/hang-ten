@@ -31,7 +31,7 @@ from the successful triggering main CI run. Manual releases compile the selected
 commit through the same workflow before signing and uploading. Both app platforms keep their existing
 package paths; iOS still places only the USDZ in On-Demand Resources.
 
-Board compilation uses eight stable SHA-256 package shards, at most four Mac
+Board compilation uses eight stable SHA-256 package shards, at most five Mac
 jobs, and two independent native processes per job. A per-board cache records
 the FCStd digest, all compiler inputs (including depth audits and package/model
 helpers), pinned dependencies/toolchain, platform, and every generated file's
@@ -43,9 +43,13 @@ hit skips native toolchain setup. Generated files remain outside Git.
 The assembled `.context/<owner>-runtime-assets/catalog.json` records the exact
 revision, CAD source hashes, and complete delivered file hashes. Assembly rejects
 missing or overlapping shards, failed builds, mixed revisions, and obsolete
-packages. Releases check the manifest again against the tested checkout. Artifact
-names stay stable within a CI run, so rerunning failed jobs preserves successful
-shards and rerunning tests preserves the tested catalog.
+packages. Releases check the manifest again against the tested checkout. Shard
+artifact names stay stable within a CI run, so failed-job retries preserve
+successful shards. Complete catalogs are immutable and include their producer
+attempt. An automatic release uses job history to identify the newest successful
+producer at or before its successful CI attempt, then selects its artifact ID.
+Missing or expired artifacts fail release preparation. Test-only retries reuse their retained
+catalog, and a later compilation cannot replace an earlier release's tested bytes.
 
 Use `scripts/build-board-assets.sh --package <slug>` for a board-only rebuild.
 Set `HANGTEN_FREECAD_CMD` or `HANGTEN_BLENDER_CMD` to installed pinned tools, or

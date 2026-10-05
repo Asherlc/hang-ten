@@ -45,11 +45,13 @@ Before Xcode or a full fresh-checkout app build, use
 `rtk proxy bash scripts/build-runtime-assets.sh`. It also exports the grip hand
 mesh with Blender 5.2.0 and the plan library from Swift. CI's
 `.github/workflows/runtime-assets.yml` runs eight stable board shards, with at
-most four Mac runners and two independent native processes per runner. It
+most five Mac runners and two independent native processes per runner. It
 assembles the complete catalog and exports the hand and plans once. Validation
 and app-build jobs download that catalog before staging. Automatic releases
-reuse the exact successful main CI artifact; manual releases invoke the same
-compiler workflow. See [generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
+reuse the immutable catalog available to the successful main CI attempt;
+manual releases invoke the same compiler workflow. Failed-job retries retain
+successful shards, and test-only retries retain their catalog producer.
+See [generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
 
 CI caches each board's complete runtime set against the current FCStd, compiler
 inputs, pinned toolchain, and platform. Every hit checks the current presentation

@@ -86,13 +86,59 @@ def validate_catalog(manifest: Path, revision: str) -> None:
         raise ValueError("compiled catalog source or output hashes do not match the tested artifacts")
 
 
+def select_catalog_artifact(artifacts: list[dict], owner: str, run_id: int, run_attempt: int,
+                            *, jobs: list[dict]) -> int:
+    """Keep a delayed release bound to the catalog available to its tested attempt.
+
+    Test-only retries reuse a retained producer. A later compilation cannot
+    replace that producer's immutable artifact before its own tests pass.
+    """
+    if not owner or type(run_id) is not int or run_id < 1 or type(run_attempt) is not int or run_attempt < 1:
+        raise ValueError("catalog selection requires an owner and positive run/attempt")
+    producers = [job["run_attempt"] for job in jobs
+                 if job.get("run_id") == run_id and isinstance(job.get("name"), str)
+                 and (job["name"] == "Assemble runtime catalog" or job["name"].endswith(" / Assemble runtime catalog"))
+                 and job.get("status") == "completed" and job.get("conclusion") == "success"
+                 and type(job.get("run_attempt")) is int and 1 <= job["run_attempt"] <= run_attempt]
+    if not producers:
+        raise ValueError("no successful catalog producer at or before the tested CI attempt")
+    name = f"{owner}-board-assets-{run_id}-{max(producers)}"
+    selected = [artifact for artifact in artifacts if artifact.get("name") == name]
+    if not selected:
+        raise ValueError("no catalog was produced at or before the tested CI attempt")
+    if len(selected) != 1:
+        raise ValueError("tested CI attempt has ambiguous catalog artifacts")
+    artifact = selected[0]
+    artifact_id = artifact.get("id")
+    if artifact.get("expired") is not False or type(artifact_id) is not int or artifact_id < 1:
+        raise ValueError("latest tested catalog is expired or has no valid immutable artifact ID")
+    return artifact_id
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, required=True)
+    parser.add_argument("--manifest", type=Path)
     parser.add_argument("--reports", type=Path)
     parser.add_argument("--shard-count", type=int, default=8)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--artifact-pages", type=Path, help="Paginated GitHub run-artifact response for release selection")
+    parser.add_argument("--job-pages", type=Path, help="Paginated GitHub job history proving the successful catalog producer")
+    parser.add_argument("--owner")
+    parser.add_argument("--run-id", type=int)
+    parser.add_argument("--run-attempt", type=int)
     arguments = parser.parse_args()
+    if arguments.artifact_pages is not None:
+        if arguments.manifest or arguments.reports or arguments.check:
+            parser.error("artifact selection cannot also create or validate a catalog")
+        if arguments.job_pages is None:
+            parser.error("artifact selection requires --job-pages producer history")
+        pages = json.loads(arguments.artifact_pages.read_text())
+        artifacts = [artifact for page in pages for artifact in page["artifacts"]]
+        jobs = [job for page in json.loads(arguments.job_pages.read_text()) for job in page["jobs"]]
+        print(select_catalog_artifact(artifacts, arguments.owner, arguments.run_id, arguments.run_attempt, jobs=jobs))
+        return 0
+    if arguments.manifest is None:
+        parser.error("catalog creation or validation requires --manifest")
     revision = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=compiler.REPOSITORY, text=True).strip()
     if arguments.check:
         validate_catalog(arguments.manifest, revision)

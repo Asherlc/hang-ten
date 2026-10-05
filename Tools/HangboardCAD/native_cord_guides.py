@@ -305,6 +305,12 @@ def _optimize_lead(mesh,seed,radius,mouth_axis,plane=None):
         if max(abs(seed[[0,-1],coordinate]-value))>1e-10:raise ValueError("native feature plane does not contain fixed endpoints")
         seed=seed.copy();seed[:,coordinate]=value
     seed,_=_remove_free_bends(mesh,seed,radius,only_small=True)
+    feasible_seed=None
+    try:
+        checked_clearance(mesh,seed,radius)
+        feasible_seed=seed.copy()
+    except ValueError:
+        pass  # Optimization may recover an initially infeasible section seed.
     reports=[]
     for phase in range(4):
         _LOG.info("Native guided lead phase %d, %d vertices",phase,len(seed))
@@ -336,9 +342,27 @@ def _optimize_lead(mesh,seed,radius,mouth_axis,plane=None):
         bounds=list(zip((seed[1:-1].ravel()-.025)*1000,(seed[1:-1].ravel()+.025)*1000))
         if plane is not None:
             for i in range(len(seed)-2):bounds[3*i+coordinate]=(value*1000,value*1000)
-        result=minimize(objective,seed[1:-1].ravel()*1000,jac=True,method="SLSQP",bounds=bounds,constraints=[{"type":"ineq","fun":lambda x:constraints(x)[0],"jac":lambda x:constraints(x)[1]}],options={"ftol":1e-9 if plane is not None else 1e-6,"maxiter":200 if plane is not None else 100})
+        # Retain the native seed's precision after releasing its plane. A loose
+        # 3D stop can leave reaction residuals too large for independent gates.
+        result=minimize(objective,seed[1:-1].ravel()*1000,jac=True,method="SLSQP",bounds=bounds,constraints=[{"type":"ineq","fun":lambda x:constraints(x)[0],"jac":lambda x:constraints(x)[1]}],options={"ftol":1e-9 if native_precision else 1e-6,"maxiter":200 if plane is not None else 100})
         candidate=path(result.x);candidate,removed=_remove_free_bends(mesh,candidate,radius)
         record={"phase":phase,"optimizerSuccess":bool(result.success),"optimizerMessage":str(result.message),"iterations":int(result.nit),"removedInactiveBends":removed,"length":length(candidate)};reports.append(record)
+        try:
+            clearance=checked_clearance(mesh,candidate,radius)
+            feasible_seed=candidate.copy()
+        except ValueError as error:
+            # A failed SLSQP iterate can cross the solid. Re-centering bounded
+            # searches on that path traps later phases inside the same wall.
+            # Keep the last clearance-certified native seed; it must still pass
+            # all material, groove, entry, length and tube gates before delivery.
+            record["independentGateFailure"]=str(error)
+            if plane is not None:
+                record["nativePlaneSeedReleasedTo3D"]=True
+                plane=None
+            if feasible_seed is not None:
+                seed=feasible_seed.copy()
+            _LOG.info("Native guided phase %d collision rejected: %s",phase,error)
+            continue
         if plane is not None:
             # The analytic plane supplies a deterministic native seed only.
             # Every final lead is tightened and certified in full 3D, including
@@ -347,7 +371,6 @@ def _optimize_lead(mesh,seed,radius,mouth_axis,plane=None):
             plane=None;seed=candidate
             continue
         try:
-            clearance=checked_clearance(mesh,candidate,radius)
             reactions=certify_active_reactions(mesh,candidate,radius)
             _LOG.info("Native guided lead certified after %d iterations",result.nit)
             return candidate,{"phases":reports,"continuousClearanceLowerBound":clearance,"reactions":reactions,"nativeSearchPlane":initial_plane}
