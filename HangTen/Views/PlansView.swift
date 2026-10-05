@@ -1,323 +1,459 @@
 import SwiftUI
+import UIKit
+
+extension Color {
+    static var workoutBrowserAccent: Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark
+                ? UIColor(red: 0.65, green: 0.85, blue: 0.55, alpha: 1)
+                : UIColor(red: 0.235, green: 0.405, blue: 0.240, alpha: 1)
+        })
+    }
+
+    fileprivate static var workoutBrowserButtonText: Color {
+        Color(uiColor: UIColor { traits in
+            traits.userInterfaceStyle == .dark ? .black : .white
+        })
+    }
+}
+
+private enum WorkoutBrowserDestination: Hashable {
+    case all
+    case myRoutines
+    case focus(WorkoutFocus)
+
+    var title: String {
+        switch self {
+        case .all: "All workouts"
+        case .myRoutines: "My routines"
+        case .focus(let focus): focus.title
+        }
+    }
+}
 
 struct PlansView: View {
     @EnvironmentObject private var store: AppStore
-    @State private var filters = PlanFilters()
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var search = ""
     @State private var isCreatingRoutine = false
+    @State private var path: [WorkoutBrowserDestination] = {
+        #if DEBUG
+        let environment = ProcessInfo.processInfo.environment
+        if environment["HANGTEN_REVIEW_CHOOSER_MY_ROUTINES"] == "1" { return [.myRoutines] }
+        if environment["HANGTEN_REVIEW_CHOOSER_RESULTS"] == "1"
+            || environment["HANGTEN_REVIEW_CHOOSER_FILTERS"] == "1" {
+            return [.all]
+        }
+        #endif
+        return []
+    }()
+
+    private var availableFocuses: [WorkoutFocus] {
+        WorkoutFocus.allCases.filter { focus in
+            store.plans.contains {
+                store.metadata(for: $0).focus == focus
+                    && !store.isIncompatible($0, on: store.selectedBoard)
+            }
+        }
+    }
 
     var body: some View {
-        let compatiblePlans = store.plans
-        let metadataByPlanID = Dictionary(
-            compatiblePlans.map { plan in
-                (plan.id, store.metadata(for: plan))
-            },
-            uniquingKeysWith: { first, _ in first }
-        )
-        let filterOptions = PlanFilterOptions(metadata: Array(metadataByPlanID.values))
-        let filteredPlans = filters.isEmpty
-            ? compatiblePlans
-            : compatiblePlans.filter { plan in
-                guard let metadata = metadataByPlanID[plan.id] else { return false }
-                return filters.matches(metadata)
-            }
-        let customPlanIDs = Set(store.customPlans.map(\.id))
-        let myRoutines = filteredPlans.filter { customPlanIDs.contains($0.id) }
-        let libraryPlans = filteredPlans.filter { !customPlanIDs.contains($0.id) }
+        NavigationStack(path: $path) {
+            List {
+                Section {
+                    NavigationLink {
+                        BoardPickerView()
+                    } label: {
+                        if dynamicTypeSize.isAccessibilitySize {
+                            boardLabel
+                        } else {
+                            Label { boardLabel } icon: {
+                                Image(systemName: "rectangle.portrait.fill")
+                                    .foregroundStyle(Color.workoutBrowserAccent)
+                            }
+                        }
+                    }
+                    .accessibilityIdentifier("plans.changeBoard")
+                }
 
-        NavigationStack {
-            ScrollView(showsIndicators: false) {
-                VStack(alignment: .leading, spacing: 20) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        currentBoardControl
-
-                        Button {
-                            isCreatingRoutine = true
-                        } label: {
+                if search.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    if !availableFocuses.isEmpty {
+                        Section("Browse by focus") {
+                            ForEach(availableFocuses) { focus in
+                                NavigationLink(value: WorkoutBrowserDestination.focus(focus)) {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(focus.title).font(.headline)
+                                        if focus == .mixed {
+                                            Text(focus.subtitle).font(.subheadline).foregroundStyle(.secondary)
+                                        }
+                                    }
+                                    .padding(.vertical, 5)
+                                }
+                                .accessibilityIdentifier("workouts.focus.\(focus.rawValue)")
+                            }
+                        }
+                    }
+                    Section {
+                        NavigationLink("All workouts", value: WorkoutBrowserDestination.all)
+                            .accessibilityIdentifier("workouts.all")
+                        NavigationLink("My routines", value: WorkoutBrowserDestination.myRoutines)
+                            .accessibilityIdentifier("workouts.myRoutines")
+                        Button { isCreatingRoutine = true } label: {
                             Label("Create routine", systemImage: "plus")
                         }
-                        .buttonStyle(.bordered)
-                        .controlSize(.large)
-                        .tint(.hangGreenDark)
                         .accessibilityIdentifier("customRoutine.create")
-
-                        if let persistenceError = store.customRoutinePersistenceError {
-                            HStack(alignment: .top, spacing: 10) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundStyle(.orange)
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("Some custom routines are unavailable")
-                                        .font(.system(.subheadline, design: .rounded, weight: .bold))
-                                        .foregroundStyle(Color.hangInk)
-                                    Text(persistenceError)
-                                        .font(.system(.caption, design: .rounded, weight: .medium))
-                                        .foregroundStyle(Color.hangMuted)
-                                }
-                            }
-                            .padding(12)
-                            .background(
-                                Color.orange.opacity(0.12),
-                                in: RoundedRectangle(cornerRadius: 12, style: .continuous)
-                            )
-                            .accessibilityIdentifier("customRoutine.persistenceError")
-                        }
-
-                        filterBar(options: filterOptions)
                     }
-
-                    if !myRoutines.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            SectionLabel(title: "My routines")
-                            ForEach(myRoutines) { plan in
-                                FavoritePlanCard(
-                                    plan: plan,
-                                    isFavorite: store.isFavorite(plan),
-                                    isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
-                                ) {
-                                    store.toggleFavorite(plan)
-                                }
+                    if !store.favoritePlans.isEmpty {
+                        Section("Favorites") {
+                            ForEach(store.favoritePlans) { plan in
+                                WorkoutBrowserRow(plan: plan)
                             }
                         }
                     }
-
-                    if compatiblePlans.isEmpty {
-                        VStack(alignment: .leading, spacing: 8) {
-                            SectionLabel(title: "No compatible routines")
-                            Text("No routines are available for \(store.selectedBoard.name).")
-                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
-                                .foregroundStyle(Color.hangInk)
+                } else {
+                    Section("Search results") {
+                        let matches = store.plans.filter {
+                            $0.matchesWorkoutSearch(search, metadata: store.metadata(for: $0))
                         }
-                        .hangCard()
-                    } else if filteredPlans.isEmpty {
-                        NoMatchingPlansCard {
-                            filters.clear()
-                        }
-                    } else if !libraryPlans.isEmpty {
-                        VStack(alignment: .leading, spacing: 12) {
-                            SectionLabel(title: "Training library")
-                            ForEach(libraryPlans) { plan in
-                                FavoritePlanCard(
-                                    plan: plan,
-                                    isFavorite: store.isFavorite(plan),
-                                    isIncompatible: store.isIncompatible(plan, on: store.selectedBoard)
-                                ) {
-                                    store.toggleFavorite(plan)
-                                }
-                            }
+                        if matches.isEmpty {
+                            WorkoutBrowserEmptyView(isSearching: true)
+                        } else {
+                            ForEach(matches) { plan in WorkoutBrowserRow(plan: plan) }
                         }
                     }
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 18)
-                .padding(.bottom, 30)
+                if let error = store.customRoutinePersistenceError {
+                    Section {
+                        Label {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Some custom routines are unavailable").font(.headline)
+                                Text(error).font(.subheadline).foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                        }
+                        .accessibilityIdentifier("customRoutine.persistenceError")
+                    }
+                }
             }
-            .background(Color.hangBackground)
+            .tint(.workoutBrowserAccent)
             .navigationTitle("Plans")
-            .navigationBarTitleDisplayMode(.inline)
+            .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search workouts")
+            .navigationDestination(for: WorkoutBrowserDestination.self) { destination in
+                WorkoutBrowserResultsView(destination: destination)
+            }
             .sheet(isPresented: $isCreatingRoutine) {
                 CustomRoutineEditorView(
-                    draft: CustomRoutineDraft(
-                        createWith: .boardSpecific(boardID: store.selectedBoard.id)
-                    ),
+                    draft: CustomRoutineDraft(createWith: .boardSpecific(boardID: store.selectedBoard.id)),
                     onSave: store.saveCustomRoutine
                 )
             }
         }
     }
-
-    private var currentBoardControl: some View {
-        NavigationLink {
-            BoardPickerView()
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "rectangle.portrait.fill")
-                    .foregroundStyle(Color.hangGreenDark)
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Training on")
-                        .font(.system(.caption, design: .rounded, weight: .semibold))
-                        .foregroundStyle(Color.hangMuted)
-                    Text(store.selectedBoard.name)
-                        .font(.system(.subheadline, design: .rounded, weight: .bold))
-                        .foregroundStyle(Color.hangInk)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(.footnote, design: .rounded, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
-            }
-            .padding(14)
-            .background(
-                Color.hangCream,
-                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
-            }
+    private var boardLabel: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text("Training on").font(.caption).foregroundStyle(.secondary)
+            Text(store.selectedBoard.name).font(.headline)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .buttonStyle(.plain)
-        .accessibilityIdentifier("plans.changeBoard")
-    }
-
-    private func filterBar(options: PlanFilterOptions) -> some View {
-        let visibleFacets = PlanFilterPresentationContent.visibleFacets(for: options)
-
-        return ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                if visibleFacets.contains(.difficulty) {
-                    Menu {
-                        filterAllButton(isSelected: filters.levels.isEmpty) {
-                            filters.levels.removeAll()
-                        }
-                        ForEach(options.levels, id: \.self) { value in
-                            filterValueButton(value, isSelected: filters.levels.contains(value)) {
-                                filters.toggle(level: value)
-                            }
-                        }
-                    } label: {
-                        filterMenuLabel(
-                            title: "Difficulty",
-                            selectionCount: filters.levels.count,
-                            singleSelection: filters.levels.first
-                        )
-                    }
-                    .accessibilityLabel("Filter by difficulty")
-                    .accessibilityValue(filterMenuAccessibilityValue(
-                        selectionCount: filters.levels.count,
-                        singleSelection: filters.levels.first
-                    ))
-                }
-
-                if visibleFacets.contains(.category) {
-                    Menu {
-                        filterAllButton(isSelected: filters.categories.isEmpty) {
-                            filters.categories.removeAll()
-                        }
-                        ForEach(options.categories, id: \.self) { value in
-                            filterValueButton(displayName(value), isSelected: filters.categories.contains(value)) {
-                                filters.toggle(category: value)
-                            }
-                        }
-                    } label: {
-                        filterMenuLabel(
-                            title: "Category",
-                            selectionCount: filters.categories.count,
-                            singleSelection: filters.categories.first.map(displayName)
-                        )
-                    }
-                    .accessibilityLabel("Filter by category")
-                    .accessibilityValue(filterMenuAccessibilityValue(
-                        selectionCount: filters.categories.count,
-                        singleSelection: filters.categories.first.map(displayName)
-                    ))
-                }
-
-                if visibleFacets.contains(.tags) {
-                    Menu {
-                        filterAllButton(isSelected: filters.tags.isEmpty) {
-                            filters.tags.removeAll()
-                        }
-                        ForEach(options.tags, id: \.self) { value in
-                            filterValueButton(displayName(value), isSelected: filters.tags.contains(value)) {
-                                filters.toggle(tag: value)
-                            }
-                        }
-                    } label: {
-                        filterMenuLabel(
-                            title: "Tags",
-                            selectionCount: filters.tags.count,
-                            singleSelection: filters.tags.first.map(displayName)
-                        )
-                    }
-                    .accessibilityLabel("Filter by tags")
-                    .accessibilityValue(filterMenuAccessibilityValue(
-                        selectionCount: filters.tags.count,
-                        singleSelection: filters.tags.first.map(displayName)
-                    ))
-                }
-
-                if !filters.isEmpty {
-                    Button("Clear") {
-                        filters.clear()
-                    }
-                    .font(.system(.footnote, design: .rounded, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
-                    .accessibilityLabel("Clear plan filters")
-                }
-            }
-            .padding(.vertical, 2)
-        }
-    }
-
-    private func filterAllButton(isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label("All", systemImage: isSelected ? "checkmark" : "rectangle")
-        }
-    }
-
-    private func filterValueButton(_ title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Label(title, systemImage: isSelected ? "checkmark" : "rectangle")
-        }
-    }
-
-    private func filterMenuLabel(title: String, selectionCount: Int, singleSelection: String?) -> some View {
-        let isActive = selectionCount > 0
-        let label = if selectionCount == 1 {
-            singleSelection ?? title
-        } else if selectionCount > 1 {
-            "\(selectionCount) selected"
-        } else {
-            title
-        }
-
-        return HStack(spacing: 5) {
-            Text(label)
-            Image(systemName: "chevron.down")
-                .font(.system(size: 10, weight: .bold))
-        }
-        .font(.system(.footnote, design: .rounded, weight: .bold))
-        .foregroundStyle(isActive ? Color.hangGreenDark : Color.hangInk)
-        .padding(.horizontal, 11)
-        .padding(.vertical, 8)
-        .background(
-            isActive ? Color.hangGreen.opacity(0.25) : Color.hangCream,
-            in: Capsule()
-        )
-        .overlay {
-            Capsule()
-                .stroke(isActive ? Color.hangGreenDark.opacity(0.55) : Color.hangLine.opacity(0.8), lineWidth: 1)
-        }
-    }
-
-    private func filterMenuAccessibilityValue(selectionCount: Int, singleSelection: String?) -> String {
-        if selectionCount == 0 {
-            return "All"
-        } else if selectionCount == 1 {
-            return singleSelection ?? "1 selected"
-        } else {
-            return "\(selectionCount) selected"
-        }
-    }
-
-    private func displayName(_ rawValue: String) -> String {
-        rawValue.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
 }
 
-private struct NoMatchingPlansCard: View {
-    let onClear: () -> Void
+private struct WorkoutBrowserResultsView: View {
+    @EnvironmentObject private var store: AppStore
+    let destination: WorkoutBrowserDestination
+    @State private var filters = WorkoutBrowserFilters()
+    @State private var search = ""
+    @State private var showsFilters = false
+    @State private var isCreatingRoutine = false
+
+    private var candidates: [TrainingPlan] {
+        store.plans.filter { plan in
+            switch destination {
+            case .all: true
+            case .myRoutines: store.isCustom(plan)
+            case .focus(let focus):
+                store.metadata(for: plan).focus == focus
+                    && !store.isIncompatible(plan, on: store.selectedBoard)
+            }
+        }
+    }
+
+    private var results: [TrainingPlan] {
+        candidates.filter {
+            filters.matches($0, metadata: store.metadata(for: $0))
+                && $0.matchesWorkoutSearch(search, metadata: store.metadata(for: $0))
+        }
+    }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("No routines match these filters")
-                .font(.system(.callout, design: .rounded, weight: .bold))
-                .foregroundStyle(Color.hangInk)
-            Button("Clear filters", action: onClear)
-                .font(.system(.footnote, design: .rounded, weight: .bold))
-                .foregroundStyle(Color.hangGreenDark)
+        List {
+            if !filters.isEmpty {
+                Section {
+                    appliedFilters
+                }
+            }
+            Section {
+                if destination == .myRoutines && candidates.isEmpty && search.isEmpty && filters.isEmpty {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(store.customPlans.isEmpty ? "Create your first routine" : "No routines for this board")
+                            .font(.headline)
+                        Text("Create a routine for \(store.selectedBoard.name) with the exercises you want to practice.")
+                            .font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    .padding(.vertical, 8)
+                    Button { isCreatingRoutine = true } label: {
+                        Label("Create routine", systemImage: "plus")
+                    }
+                    .accessibilityIdentifier("customRoutine.create")
+                } else if results.isEmpty {
+                    WorkoutBrowserEmptyView(isSearching: !search.isEmpty)
+                    if !filters.isEmpty {
+                        Button("Clear filters") { filters.clear() }
+                    }
+                } else {
+                    ForEach(results) { plan in WorkoutBrowserRow(plan: plan) }
+                }
+            } header: {
+                Text("\(results.count) \(results.count == 1 ? "workout" : "workouts")")
+            }
         }
-        .hangCard()
+        .tint(.workoutBrowserAccent)
+        .navigationTitle(destination.title)
+        .navigationBarTitleDisplayMode(.large)
+        .searchable(text: $search, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search workouts")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { showsFilters = true } label: {
+                    Label(filters.isEmpty ? "Filter" : "Filter (\(filters.activeFacetCount))", systemImage: "line.3.horizontal.decrease")
+                        .foregroundStyle(Color.workoutBrowserAccent)
+                }
+                .accessibilityIdentifier("workouts.filter")
+            }
+        }
+        .sheet(isPresented: $showsFilters) {
+            WorkoutBrowserFilterSheet(
+                filters: filters,
+                plans: candidates,
+                metadata: { store.metadata(for: $0) },
+                search: search
+            ) { filters = $0 }
+        }
+        .sheet(isPresented: $isCreatingRoutine) {
+            CustomRoutineEditorView(
+                draft: CustomRoutineDraft(createWith: .boardSpecific(boardID: store.selectedBoard.id)),
+                onSave: store.saveCustomRoutine
+            )
+        }
+        .onAppear {
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_CHOOSER_FILTERS"] == "1" {
+                showsFilters = true
+            }
+            #endif
+        }
+    }
+
+    private var appliedFilters: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Applied filters").font(.subheadline).foregroundStyle(.secondary)
+            // Vertical wrapping remains readable at accessibility text sizes.
+            if filters.duration != .any {
+                removeFilter(filters.duration.title) { filters.duration = .any }
+            }
+            ForEach(WorkoutExercise.allCases.filter { filters.exercises.contains($0) }) { exercise in
+                removeFilter(exercise.title) { filters.exercises.remove(exercise) }
+            }
+            ForEach(filters.levels.sorted(), id: \.self) { level in
+                removeFilter(level) { filters.levels.remove(level) }
+            }
+            Button("Clear all") { filters.clear() }.font(.subheadline)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private func removeFilter(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Label(title, systemImage: "xmark.circle.fill")
+                .font(.subheadline)
+                .padding(.horizontal, 12)
+                .frame(minHeight: 44)
+                .background(Color.workoutBrowserAccent.opacity(0.12), in: Capsule())
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(Color.workoutBrowserAccent)
+        .accessibilityLabel("Remove filter: \(title)")
+        .accessibilityIdentifier("workouts.removeFilter.\(title)")
+    }
+}
+
+private struct WorkoutBrowserRow: View {
+    @EnvironmentObject private var store: AppStore
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let plan: TrainingPlan
+
+    var body: some View {
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 4))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 8))
+        layout {
+            NavigationLink {
+                PlanDetailView(plan: plan)
+            } label: {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(plan.title).font(.headline)
+                    Text("\(plan.browserDurationLabel) · \(plan.level)")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                    if store.isIncompatible(plan, on: store.selectedBoard) {
+                        Label("Not on this board", systemImage: "exclamationmark.circle")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    if !plan.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        Text(plan.subtitle).font(.subheadline).foregroundStyle(.secondary)
+                    }
+                    let exercises = WorkoutExercise.allCases.filter { plan.workoutExercises.contains($0) }
+                    if !exercises.isEmpty {
+                        Text(exercises.map(\.title).joined(separator: " · "))
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.vertical, 6)
+                .fixedSize(horizontal: false, vertical: true)
+            }
+            .accessibilityIdentifier("workouts.row.\(plan.id)")
+            Button { store.toggleFavorite(plan) } label: {
+                if dynamicTypeSize.isAccessibilitySize {
+                    Label(store.isFavorite(plan) ? "Favorited" : "Favorite", systemImage: store.isFavorite(plan) ? "star.fill" : "star")
+                        .font(.subheadline).frame(minHeight: 44)
+                } else {
+                    Image(systemName: store.isFavorite(plan) ? "star.fill" : "star")
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+            }
+            .buttonStyle(.borderless)
+            .accessibilityLabel("\(store.isFavorite(plan) ? "Remove" : "Add") \(plan.title) \(store.isFavorite(plan) ? "from" : "to") favorites")
+        }
+    }
+}
+
+private struct WorkoutBrowserEmptyView: View {
+    var isSearching: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Label("No matching workouts", systemImage: "magnifyingglass").font(.headline)
+            Text(isSearching ? "Try another search or adjust your filters." : "Try adjusting your filters or choosing another board.")
+                .font(.subheadline).foregroundStyle(.secondary)
+        }
+        .padding(.vertical, 12)
+    }
+}
+
+private struct WorkoutBrowserFilterSheet: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.dismiss) private var dismiss
+    @State private var draft: WorkoutBrowserFilters
+    let plans: [TrainingPlan]
+    let metadata: (TrainingPlan) -> PlanMetadata
+    let search: String
+    let onApply: (WorkoutBrowserFilters) -> Void
+
+    init(filters: WorkoutBrowserFilters, plans: [TrainingPlan], metadata: @escaping (TrainingPlan) -> PlanMetadata, search: String, onApply: @escaping (WorkoutBrowserFilters) -> Void) {
+        _draft = State(initialValue: filters)
+        self.plans = plans
+        self.metadata = metadata
+        self.search = search
+        self.onApply = onApply
+    }
+
+    private var matchingCount: Int {
+        plans.filter { draft.matches($0, metadata: metadata($0)) && $0.matchesWorkoutSearch(search, metadata: metadata($0)) }.count
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Duration") {
+                    ForEach(WorkoutDurationFilter.allCases) { duration in
+                        selectionRow(duration.title, selected: draft.duration == duration) {
+                            draft.duration = duration
+                        }
+                    }
+                }
+                let availableExercises = WorkoutExercise.allCases.filter { exercise in
+                    plans.contains { $0.workoutExercises.contains(exercise) } || draft.exercises.contains(exercise)
+                }
+                if !availableExercises.isEmpty {
+                    Section {
+                        ForEach(availableExercises) { exercise in
+                            selectionRow(exercise.title, selected: draft.exercises.contains(exercise)) {
+                                if !draft.exercises.insert(exercise).inserted { draft.exercises.remove(exercise) }
+                            }
+                        }
+                    } header: { Text("Exercises") } footer: { Text("Matches any selected exercise.") }
+                }
+                let levels = Set(plans.map(\.level)).union(draft.levels).filter { !$0.isEmpty }.sorted {
+                    let progression = ["entry", "beginner", "intermediate", "advanced"]
+                    let lhs = progression.firstIndex(of: $0.lowercased()) ?? progression.count
+                    let rhs = progression.firstIndex(of: $1.lowercased()) ?? progression.count
+                    return lhs == rhs ? $0.localizedCaseInsensitiveCompare($1) == .orderedAscending : lhs < rhs
+                }
+                if !levels.isEmpty {
+                    Section {
+                        ForEach(levels, id: \.self) { level in
+                            selectionRow(level, selected: draft.levels.contains(level)) {
+                                if !draft.levels.insert(level).inserted { draft.levels.remove(level) }
+                            }
+                        }
+                    } header: { Text("Difficulty") } footer: { Text("Matches any selected difficulty.") }
+                }
+                Section {
+                    Button("Clear all") { draft.clear() }
+                        .disabled(draft.isEmpty)
+                }
+            }
+            .tint(.workoutBrowserAccent)
+            .navigationTitle("Filter workouts")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }.accessibilityIdentifier("workouts.filter.cancel")
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                Button {
+                    onApply(draft)
+                    dismiss()
+                } label: {
+                    Text(dynamicTypeSize.isAccessibilitySize ? "Show" : "Show \(matchingCount) \(matchingCount == 1 ? "workout" : "workouts")")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                }
+                .buttonStyle(.borderedProminent)
+                .foregroundStyle(Color.workoutBrowserButtonText)
+                .accessibilityIdentifier("workouts.filter.apply")
+                .accessibilityLabel("Show workouts")
+                .accessibilityValue("\(matchingCount) matching \(matchingCount == 1 ? "workout" : "workouts")")
+                .padding()
+                .background(.regularMaterial)
+            }
+        }
+    }
+
+    private func selectionRow(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack {
+                Text(title).foregroundStyle(.primary)
+                Spacer()
+                if selected { Image(systemName: "checkmark").foregroundStyle(Color.workoutBrowserAccent) }
+            }
+            .frame(minHeight: 32)
+        }
+        .accessibilityAddTraits(selected ? [.isSelected] : [])
+        .accessibilityValue(selected ? "Selected" : "Not selected")
+        .accessibilityIdentifier("workouts.filter.option.\(title)")
     }
 }
 
