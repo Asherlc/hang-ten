@@ -10,7 +10,8 @@
 #   XCTEST_ONLY_TESTING          Whitespace-separated -only-testing identifiers
 #   XCTEST_PARALLEL_WORKERS      maximum-parallel-testing-workers value;
 #                                parallel testing enabled only when > 1
-#   XCTEST_RUN_TIMEOUT_SECONDS
+#   XCTEST_RUN_TIMEOUT_SECONDS   Limit for each xcodebuild phase; the Actions
+#                                job timeout bounds setup, build and tests together
 #
 # Optional:
 #   SWIFT_PACKAGE_CACHE_PATH     -clonedSourcePackagesDirPath
@@ -126,7 +127,9 @@ run_xcodebuild_with_watchdog() {
   local result_bundle="${3:-}"
   local log_dir="$XCTEST_LOG_ROOT/run"
   local phase_log="$log_dir/${phase}.log"
-  local timeout_seconds=$((deadline - SECONDS))
+  # Simulator startup and compilation must not spend the test phase's budget.
+  # Keep each invocation bounded independently, with no automatic retries.
+  local timeout_seconds="$XCTEST_RUN_TIMEOUT_SECONDS"
   local phase_started
   local xcodebuild_pid
   local xcodebuild_status=0
@@ -136,7 +139,7 @@ run_xcodebuild_with_watchdog() {
   mkdir -p "$log_dir"
 
   if (( timeout_seconds <= 0 )); then
-    echo "XCTest run out of time before ${phase}." | tee -a "$phase_log"
+    echo "XCTest timeout must be positive before ${phase}." | tee -a "$phase_log"
     return 124
   fi
 
@@ -225,7 +228,6 @@ run_xcodebuild_with_watchdog() {
   return "$xcodebuild_status"
 }
 
-deadline=$((SECONDS + XCTEST_RUN_TIMEOUT_SECONDS))
 result_bundle="$XCTEST_RESULT_ROOT/${XCTEST_LABEL}-run.xcresult"
 
 prepare_simulator_destination
