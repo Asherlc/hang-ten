@@ -772,7 +772,7 @@ private struct StepRow: View {
                 }
                 PlanStepInstructions(step: step)
                 if let nextInstruction {
-                    SectionLabel(title: "Next hold")
+                    SectionLabel(title: "Up next")
                         .padding(.top, 5)
                     Text(nextInstruction)
                         .font(.system(.footnote, design: .rounded, weight: .medium))
