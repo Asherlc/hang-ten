@@ -12,7 +12,10 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         addStep(title: "Finish", rest: false, in: app)
         tap("customRoutine.addRepeat", in: app)
         XCTAssertTrue(app.navigationBars["Repeat steps"].waitForExistence(timeout: 10))
-        selectMenuOption("2. Rest", from: "customRoutine.repeatEnd", in: app)
+        selectStepOption("3. Finish", from: "customRoutine.repeatStart", title: "From step", in: app)
+        XCTAssertEqual(app.buttons["customRoutine.repeatEnd"].value as? String, "3. Finish")
+        selectStepOption("1. Hang", from: "customRoutine.repeatStart", title: "From step", in: app)
+        selectStepOption("2. Rest", from: "customRoutine.repeatEnd", title: "Through step", in: app)
         changeCount(by: 4, in: app)
         XCTAssertTrue(app.staticTexts["Run 6 times"].exists)
         capture(app, name: "Repeat range and count")
@@ -30,7 +33,7 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         reveal(app.buttons["Steps 1–2 · 6 times"], in: app)
         app.buttons["Steps 1–2 · 6 times"].tap()
         XCTAssertTrue(app.staticTexts["Run 6 times"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["customRoutine.repeatEnd"].label.contains("2. Rest"))
+        XCTAssertEqual(app.buttons["customRoutine.repeatEnd"].value as? String, "2. Rest")
         changeCount(by: -3, in: app)
         tap("customRoutine.repeatSave", in: app)
         tap("customRoutine.save", in: app)
@@ -122,20 +125,22 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         for _ in 0..<abs(delta) { button.tap() }
     }
 
-    private func selectMenuOption(_ label: String, from identifier: String, in app: XCUIApplication) {
+    private func selectStepOption(_ label: String, from identifier: String, title: String, in app: XCUIApplication) {
         let picker = app.buttons[identifier].firstMatch
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(picker.isHittable, "Repeat picker is unavailable: \(identifier)")
+        picker.tap()
+        XCTAssertTrue(app.navigationBars[title].waitForExistence(timeout: 10))
         let option = app.buttons[label].firstMatch
-        reveal(picker, in: app)
-        // Xcode 26.5 chooses an activation point on the value label that
-        // leaves this sheet's menu closed. Tap the visible picker row instead.
-        picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-        XCTAssertTrue(option.waitForExistence(timeout: 10), "Picker option is unavailable: \(label)")
+        XCTAssertTrue(option.waitForExistence(timeout: 10), "Step option is unavailable: \(label)")
+        capture(app, name: "Repeat step choices: \(title)")
         option.tap()
         let selected = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label CONTAINS %@", label),
-            object: picker
+            predicate: NSPredicate { _, _ in picker.exists && picker.isHittable && picker.value as? String == label },
+            object: nil
         )
-        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed)
+        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 10), .completed)
+        capture(app, name: "Selected repeat step: \(title)")
     }
 
     private func tap(_ identifier: String, in app: XCUIApplication) {

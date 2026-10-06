@@ -731,6 +731,7 @@ private struct CustomRoutineRepeatEditor: View {
                             Text(stepLabel(at: index)).tag(steps[index].id)
                         }
                     }
+                    .pickerStyle(.navigationLink)
                     .accessibilityIdentifier("customRoutine.repeatStart")
                     .onChange(of: firstStepID) { _, _ in
                         if !endIndices.contains(where: { steps[$0].id == lastStepID }) {
@@ -742,6 +743,7 @@ private struct CustomRoutineRepeatEditor: View {
                             Text(stepLabel(at: index)).tag(steps[index].id)
                         }
                     }
+                    .pickerStyle(.navigationLink)
                     .accessibilityIdentifier("customRoutine.repeatEnd")
                 }
                 Section {
