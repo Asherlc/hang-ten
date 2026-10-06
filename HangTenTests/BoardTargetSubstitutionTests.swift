@@ -83,6 +83,96 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
+    func testThreeFingerEdgeRequirementAcceptsUnspecifiedAndLargerCapacities() throws {
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 20, maximum: 20)),
+            fingerCapacity: 3,
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [nil, 3, 4] as [Int?] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity
+            )
+
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(requirement, step: step, board: board).map(\.id)),
+                ["edge-left", "edge-right"],
+                "An edge with capacity \(String(describing: capacity)) should allow three fingers."
+            )
+        }
+    }
+
+    func testThreeFingerEdgeRequirementRejectsExplicitlySmallerCapacities() {
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 20, maximum: 20)),
+            fingerCapacity: 3,
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [1, 2] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity
+            )
+
+            XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+                XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
+            }
+        }
+    }
+
+    func testNamedPocketCapacityStillRequiresItsSpecifiedSize() throws {
+        let requirement = ContactRequirement.kind(.pocket, fingerCapacity: 3, selection: .bilateralPair)
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [nil, 2, 3, 4] as [Int?] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity,
+                contactKind: .pocket
+            )
+
+            if capacity == 3 {
+                XCTAssertEqual(
+                    Set(try ContactResolver.resolve(requirement, step: step, board: board).map(\.id)),
+                    ["edge-left", "edge-right"]
+                )
+            } else {
+                XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+                    XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
+                }
+            }
+        }
+    }
+
+    func testRepeatersRestPreviewsThreeFingerEdgesOnGrindstoneMk2() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
+        let rest = try XCTUnwrap(plan.steps.first {
+            $0.id == "repeaters-grip-set-1-series-4-rep-3.segment-2"
+        })
+        let cue = WorkoutTimeline(steps: plan.steps).boardCue(
+            currentStep: rest,
+            stepElapsed: 1,
+            countdown: 0,
+            isComplete: false
+        )
+        let preview = try XCTUnwrap(cue.step)
+        let contacts = WorkoutHighlightResolver.contacts(for: preview, on: board)
+
+        XCTAssertTrue(cue.isResting)
+        XCTAssertEqual(cue.mode, .preview)
+        XCTAssertEqual(preview.fingerConfiguration?.engagedFingers, [.index, .middle, .ring])
+        XCTAssertEqual(Set(contacts.map(\.id)).count, 2)
+        XCTAssertTrue(contacts.allSatisfy { $0.kind == .edge })
+    }
+
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
         XCTAssertEqual(
             ContactResolutionError.noMatches.errorDescription,
@@ -581,13 +671,14 @@ final class ContactResolverTests: XCTestCase {
         rightHandCapacity: Int? = nil,
         leftHandCapacity: Int? = nil,
         positionContactIDs: [String]? = nil,
-        gripTypes: Set<GripType> = [.openHand]
+        gripTypes: Set<GripType> = [.openHand],
+        contactKind: HoldKind = .edge
     ) -> BoardRevision {
         let contacts = [
             PhysicalContact(
                 id: "edge-right",
                 name: "Right edge",
-                kind: .edge,
+                kind: contactKind,
                 fingerCapacity: rightFingerCapacity,
                 handCapacity: rightHandCapacity,
                 depth: .range(.init(minimum: rightDepth.lowerBound, maximum: rightDepth.upperBound)),
@@ -596,7 +687,7 @@ final class ContactResolverTests: XCTestCase {
             PhysicalContact(
                 id: "edge-left",
                 name: "Left edge",
-                kind: .edge,
+                kind: contactKind,
                 fingerCapacity: leftFingerCapacity,
                 handCapacity: leftHandCapacity,
                 depth: .range(.init(minimum: 20, maximum: 20)),
@@ -605,7 +696,7 @@ final class ContactResolverTests: XCTestCase {
             PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
-                kind: .edge,
+                kind: contactKind,
                 depth: .range(.init(minimum: 30, maximum: 30)),
                 gripTypes: gripTypes
             )
