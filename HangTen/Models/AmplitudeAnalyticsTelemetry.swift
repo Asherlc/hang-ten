@@ -43,7 +43,6 @@ struct TelemetryDependencies {
     let tracking: any TelemetryTracking
     let diagnostics: any DiagnosticReporting
     let userReports: any UserReportSubmitting
-    let flags: any FeatureFlagProviding
     let replay: any SessionReplayControlling
     let isNoOp: Bool
 
@@ -53,7 +52,6 @@ struct TelemetryDependencies {
             tracking: noOp,
             diagnostics: noOp,
             userReports: noOp,
-            flags: noOp,
             replay: noOp,
             isNoOp: true
         )
@@ -86,7 +84,6 @@ enum TelemetryComposition {
                 : noOp,
             diagnostics: sentryConfigured ? SentryDiagnostics() : noOp,
             userReports: sentryConfigured ? SentryUserReports() : noOp,
-            flags: noOp,
             replay: noOp,
             isNoOp: !trackingConfigured && !sentryConfigured
         )

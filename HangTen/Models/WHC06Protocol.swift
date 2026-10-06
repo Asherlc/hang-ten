@@ -44,7 +44,7 @@ struct WHC06ProtocolAdapter {
         }
     }
 
-    func payload(for command: ForceSensorCommand) -> Data? {
+    func payload(for _: ForceSensorCommand) -> Data? {
         nil
     }
 

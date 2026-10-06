@@ -4,9 +4,6 @@ import SwiftUI
 struct FreeWorkoutLogSetSheet: View {
     let exerciseType: FreeExerciseType
     let holdName: String
-    let initialWeightKGF: Double?
-    let initialDuration: TimeInterval?
-    let initialReps: Int?
     let onSave: (_ weightKGF: Double?, _ duration: TimeInterval?, _ reps: Int?) -> Void
     let onCancel: () -> Void
 
@@ -25,9 +22,6 @@ struct FreeWorkoutLogSetSheet: View {
     ) {
         self.exerciseType = exerciseType
         self.holdName = holdName
-        self.initialWeightKGF = initialWeightKGF
-        self.initialDuration = initialDuration
-        self.initialReps = initialReps
         self.onSave = onSave
         self.onCancel = onCancel
         _weightText = State(initialValue: FreeWorkoutDecimalText.format(initialWeightKGF))

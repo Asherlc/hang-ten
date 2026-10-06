@@ -62,8 +62,4 @@ enum FreeWorkoutDraftMigration {
         return .seeded(logID: log.id)
     }
 
-    /// Test helper: clears the migrated flag without touching history/draft.
-    static func clearMigratedFlag(defaults: UserDefaults = .standard) {
-        defaults.removeObject(forKey: migratedFlagKey)
-    }
 }

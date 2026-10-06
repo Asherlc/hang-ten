@@ -83,8 +83,6 @@ struct HangTenApp: App {
 		_motherboardSettingsStore = StateObject(wrappedValue: motherboardSettingsStore)
 		_purchaseManager = StateObject(wrappedValue: purchaseManager)
 		_store = StateObject(wrappedValue: AppStore(
-			motherboardBluetoothService: motherboardBluetoothService,
-			motherboardSettingsStore: motherboardSettingsStore,
 			workoutSessionStore: workoutSessionStore,
 			customRoutineStore: customRoutineStore,
 			workoutAccessStore: workoutAccessStore,

@@ -9,7 +9,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "Tools/HangboardCAD"))
-import use_hangboard_packages
+import use_hangboard_packages  # noqa: F401 -- Installs the shared package module search path.
 from hangboard_packages import cad_source
 import solve_threaded_rope as solver
 from cad_authoring_fixtures import canonical_pose, write_native_authoring

@@ -1,4 +1,7 @@
 import Foundation
+@testable import HangTen
+
+// Protocol research retained by fixture tests; this device has no live transport.
 
 struct EntralpiProtocolAdapter {
     static let deviceInfoServiceUUID = UUID(uuidString: "0000180A-0000-1000-8000-00805F9B34FB")!
@@ -10,11 +13,8 @@ struct EntralpiProtocolAdapter {
     static let weightScaleNotificationUUID = UUID(uuidString: "0000FFF1-0000-1000-8000-00805F9B34FB")!
     static let batteryLevelUUID = UUID(uuidString: "00002A19-0000-1000-8000-00805F9B34FB")!
 
-    let profile: ForceSensorProfile
-
     init?(profile: ForceSensorProfile) {
         guard profile == .entralpi else { return nil }
-        self.profile = profile
     }
 
     var capabilities: Set<ForceSensorCapability> {
@@ -58,7 +58,7 @@ struct EntralpiProtocolAdapter {
         advertisement.name == "ENTRALPI"
     }
 
-    func payload(for command: ForceSensorCommand) -> Data? {
+    func payload(for _: ForceSensorCommand) -> Data? {
         nil
     }
 

@@ -383,24 +383,6 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         isRest = try container.decodeIfPresent(Bool.self, forKey: .isRest) ?? false
     }
 
-    func applyingSemantics(from step: WorkoutStep) -> WorkoutStepMeasurement {
-        WorkoutStepMeasurement(
-            stepID: stepID,
-            plannedActiveDuration: plannedActiveDuration,
-            intervals: intervals,
-            peakLoadKGF: peakLoadKGF,
-            sampleCount: sampleCount,
-            status: status,
-            handUse: step.handUse,
-            side: step.side,
-            action: step.action,
-            repetitions: step.repetitions,
-            completedRepetitions: completedRepetitions,
-            externalLoadKGF: step.externalLoadKGF,
-            isRest: step.isRestStep
-        )
-    }
-
     var actualLoadedDuration: TimeInterval {
         intervals.reduce(0) { $0 + $1.duration }
     }

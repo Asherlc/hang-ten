@@ -181,10 +181,6 @@ struct FreeWorkoutLog: Codable, Hashable, Identifiable {
         exercises.insert(exercise, at: clamped)
     }
 
-    mutating func reorderExercises(fromOffsets: IndexSet, toOffset: Int) {
-        exercises.move(fromOffsets: fromOffsets, toOffset: toOffset)
-    }
-
     // MARK: - Set mutations
 
     /// Returns the new set’s id, or `nil` when `exerciseID` is missing.

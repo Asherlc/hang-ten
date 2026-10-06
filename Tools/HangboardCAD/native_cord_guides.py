@@ -409,9 +409,8 @@ def _certify_guided_paths(mesh,full,radii,rests,features,selections,terminals,cl
 
 
 def solve_groove_guided_routes(mesh,data,descriptor,source):
-    from native_cord_routes import checked_clearance,length
+    from native_cord_routes import length
     from solve_threaded_rope import rotate_inverse
-    from hangboard_packages.cord_paths import validate_cord_paths
     if not mesh.is_watertight or not mesh.is_winding_consistent or mesh.volume<=0:
         raise ValueError("native guided collider must be a closed consistently outward solid")
     features=validate_guide_bindings(data,source);setup=data["suspension"];solver=data["ropeSolver"];settings=solver["grooveGuides"]

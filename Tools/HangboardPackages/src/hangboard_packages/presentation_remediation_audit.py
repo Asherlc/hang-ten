@@ -2485,10 +2485,6 @@ def _production_started(record: PresentationRemediationRecord) -> bool:
     )
 
 
-def _is_phase2_keep(record: PresentationRemediationRecord) -> bool:
-    return record.decision == "keep"
-
-
 def _check_pending(check: PresentationCheck) -> bool:
     return check.status == "pending" and check.evidence is None
 
@@ -2807,7 +2803,6 @@ def _validate_generation_and_final(
     assert record.phase2_action is not None
     generation = record.generation
     action = record.phase2_action
-    key = _record_key(record)
     if record.decision == "splitPhysicalRevision":
         raise PresentationRemediationAuditError(
             "schema 2 has no splitPhysicalRevision action in the approved remediation matrix"

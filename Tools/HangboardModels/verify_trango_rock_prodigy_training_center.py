@@ -97,7 +97,7 @@ def _verify_reusable_package(package: Path) -> dict[str, object]:
     from pxr import Usd, UsdShade
     cad_tools = _TOOLS.parent / "HangboardCAD"
     sys.path.insert(0, str(cad_tools))
-    import board_manifest  # Installs the shared package module search path.
+    import use_hangboard_packages  # noqa: F401 -- Installs the shared package module search path.
     from hangboard_packages.cad_source import load_board, package_source_path
     from usdz_writer import read_usdz
 
