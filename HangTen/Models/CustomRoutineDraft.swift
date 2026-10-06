@@ -188,6 +188,7 @@ struct CustomRoutineDraft: Equatable {
     var category: String?
     var tagsText: String
     var steps: [CustomRoutineStepDraft]
+    var repeatGroups: [CustomRoutineRepeatGroup]
 
     init(createWith targetMode: CustomRoutineTargetMode) {
         self.init(
@@ -206,6 +207,7 @@ struct CustomRoutineDraft: Equatable {
         category = nil
         tagsText = ""
         steps = []
+        repeatGroups = []
     }
 
     init(duplicate definition: CustomRoutineDefinition) {
@@ -238,6 +240,7 @@ struct CustomRoutineDraft: Equatable {
         category = definition.category
         tagsText = definition.tags.joined(separator: ", ")
         steps = definition.steps.map(Self.stepDraft(from:))
+        repeatGroups = definition.repeatGroups
     }
 
     mutating func addStep() {
@@ -319,10 +322,24 @@ struct CustomRoutineDraft: Equatable {
         for index in offsets.sorted(by: >) where steps.indices.contains(index) {
             steps.remove(at: index)
         }
+        let remainingIDs = Set(steps.map(\.id))
+        repeatGroups = repeatGroups.compactMap { group in
+            var group = group
+            group.stepIDs.removeAll { !remainingIDs.contains($0) }
+            return group.stepIDs.isEmpty ? nil : group
+        }
     }
 
     mutating func moveSteps(from offsets: IndexSet, to destination: Int) {
-        let sourceOffsets = offsets.filter { steps.indices.contains($0) }.sorted()
+        let stepIDs = steps.map(\.id)
+        var movingOffsets = Set(offsets.filter { steps.indices.contains($0) })
+        // A repeat is one sequence: moving any member moves the whole range.
+        for group in repeatGroups {
+            if let range = group.range(in: stepIDs), !movingOffsets.isDisjoint(with: range) {
+                movingOffsets.formUnion(range)
+            }
+        }
+        let sourceOffsets = movingOffsets.sorted()
         guard !sourceOffsets.isEmpty else {
             return
         }
@@ -332,13 +349,42 @@ struct CustomRoutineDraft: Equatable {
             steps.remove(at: index)
         }
 
-        let boundedDestination = min(max(destination, 0), steps.count + sourceOffsets.count)
+        var boundedDestination = min(max(destination, 0), stepIDs.count)
+        for group in repeatGroups {
+            if let range = group.range(in: stepIDs),
+               boundedDestination > range.lowerBound, boundedDestination < range.upperBound {
+                boundedDestination = destination > sourceOffsets[0] ? range.upperBound : range.lowerBound
+            }
+        }
         let removedBeforeDestination = sourceOffsets.filter { $0 < boundedDestination }.count
         let insertionIndex = min(
             max(boundedDestination - removedBeforeDestination, 0),
             steps.count
         )
         steps.insert(contentsOf: movingSteps, at: insertionIndex)
+    }
+
+    func newRepeatGroup() -> CustomRoutineRepeatGroup? {
+        let usedIDs = Set(repeatGroups.flatMap(\.stepIDs))
+        guard let step = steps.first(where: { !usedIDs.contains($0.id) }) else { return nil }
+        return CustomRoutineRepeatGroup(stepIDs: [step.id])
+    }
+
+    mutating func updateRepeatGroup(_ group: CustomRoutineRepeatGroup) {
+        guard CustomRoutineRepeatGroup.supportedCounts.contains(group.repeatCount),
+              group.range(in: steps.map(\.id)) != nil,
+              repeatGroups.filter({ $0.id != group.id }).allSatisfy({
+                  Set($0.stepIDs).isDisjoint(with: group.stepIDs)
+              }) else { return }
+        if let index = repeatGroups.firstIndex(where: { $0.id == group.id }) {
+            repeatGroups[index] = group
+        } else {
+            repeatGroups.append(group)
+        }
+    }
+
+    mutating func removeRepeatGroup(id: String) {
+        repeatGroups.removeAll { $0.id == id }
     }
 
     func retargeted(
@@ -358,6 +404,7 @@ struct CustomRoutineDraft: Equatable {
         retargeted.difficulty = difficulty
         retargeted.category = category
         retargeted.tagsText = tagsText
+        retargeted.repeatGroups = repeatGroups
         retargeted.steps = steps.map { step in
             var step = step
             step.targets = Self.compatibleTargets(
@@ -380,7 +427,8 @@ struct CustomRoutineDraft: Equatable {
             category: normalizedOptional(category),
             tags: CustomRoutineTagNormalizer.normalizedTags(from: tagsText),
             targetMode: targetMode,
-            steps: steps.map(Self.stepDefinition(from:))
+            steps: steps.map(Self.stepDefinition(from:)),
+            repeatGroups: repeatGroups
         )
     }
 

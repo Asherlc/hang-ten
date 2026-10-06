@@ -2,6 +2,77 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testRepeatGroupSurvivesEditingDuplicatingAndRetargeting() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Repeat"
+        draft.steps = [makeStep(id: "one", title: "One"), makeStep(id: "two", title: "Two")]
+        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["one", "two"], repeatCount: 6)
+        draft.updateRepeatGroup(group)
+        let definition = draft.definition()
+
+        XCTAssertEqual(CustomRoutineDraft(editing: definition).repeatGroups, [group])
+        let duplicate = CustomRoutineDraft(duplicate: definition).definition()
+        XCTAssertNotEqual(duplicate.id, definition.id)
+        XCTAssertEqual(duplicate.repeatGroups, [group])
+        XCTAssertEqual(draft.retargeted(to: .boardSpecific(boardID: BoardCatalog.defaultBoard.id)).repeatGroups, [group])
+        XCTAssertNil(draft.newRepeatGroup(), "Every step already belongs to this repeat")
+    }
+
+    func testDeletingRepeatMembersShrinksRangeAndRemovesEmptyRepeat() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
+        draft.updateRepeatGroup(.init(id: "repeat", stepIDs: ["one", "two", "three"], repeatCount: 5))
+
+        draft.removeSteps(at: IndexSet(integer: 1))
+        XCTAssertEqual(draft.repeatGroups, [.init(id: "repeat", stepIDs: ["one", "three"], repeatCount: 5)])
+        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        draft.removeSteps(at: IndexSet([0, 1]))
+        XCTAssertTrue(draft.repeatGroups.isEmpty)
+    }
+
+    func testReorderingARepeatMemberMovesWholeGroupAndKeepsOrder() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four"].map { makeStep(id: $0, title: $0) }
+        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["two", "three"], repeatCount: 6)
+        draft.updateRepeatGroup(group)
+
+        draft.moveSteps(from: IndexSet(integer: 2), to: 0)
+        XCTAssertEqual(draft.steps.map(\.id), ["two", "three", "one", "four"])
+        XCTAssertEqual(draft.repeatGroups, [group])
+        draft.moveSteps(from: IndexSet(integer: 0), to: 4)
+        XCTAssertEqual(draft.steps.map(\.id), ["one", "four", "two", "three"])
+        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+    }
+
+    func testMovingIntoAnotherRepeatKeepsItsMembersTogether() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        draft.updateRepeatGroup(.init(id: "first", stepIDs: ["one", "two"]))
+        draft.updateRepeatGroup(.init(id: "second", stepIDs: ["three", "four"]))
+
+        draft.moveSteps(from: IndexSet(integer: 0), to: 3)
+        XCTAssertEqual(draft.steps.map(\.id), ["three", "four", "one", "two", "five"])
+        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        draft.moveSteps(from: IndexSet(integer: 4), to: 1)
+        XCTAssertEqual(draft.steps.map(\.id), ["five", "three", "four", "one", "two"])
+        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+    }
+
+    func testOverlappingRepeatIsRejectedAndRemovingRepeatRetainsSteps() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
+        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["one", "two"])
+        draft.updateRepeatGroup(group)
+        draft.updateRepeatGroup(.init(stepIDs: ["two", "three"]))
+        XCTAssertEqual(draft.repeatGroups, [group])
+        XCTAssertEqual(draft.newRepeatGroup()?.stepIDs, ["three"])
+
+        let steps = draft.steps
+        draft.removeRepeatGroup(id: group.id)
+        XCTAssertEqual(draft.steps, steps)
+        XCTAssertTrue(draft.definition().repeatGroups.isEmpty)
+    }
+
     func testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation() throws {
         let contact = PhysicalContact(id: "edge", name: "Fixture edge", kind: .edge,
             handCapacity: 1, depth: .range(.init(minimum: 18, maximum: 18)))

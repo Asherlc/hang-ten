@@ -696,6 +696,7 @@ jobs:
           - shard: purchase-settings-workouts
             only_testing: >-
               HangTenUITests/CustomRoutineEditorUITests
+              HangTenUITests/CustomRoutineRepeatUITests
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession

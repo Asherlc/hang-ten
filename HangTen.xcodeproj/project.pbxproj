@@ -245,6 +245,7 @@
 		F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000002 /* PlanFlowPresentation.swift */; };
 		F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */; };
 		F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000006 /* PlanFlowUITests.swift */; };
+		F8BC00000000000000000001 /* CustomRoutineRepeatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -505,6 +506,7 @@
 		F8BB00000000000000000002 /* PlanFlowPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentation.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentationTests.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000006 /* PlanFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowUITests.swift; sourceTree = "<group>"; };
+		F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineRepeatUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -547,6 +549,7 @@
 				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 				6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */,
 				F8BB00000000000000000006 /* PlanFlowUITests.swift */,
+				F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -1089,6 +1092,7 @@
 				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 				5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */,
 				F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */,
+				F8BC00000000000000000001 /* CustomRoutineRepeatUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
