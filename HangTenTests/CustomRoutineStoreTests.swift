@@ -110,6 +110,40 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(store.routines[0].repeatGroups[0].repeatCount, 2)
     }
 
+    func testMixedRepeatGroupPreservesSimpleAndExpandedCompoundIDsAfterReload() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let simple = repeatedDefinition().steps[0]
+        let finish = repeatedDefinition().steps[2]
+        let compound = WorkoutStepDefinition(
+            id: "compound", title: "Hang", instruction: "", accessory: "", duration: 12, phase: .hang,
+            segments: [
+                .init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 8),
+                .init(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ]
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.mixed-repeat", title: "Mixed", subtitle: "", difficulty: nil, category: nil,
+            tags: [], targetMode: .generic, steps: [simple, compound, finish],
+            repeatGroups: [.init(id: "repeat", stepIDs: [simple.id, compound.id], repeatCount: 2)]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        let saved = try XCTUnwrap(reloaded.routines.first)
+
+        XCTAssertEqual(saved.steps.map(\.id), ["hang", "compound.segment-1", "compound.segment-2", "finish"])
+        XCTAssertEqual(saved.repeatGroups, [
+            .init(id: "repeat", stepIDs: ["hang", "compound.segment-1", "compound.segment-2"], repeatCount: 2)
+        ])
+        XCTAssertEqual(CustomRoutineDraft(editing: saved).definition(), saved)
+        let plan = try reloaded.plan(for: saved)
+        XCTAssertEqual(plan.steps.map(\.duration), [10, 8, 4, 10, 8, 4, 10])
+        XCTAssertEqual(plan.steps.map(\.phase), [.hang, .hang, .rest, .hang, .hang, .rest, .hang])
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, 7)
+    }
+
     func testRepeatingCompoundStepKeepsCanonicalRangeEditable() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
