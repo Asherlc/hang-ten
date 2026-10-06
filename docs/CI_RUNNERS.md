@@ -15,8 +15,8 @@ matrix expansion and the two call sites for the reusable runtime workflow.
 | CI / build-required | Ubuntu | Required-check aggregation |
 | CI / build-release-device | macOS | `xcodebuild` with the iPhoneOS SDK |
 | CI / test-unit | macOS | XCTest on iOS Simulator |
-| CI / test-ui-paywall | macOS | Two XCTest UI shards on iOS Simulator |
-| CI / test-ui-map | Apple runner (`xcode-27`) | Xcode 27, Metal compiler and iOS Simulator |
+| CI / test-ui-paywall | macOS | Purchase, settings and workout UI tests on iOS Simulator |
+| CI / test-ui-map | Apple runner (`xcode-27`) | Three UI shards with Xcode 27, Metal compiler and iOS Simulator |
 | CI / test-ui | Ubuntu | Required UI-check aggregation |
 | Dependabot / discover-pr | Ubuntu | GitHub API and jq |
 | Dependabot / enable-auto-merge | Ubuntu | GitHub CLI |
@@ -25,6 +25,14 @@ matrix expansion and the two call sites for the reusable runtime workflow.
 | Release / compile-manual-assets | Reusable Ubuntu pipeline | Calls `runtime-assets.yml` for manually selected sources |
 | Release / board-assets | Ubuntu | Selects and validates the exact runtime catalog tested by CI |
 | Release / release | macOS | Xcode archive/export, Apple keychain signing, codesign and Mach-O verification |
+
+The board UI matrix separates model/picker interaction, board layouts, and
+grip/weight flows. Each shard keeps one simulator and runs each selected test
+once. Keep these groups separate: the one-hour XCTest budget includes simulator
+startup and compilation, and a combined run can exhaust it before the layout
+tests finish. `test_ci_xctest_contract.py` verifies that every UI test method is
+selected exactly once across both required UI jobs; the required UI gate waits
+for all matrix shards.
 
 The native CAD job previously used macOS solely to install a DMG. The shared
 `scripts/install-freecad.sh` now verifies the pinned official Linux x86_64

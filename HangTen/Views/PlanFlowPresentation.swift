@@ -7,6 +7,7 @@ struct PlanFlowGroup: Identifiable {
     let repeatCount: Int
     let children: [PlanFlowGroup]
     let title: String
+    let nextInstruction: String?
 
     var id: String { sourceSteps[0].id }
     var duration: TimeInterval { sourceSteps.reduce(0) { $0 + $1.duration } }
@@ -22,15 +23,28 @@ struct PlanFlowGroup: Identifiable {
 }
 
 enum PlanFlowPresentation {
+    private struct Prescription: Equatable {
+        let step: WorkoutStep
+        let nextInstruction: String?
+    }
+
     static func groups(for steps: [WorkoutStep]) -> [PlanFlowGroup] {
-        let prescriptions = steps.map(prescription)
+        var nextWorkInstruction: String?
+        let prescriptions = Array(steps.reversed().map { step in
+            let nextInstruction = step.isRestStep ? nextWorkInstruction : nil
+            if !step.isRestStep {
+                let instruction = step.instruction.trimmingCharacters(in: .whitespacesAndNewlines)
+                nextWorkInstruction = instruction.isEmpty ? nil : instruction
+            }
+            return Prescription(step: prescription(for: step), nextInstruction: nextInstruction)
+        }.reversed())
         return groups(in: steps.indices, steps: steps, prescriptions: prescriptions, isRepeated: false)
     }
 
     private static func groups(
         in range: Range<Int>,
         steps: [WorkoutStep],
-        prescriptions: [WorkoutStep],
+        prescriptions: [Prescription],
         isRepeated: Bool
     ) -> [PlanFlowGroup] {
         var result: [PlanFlowGroup] = []
@@ -75,7 +89,8 @@ enum PlanFlowPresentation {
                 sourceSteps: Array(steps[start..<end]),
                 repeatCount: repeatCount,
                 children: children,
-                title: isRepeated ? prescriptions[start].title : steps[start].title
+                title: isRepeated ? prescriptions[start].step.title : steps[start].title,
+                nextInstruction: prescriptions[start].nextInstruction
             ))
             start = end
         }
