@@ -16,8 +16,39 @@ permissions:
   contents: read
 
 jobs:
+  lfs-sources:
+    name: Prepare cached CAD sources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact-name: ${{ steps.sources.outputs.owner }}-lfs-objects-${{ github.run_id }}
+    steps:
+      - name: Check out exact source pointers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source-ref }}
+          lfs: false
+          persist-credentials: false
+
+      # Save before releasing parallel shards, including on a completely cold cache.
+      - name: Materialize cached CAD sources
+        id: sources
+        uses: ./.github/actions/materialize-lfs
+
+      # Artifacts share the fetch even when a manual caller caps cache access at read.
+      - name: Share verified source objects with all compiler jobs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.sources.outputs.owner }}-lfs-objects-${{ github.run_id }}
+          overwrite: true
+          path: .git/lfs/objects
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
   boards:
     name: Compile board shard ${{ matrix.shard }}
+    needs: lfs-sources
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     strategy:
@@ -32,8 +63,19 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ inputs.source-ref }}
-          lfs: true
+          lfs: false
           persist-credentials: false
+
+      - name: Restore this run's verified source objects
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.lfs-sources.outputs.artifact-name }}
+          path: .git/lfs/objects
+
+      - name: Materialize this run's CAD sources
+        uses: ./.github/actions/materialize-lfs
+        with:
+          cache: 'false'
 
       - name: Compile current board shard
         id: compile
@@ -60,7 +102,7 @@ jobs:
 
   assemble:
     name: Assemble runtime catalog
-    needs: boards
+    needs: [lfs-sources, boards]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
@@ -70,8 +112,19 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ inputs.source-ref }}
-          lfs: true
+          lfs: false
           persist-credentials: false
+
+      - name: Restore this run's verified source objects
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.lfs-sources.outputs.artifact-name }}
+          path: .git/lfs/objects
+
+      - name: Materialize this run's CAD sources
+        uses: ./.github/actions/materialize-lfs
+        with:
+          cache: 'false'
 
       - name: Set up compiler host Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97

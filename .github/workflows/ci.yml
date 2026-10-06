@@ -76,7 +76,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -129,7 +129,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       # actions/setup-python v7.0.0
       - name: Set up Python
@@ -219,6 +222,7 @@ jobs:
           ../HangboardCAD/tests/test_runtime_asset_catalog.py
           ../../scripts/tests/test_runtime_catalog_selection.py
           ../../scripts/tests/test_cad_ci_dependencies.py
+          ../../scripts/tests/test_materialize_lfs.py
           ../HangboardCAD/tests/test_compile_suspension.py
           ../HangboardCAD/tests/test_cad_consumers.py
           ../HangboardCAD/tests/test_cad_sidecars.py
@@ -258,7 +262,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -455,7 +462,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -539,7 +549,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -730,7 +743,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -858,7 +874,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
