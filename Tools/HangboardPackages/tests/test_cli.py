@@ -71,6 +71,20 @@ def _write_audit_ledger(
                             else {}
                         ),
                     },
+                    {
+                        "boardID": "fixture.board",
+                        "contactIDs": [contact_id],
+                        "field": "fingerCapacity",
+                        "outcome": "adapted",
+                        "reviewedAt": "2026-10-06",
+                        "source": {
+                            "kind": "manufacturer",
+                            "url": "https://example.com/fixture-source",
+                            "label": "Fixture hold identity; capacity is a reviewed estimate",
+                        },
+                        "value": 4,
+                        "reason": "Reviewed four-finger estimate for the fixture whole-hand jug.",
+                    },
                     *[
                         {
                             "boardID": "fixture.board",
@@ -87,7 +101,6 @@ def _write_audit_ledger(
                         }
                         for field in (
                             "depth",
-                            "fingerCapacity",
                             "handCapacity",
                             "gripType",
                             "shape",
@@ -151,6 +164,13 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "unavailable": 0,
                 "notApplicable": 0,
             },
+            "fingerCapacity": {
+                "populated": 1,
+                "verified": 0,
+                "adapted": 1,
+                "unavailable": 0,
+                "notApplicable": 0,
+            },
             **{
                 field: {
                     "populated": 0,
@@ -161,7 +181,6 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 }
                 for field in (
                     "depth",
-                    "fingerCapacity",
                     "handCapacity",
                     "gripType",
                     "shape",
@@ -171,10 +190,10 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
         "boards": [
             {
                 "boardID": "fixture.board",
-                "populated": 1,
+                "populated": 2,
                 "verified": 1,
-                "adapted": 0,
-                "unavailable": 5,
+                "adapted": 1,
+                "unavailable": 4,
                 "notApplicable": 0,
                 "unaccountedFields": 0,
             }
@@ -199,10 +218,10 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
     assert report["boards"] == [
         {
             "boardID": "fixture.board",
-            "populated": 1,
+            "populated": 2,
             "verified": 0,
-            "adapted": 1,
-            "unavailable": 5,
+            "adapted": 2,
+            "unavailable": 4,
             "notApplicable": 0,
             "unaccountedFields": 0,
         }

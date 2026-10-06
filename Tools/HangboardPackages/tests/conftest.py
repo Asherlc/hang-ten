@@ -103,6 +103,7 @@ def board_document(
                 "equipmentObjectID": "primary",
                 "name": "Left hold",
                 "kind": "jug",
+                "fingerCapacity": 4,
                 "gripTypes": [],
             }
         ],
@@ -168,6 +169,7 @@ def multi_presentation_board_document(
             "equipmentObjectID": "primary",
             "name": "Right hold",
             "kind": "jug",
+            "fingerCapacity": 4,
             "gripTypes": [],
         }
     )

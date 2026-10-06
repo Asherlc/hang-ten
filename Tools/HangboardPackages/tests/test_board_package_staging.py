@@ -154,11 +154,11 @@ def make_v3_model_package(root: Path) -> Path:
         "contacts": [
             {
                 "id": "hold-left", "equipmentObjectID": "primary",
-                "name": "Left hold", "kind": "jug", "gripTypes": []
+                "name": "Left hold", "kind": "jug", "fingerCapacity": 4, "gripTypes": []
             },
             {
                 "id": "hold-right", "equipmentObjectID": "primary",
-                "name": "Right hold", "kind": "jug", "gripTypes": []
+                "name": "Right hold", "kind": "jug", "fingerCapacity": 4, "gripTypes": []
             },
         ],
     }

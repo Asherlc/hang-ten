@@ -185,14 +185,14 @@ def _stone_reverse_six_bearing_samples(position_id: str):
     assert preserved["beforeSHA256"] == native["sourceSHA256"]
     # The checked archive/XML comparison in
     # docs/source-audits/2026-10-05-native-pose-source-binding.md binds the
-    # historical bearing proof to this metadata-only consolidation. Pin the
-    # full CAD document, including placements and contact mappings; a future
+    # historical bearing proof through consolidation and explicit capacities.
+    # Pin the full CAD document, including placements and contact mappings; a future
     # source change requires a new audit. Export bytes vary across platforms.
     assert preserved["sourceSHA256"] == runtime["sourceSHA256"] == (
         "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9"
     )
     assert artifact["sourceSHA256"] == hashlib.sha256(source.read_bytes()).hexdigest() == (
-        "73b88efa8fb34b9f99a952cc0352bf97a91ac15033919a561d48a255ae83244b"
+        "8571d08d5101fc13e54745436277a499c3a79b13f7e6d60822b8617c450c38c5"
     )
     assert descriptor["modelSHA256"] == artifact["modelSHA256"] == hashlib.sha256(
         (package / "assets/primary.usdz").read_bytes()

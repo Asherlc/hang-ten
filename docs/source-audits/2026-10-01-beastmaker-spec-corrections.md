@@ -100,6 +100,12 @@ Names include existing depths where those values are corroborated; the audit abo
 
 ## Validation
 
+The [2026-10-06 capacity audit](2026-10-06-finger-capacity.md) adds reviewed
+four-finger estimates to the previously unspecified jugs and slopers. The
+Beastmaker 1000 source hash in `Tools/HangboardCAD/display_depth_audits.json`
+was refreshed for that manifest-only edit. All geometry bytes and the reviewed
+metadata/display depth differences remain unchanged.
+
 The supported `set_board_manifest.py` rewrites only the native metadata. Compared every FCStd archive member against the pre-change copies: only Document.xml differs; all CAD shape members are byte-identical. Presentations, descriptors, model assets and contact bindings stay unchanged. No generated board.json is committed.
 
 Package validation and catalog status pass for all 66 packages with no drafts. iOS build, contact resolution/recording tests and screenshots are recorded after execution below.

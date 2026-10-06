@@ -140,6 +140,11 @@ targets. Routines never contain board contact IDs or visual-frame references:
   an exact match; omitted capacity cannot establish that size;
 - `target: "any"` when the source explicitly lets the athlete choose a hold.
 
+Catalog packages require an authored capacity on every contact; see
+[board authoring](ADDING_A_BOARD.md). The resolver's unknown-capacity handling
+supports synthetic contacts and older activity snapshots. Reviewed board
+capacity estimates do not establish a plan's finger or grip prescription.
+
 Each task has one or two hand entries according to the sourced hand use. Put
 holds used together in the same task and successive holds in successive tasks.
 Use `side: "left"` or `"right"` only when the source names a side. The entry

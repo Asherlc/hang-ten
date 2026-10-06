@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "boards": {
     "beastmaker-1000": {
-      "sourceSHA256": "de2bd04820b49ab077828234c2199f28b6a45b18ae2369f2b97096880ba48723",
+      "sourceSHA256": "af01a6beaef0cccd0a6f1c265344bad23150c632b3c3505c31fadfddd0646d7c",
       "audit": "docs/source-audits/2026-10-01-beastmaker-spec-corrections.md",
       "reason": "The reviewed metadata-only correction changed the center-edge label to 53 mm and both upper outer labels to 15 mm while explicitly preserving all display geometry. The source still models the existing 50 mm and 10 mm regions; these display extents are not manufacturer depth measurements.",
       "contacts": {
