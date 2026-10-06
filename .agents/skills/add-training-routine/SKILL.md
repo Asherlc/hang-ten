@@ -1,13 +1,13 @@
 ---
 name: add-training-routine
-description: Import or audit a manufacturer hangboard routine in Hang Ten while preserving exact tasks, order, repetitions, times, interval structure, provenance, and board compatibility. Use for new routines, source verification, generic-versus-board-specific classification, or routine hold-target corrections.
+description: Use when adding or auditing a manufacturer hangboard routine in Hang Ten, verifying source prescriptions, classifying board compatibility, or correcting routine hold targets.
 ---
 
 # Add a training routine
 
 Read `docs/ADDING_A_ROUTINE.md` completely before changing files. Treat the
 manufacturer's primary source as the prescription and the board catalog as a
-separate semantic-resolution layer.
+separate factual inventory.
 
 ## Workflow
 
@@ -16,15 +16,23 @@ separate semantic-resolution layer.
 2. Classify the routine as board-flexible or board-specific before modeling it.
 3. Create a line-by-line source audit covering every task, count, duration,
    order, switch, stay-on, maximum/failure, and rest instruction.
-4. Add `TrainingPlan` and `WorkoutStep` data without inventing segments or
-   exercises. Mark provenance honestly.
-5. Target the narrowest truthful semantic `ContactRequirement` predicate;
+4. Add plan and block data directly to the canonical
+   `HangTen/Resources/PlanLibrary.json` without inventing segments or exercises.
+   Mark provenance honestly and commit the JSON with its source mappings.
+5. Target the narrowest truthful semantic `PlanContactPredicate` for each hand;
    never embed board contact IDs or visual references in a routine.
-6. Regenerate `HangTen/Resources/PlanLibrary.json` with
-   `scripts/export-plan-library.sh`, then run the script again with `--check`.
-7. Verify every target resolves on every board where the plan appears.
+6. Generate board assets before validating factual board compatibility. Board
+   metadata comes from each flat `Hangboards/<slug>.FCStd` document's
+   `HangTenBoardManifest` and validated generated suspension. Cord/simulation
+   inputs remain embedded CAD data; their generated artifacts do not establish
+   training prescriptions. Run `rtk proxy bash scripts/build-board-assets.sh`
+   and `rtk scripts/validate-plan-work-targets.sh`, then run the plan tests.
+   Both apps bundle the checked-in canonical JSON; there is no Swift plan
+   authoring catalog or exporter.
+7. Verify each factual requirement remains compatible with every board where
+   the plan appears. Keep source-generic work as explicit athlete self-selection.
 8. Preview representative text, timer, audio, hand cue, and active-hold states
-   in the dedicated simulator.
+   in the dedicated simulator after `rtk proxy bash scripts/build-runtime-assets.sh`.
 
 ## Non-negotiable rules
 

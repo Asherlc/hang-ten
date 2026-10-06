@@ -19,10 +19,15 @@ and do not guess which is authoritative.
 ## 2. Classify the routine before importing it
 
 A board-flexible routine names semantic holds such as “Jug,” “Round Sloper,” or
-“Large Edge.” It can use `boardID: nil` if every required feature resolves on
-the selected board. `AppStore` hides a plan when even one of its targets does
-not resolve; DEBUG catalog assertions require semantic targets and at least one
-fully compatible registered board.
+“Large Edge.” Use `boardID: nil` when the source is board-agnostic, and retain
+every prescribed semantic hand target. `AppStore` lists these plans on every
+board; compatibility is assessed separately, and unresolved targets mark the
+plan “Not on this board.”
+
+Catalog resolution checks apply to plans with a declared `boardID`, not every
+board-agnostic routine. Non-custom, source-linked board-agnostic work may record
+as self-selected when its prescribed requirements or hand tasks cannot resolve.
+Test each board mapping claimed to support the full source prescription.
 
 A board-specific routine refers to numbered holds, a board diagram, or unique
 features whose meaning depends on one product. Set its `boardID` and do not show
@@ -70,20 +75,24 @@ manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
-The app reads runtime plans from the schema-versioned
-`HangTen/Resources/PlanLibrary.json`. Add the audited plan to
-`LegacyPlanSeedCatalog` in `TrainingModels.swift`, where it acts as the export
-fixture, then run:
+Both apps read the checked-in canonical `HangTen/Resources/PlanLibrary.json`.
+Add the audited plan directly to its reusable block definitions and plan
+references, retaining source metadata and provenance. Build board resources
+before validating factual board compatibility, and validate the work targets:
 
 ```sh
-scripts/export-plan-library.sh
-scripts/export-plan-library.sh --check
+rtk proxy bash scripts/build-board-assets.sh
+rtk scripts/validate-plan-work-targets.sh
 ```
 
-`PlanStorage.swift` turns the fixture into reusable block definitions,
-semantic targets, source metadata, and provenance, then validates the bundled
-JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
-against the fixture.
+`PlanStorage.swift` decodes and validates the bundled JSON, then resolves its
+blocks into runtime steps. Source-prescription tests inspect the canonical
+definitions before segment expansion and verify the resulting runtime plans.
+
+Commit the canonical JSON and source mappings for every changed field. There
+is no separate Swift authoring catalog or plan export step.
+For a complete fresh-checkout app build run `scripts/build-runtime-assets.sh`
+before Xcode. See [generated artifacts](GENERATED_ARTIFACTS.md).
 
 For an unchanged official import, preserve the source's ten-minute task-cycle
 structure exactly and leave `timedWorkDuration` `nil` unless the source
@@ -195,7 +204,7 @@ steps for Entry, 26 for Intermediate, and 27 for Advanced; these generated
 counts differ from the ten source cycles. The source explicitly says to
 complete the task or tasks within each minute and use the remaining time to
 rest.
-DEBUG builds validate the current adapted Metolius audit with assertions for
+Catalog tests validate the current adapted Metolius audit with assertions for
 step order, target mapping, timing, generated numbering, and the 60-second
 cycle structure.
 
@@ -218,6 +227,6 @@ Preview representative steps with the DEBUG routes documented in
 - Every simultaneous task resolves to factual hold contacts on each compatible board.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
-- `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
+- Canonical `PlanLibrary.json` changes and their source mappings are committed.
 - `scripts/validate-plan-work-targets.sh` validates every bundled work target.
 - Representative timer, audio, text, and highlight states reviewed.

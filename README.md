@@ -4,19 +4,19 @@ Hang Ten is a SwiftUI hangboard coach built around a simple promise: show the
 athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
-Each supported board is a complete schema-v3 contact-first package with typed
-presentation media. Raster presentations own a PNG and
-`media.contactGeometry`; model presentations own a USDZ and generated,
-hash-bound contact descriptor. `contacts[]` owns sourced physical facts without
-presentation geometry. The selected presentation supplies rendering,
-highlighting, and interaction data.
+Each catalog board retains one flat native FreeCAD source containing its
+geometry, schema-v3 contact-first metadata, and authored cord/simulation inputs.
+The build generates a material-free USDZ, hash-bound contact descriptor, and
+optional suspension/physics artifacts; staging generates `board.json` from the
+embedded manifest and validated generated suspension. `contacts[]` owns sourced physical
+facts without presentation geometry. The selected presentation supplies
+rendering, highlighting, and interaction data.
 
 ## Included
 
-- Audited board packages with source-backed contact inventories and
-  presentation-specific media; raster packages use normalized, manually
-  authored geometry, exact mirroring where the physical product is symmetric,
-  and exact-path highlights.
+- Audited native CAD board packages with source-backed contact inventories,
+  presentation-specific meshes, exact mirroring where the physical product is
+  symmetric, and contact-bound highlights.
 - Source-backed physical inventories that omit unsupported optional metadata.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
   Intermediate, and Advanced, represented as faithful task-order expansions
@@ -37,22 +37,24 @@ highlighting, and interaction data.
   physical-device validation requirements.
 - A source-linked plan library and lightweight local session progress.
 
-Runtime routine definitions are stored in
-`HangTen/Resources/PlanLibrary.json`. `HangTen/Models/PlanStorage.swift`
-decodes and validates that schema-versioned document; the source-audited seed
-in `TrainingModels.swift` is its export fixture and DEBUG drift oracle. Board
-identity and conservative contact facts, plus each presentation's typed media,
-live in directly discovered `Hangboards/<board-folder>/board.json` packages.
-Raster packages store canonical geometry in `media.contactGeometry`; model
-packages store their USDZ and generated descriptor. Contact records do not
-carry spatial geometry. The app loads validated package bytes without
-rewriting geometry or maintaining another geometry source.
+Audited routine definitions live in the checked-in canonical
+`HangTen/Resources/PlanLibrary.json`, shared by both apps.
+`HangTen/Models/PlanStorage.swift` decodes and validates the bundled document.
+Board sources live in directly discovered
+`Hangboards/<slug>.FCStd` files. Generated package assets remain under
+`Hangboards/<slug>/assets/`. The grip hand retains
+its editable `Art/GripHand/GripHand.blend` and licensed upstream source; its
+runtime mesh JSON is generated. The app loads the compiled and staged outputs
+without rewriting geometry or maintaining another geometry source.
 
 ## Run
 
-Open `HangTen.xcodeproj` in Xcode 26, or build from the repository root:
+Fetch Git LFS sources and generate the runtime files before opening
+`HangTen.xcodeproj` in Xcode 26 or building from the repository root:
 
 ```sh
+rtk git lfs pull
+rtk proxy bash scripts/build-runtime-assets.sh
 rtk xcodebuild -project HangTen.xcodeproj \
   -scheme HangTen \
   -sdk iphonesimulator \
@@ -63,6 +65,14 @@ rtk xcodebuild -project HangTen.xcodeproj \
 
 All Paseo/local-agent builds must use a workspace-local DerivedData path so
 indexes and build output disappear with the workspace.
+
+The runtime build uses pinned FreeCAD 1.1.3/OpenUSD 26.8 for board exports and
+Blender 5.2.0 for the grip hand export. Generated USDZ, descriptors,
+`assets/suspension.json`, and hand mesh JSON are ignored by Git. Commit their
+authoring sources and evidence, plus the canonical plan JSON and its source
+audits. For board-only work use
+`rtk proxy bash scripts/build-board-assets.sh`; see
+[generated artifacts](docs/GENERATED_ARTIFACTS.md) for the full build boundary.
 
 ## Lifetime unlock StoreKit setup
 
@@ -121,6 +131,14 @@ against the new base.
 
 Required-check summaries reject cancelled or unexpectedly skipped prerequisites;
 they report success only after all required validation has completed.
+
+The runtime-asset producer uses `.github/workflows/runtime-assets.yml` to build
+from the checked-out sources. It validates per-board caches and compiles misses
+in bounded parallel shards, then uploads a complete artifact for that revision.
+Python, native, and Xcode consumers download it before validation or staging.
+Automatic releases reuse the catalog tested by main CI and verify its source
+revision and output hashes before archiving. Manual releases use the same
+compiler workflow.
 
 Running main CI jobs finish when newer commits arrive; only the pending run is
 replaced by the newest commit. Superseded revisions cancel their own PR checks
@@ -188,52 +206,49 @@ simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.m
 - [Apple On-Demand Resources for board models](docs/IOS_ON_DEMAND_RESOURCES.md)
 
 Canonical hangboard packages are checked by the read-only validator in
-`Tools/HangboardPackages`. Validate the final inventory or inspect its status
-from the repository root:
+`Tools/HangboardPackages`. Build the ignored board assets, then validate the
+final inventory or inspect its status from the repository root:
 
 ```sh
+rtk proxy bash scripts/build-board-assets.sh
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-The repository directly discovers complete raster and model-only packages.
-Model packages declare no PNG or raster presentation and keep their
-USDZ and generated descriptor beside `board.json` in the package tree.
-The Xcode build phase runs
-`scripts/stage-board-packages.py` after parser-approved discovery. It
-keeps `board.json`, raster assets, and model descriptors in normal app
-resources. Model USDZ bytes are copied without modification into one tagged
-Apple On-Demand Resources asset pack per package and are omitted from the base
-resource tree. The staging step never rewrites geometry or presentation bytes.
+The repository discovers native source packages directly. Generated USDZ and
+descriptor files are installed under each package's ignored `assets/` paths.
+The Xcode build phase runs `scripts/stage-board-packages.py` after
+parser-approved discovery and writes generated `board.json`, descriptors, and
+any physics metadata into normal app resources. USDZ bytes are copied unchanged
+into tagged Apple On-Demand Resources asset packs and omitted from the base
+resource tree. Android uses the same staging script with USDZ files inline.
 
-For a new model package, after geometry has been authored and reviewed, compile
-
-```sh
-rtk proxy blender --background --factory-startup --python-exit-code 1 \
-  --python Tools/HangboardModels/contact_model_package.py -- \
-  --blend PATH/board.blend --board-json Hangboards/SLUG/board.json \
-  --output-directory PATH/compiled-package
-```
-
-The compiler reimports the exact USDZ export and generates the read-only,
-hash-bound contact descriptor; it does not repair or redesign geometry. A model
-package contains only its declared USDZ and descriptor media, with no raster
-fallback. See the [package contract](Tools/HangboardPackages/README.md) for
-schema-v3 validation. Remote model editing is unsupported; the app treats model
-packages as read-only and uses their mesh and descriptor as the presentation
-source.
+The native compiler reopens its exact USDZ output and derives the descriptor
+from its exported mesh; it does not repair or redesign geometry. See the
+[CAD guide](Tools/HangboardCAD/README.md) for source authoring and the
+[package contract](Tools/HangboardPackages/README.md) for validation. There is
+no Blender board compiler or importer. Blender remains the grip hand export
+tool. Model packages have no raster fallback and are read-only in the apps.
 
 The apps only read bundled `Hangboards/*/board.json` packages; there is no
-in-app board editor or package sync. Raster package geometry is edited directly
-in `board.json`, and the saved paths remain the exact rendering and hit-testing
-source of truth.
+in-app board editor or package sync. Edit native source geometry in
+`Hangboards/<slug>.FCStd`, board metadata with
+`Tools/HangboardCAD/set_board_manifest.py`, and embedded cord/simulation inputs
+with `Tools/HangboardCAD/set_cad_authoring.py`, then rebuild the ignored runtime
+outputs. Authored suspension contains topology, dimensions, solver settings,
+evidence, pose rotations/cameras, and optional `offsetXZ: [x, z]`; hashes,
+settled heights, and solved routes are generated.
 
-Regenerate the bundled routine document after an audited plan change:
+Edit the canonical routine document after a source audit, then validate its
+work targets:
 
 ```sh
-rtk scripts/export-plan-library.sh
-rtk scripts/export-plan-library.sh --check
+rtk scripts/validate-plan-work-targets.sh
 ```
+
+Commit `HangTen/Resources/PlanLibrary.json` and the source mappings for every
+changed plan field. Plan tests validate the document and its resolved routines;
+there is no separate Swift authoring catalog or plan exporter.
 
 ## Routine scope
 

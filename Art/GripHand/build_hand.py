@@ -1,5 +1,8 @@
 """Rebuild editable grip poses from the bundled MIT WebXR source. Blender 5.2."""
-import bpy, bmesh, math, runpy
+import bpy
+if bpy.app.version != (5, 2, 0):
+    raise RuntimeError("hand authoring requires pinned Blender 5.2.0")
+import bmesh, math, runpy
 from mathutils import Vector, Quaternion, Matrix
 from pathlib import Path
 HERE = Path(__file__).resolve().parent

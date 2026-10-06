@@ -5,7 +5,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import pytest
-from hangboard_packages.cad_source import load_board, read_document_xml
+from hangboard_packages.cad_source import load_board, read_document_xml, package_source_path
 
 ROOT = Path(__file__).resolve().parents[3] / 'Hangboards'
 
@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[3] / 'Hangboards'
 ])
 def test_single_half_maps_every_physical_contact_once(slug, count):
     package = ROOT / slug
-    source = package / f'{slug}.FCStd'
+    source = package_source_path(package)
     board = load_board(source) if source.exists() else json.loads((package / 'board.json').read_text())
     media = board['presentations'][0]['media']
     descriptor = json.loads((package / media['descriptorPath']).read_text())
@@ -78,7 +78,7 @@ FORGE_CONTACT_STEMS = {
 
 def test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame():
     package = ROOT / 'trango-rock-prodigy-forge'
-    board = load_board(package / 'trango-rock-prodigy-forge.FCStd')
+    board = load_board(package_source_path(package))
     assert not (package / 'board.json').exists()
     # The full paired asset still represents two physical pieces of equipment.
     assert board['equipmentObjects'] == [{'id': 'left-half'}, {'id': 'right-half'}]
@@ -130,7 +130,7 @@ def test_native_forge_full_pair_maps_every_physical_contact_and_mirrored_frame()
 
 
 def test_native_forge_mirrors_one_authored_right_wing_and_all_contact_surfaces():
-    source = ROOT / 'trango-rock-prodigy-forge' / 'trango-rock-prodigy-forge.FCStd'
+    source = package_source_path(ROOT / 'trango-rock-prodigy-forge')
     document = ET.fromstring(read_document_xml(source))
     types = {obj.get('name'): obj.get('type') for obj in document.findall('./Objects/Object')}
     objects = {obj.get('name'): obj for obj in document.findall('./ObjectData/Object')}
@@ -172,7 +172,7 @@ def test_native_forge_mirrors_one_authored_right_wing_and_all_contact_surfaces()
             contact_id = f'{stem}-{side}'
             assert string(name, 'ContactID') == contact_id
             native_contacts[contact_id] = string(name, 'NodeID')
-    descriptor = json.loads((source.parent / 'assets/primary.model.json').read_text())
+    descriptor = json.loads((source.parent / source.stem / 'assets/primary.model.json').read_text())
     assert native_contacts == {
         contact_id: contact['nodeIDs'][0] for contact_id, contact in descriptor['contacts'].items()
     }

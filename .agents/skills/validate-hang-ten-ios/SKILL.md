@@ -1,6 +1,6 @@
 ---
 name: validate-hang-ten-ios
-description: Build, install, launch, and visually validate Hang Ten on an isolated iOS Simulator, including DEBUG review routes, landscape screenshots, spoken countdowns, and HealthKit permission wiring. Use after board, routine, workout, audio, orientation, or Apple Health changes, especially in parallel Paseo workspaces.
+description: Use when validating Hang Ten after board, routine, workout, audio, orientation, or Apple Health changes, or reviewing runtime behavior and screenshots on an isolated iOS Simulator.
 ---
 
 # Validate Hang Ten iOS
@@ -30,7 +30,15 @@ Read `docs/IOS_SIMULATOR_VALIDATION.md` and
    if lookup or ownership verification fails, do not
    delete and return failure. Use that UUID for every simulator operation; never
    target `booted`.
-2. Wait for launch services, then build with the local workspace-specific
+2. Fetch native and hand Git LFS sources and run
+   `rtk proxy bash scripts/build-runtime-assets.sh` before Xcode. This generates
+   the ignored board assets, including solved `assets/suspension.json` and
+   optional physics descriptors, grip hand mesh and plan library. Each flat
+   `Hangboards/<slug>.FCStd` embeds board/cord/simulation inputs; staging merges
+   validated generated suspension into bundled `board.json` and excludes the
+   source and standalone artifact. A fresh checkout
+   does not contain their exported bytes. See `docs/GENERATED_ARTIFACTS.md`.
+   Wait for launch services, then build with the local workspace-specific
    `.context/DerivedData` path and explicit destination.
 3. Keep signing enabled for HealthKit validation. Install the exact built app
    and confirm its app container when parallel builds share the bundle ID.

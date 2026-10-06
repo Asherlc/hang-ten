@@ -19,54 +19,55 @@ geometry, and validation contract.
    caveats for any archival third-party image in a source audit.
 3. Freeze the physical hold inventory. Omit optional measurements, capacities,
    posture, and feature metadata that the sources do not support.
-4. Create the flat `Hangboards/<slug>/board.json` plus the PNG assets declared
-   by its presentations. Use a clean, simplified, straight-on presentation
-   render that preserves the revision's distinguishable layout; use source
-   photos as evidence, not as the primary asset. Match the established catalog
-   material/render style for the real product: wood boards use pale timber,
-   realistic recesses, soft studio lighting, and an off-white background;
-   non-wood boards use a comparable style for their actual material. Before PR
-   submission, compare the asset side by side with a similar existing catalog
-   board that matches the product's material and form factor. Use the Trango
-   Rock Prodigy Pivot only as a structural and path-style precedent; do not
-   copy its product-specific geometry.
-5. Deliberately author each normalized closed path, then refine it directly in
-   `board.json` (the apps only read packages; there is no in-app editor).
-   Mirror one reviewed side exactly when official evidence shows symmetry.
-   Keep one logical hold with multiple pieces when a single physical contact
-   is visually disconnected.
-6. If the checked-out schema supports shape constraints, select one manually
-   in `board.json` for a genuinely regular hold; otherwise use a freeform
-   path. The canonical path is always the rendering, highlighting, and hit-testing truth.
+4. Create or refine one flat `Hangboards/<slug>.FCStd`, the retained native
+   geometry and embedded board/cord/simulation input source. **REQUIRED SUB-SKILL:** Use
+   `migrate-hangboard-to-3d` for geometry or model integration work. Embed
+   metadata with `Tools/HangboardCAD/set_board_manifest.py`; edit evidenced
+   cord/simulation inputs with `Tools/HangboardCAD/set_cad_authoring.py` in
+   document-level `App::PropertyString` properties `HangTenSuspensionAuthoring`
+   and `HangTenRopePhysics`. Suspension authoring retains topology, dimensions,
+   solver settings, evidence, pose rotations/cameras, and optional
+   `offsetXZ: [x, z]`. Hashes, settled heights, and solved routes are generated.
+   Do not create `board.json` or authored JSON sidecars inside a CAD package.
+5. Deliberately author native contact regions. Mirror one reviewed side
+   exactly when official evidence shows symmetry, and keep disconnected pieces
+   under their physical contact ID. Follow the Trango Rock Prodigy Pivot as a
+   structural precedent, without copying its product-specific geometry.
+6. Run `rtk proxy bash scripts/build-board-assets.sh --package <slug>` using
+   pinned FreeCAD 1.1.3/OpenUSD 26.8 and pinned native solver dependencies.
+   Generated USDZ, model descriptors, `assets/suspension.json`, and optional
+   physics descriptors remain at ignored `Hangboards/<slug>/assets/` paths.
+   The producer solves every declared cord pose from the CAD inputs and actual
+   solid; package generation validates the source/model bindings and merges
+   solved suspension into bundled `board.json`. Compare front/side/top
+   exports against the prior committed source for every geometry change.
 7. Run `rtk scripts/hangboard-packages.sh validate --root Hangboards
    --final-inventory` and `rtk scripts/hangboard-packages.sh status --root
    Hangboards`. Inspect normal paths and active/highlight alignment in the app
-   on an owned simulator. Capture representative app-rendered normal and
+   on an owned simulator after `rtk proxy bash scripts/build-runtime-assets.sh`.
+   Capture representative app-rendered normal and
    active/highlight screenshots and include them in the PR evidence.
 
 ## Non-negotiable rules
 
-- Author paths directly. Do not use or create image-driven detection,
+- Author geometry directly. Do not use or create image-driven detection,
   segmentation, masks, contours, registration/alignment, vectorization,
   automatic simplification/cropping, or proposal/refine/promote tooling.
-- Shape constraints are operator-selected, never inferred from pixels.
-- The same saved path must drive normal rendering, active rendering, and hit
-  testing.
-- Keep each revision's presentation asset head-on and visually distinguishable;
-  do not substitute an angled archival photograph for the rendered asset.
-- Match each presentation asset to the catalog render style for the product's
-  actual material and form factor, and side-by-side review it against a
-  comparable existing catalog board before PR submission.
+- For supported raster packages, canonical paths remain the rendering,
+  highlighting and hit-testing source; constraints are operator-selected,
+  never inferred from pixels.
+- Generated board meshes ship unbound, without materials or textures.
+- Review each revision's distinguishable shape against primary evidence and a
+  comparable catalog product.
 - Do not split one physical product into separate catalog packages solely
   because its selectable surface or mounting orientation changes.
 - Record provenance and caveats for every non-primary source; never turn an
   unsupported image detail into board metadata or geometry.
 - Do not hand-author both sides of a symmetric board unless evidence establishes
   asymmetry.
-- This flow creates a hand-authored `board.json`. A board with a native
-  `Hangboards/<slug>/<slug>.FCStd` source has no committed `board.json` (it is
-  generated from the FCStd at build time and the validator rejects an on-disk
-  copy); use `migrate-hangboard-to-3d` and `Tools/HangboardCAD/README.md`.
+- Commit flat native sources and evidence. `board.json` is
+  generated during validation/staging, and runtime assets stay ignored.
+  See `Tools/HangboardCAD/README.md` and `docs/GENERATED_ARTIFACTS.md`.
 - Do not finish with missing geometry, extra geometry, unsupported facts, or a
   highlight that drifts from its physical contact surface. Include app-rendered
   normal and highlighted-hold screenshots in PR review evidence.

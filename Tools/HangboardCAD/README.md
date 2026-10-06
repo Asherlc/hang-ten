@@ -4,35 +4,109 @@ The pipeline below is implemented and reproducible for native CAD packages.
 
 ## What this provides
 
-One self-contained native FreeCAD document per board, kept inside the board's own
-package:
+One self-contained native FreeCAD document per board, kept directly in the
+catalog source root:
 
-    Hangboards/<package-directory>/<package-directory>.FCStd
+    Hangboards/<slug>.FCStd
 
-The FCStd is the source of truth for the board geometry and board metadata.
-An optional adjacent `suspension.json` owns cord setup. One shared command turns
-the FCStd into the runtime pair
-(`assets/primary.usdz` and `assets/primary.model.json`), and the package's
-`board.json` is generated from it at build time and never committed (see
+The FCStd is the source of truth for geometry, board metadata, cord topology,
+solver settings, evidence, and optional simulation inputs. One shared command
+turns it into ignored runtime files under `Hangboards/<slug>/assets/`
+(`*.usdz`, `*.model.json`, optional `suspension.json` and `primary.physics.json`).
+The package's `board.json` is generated at build time and never committed (see
 [Board metadata](#board-metadata-boardjson-is-generated-at-build-time)).
-There is no required Blender, GLB, STEP, OBJ, or STL step, and no board-specific
-Python program in the build path.
+There is no Blender board compiler/importer, intermediate GLB/STEP/OBJ/STL step,
+or board-specific Python program in the build path. Commit the FCStd and source
+audits. All runtime exports, including solved suspension, remain ignored.
+
+## Build from a fresh checkout
+
+Fetch the retained Git LFS sources, then compile and install every ignored board
+asset before package validation.
+
+On Ubuntu 24.04, install the prerequisites for FreeCAD board builds and the
+Blender hand export used by the full runtime build below:
+`libegl1 libgl1 libglu1-mesa libopengl0 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 squashfs-tools xz-utils`.
+The FreeCAD installer extracts the pinned AppImage and runs its bundled
+`freecadcmd` without a FUSE mount.
+
+```sh
+rtk git lfs pull
+rtk proxy bash scripts/build-board-assets.sh
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+```
+
+The script uses pinned FreeCAD 1.1.3 and OpenUSD 26.8, runs
+`prepare_assets.py` in workspace-owned scratch, and installs outputs into the
+existing `Hangboards/<slug>/assets/` paths. It builds every declared model
+presentation and invokes `compile_suspension.py` with the embedded authoring
+inputs to solve native cord routes. It validates current source, model,
+physics, and suspension bindings before publishing the complete package. It
+never needs a previous USDZ, descriptor, or solved suspension artifact.
+For one board, pass `--package <slug>`; repeated `--package` selects several.
+`HANGTEN_FREECAD_CMD` can select the pinned executable and `HANGBOARD_PYTHON`
+selects the host Python.
+
+Before Xcode or a full fresh-checkout app build, use
+`rtk proxy bash scripts/build-runtime-assets.sh`. It also exports the grip hand
+mesh with Blender 5.2.0. Audited plans live in the checked-in canonical
+`HangTen/Resources/PlanLibrary.json`. CI's
+`.github/workflows/runtime-assets.yml` runs eight stable board shards on
+Ubuntu 24.04, with up to eight Linux runners and two independent native processes
+per runner. One Linux job assembles the complete catalog and exports the hand
+once. Validation and app-build jobs download that catalog before staging.
+Automatic releases
+reuse the immutable catalog available to the successful main CI attempt;
+manual releases invoke the same compiler workflow. Failed-job retries retain
+successful shards, and test-only retries retain their catalog producer.
+Release selection groups copied job records by execution times and runner to
+identify the original producer attempt; it rejects missing or expired catalogs.
+See [generated artifacts](../../docs/GENERATED_ARTIFACTS.md).
+
+CI caches each board's complete runtime set against the current FCStd, compiler
+inputs, pinned toolchain, and platform. Every hit checks the current presentation
+inventory, source/model/physics/suspension bindings, and all output hashes.
+Changed or damaged entries rebuild through the native compiler. A complete
+cache hit skips FreeCAD download and native dependency installation. Local
+builds can opt in with `HANGTEN_CAD_CACHE_DIR` pointing to a workspace-owned
+directory under `.context`; omit it for a fresh native build. `--jobs <count>`
+sets the number of independent board workers.
 
 ## Board metadata: board.json is generated at build time
 
-For a CAD-backed package, `Hangboards/<package>/board.json` is **not in the
-repository**. It is generated from the FCStd whenever something needs the board
-document. A package may also carry an authoring-only `suspension.json` beside
-the FCStd; generation merges its suspension into the named model presentation.
-The sidecar declares `schemaVersion`, `presentationID`, the descriptor's
-`modelSHA256`, and `suspension`. It is rejected if the FCStd already contains
-that presentation's suspension, if the descriptor hash differs, or if the
-package is not CAD-backed. Neither source file is staged into the app:
+For a CAD-backed package, `Hangboards/<slug>/board.json` is **not in the
+repository**. Host package generation reads the adjacent flat
+`Hangboards/<slug>.FCStd` and merges validated generated
+`Hangboards/<slug>/assets/suspension.json` into the named model presentations
+or equipment instances. An artifact is required when the source declares
+`HangTenSuspensionAuthoring`. Source/model hashes and the retained authoring
+payload bind the artifact to the current CAD document; missing artifacts, stale hashes, or
+changed authoring inputs fail before validation/staging. Neither the FCStd nor
+the standalone suspension artifact is staged into the app: its runtime
+suspension is already in bundled `board.json`.
 
-Schema 2 instead declares `instanceSuspensions`, keyed by the exact equipment
-instance IDs in the native manifest. This supports independently placed copies
-of one asset; every instance must have a suspension and the asset hash still
-matches the shared descriptor. Rock Rings use this form with `threadedLoopCord`:
+The document-level `App::PropertyString` `HangTenSuspensionAuthoring` retains
+only authored topology, dimensions, solver settings, evidence, pose rotations
+and cameras, and optional horizontal `offsetXZ: [x, z]` (default `[0, 0]`).
+It contains no model/source hashes, settled Y translations, `cordContactPoints`,
+or `wrappedRoutes`. `compile_suspension.py` reads those inputs, derives the
+native collision solid and current model bindings, and solves every canonical
+pose with the retained native solvers. The generated artifact supplies runtime
+`translation` values and solved routes, as well as `sourceSHA256` and model
+hashes. Edit the CAD inputs and rebuild; do not copy solved values into CAD.
+The optional `App::PropertyString` `HangTenRopePhysics` retains the native
+body/channel feature selections and simulation/topology inputs used to generate
+`primary.physics.json`, including the Clavellium live-physics configuration.
+Captain Fingerfood POCKET retains its existing suspension in
+`HangTenBoardManifest` as an intentional legacy exception, unchanged by source
+consolidation. A separate evidence-backed cord revision must use the native
+solver contract; this exception does not authorize new hand-authored routes.
+
+Authoring schema 2 may declare `instanceSuspensions`, keyed by the exact
+equipment instance IDs in the native manifest. This supports independently
+placed copies of one asset; every instance must have a suspension. The generated
+artifact adds the hash of the shared asset. Rock Rings use this form with
+`threadedLoopCord`:
 one branch, two mouths, and an ordered native channel centerline in
 `internalLoop.channelPointsByBranchID`. Its hidden length is measured from the
 linked `ContinuousCordSpine` of the channel's `Part::MultiFuse`. Run its rope
@@ -43,11 +117,12 @@ length; a collision rejects the route instead of adding manual contacts.
 For a schema-2 Rock Ring measurement, select the instance explicitly:
 
 ```sh
-HANGTEN_CHANNEL_PACKAGE=metolius-rock-rings-3d \
+rtk proxy env HANGTEN_CHANNEL_PACKAGE=metolius-rock-rings-3d \
 HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID=left-ring \
 HANGTEN_CHANNEL_FEATURES_JSON='{"left-ring-loop":"ContinuousCordChannel"}' \
 HANGTEN_CHANNEL_VERIFY=1 \
-freecadcmd Tools/HangboardCAD/measure_channel_spines.py
+/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+  Tools/HangboardCAD/measure_channel_spines.py
 ```
 
 For the other copy, use `right-ring` and `right-ring-loop`. An omitted or
@@ -70,13 +145,14 @@ scripts under host `python3` and under FreeCAD's `freecadcmd` (which does not
 inherit `PYTHONPATH`). `contract.py` holds only the compiler's node role-binding
 check; the archive preflight is `cad_source.inspect_archive`. An on-disk `board.json` inside a
 CAD-backed package is a validation error (it would be a stale hand edit), and
-`.gitignore` lists each CAD package's `board.json` path. Boards without an FCStd
-keep their hand-authored, committed `board.json`. Because the FCStd is Git LFS,
+`.gitignore` covers native packages' `board.json` and generated asset paths.
+The schema still supports non-CAD raster packages with hand-authored
+`board.json`; the current catalog retains native sources. Because the FCStd is Git LFS,
 every checkout that builds or validates packages needs the LFS objects
 (`git lfs pull`, or `lfs: true` in CI); an LFS pointer fails generation with a
 fetch hint.
 
-The metadata lives in two document-level string properties of the FCStd:
+Board metadata lives in two document-level string properties of the FCStd:
 
 * `HangTenBoardID` — the board `id`;
 * `HangTenBoardManifest` — `board.json` minus `id`, as compact single-line JSON
@@ -92,23 +168,29 @@ seven CAD boards covered by the aspect-ratio audit, five match the descriptor
 `metolius-wood-grips-compact-ii` keeps its pre-migration raster value `3.88`
 (0.14% from its 610 × 157 mm face), and `metolius-rock-rings-3d` presents two
 ring instances while its descriptor bounds cover one ring, so a derived value
-would be wrong there (see
-[`docs/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/2026-09-24-cad-aspect-ratio-audit.md)).
+would be wrong there. These are the findings of the initial seven-board
+aspect-ratio audit.
 The eighth CAD board, `soill-iron-palm-2`, was added after that audit and is
 not covered by it: its model presentation `aspectRatio` equals its bounds ratio
 (`2.3226565483816386`), while its top-level value is `1.5`.
 Published grip depths stay because they are sourced product facts (see `AGENTS.md`,
 Training-plan Fidelity) that `compile_board.py` validates the geometry against.
+The reviewed Beastmaker 1000 metadata correction deliberately preserved its
+existing display geometry. Those exact source and contact exceptions are
+hash-bound in [display_depth_audits.json](display_depth_audits.json), with the
+retained source audit linked there. Source consolidation preserves its exported
+geometry and does not turn display extents into product measurements.
 Schema-v2 boards (slots, instances, `contactIDsBySlotID`) are carried the same
 way, which is why the manifest is one JSON document rather than per-object
-properties.
+properties. Optional cord/simulation inputs live separately in the document's
+`HangTenSuspensionAuthoring` and `HangTenRopePhysics` string properties.
 
 `board_manifest.py` is the command line for the same generator (host Python):
 
-    python3 Tools/HangboardCAD/board_manifest.py --package <slug>                   # board.json to stdout
-    python3 Tools/HangboardCAD/board_manifest.py --package <slug> --output <path>   # ... to a file
-    python3 Tools/HangboardCAD/board_manifest.py --all                              # generate every CAD board
-    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug>            # print the manifest
+    rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug>                   # board.json to stdout
+    rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug> --output <path>   # ... to a scratch file
+    rtk python3 Tools/HangboardCAD/board_manifest.py --all                              # generate every CAD board
+    rtk python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug>            # print the manifest
 
 It refuses to write into the package's own `board.json`.
 
@@ -116,10 +198,11 @@ To change a CAD board's metadata, edit the manifest and embed it (host Python;
 source URLs and audit mappings for any changed field are still required, per
 `AGENTS.md`), then validate:
 
-    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/manifest.json
-    $EDITOR /tmp/manifest.json
-    python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/manifest.json
-    scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+    rtk python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > .context/<owner>-manifest.json
+    # Edit .context/<owner>-manifest.json, retaining source mappings.
+    rtk python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> .context/<owner>-manifest.json
+    rtk proxy bash scripts/build-board-assets.sh --package <slug>
+    rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
 `set_board_manifest.py` rewrites only `Document.xml` inside the archive (it
 inserts or replaces the property exactly as FreeCAD writes it) and verifies that
@@ -131,10 +214,36 @@ treat it like any geometry edit (recompile and validate the package). After
 either route, commit the changed FCStd; there is no committed `board.json` for
 a CAD-backed package.
 
-Readable diffs: `.gitattributes` routes `Hangboards/*/*.FCStd` through the
+To inspect and change cord/simulation authoring, dump the chosen property to
+workspace scratch, edit the authored inputs with their evidence mappings, and
+embed it without re-saving through FreeCAD:
+
+```sh
+rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug> \
+  --dump-authoring suspension > .context/<owner>-suspension-authoring.json
+rtk python3 Tools/HangboardCAD/set_cad_authoring.py --package <slug> \
+  --suspension .context/<owner>-suspension-authoring.json
+rtk python3 Tools/HangboardCAD/board_manifest.py --package <slug> \
+  --dump-authoring rope-physics > .context/<owner>-rope-physics-authoring.json
+rtk python3 Tools/HangboardCAD/set_cad_authoring.py --package <slug> \
+  --rope-physics .context/<owner>-rope-physics-authoring.json
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
+rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+```
+
+An absent property dumps as `null`; author a supported JSON object before
+embedding it. The editor accepts `--source <path.FCStd>` instead of `--package`,
+allows both inputs in one mutation, and preserves the property not selected.
+Use `--remove-suspension` or `--remove-rope-physics` for an evidence-backed
+removal. Like the manifest editor, it changes only `Document.xml` and verifies
+that every other archive member is unchanged. Duplicate, incorrectly typed,
+oversized, or malformed authoring properties fail closed. Both editors
+invalidate generated source bindings, so always rebuild before validation.
+
+Readable diffs: `.gitattributes` routes `Hangboards/*.FCStd` through the
 `hangten-fcstd` diff driver. Enable it once per clone:
 
-    git config diff.hangten-fcstd.textconv "python3 Tools/HangboardCAD/board_manifest.py --dump-file"
+    rtk git config diff.hangten-fcstd.textconv "python3 Tools/HangboardCAD/board_manifest.py --dump-file"
 
 `git diff`/`git log -p` then show the HangTen document properties, the
 pretty-printed manifest, and one digest line per archive member (so geometry
@@ -153,12 +262,11 @@ the build now generates.
 
 ## Authoring a new CAD board
 
-There is no per-board authoring program in the repository. The six retired
-`Tools/HangboardCAD/migration/author_*.py` scripts that created the current
-FCStd documents were one-off, and re-running one would now recreate a document
-without its embedded manifest. Their provenance is preserved in
-a provenance record, and each record names
-the commit from which the script can still be read with `git show`.
+There is no per-board authoring program in the repository. Retired migration,
+conversion, and archived execution scripts are preserved in Git history;
+commit `769817bcc` retains the code that preceded the source-only cleanup.
+Their dated source audits remain evidence. The saved FCStd must stand alone
+and must not depend on recreating it with an old authoring script.
 
 1. Create the FCStd. Drawing it in the FreeCAD GUI or writing a throwaway script
    under `.context/` (run with `run_freecad.py`) are both fine; the script is
@@ -168,21 +276,26 @@ the commit from which the script can still be read with `git show`.
 2. Write the board metadata as a manifest (`board.json` fields minus `id`, or a
    full `board.json`-shaped object whose `id` equals `HangTenBoardID`), with
    source URLs and audit mappings for every field per `AGENTS.md`. Embed it
-   (do not create `Hangboards/<slug>/board.json`; delete it once its content is
-   in the manifest, and add the path to `.gitignore` next to the other CAD
-   packages):
+   (do not create `Hangboards/<slug>/board.json`):
 
-       python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> <manifest.json>
+       rtk python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> <manifest.json>
 
-3. Compile the runtime pair with `compile_board.py` (below; `--check` first),
-   then run the native source checks and the package validator.
+3. Compile with `scripts/build-board-assets.sh --package <slug>`, then run the
+   native source checks and package validator. Review front/side/top exports
+   alongside the prior source's export for any geometry change.
 4. Record the provenance of every authored number (published versus measured,
    tolerances, reference SHAs, source URLs) in a dated provenance record.
 
-From then on every build and validation generates `board.json` from the FCStd.
+For a newly authored or revised cord setup, embed its reviewed authoring inputs
+with `set_cad_authoring.py` before compilation. From then on the build generates
+runtime assets from the FCStd, and host validation/staging generates
+`board.json` from its manifest and validated suspension artifact.
 
-Every corded CAD board uses this channel-and-solver method (see
+Choose each corded board's solver from its evidenced topology (see
 [`docs/HANGBOARD_CORD_AUTHORING.md`](../../docs/HANGBOARD_CORD_AUTHORING.md)).
+Connected internal mouth pairs use the channel method below; independent leads,
+exterior wraps, and unknown hidden connections use `cadRoutedCord` with
+`ropeSolver.method: "nativeRoutes"`. Do not add a hidden join to fit a solver.
 For a cord routed through connected `PartDesign::SubtractivePipe` channels,
 measure the hidden length from each pipe's Sketcher spine between the two
 declared mouth points; a straight `Part::Cylinder` through-bore is measured
@@ -190,46 +303,69 @@ along its axis. The result is channel geometry, not a cord mesh. For
 the Mini Bar, run:
 
 ```sh
-HANGTEN_CHANNEL_PACKAGE=lattice-mini-bar \
+rtk proxy env HANGTEN_CHANNEL_PACKAGE=lattice-mini-bar \
 HANGTEN_CHANNEL_FEATURES_JSON='{"left-loop":"LeftCordChannel","right-loop":"RightCordChannel"}' \
   /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
   Tools/HangboardCAD/measure_channel_spines.py
 ```
 
-Record the output in `suspension.json` under
-`internalLoop.channelLengthByBranchID`. Run the same command with
-`HANGTEN_CHANNEL_VERIFY=1` after editing the sidecar to check that the
-declared lengths still match the CAD spines.
+Record the measured length in embedded `HangTenSuspensionAuthoring` under
+`internalLoop.channelLengthByBranchID`, using `set_cad_authoring.py`. Run the
+same command with `HANGTEN_CHANNEL_VERIFY=1` after editing the property to check
+that the declared lengths still match the CAD spines.
 For a physics probe, add
 `HANGTEN_CHANNEL_SAMPLES_OUTPUT=.context/<workspace-owner>/channel-paths.json`
 to export both spine centerlines in model coordinates. The output paths run
 from the first to second declared mouth, including both endpoints; they are
 derived from CAD and must not be copied into the USDZ.
 
-For a bar-shaped board with two connected cord channels, solve the visible
-settled routes from the native wood solid. This authoring step writes derived
-pose translations and contact routes into `suspension.json`; the authored
-inputs remain the mouths, connected channel lengths, winding, overhead anchor,
-and loop length. Install `rope_solver_requirements.txt` in a workspace-local
-virtual environment, then run:
+### Focused cord reproduction
+
+For a bar-shaped board with two connected cord channels, the shared producer
+solves visible settled routes from the native wood solid and writes only the
+ignored `assets/suspension.json`. Authored inputs remain the mouths, connected
+channel lengths, winding, overhead anchor, loop length, pose rotations/cameras,
+and horizontal offsets. The build provisions pinned
+`rope_solver_requirements.txt` dependencies in temporary scratch and removes
+that environment on exit. For focused reproduction, create a retained
+workspace-owned virtualenv explicitly. Run these commands from the repository
+root with Python 3.11 or 3.12 and an installed FreeCAD 1.1.3 executable;
+set `HANGTEN_FREECAD_CMD` if FreeCAD is installed elsewhere:
 
 ```sh
-HANGTEN_ROPE_PACKAGE=lattice-mini-bar \
-HANGTEN_ROPE_SOLID_FEATURE=RightCordChannel \
-HANGTEN_ROPE_SOLID_OUTPUT=.context/<workspace-owner>/mini-bar-solid.json \
-  /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+rope_owner="${PASEO_WORKTREE_PATH:-$PWD}"
+rope_owner="${rope_owner##*/}"
+rope_root=".context/$rope_owner/cord-reproduction"
+rope_python="$rope_root/rope-venv/bin/python"
+freecad_command="${HANGTEN_FREECAD_CMD:-/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd}"
+
+rtk proxy python3 -m venv "$rope_root/rope-venv"
+rtk proxy "$rope_python" -m pip install --disable-pip-version-check --only-binary=:all: \
+  -r Tools/HangboardCAD/rope_solver_requirements.txt
+
+rtk proxy bash scripts/build-board-assets.sh --package lattice-mini-bar
+rtk proxy env TMPDIR="$rope_root" HANGTEN_ROPE_PACKAGE=lattice-mini-bar \
+  HANGTEN_ROPE_SOLID_FEATURE=RightCordChannel \
+  HANGTEN_ROPE_SOLID_OUTPUT="$rope_root/lattice-mini-bar-solid.json" \
+  python3 Tools/HangboardCAD/run_freecad.py --freecad "$freecad_command" \
   Tools/HangboardCAD/export_rope_collision_solid.py
 
-.context/<workspace-owner>/rope-venv/bin/python \
+rtk proxy "$rope_python" \
   Tools/HangboardCAD/solve_threaded_rope.py \
   --package lattice-mini-bar \
-  --solid .context/<workspace-owner>/mini-bar-solid.json --apply
-
-.context/<workspace-owner>/rope-venv/bin/python \
-  Tools/HangboardCAD/solve_threaded_rope.py \
-  --package lattice-mini-bar \
-  --solid .context/<workspace-owner>/mini-bar-solid.json --check
+  --solid "$rope_root/lattice-mini-bar-solid.json" --check \
+  --report "$rope_root/lattice-mini-bar-check.json"
 ```
+
+For another board, export its selected final native solid, including any
+explicit `ropeSolver.collisionFeature`, and pass that board's slug and collider
+path. Groove-guided routes also require the retained native groove and bore
+feature selections in `HANGTEN_ROPE_GROOVE_FEATURES` and
+`HANGTEN_ROPE_BORE_FEATURES` during export. Schema-2 entries require
+`--presentation` and, for a reusable-unit entry, `--equipment-object`.
+The host virtualenv example supports `twoBranchCord` and `nativeRoutes`;
+`threadedLoopCord` requires FreeCAD's interpreter for exact native-solid checks,
+as used by the pinned producer.
 
 The solver finds a shortest route in each declared winding direction on a
 CAD section offset by the rope radius, moves the board under the fixed anchor
@@ -243,12 +379,13 @@ Review the generated poses next to manufacturer photos before delivery.
 ## Running it
 
 The pinned toolchain is FreeCAD 1.1.3 (OCCT 7.8.1, Python 3.11.14) with OpenUSD
-26.08 supplied to FreeCAD's interpreter out of band, because FreeCAD's launcher
-does not inherit `PYTHONPATH`:
+26.8 supplied to FreeCAD's interpreter out of band. The shared build script
+handles this and the launcher's consumed command-line options. For a focused
+compiler check, use the retained wrapper:
 
-    HANGTEN_CAD_PYTHONPATH=<dir containing pxr> \
-      /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
-      Tools/HangboardCAD/compile_board.py --package lattice-triple-rung
+    rtk python3 Tools/HangboardCAD/run_freecad.py \
+      --extra-python-path <directory-containing-pxr> \
+      Tools/HangboardCAD/compile_board.py --package lattice-triple-rung --check
 
 Add `--check` to validate and stage without publishing, and `--report <path>` to
 write the JSON build report. The command reads the board metadata from the
@@ -258,18 +395,23 @@ validates it and the source archive, reopens and recomputes the document without
 modifying its bytes,
 extracts the bound components, tessellates at the document's pinned deflection,
 partitions the board surface, writes the USDZ directly, reopens the exported
-bytes, derives the descriptor from those bytes, and publishes the pair. It never
+bytes, derives the descriptor from those bytes, and installs the ignored outputs. It never
 writes `board.json`.
 
 **Without the pinned toolchain.** A USDZ compiled with another OCCT version may
-not reproduce the committed bytes. Compile on the pinned macOS FreeCAD toolchain
-before publishing changed assets. `prepare_assets.py` independently rebuilds
-the source and compares the result with the committed descriptor and model hash.
-Review the changed USDZ and descriptor together before committing them.
+not reproduce the approved export bytes. Use the pinned toolchain before
+staging or reviewing a changed export. `prepare_assets.py` rebuilds from the
+source, derives a new descriptor, checks source immutability and the authored
+generated suspension source/model bindings, and fails if those boundaries
+disagree. Review source changes
+and their generated USDZ/descriptor together; commit only authoring inputs and
+evidence.
 
 ## Source document contract
 
-Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
+Document properties: `HangTenBoardID`, `HangTenBoardManifest`, optional
+`HangTenSuspensionAuthoring` and `HangTenRopePhysics` (all document-level
+`App::PropertyString`; see above),
 `HangTenPresentationID`, `HangTenSchemaVersion` (1 or 2), `HangTenSourceKind`,
 `HangTenCoordinateFrame` (`freecad-mm-z-up-front-negative-y`), and
 `HangTenTessellationDeflection`.
@@ -306,7 +448,7 @@ Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
 
-**Material policy.** Committed USDZ models ship without materials or textures.
+**Material policy.** Generated USDZ models ship without materials or textures.
 The compiler produces unbound meshes — objects without `MaterialName` are
 exported without material bindings. The FreeCAD source may still carry
 `MaterialName`, `BaseColor`, etc. as compile-time metadata, but those
@@ -327,7 +469,7 @@ assigned when all three vertices lie on the region, the centroid is within the
 deflection, and its normal agrees with the surface normal (so an end-cap
 triangle touching the region's boundary edge is never claimed). It is opt-in
 because it changes existing output, and older sources must keep reproducing
-their committed bytes until they are deliberately rebuilt. `metolius-prime-rib`
+their approved export bytes until they are deliberately rebuilt. `metolius-prime-rib`
 and the vector `metolius-rock-rings-3d` source opt in. Verified on the
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
@@ -355,9 +497,9 @@ source re-authored from manufacturer evidence rather than from the
 pre-migration mesh: the front view comes from Trango's top-down photograph
 (bolt-seat scale) and every depth from Trango's depth guide. See
 `docs/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
-`photo_grid.py` provides the reading and review aids used there: gridded,
-contrast-stretched photo crops and the model-over-photo overlay. It is a
-diagnostic, never a build input (lessons §18).
+The initial authoring diagnostics are historical evidence; their scripts are
+retired. Current review uses native front/side/top previews alongside primary
+manufacturer evidence.
 
 `trango-rock-prodigy-natural` follows the same manufacturer-photo approach.
 Its two halves are exact mirrors, with rounded rail and pocket mouths, sloped
@@ -448,7 +590,7 @@ holds its centroid (within the deflection, inside the face domain), vertices
 are split per face, and each carries that face's normal at its position. A face
 then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
-existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
+existing sources keep reproducing their approved export bytes. `metolius-light-rail-2`,
 `moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
 `the-hangboard`, `metolius-climbers-edge`, `frictitious-megalith` and
 `metolius-foundry` set it.
@@ -485,7 +627,7 @@ Every other region still has to match its published depth.
 
 ## Pilot: lattice-triple-rung
 
-`Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
+`Hangboards/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
 constrained 170-vertex Sketcher profile and a symmetric 550 mm pad. The three
 grip regions are `PartDesign::SubShapeBinder` runs of the profile's own sketch
 edges, extruded with a length expression on the pad.
@@ -505,12 +647,13 @@ provenance sidecar; these facts live here instead.
   deviation of 0.1899 mm. The reduction criterion and tolerance from the retired
   authoring script are preserved in
   the corresponding authoring notes.
-* The reference is resolved from commit `6b828e15`
-  (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
+* The initial migration's reference came from commit `6b828e15`, not from a
+  live runtime path. Its historical resolver and authoring code remain in Git
+  history; they are not current build inputs.
 
 ## Vector profile: metolius-prime-rib
 
-`Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd` is the first source
+`Hangboards/metolius-prime-rib.FCStd` is the first source
 whose profile is authored from vector primitives rather than measured vertices:
 one fully constrained Sketcher profile of 11 lines, 12 tangent arcs and two
 cubic Bezier spans (Sketcher B-splines with dimensioned poles), a symmetric
@@ -536,7 +679,12 @@ dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
 * Provenance, field mappings, and the retired authoring script's recovery
   commit: `docs/2026-09-24-metolius-prime-rib-cad-provenance.md`.
 
-## In-app verification
+## Historical pilot app verification
+
+The initial pilot review below predates the current unbound material policy.
+It records that migration's evidence. Use
+[isolated Simulator validation](../../docs/IOS_SIMULATOR_VALIDATION.md) for
+current-source reviews.
 
 Built for the iOS simulator (Debug, `iPhone 17 Pro`) and launched through the
 repository's board-detail review route
@@ -587,7 +735,7 @@ assigned body triangles to share an exact seam, rather than independently
 tessellating the same curved face. It does not bypass native source, depth,
 face-membership, contact-partition or material validation.
 
-    python -m pytest Tools/HangboardCAD/tests -q   # in a venv with Tools/HangboardPackages[dev], numpy, usd-core==26.8
+    rtk python -m pytest Tools/HangboardCAD/tests -q   # in a venv with Tools/HangboardPackages[dev], numpy, usd-core==26.8
 
 * `test_contract.py` — archive preflight (`cad_source.inspect_archive`):
   traversal, case collisions, duplicate members, unsupported object types,
@@ -609,9 +757,8 @@ face-membership, contact-partition or material validation.
   normals and UVs, and byte reproducibility.
 * `test_pilot_native.py` — runs the native checks and the compiler under the
   pinned FreeCAD build as subprocesses; skipped, not silently passed, when that
-  toolchain is absent. The reference comparison resolves the pre-migration asset
-  from Git via `Tools/HangboardCAD/reference.py`, so no copy of it is kept in the
-  working tree.
+  toolchain is absent. Its historical pre-migration artifact comparison was
+  retired; native source, recompute-failure, and compiler checks remain.
 * `tests/native_source_checks.py` — genuine native reopen, recompute, and edit
   checks: pad length 550 -> 620 mm propagating to every contact, and a profile
   dimension 50 -> 56 mm moving the edge-45 contact from 45.00 to 55.98 mm while
@@ -621,6 +768,7 @@ face-membership, contact-partition or material validation.
   envelope and depths, regions on the body surface, a pad-length edit and an
   `Edge23Depth` 23 -> 26 mm edit that moves only edge-23. `HANGTEN_FREECAD_CMD`
   points it at a non-default `freecadcmd`.
-* `tests/compare_exports.py` — sampled two-way point-to-triangle distance against
-  the approved reference (0.21 mm worst case, limit 0.5 mm). A sampled bound, not
+* `tests/compare_exports.py` — sampled two-way point-to-triangle distance between
+  reviewed exports. The initial pilot comparison recorded 0.21 mm worst case
+  against a 0.5 mm limit. A sampled bound, not
   an exact Hausdorff distance and not a product accuracy claim.

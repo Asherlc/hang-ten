@@ -343,6 +343,7 @@ struct SuspendedPairedLeadSolvedPresentation {
 }
 
 
+/// Solver output shared by package validation and the RealityKit renderer.
 enum BoardModelSolvedSuspension {
     case single(SuspendedSolvedPresentation)
     case pairedLead(SuspendedPairedLeadSolvedPresentation)

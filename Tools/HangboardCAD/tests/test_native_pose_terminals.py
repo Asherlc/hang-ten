@@ -12,11 +12,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "Tools/HangboardCAD
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "Tools/HangboardPackages/src"))
 from hangboard_packages import cad_source
 from native_cord_routes import solve_native_routes, checked_clearance, length
+from cad_authoring_fixtures import authored_runtime_setup, canonical_pose, merge_native_artifact
 
 
 def loop_fixture(accelerated=True):
     mesh = trimesh.creation.box(extents=[.1, .06, .06])
-    pose = {"translation": [0, 0, 0], "rotation": [0, 0, 0, 1]}
+    pose = {"translation": [0, 0, 0], **canonical_pose()}
     default = {"loop": {"points": [[0, -.033, -.033], [0, -.033, .033]],
                         "planeNormal": [1, 0, 0]}}
     override = copy.deepcopy(default)
@@ -40,16 +41,18 @@ def merge_fixture(tmp_path, data):
     (tmp_path / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
     board = {"presentations": [{"id": "main", "media": {
         "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
-    sidecar = {"schemaVersion": 1, "presentationID": "main", "modelSHA256": "a" * 64, **data}
-    (tmp_path / "suspension.json").write_text(json.dumps(sidecar))
-    return cad_source.merge_suspension_sidecar(board, tmp_path)
+    authoring = {"schemaVersion": 1, "presentationID": "main", **authored_runtime_setup(data)}
+    return merge_native_artifact(tmp_path, board, authoring)
 
 
 def test_pose_terminals_are_authoring_only_and_merge_without_input_mutation(tmp_path):
     _, data, _ = loop_fixture()
     before = copy.deepcopy(data)
     merged = merge_fixture(tmp_path, data)
-    assert merged["presentations"][0]["media"]["suspension"] == data["suspension"]
+    runtime = copy.deepcopy(merged["presentations"][0]["media"]["suspension"])
+    for pose in runtime["canonicalPoses"].values():
+        assert pose.pop("wrappedRoutes")
+    assert runtime == data["suspension"]
     assert data == before
     rendered = cad_source.render_board(merged).decode()
     assert "ropeSolver" not in rendered and "terminalsByPoseID" not in rendered

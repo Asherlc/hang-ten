@@ -247,8 +247,8 @@ warranted by this request.
 ## Implementation acceptance
 
 - Every preset discloses chosen ranges and manual/failure timing.
-- Exported JSON and seed resolve to identical task order, cues, and
-  provenance.
+- Canonical JSON-source tests verify task order, cues, provenance, and
+  runtime expansion against the audited definitions.
 - Variable total duration on stopwatch plans is an estimate, not a promised
   fixed workout length.
 - Pivot rotation recovery remains distinct from within-set and
@@ -258,7 +258,12 @@ warranted by this request.
   boundaries, manual progression, hand cues, compatibility, and retained
   history IDs.
 
-## Validation record
+## Historical validation record
+
+This record describes the original 40-plan import milestone, before integration
+of main's 31-plan catalog and before retirement of Swift prescription authoring
+and its exporter. Current authoring uses the checked-in
+`HangTen/Resources/PlanLibrary.json`; JSON-source and runtime tests validate it.
 
 Validated with Xcode on a workspace-owned iPhone 17 Pro simulator running
 iOS 26.5, named `Hang Ten Paseo mindless-snail Review`, UUID
@@ -267,9 +272,10 @@ iOS 26.5, named `Hang Ten Paseo mindless-snail Review`, UUID
 with that explicit simulator destination, `.context/DerivedData`, and
 `-parallel-testing-enabled NO`.
 
-- Source exporter `scripts/export-plan-library.sh --check` validates the
-  bundled packages and reproduces all 40 plans. The previous 26 plan
-  definitions and 52 blocks compare equal to the committed versions by ID.
+- At that historical milestone, the now-retired source exporter
+  `scripts/export-plan-library.sh --check` validated the bundled packages and
+  reproduced all 40 plans. The previous 26 plan definitions and 52 blocks
+  compared equal to the committed versions by ID.
 - Catalog, compatibility, plan filters, activity recording and timeline
   suites: 249 tests, one existing skip, zero failures.
 - Clock, countdown scheduling, audio coach, audio cue policy and session
@@ -308,23 +314,25 @@ Retained screenshots include `rptc-jug.png`, `pivot-plan.png`,
 `tension-stopwatch.png`.
 
 
-## Review and current-main integration verification
+## Historical review and main integration verification
 
 The branch incorporates main `39c1833bf`. Its 31 existing plan definitions
 and blocks compare equal by ID to the regenerated library; the 14 additions
 produce 45 routines. Existing IDs and current hand-task schema are retained.
 Package restrictions reside in the canonical source-requirement owner.
-The CLI exporter includes the current pure suspension validator and its
-result-type shim, preserving package validation without UI dependencies.
-The tracked-source manifest includes both new Swift files.
+At that milestone, the CLI exporter included the pure suspension validator and
+its result-type shim, preserving package validation without UI dependencies.
+The tracked-source manifest included both Swift prescription-authoring files.
+Swift prescription authoring and the exporter are now retired; the audited
+plan definitions remain in canonical JSON.
 
 After reconciling the current hand-task schema, the selected catalog,
 compatibility, source-boundary, filter, activity and timeline suites pass:
 307 tests pass and one existing test is skipped. Both revised UI tests pass,
 using observable countdown/stopwatch state instead of fixed sleeps. The
 stopwatch label reaches at least 16 seconds while the routine stays paused;
-stopping and skipping then enters recovery. Exporter `--check` and the
-manifest verification script pass. The iOS test build succeeds.
+stopping and skipping then enters recovery. The historical exporter `--check`
+and manifest verification script passed. The iOS test build succeeded.
 
 Representative plan and single-hand screenshots were inspected in
 `.context/workout-merge-images`. Results are retained in
@@ -337,3 +345,11 @@ The review simulator, `Hang Ten Paseo mindless-snail Review`, UUID
 `4C02EAF6-6C72-4FF0-9C84-EEF9685316FC`, was shut down and deleted by the
 runner's exit cleanup. Its absence from `simctl list` and removal of
 `.context/DerivedData` were verified before publishing the review fixes.
+
+Current integration with main `838f112dc` retains its 45-plan, 90-block canonical
+JSON byte for byte. All 31 original plan definitions and 62 blocks remain equal
+by ID, with all 14 audited additions preserved. Current plan authoring and
+validation use canonical JSON-source tests rather than Swift seeds or the
+retired exporter. The exact source size, hash, and original migration receipts
+are recorded in the
+[canonical plan migration audit](source-audits/2026-10-05-canonical-plan-library.md).

@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/shell-diagnosis-bootstrap.py", line 7, in <module>
-    exec(compile(open(path).read(),path,'exec'),{'__name__':'__main__','__file__':path})
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author.py", line 49, in <module>
-    r={'passed':False,'bodyEquality':eq(body,d.FinalSolid.Shape),'exportSurfaceEquality':surface_coverage(body,export.Shape),'exportComponentsOverlapArea':remainder.Shape.common(pressure.Shape).Area,'pressureAreaMm2':contact.Shape.Area,'pressureBounds':[contact.Shape.BoundBox.XMin,contact.Shape.BoundBox.XMax,contact.Shape.BoundBox.YMin,contact.Shape.BoundBox.YMax,contact.Shape.BoundBox.ZMin,contact.Shape.BoundBox.ZMax],'pressureFaceCount':len(contact.Shape.Faces),'cutoffMm':mask.Placement.Base.z,'maskExpression':str(mask.ExpressionEngine),'originalContactEquality':{n:eq(original[n],d.getObject(n).Shape) for n in names},'newContactOverlapArea':{n:contact.Shape.common(d.getObject(n).Shape).Area for n in names},'pressureOffBodyArea':contact.Shape.cut(d.FinalSolid.Shape).Area,'manifestIdentical':d.HangTenBoardManifest==manifest,'badStates':{o.Name:list(o.State) for o in d.Objects if set(o.State)&{'Invalid','Error','Touched','Recompute'}},'exportValid':export.Shape.isValid(),'nativeBodySolids':len(d.FinalSolid.Shape.Solids)}
-                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/mini-finger-contact-2026-10-02/native-author/author.py", line 41, in surface_coverage
-    raise AssertionError((j,candidates))
-AssertionError: (3, [])

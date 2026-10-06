@@ -11,6 +11,11 @@ Primary pages were checked on October 5, 2026. Existing retained task evidence
 is also recorded in [the import audit](TRAINING_PLAN_SOURCE_AUDIT_2026-08-10.md)
 and [routine authoring guidance](ADDING_A_ROUTINE.md).
 
+Author each optional `metadata.focus` directly in the checked-in
+`HangTen/Resources/PlanLibrary.json`, following the mappings below. Leave the
+field absent when the audit does not support a classification. The canonical
+JSON supplies these values; there is no separate Swift focus authoring helper.
+
 ## Accepted focus mappings
 
 | Routine IDs | Focus | Specific source fact and adaptation |
@@ -70,3 +75,13 @@ published sample a recovery prescription.
 - Calculated time is an app duration estimate when the prescription includes
   manual, maximal, variable, or untimed work; it is not presented as an exact
   manufacturer session length.
+
+## Canonical source integration
+
+Main `f7d113822c6345a1c37421b75851c94870949a3f` adds exactly 19 optional focus
+fields to the existing 45-plan, 90-block canonical source. The values match the
+accepted mappings above. Excluding only those added fields reproduces the
+complete prior document; every block, instruction, cue, count, duration, target,
+source URL, and provenance value is retained. The merged JSON is byte-identical
+to that main commit. Exact current and historical source receipts are recorded
+in the [canonical plan migration audit](source-audits/2026-10-05-canonical-plan-library.md).

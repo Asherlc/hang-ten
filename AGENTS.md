@@ -33,9 +33,11 @@ UI text rather than filling gaps from board metadata or model assumptions.
 
 Author hangboard geometry directly from primary manufacturer evidence, following
 the Trango Rock Prodigy Pivot package as the structural and path-style
-precedent. An operator must deliberately draw and review every canonical hold
-path in `board.json`; exact left/right mirroring is preferred when the product
-is actually symmetric.
+precedent. Catalog board geometry and metadata live in the retained native
+FreeCAD source. Deliberately author and review its contact regions; prefer exact
+left/right mirroring when the product is actually symmetric. For supported
+raster packages, deliberately draw and review every canonical hold path in
+`board.json`.
 
 The apps only read bundled packages; there is no in-app board editor. When
 the checked-out schema supports shape constraints, author an operator-selected
@@ -45,15 +47,34 @@ for irregular holds. A constraint is editing metadata only: the saved path
 remains the sole rendering, highlighting, and hit-testing source of truth.
 Never infer a constraint from pixels.
 
-A model package with a native FreeCAD source (`Hangboards/<slug>/<slug>.FCStd`)
-generates `board.json` from its `HangTenBoardManifest` at build time; the file
-is never committed and an on-disk copy is rejected. Change the CAD metadata
-with `Tools/HangboardCAD/set_board_manifest.py`. A CAD package may keep its
-cord setup in a separate `suspension.json`; generation merges that authoring
-file into `board.json`, and both app platforms stage only the generated file.
-The sidecar must match the descriptor's model SHA-256 and is checked by package
-validation. See `Tools/HangboardCAD/README.md`. Building or validating
-packages needs the FCStd Git LFS objects, not pointers.
+A catalog board retains one flat native source, `Hangboards/<slug>.FCStd`.
+Its `HangTenBoardManifest` generates `board.json` at build time; the file is
+never committed and an on-disk copy is rejected. Change board metadata with
+`Tools/HangboardCAD/set_board_manifest.py`. The document-level
+`App::PropertyString` properties `HangTenSuspensionAuthoring` and
+`HangTenRopePhysics` retain cord and simulation inputs; edit them with
+`Tools/HangboardCAD/set_cad_authoring.py`. Suspension authoring contains only
+topology, dimensions, solver settings, evidence, pose rotations/cameras, and
+optional `offsetXZ: [x, z]`. Model/source hashes, settled heights, and solved
+routes belong only in generated `Hangboards/<slug>/assets/suspension.json`.
+The package generator validates that artifact against the current CAD source,
+authoring inputs, and model descriptors, then merges it into bundled
+`board.json`. Both app platforms stage generated resources only. See
+`Tools/HangboardCAD/README.md`. Building or validating packages needs the
+FCStd Git LFS objects, not pointers.
+
+Generated board USDZ, `*.model.json`, `*.physics.json`, and
+`assets/suspension.json` files are ignored build outputs. Run
+`rtk proxy bash scripts/build-board-assets.sh` with pinned
+FreeCAD 1.1.3/OpenUSD 26.8 before package validation. For a fresh checkout or
+Xcode build, run `rtk proxy bash scripts/build-runtime-assets.sh`; it also
+exports the grip hand using Blender 5.2.0. The checked-in
+`HangTen/Resources/PlanLibrary.json` is the canonical training-plan source;
+edit that audited data directly and preserve its source mappings.
+Commit source documents and source audits. Keep generated
+grip hand mesh JSON out of Git. CI compiles from sources
+once and delivers its artifact to the validation and app-build consumers.
+See [`docs/GENERATED_ARTIFACTS.md`](docs/GENERATED_ARTIFACTS.md).
 
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path
@@ -69,18 +90,17 @@ profile as an ordered boundary loop of the reference's cross-section"), authored
 deliberately as a Sketcher profile. Never infer a 3D profile from pixels.
 
 Every geometry change must be shown, not just described: render front/side/top
-previews of the changed board next to the prior committed asset and present them
-before reporting the change complete. A geometry change without screenshots is
+previews of the changed board next to an export built from the prior committed
+source and present them before reporting the change complete. A geometry change without screenshots is
 not reported as done.
 
 ## Model material policy
 
 All USDZ models must ship without materials or textures. Meshes are unbound so
 the renderer uses its default appearance. Do not add PBR materials, image
-textures, or color adornments to committed USDZ files. Both compilers
-(`compile_board.py` and `contact_model_package.py`) produce unbound meshes by
-default — objects without `MaterialName` in FreeCAD or without materials in
-Blender are exported as-is.
+textures, or color adornments to generated USDZ files. The retained native
+compiler, `Tools/HangboardCAD/compile_board.py`, produces unbound meshes from
+FreeCAD objects without `MaterialName`. There is no Blender board compiler.
 
 ## 3D suspension and On-Demand Resources
 
@@ -95,16 +115,21 @@ For a corded CAD board, preserve the evidenced connection graph and follow
 [`docs/HANGBOARD_CORD_AUTHORING.md`](docs/HANGBOARD_CORD_AUTHORING.md). For
 connected internal mouth pairs, the standard method models the hidden passage
 as an FCStd void, uses `twoBranchCord` (or `threadedLoopCord`) with
-`internalLoop` in `suspension.json`, and measures its channel length with
+`internalLoop` in `HangTenSuspensionAuthoring`, and measures its channel length with
 `measure_channel_spines.py`. For source-backed independent visible leads,
 exterior wraps, or mouths whose hidden connection is unknown, use the
 `cadRoutedCord` topology and authoring `ropeSolver.method: "nativeRoutes"`;
 never invent a hidden join to fit the connected-passage method. Generate every
-canonical pose against the actual CAD solid with `solve_threaded_rope.py
---apply`, reproduce it with `--check`, and retain native-solid clearance,
-length, tube and topology checks. Do not hand-author cord routes or keep a
+canonical pose against the actual CAD solid through the pinned build's
+`compile_suspension.py` and retained native rope solvers; reproduce generated
+routes with `solve_threaded_rope.py --check` and retain native-solid clearance,
+length, tube and topology checks. Change CAD authoring parameters and rebuild;
+never apply solved heights or routes into the source. Do not hand-author cord routes or keep a
 `pairedLeadCord` when a board moves to CAD; extend the solver with evidence and
-tests when the supported native methods do not fit.
+tests when the supported native methods do not fit. Captain Fingerfood POCKET's
+existing `HangTenBoardManifest` suspension is the documented legacy exception,
+preserved unchanged pending a separate evidence-backed cord revision; it does
+not authorize new hand-authored routes.
 
 ## CodeGraph
 

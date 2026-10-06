@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/zlagboard-pro/prep/boot-26-5.py", line 30, in <module>
-    assert second==0,second
-           ^^^^^^^^^
-AssertionError: -15

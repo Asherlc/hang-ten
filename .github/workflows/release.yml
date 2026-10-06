@@ -14,20 +14,124 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: app-store-connect-release
   cancel-in-progress: false
 
 jobs:
-  release:
+  compile-manual-assets:
+    if: github.event_name == 'workflow_dispatch'
+    name: Compile manually selected runtime assets
+    cache-mode: read
+    uses: ./.github/workflows/runtime-assets.yml
+    with:
+      source-ref: ${{ github.sha }}
+
+  board-assets:
+    needs: compile-manual-assets
     if: >-
+      !cancelled() && (
+      (github.event_name == 'workflow_dispatch' && needs.compile-manual-assets.result == 'success') ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      ))
+    name: Prepare tested release assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      artifact-name: ${{ steps.owner.outputs.owner }}-release-board-assets-${{ github.run_id }}
+    steps:
+      - name: Check out tested commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
+          lfs: true
+          persist-credentials: false
+
+      - name: Set up catalog validator Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+
+      - name: Identify catalog owner
+        id: owner
+        run: echo "owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")" >> "$GITHUB_OUTPUT"
+
+      - name: Restore manually compiled catalog
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.compile-manual-assets.outputs.artifact-name }}
+          path: .
+
+      - name: Select immutable catalog from the successful CI attempt
+        if: github.event_name == 'workflow_run'
+        id: tested-catalog
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CI_RUN_ID: ${{ github.event.workflow_run.id }}
+          CI_RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          artifact_pages=".context/$owner-runtime-assets/artifact-pages.json"
+          job_pages=".context/$owner-runtime-assets/job-pages.json"
+          mkdir -p "$(dirname "$artifact_pages")"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/artifacts?per_page=100" > "$artifact_pages"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$CI_RUN_ID/jobs?filter=all&per_page=100" > "$job_pages"
+          artifact_id=$(python3 scripts/select-runtime-catalog.py \
+            --artifact-pages "$artifact_pages" --job-pages "$job_pages" --owner "$owner" \
+            --run-id "$CI_RUN_ID" --run-attempt "$CI_RUN_ATTEMPT")
+          echo "artifact-id=$artifact_id" >> "$GITHUB_OUTPUT"
+
+      - name: Restore the exact catalog tested by CI
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          artifact-ids: ${{ steps.tested-catalog.outputs.artifact-id }}
+          merge-multiple: true
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: .
+
+      - name: Verify tested source revision and catalog hashes
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          python3 Tools/HangboardCAD/runtime_asset_catalog.py \
+            --manifest ".context/$owner-runtime-assets/catalog.json" --check
+
+      - name: Upload compiled release catalog
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.owner.outputs.owner }}-release-board-assets-${{ github.run_id }}
+          overwrite: true
+          path: |
+            Hangboards/*/assets/*.usdz
+            Hangboards/*/assets/*.model.json
+            Hangboards/*/assets/*.physics.json
+            Hangboards/*/assets/suspension.json
+            HangTen/Resources/GripHand/hand-mesh.json
+            .context/${{ steps.owner.outputs.owner }}-runtime-assets/catalog.json
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  release:
+    needs:
+      - board-assets
+    if: >-
+      !cancelled() && needs.board-assets.result == 'success' && (
       github.event_name == 'workflow_dispatch' ||
       (
         github.event.workflow_run.conclusion == 'success' &&
         github.event.workflow_run.event == 'push' &&
         github.event.workflow_run.head_branch == 'main'
-      )
+      ))
     name: Archive, sign, and upload
     runs-on: macos-26
     timeout-minutes: 60
@@ -46,6 +150,12 @@ jobs:
           fetch-depth: 1
           lfs: true
           persist-credentials: false
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources

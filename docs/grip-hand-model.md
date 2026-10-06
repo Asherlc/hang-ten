@@ -2,6 +2,13 @@
 
 The editable source is `Art/GripHand/GripHand.blend`, a stylized schematic hand adapted from the Immersive Web [WebXR Input Profiles generic right hand](https://github.com/immersive-web/webxr-input-profiles/tree/main/packages/assets/profiles/generic-hand). The upstream asset is MIT licensed, copyright Amazon.com, Inc. or its affiliates, 2019. See [the asset README](../Art/GripHand/README.md) and [third-party notices](../THIRD_PARTY_NOTICES.md) for the source, attribution, and reproducible Blender workflow.
 
+`HangTen/Resources/GripHand/hand-mesh.json` is generated and ignored by Git.
+`scripts/export-grip-hand.sh` exports the retained editable source using pinned
+Blender 5.2.0; `scripts/build-runtime-assets.sh` includes that step before app
+builds, and CI delivers the JSON in its producer artifact. Source geometry,
+poses, upstream provenance, and licenses remain unchanged. See
+[generated artifacts](GENERATED_ARTIFACTS.md).
+
 The app displays finite 3D surfaces evaluated in Blender after posing and smoothing. This preserves the authored joint shapes without approximating Blender's modifier stack through runtime linear skinning. The surfaces remain fully rotatable 3D geometry; they are not rendered images. The thumb stays relaxed beside the hand in every illustration.
 
 Only `HangTen/Resources/GripHand/hand-mesh.json` ships in the app. `GripHandModelView` validates and shares the decoded asset, creates geometry as a pose is requested, and caches at most three surfaces per view. Missing or corrupt assets show “3D hand unavailable.” The renderer mirrors the left mesh's positions, normals, and triangle winding so both sides keep the same material lighting. The paired view angles the hands in opposite directions to reveal finger curl and spaces them from the current pose's bounds so the thumbs stay apart. The default camera fits the actual displayed pose, including the short wrist. Tapping a compact workout card opens an inspector with rotation, zoom, and reset, using side-by-side controls in landscape.

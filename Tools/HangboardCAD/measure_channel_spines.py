@@ -6,15 +6,18 @@ Run with FreeCAD's Python interpreter, for example:
     HANGTEN_CHANNEL_FEATURES_JSON='{"left-loop":"LeftCordChannel","right-loop":"RightCordChannel"}' \
     freecadcmd Tools/HangboardCAD/measure_channel_spines.py
 
-The adjacent suspension.json supplies each branch's two mouth coordinates.
+The native document's HangTenSuspensionAuthoring supplies each branch's
+two mouth coordinates.
 This command reports the measured length between their projections on each
 channel's spine. A channel is either a `PartDesign::SubtractivePipe` (its
 Sketcher spine, as on the Mini Bar) or a straight `Part::Cylinder` through-bore
 (its axis, as on the Helium Mobile), a `Part::Box` rectangular channel
 with the operator-selected `HangTenChannelAxis` set to x, y, or z (as on
 Clavellium), or a `Part::MultiFuse` with a linked ordered Part::Feature Spine
-(Rock Rings). Schema-2 sidecars require HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID
-to select the instance. It never edits the CAD source or sidecar.
+(Rock Rings). Schema-2 entries can be selected with
+HANGTEN_CHANNEL_PRESENTATION_ID and HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID.
+Reusable-instance configurations require the equipment ID. The command is
+read-only and never edits the CAD source or generated suspension artifact.
 """
 from __future__ import annotations
 
@@ -24,6 +27,9 @@ import os
 from pathlib import Path
 
 import FreeCAD as App
+
+import use_hangboard_packages  # noqa: F401
+from hangboard_packages import cad_source
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -144,49 +150,77 @@ def native_to_model(point):
     return [point.x / 1000, point.z / 1000, -point.y / 1000]
 
 
+def selected_suspension(data, presentation_id=None, equipment_id=None):
+    """Select one authored setup without consulting a generated route cache."""
+    if "entries" in data:
+        entries = [entry for entry in data["entries"]
+                   if (presentation_id is None or entry["presentationID"] == presentation_id)
+                   and (equipment_id is None or entry.get("equipmentObjectID") == equipment_id
+                        or equipment_id in entry.get("instanceSuspensions", {}))]
+        if len(entries) != 1:
+            raise ValueError(
+                "select exactly one authored setup with HANGTEN_CHANNEL_PRESENTATION_ID "
+                "and HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID"
+            )
+        data = entries[0]
+        if "instanceSuspensions" not in data:
+            return data["suspension"]
+    if presentation_id is not None and data.get("presentationID") != presentation_id:
+        raise ValueError(f"unknown presentation: {presentation_id}")
+    if "instanceSuspensions" in data:
+        instances = data["instanceSuspensions"]
+        if equipment_id not in instances:
+            raise ValueError("set HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID to one of: "
+                             + ", ".join(instances))
+        return instances[equipment_id]
+    if equipment_id is not None:
+        raise ValueError("this authored setup has no equipment-object instances")
+    return data["suspension"]
+
+
 def main():
     PACKAGE = os.environ["HANGTEN_CHANNEL_PACKAGE"]
     FEATURES = json.loads(os.environ["HANGTEN_CHANNEL_FEATURES_JSON"])
-    SOURCE = ROOT / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
-    SIDECAR = SOURCE.with_name("suspension.json")
+    SOURCE = ROOT / "Hangboards" / f"{PACKAGE}.FCStd"
+    data = cad_source.load_suspension_authoring(SOURCE)
+    if data is None:
+        raise ValueError(f"{SOURCE} has no authored suspension")
+    suspension = selected_suspension(
+        data, os.environ.get("HANGTEN_CHANNEL_PRESENTATION_ID"),
+        os.environ.get("HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID"),
+    )
     document = App.openDocument(str(SOURCE))
-    data = json.loads(SIDECAR.read_text())
-    if "instanceSuspensions" in data:
-        equipment_id = os.environ.get("HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID")
-        if equipment_id not in data["instanceSuspensions"]:
-            raise ValueError("set HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID to one of: "
-                             + ", ".join(data["instanceSuspensions"]))
-        suspension = data["instanceSuspensions"][equipment_id]
-    else:
-        suspension = data["suspension"]
-    passages_by_id = {
-        passage["id"]: passage for side in suspension["passages"].values()
-        for passage in side
-    }
-    output = {}
-    paths = {}
-    for branch in suspension["branches"]:
-        feature_name = FEATURES[branch["id"]]
-        samples = channel_samples(document.getObject(feature_name), feature_name)
-        first, second = (
-            model_to_native(passages_by_id[passage_id]["pointInModel"])
-            for passage_id in branch["passageIDs"]
-        )
-        first_station = station_on_spine(first, samples)
-        second_station = station_on_spine(second, samples)
-        length = abs(second_station - first_station) / 1000
-        output[branch["id"]] = round(length, 9)
-        paths[branch["id"]] = [native_to_model(point) for point in
-                               path_between_stations(samples, first_station, second_station)]
-    if os.environ.get("HANGTEN_CHANNEL_VERIFY") == "1":
-        declared = suspension["internalLoop"]["channelLengthByBranchID"]
-        if set(declared) != set(output) or any(
-            abs(declared[branch] - measured) > 1e-6 for branch, measured in output.items()
-        ):
-            raise ValueError(f"channel lengths differ from CAD spine: {output}")
-    print(json.dumps(output, sort_keys=True))
-    if destination := os.environ.get("HANGTEN_CHANNEL_SAMPLES_OUTPUT"):
-        Path(destination).write_text(json.dumps(paths, sort_keys=True) + "\n")
+    try:
+        passages_by_id = {
+            passage["id"]: passage for side in suspension["passages"].values()
+            for passage in side
+        }
+        output = {}
+        paths = {}
+        for branch in suspension["branches"]:
+            feature_name = FEATURES[branch["id"]]
+            samples = channel_samples(document.getObject(feature_name), feature_name)
+            first, second = (
+                model_to_native(passages_by_id[passage_id]["pointInModel"])
+                for passage_id in branch["passageIDs"]
+            )
+            first_station = station_on_spine(first, samples)
+            second_station = station_on_spine(second, samples)
+            length = abs(second_station - first_station) / 1000
+            output[branch["id"]] = round(length, 9)
+            paths[branch["id"]] = [native_to_model(point) for point in
+                                   path_between_stations(samples, first_station, second_station)]
+        if os.environ.get("HANGTEN_CHANNEL_VERIFY") == "1":
+            declared = suspension["internalLoop"]["channelLengthByBranchID"]
+            if set(declared) != set(output) or any(
+                abs(declared[branch] - measured) > 1e-6 for branch, measured in output.items()
+            ):
+                raise ValueError(f"channel lengths differ from CAD spine: {output}")
+        print(json.dumps(output, sort_keys=True))
+        if destination := os.environ.get("HANGTEN_CHANNEL_SAMPLES_OUTPUT"):
+            Path(destination).write_text(json.dumps(paths, sort_keys=True) + "\n")
+    finally:
+        App.closeDocument(document.Name)
 
 
 if __name__ == "__main__":

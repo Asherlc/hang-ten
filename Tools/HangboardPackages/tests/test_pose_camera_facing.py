@@ -179,20 +179,23 @@ def _stone_reverse_six_bearing_samples(position_id: str):
     runtime = json.loads((audit / "granite-seat-review/runtime-validation.json").read_bytes())
     package = HANGBOARDS_ROOT / "nature-stone-hanger"
     descriptor = json.loads((package / "assets/primary.model.json").read_bytes())
-    sidecar = json.loads((package / "suspension.json").read_bytes())
+    artifact = json.loads((package / "assets/suspension.json").read_bytes())
+    source = load_board_catalog_module().cad_source.package_source_path(package)
     assert preserved["status"] == runtime["status"] == "pass"
     assert preserved["beforeSHA256"] == native["sourceSHA256"]
-    assert preserved["sourceSHA256"] == runtime["sourceSHA256"] == hashlib.sha256(
-        (package / "nature-stone-hanger.FCStd").read_bytes()
-    ).hexdigest()
-    assert runtime["modelSHA256"] == descriptor["modelSHA256"] == sidecar["modelSHA256"] == hashlib.sha256(
+    # The checked archive/XML comparison in
+    # docs/source-audits/2026-10-05-native-pose-source-binding.md binds the
+    # historical bearing proof to this metadata-only consolidation. Pin the
+    # full CAD document, including placements and contact mappings; a future
+    # source change requires a new audit. Export bytes vary across platforms.
+    assert preserved["sourceSHA256"] == runtime["sourceSHA256"] == (
+        "44a081979246f076853a3537bd0b79375c822c554507a7e0d1e04347a25cc9c9"
+    )
+    assert artifact["sourceSHA256"] == hashlib.sha256(source.read_bytes()).hexdigest() == (
+        "73b88efa8fb34b9f99a952cc0352bf97a91ac15033919a561d48a255ae83244b"
+    )
+    assert descriptor["modelSHA256"] == artifact["modelSHA256"] == hashlib.sha256(
         (package / "assets/primary.usdz").read_bytes()
-    ).hexdigest()
-    assert runtime["descriptorSHA256"] == hashlib.sha256(
-        (package / "assets/primary.model.json").read_bytes()
-    ).hexdigest()
-    assert runtime["suspensionSHA256"] == hashlib.sha256(
-        (package / "suspension.json").read_bytes()
     ).hexdigest()
     preserved_wood = {
         contact_id for contact_id, proof in preserved["contactInventory"].items()

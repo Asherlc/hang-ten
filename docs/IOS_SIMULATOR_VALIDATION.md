@@ -198,10 +198,24 @@ the bounded readiness poll proved more reliable on a newly created device.
 
 ## Build for that destination
 
+Fetch the retained Git LFS sources and generate the runtime files before Xcode:
+
+```sh
+rtk git lfs pull
+rtk proxy bash scripts/build-runtime-assets.sh
+```
+
+This produces ignored board USDZ/descriptors, optional suspension/physics
+artifacts and grip hand mesh JSON. Each flat
+`Hangboards/<slug>.FCStd` embeds board, cord, and simulation inputs; the hand
+Blender source and checked-in canonical `HangTen/Resources/PlanLibrary.json`
+remain authoritative. CI consumers receive the generated runtime files from the producer
+artifact. See [generated artifacts](GENERATED_ARTIFACTS.md).
+
 Use a workspace-specific Derived Data path and explicit destination:
 
 ```sh
-xcodebuild \
+rtk xcodebuild \
   -project HangTen.xcodeproj \
   -scheme HangTen \
   -configuration Debug \

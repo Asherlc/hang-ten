@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FE2026100500000000000002 /* RockProdigyPlans.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2026100500000000000102 /* RockProdigyPlans.swift */; };
-		FE2026100500000000000001 /* PublishedHangboardPlans.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE2026100500000000000101 /* PublishedHangboardPlans.swift */; };
 		AE034E2B4778CFF045AA2F42 /* WorkoutCueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */; };
 		D124854F1524ED273B860027 /* WorkoutControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1561CC9F49A8482434431C1D /* WorkoutControls.swift */; };
 		E12D3C8673A4330F01E4329C /* WorkoutTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */; };
@@ -267,8 +265,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FE2026100500000000000102 /* RockProdigyPlans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RockProdigyPlans.swift; sourceTree = "<group>"; };
-		FE2026100500000000000101 /* PublishedHangboardPlans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedHangboardPlans.swift; sourceTree = "<group>"; };
 		73BB087DEE4043CE4D71BBC1 /* WorkoutCueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutCueCard.swift; sourceTree = "<group>"; };
 		1561CC9F49A8482434431C1D /* WorkoutControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutControls.swift; sourceTree = "<group>"; };
 		ECF851F490988BBF1DC74E31 /* WorkoutTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTimerView.swift; sourceTree = "<group>"; };
@@ -661,8 +657,6 @@
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
-				FE2026100500000000000102 /* RockProdigyPlans.swift */,
-				FE2026100500000000000101 /* PublishedHangboardPlans.swift */,
 				7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
@@ -1105,8 +1099,6 @@
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
-				FE2026100500000000000002 /* RockProdigyPlans.swift in Sources */,
-				FE2026100500000000000001 /* PublishedHangboardPlans.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
 				E31000000000000000000001 /* BoardModelView.swift in Sources */,

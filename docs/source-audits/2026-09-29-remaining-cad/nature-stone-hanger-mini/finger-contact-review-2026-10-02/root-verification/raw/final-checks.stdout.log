@@ -1,3 +1,0 @@
-...................................................................      [100%]
-67 passed in 0.57s
-{"catalogPassed": true, "deliveryPassed": true, "stagingPassed": true, "tests": {"tests": 67, "failures": 0, "errors": 0, "skipped": 0, "exitCode": 0, "passed": 67}}

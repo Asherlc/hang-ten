@@ -36,6 +36,15 @@ def test_ci_model_asset_guard_matches_staging_inventory() -> None:
     assert set(actual) == expected
 
 
+def test_android_staging_check_uses_flat_native_sources() -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = next(step for step in workflow["jobs"]["python"]["steps"]
+                if step.get("name") == "Stage board packages as the Android build does")
+    assert "for source in Hangboards/*.FCStd; do" in step["run"]
+    assert 'slug=$(basename "$source" .FCStd)' in step["run"]
+    assert "Hangboards/*/*.FCStd" not in step["run"]
+
+
 def test_required_ui_shards_select_every_method_exactly_once() -> None:
     workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
     jobs = workflow["jobs"]
@@ -122,6 +131,8 @@ def test_ui_required_gate_reports_both_groups(
             **os.environ,
             "CHANGES_RESULT": "success",
             "BUILD_REQUIRED": required,
+            "BOARD_ASSETS_REQUIRED": "true",
+            "BOARD_ASSETS_RESULT": "success",
             "PAYWALL_RESULT": results[0],
             "MAP_RESULT": results[1],
         },
@@ -199,6 +210,8 @@ def test_build_required_gate_rejects_missing_required_validation(
             "BUILD_REQUIRED": required,
             "UNIT_TEST_RESULT": unit,
             "UI_TEST_RESULT": ui,
+            "BOARD_ASSETS_REQUIRED": "true",
+            "BOARD_ASSETS_RESULT": "success",
             "NATIVE_CAD_REQUIRED": native_required,
             "NATIVE_CAD_RESULT": native_result,
         },
@@ -329,6 +342,8 @@ def test_required_build_gate_rejects_missing_native_cad_checks(
             **os.environ,
             "CHANGES_RESULT": "success",
             "BUILD_REQUIRED": "true",
+            "BOARD_ASSETS_REQUIRED": "true",
+            "BOARD_ASSETS_RESULT": "success",
             "UNIT_TEST_RESULT": "success",
             "UI_TEST_RESULT": "success",
             "NATIVE_CAD_REQUIRED": required,
@@ -337,6 +352,27 @@ def test_required_build_gate_rejects_missing_native_cad_checks(
         capture_output=True,
         text=True,
         check=False,
+    )
+    assert result.returncode == expected, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    ("required", "asset_result", "expected"),
+    [("true", "success", 0), ("true", "failure", 1),
+     ("true", "skipped", 1), ("true", "cancelled", 1),
+     ("false", "skipped", 0)],
+)
+def test_required_build_gate_rejects_missing_compiled_assets(required, asset_result, expected):
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    job = workflow["jobs"]["build-required"]
+    assert "board-assets" in job["needs"]
+    result = subprocess.run(
+        ["bash", "-c", job["steps"][0]["run"]],
+        env={**os.environ, "CHANGES_RESULT": "success", "BUILD_REQUIRED": "false",
+             "UNIT_TEST_RESULT": "skipped", "UI_TEST_RESULT": "success",
+             "NATIVE_CAD_REQUIRED": "false", "NATIVE_CAD_RESULT": "skipped",
+             "BOARD_ASSETS_REQUIRED": required, "BOARD_ASSETS_RESULT": asset_result},
+        capture_output=True, text=True, check=False,
     )
     assert result.returncode == expected, result.stdout + result.stderr
 

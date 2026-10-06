@@ -32,7 +32,7 @@ import FreeCAD as App  # noqa: E402
 import compile_board  # noqa: E402
 
 PACKAGE = "lattice-triple-rung"
-SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / f"{PACKAGE}.FCStd"
 # board.json is generated from the source's HangTenBoardManifest (never committed).
 BOARD_BYTES = compile_board.cad_source.generate_board_json(SOURCE)
 

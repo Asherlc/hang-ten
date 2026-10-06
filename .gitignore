@@ -13,6 +13,14 @@ xcuserdata/
 # Paseo workspace-local state
 .context/
 
+# All current boards are CAD-backed. These files are installed by
+# scripts/build-board-assets.sh and are never source inputs.
+/Hangboards/*/assets/*.usdz
+/Hangboards/*/assets/*.model.json
+/Hangboards/*/assets/*.physics.json
+/Hangboards/*/assets/suspension.json
+/HangTen/Resources/GripHand/hand-mesh.json
+
 # CodeGraph local index and runtime state
 .codegraph/
 
@@ -26,6 +34,22 @@ xcuserdata/
 __pycache__/
 *.py[cod]
 *.egg-info/
+*.FCBak
+
+# Historical reviews retain findings, screenshots, and authoring evidence.
+# Raw execution outputs belong in workspace scratch or CI artifacts.
+/docs/**/*.usdz
+/docs/**/*.model.json
+/docs/**/*.physics.json
+/docs/**/*.log
+/docs/**/*.stdout
+/docs/**/*.stderr
+/docs/**/*.swift
+/docs/**/*.patch
+/docs/**/*.diff
+/docs/**/*.xcresult/
+/docs/**/*.xcresult.zip
+/docs/**/command-logs.zip
 # trigger CI
 
 # CAD-backed board packages: board.json is generated from the package's

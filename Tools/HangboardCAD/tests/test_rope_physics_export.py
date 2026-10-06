@@ -9,7 +9,10 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 TOOLS = ROOT / "Tools/HangboardCAD"
 FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
-pytestmark = pytest.mark.skipif(not FREECAD.is_file(), reason="FreeCAD unavailable")
+pytestmark = pytest.mark.skipif(
+    not FREECAD.is_file() and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="native FreeCAD unavailable outside the required native lane",
+)
 
 
 def test_native_cylinder_bores_export_complete_circular_apertures(tmp_path):
@@ -20,7 +23,7 @@ from pathlib import Path
 sys.path[:0]=[str(Path("Tools/HangboardCAD").resolve()),str(Path("Tools/HangboardPackages/src").resolve())]
 from export_rope_physics import export_rope_physics
 from hangboard_packages.rope_physics import _mesh,portal_clearance_radius
-d=App.openDocument(str(Path("Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd").resolve()))
+d=App.openDocument(str(Path("Hangboards/crimptonite-helium-mobile.FCStd").resolve()))
 mapping={"left":"LeftCordChannel","right":"RightCordChannel"}
 a=export_rope_physics(d,"BodySolid",mapping)
 b=export_rope_physics(d,"BodySolid",mapping)
@@ -51,7 +54,7 @@ from pathlib import Path
 sys.path[:0]=[str(Path("Tools/HangboardCAD").resolve()),str(Path("Tools/HangboardPackages/src").resolve())]
 from export_rope_physics import export_rope_physics
 from hangboard_packages.rope_physics import _mesh,portal_clearance_radius
-d=App.openDocument(str(Path("Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd").resolve()))
+d=App.openDocument(str(Path("Hangboards/lattice-mini-bar.FCStd").resolve()))
 mapping={"left-loop":"LeftCordChannel","right-loop":"RightCordChannel"}
 a=export_rope_physics(d,"RightCordChannel",mapping)
 b=export_rope_physics(d,"RightCordChannel",mapping)
@@ -84,7 +87,7 @@ import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path("Tools/HangboardCAD").resolve()))
 from export_rope_physics import export_rope_physics
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 first = export_rope_physics(d, "Pinch100BottomReliefCut", {{"central": "CenterChannelTool"}})
 second = export_rope_physics(d, "Pinch100BottomReliefCut", {{"central": "CenterChannelTool"}})
 assert json.dumps(first) == json.dumps(second)
@@ -138,7 +141,7 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path("Tools/HangboardCAD").resolve()))
 from export_rope_physics import export_rope_physics
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 for body, channels in [("Missing", {}), ("Pinch100BottomReliefCut", {"central":"Missing"})]:
     try: export_rope_physics(d, body, channels)
     except ValueError: pass
@@ -171,7 +174,7 @@ sys.path[:0] = [str(Path("Tools/HangboardCAD").resolve()),
                str(Path("Tools/HangboardPackages/src").resolve()),
                str(Path("Tools/HangboardPackages/tests").resolve())]
 from export_rope_physics import build_physics_descriptor
-source = Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()
+source = Path("Hangboards/clavellium-training-block.FCStd").resolve()
 d = App.openDocument(str(source))
 profile = json.loads(PROFILE_JSON)
 profile["ropes"][0]["nodes"][1]["portalID"] = "central-front"
@@ -206,11 +209,15 @@ def test_compiler_removes_stale_physics_when_authoring_is_removed(tmp_path):
     pxr = pytest.importorskip("pxr")
     env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
     source = tmp_path / "clavellium-training-block.FCStd"
-    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block.FCStd", source)
+    sys.path.insert(0, str(TOOLS))
+    import use_hangboard_packages  # noqa: F401
+    from hangboard_packages import cad_source
+    # Isolate physics publication from the separately checked cord solver.
+    physics_authoring = cad_source.load_rope_physics_authoring(source)
+    cad_source.embed_authoring(source, rope_physics=physics_authoring)
     assets = tmp_path / "assets"
     assets.mkdir()
-    authoring = tmp_path / "rope-physics.json"
-    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/rope-physics.json", authoring)
     command = [sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
                "--package", "clavellium-training-block", "--source", str(source), "--assets", str(assets)]
     first = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
@@ -220,7 +227,7 @@ def test_compiler_removes_stale_physics_when_authoring_is_removed(tmp_path):
     physics = json.loads(physics_path.read_text())
     model = json.loads((assets / "primary.model.json").read_text())
     assert physics["modelSHA256"] == model["modelSHA256"]
-    authoring.unlink()
+    cad_source.embed_authoring(source)
     second = subprocess.run(command, cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)
     assert second.returncode == 0, second.stdout + second.stderr
     assert (assets / "primary.usdz").is_file()
@@ -233,8 +240,22 @@ def test_compiler_reports_malformed_physics_authoring_as_build_error(tmp_path):
     pxr = pytest.importorskip("pxr")
     env = dict(os.environ, HANGTEN_CAD_PYTHONPATH=str(Path(pxr.__file__).parent.parent))
     source = tmp_path / "clavellium-training-block.FCStd"
-    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block/clavellium-training-block.FCStd", source)
-    (tmp_path / "rope-physics.json").write_text("[]")
+    shutil.copyfile(ROOT / "Hangboards/clavellium-training-block.FCStd", source)
+    # Deliberately corrupt the native property; the supported editor rejects
+    # this input, while the compiler still needs a clear failure for bad files.
+    import xml.etree.ElementTree as ET
+    import zipfile
+    with zipfile.ZipFile(source) as archive:
+        infos = archive.infolist()
+        members = {info.filename: archive.read(info.filename) for info in infos}
+    document = ET.fromstring(members["Document.xml"])
+    property_value = document.find('./Properties/Property[@name="HangTenRopePhysics"]/String')
+    assert property_value is not None
+    property_value.set("value", "[]")
+    members["Document.xml"] = ET.tostring(document, encoding="utf-8")
+    with zipfile.ZipFile(source, "w") as archive:
+        for info in infos:
+            archive.writestr(info, members[info.filename])
     run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), "--freecad", str(FREECAD), str(TOOLS / "compile_board.py"),
                           "--package", "clavellium-training-block", "--source", str(source), "--check"],
                          cwd=ROOT, env=env, capture_output=True, text=True, timeout=60)

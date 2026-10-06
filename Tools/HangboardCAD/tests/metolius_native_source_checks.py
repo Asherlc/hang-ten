@@ -31,7 +31,7 @@ import Part  # noqa: E402
 
 REPOSITORY = Path(__file__).resolve().parents[3]
 # board.json is generated from the FCStd's HangTenBoardManifest (never committed).
-BOARD_SOURCE = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "metolius-rock-rings-3d.FCStd"
+BOARD_SOURCE = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d.FCStd"
 
 FAILURES: list[str] = []
 

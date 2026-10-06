@@ -13,20 +13,30 @@ A model presentation crosses two different delivery paths:
 
 | Content | Source | Shipping path | Runtime role |
 | --- | --- | --- | --- |
-| Board identity, positions, `media.suspension`, and display configuration | `board.json` | Main app bundle | Parsed into `BoardModelMedia`; selects and solves transient cord geometry |
-| Model descriptor and its expected `modelSHA256` | `assets/*.model.json` | Main app bundle | Validates model identity, bounds, nodes, attachments, and physical-contact bindings |
-| Material-free board mesh | `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by RealityKit after access and SHA-256 validation |
+| Board identity, positions, `media.suspension`, and display configuration | Flat FCStd manifest plus validated generated `assets/suspension.json`, staged as `board.json` | Main app bundle | Parsed into `BoardModelMedia`; selects transient cord geometry |
+| Model descriptor and its expected `modelSHA256` | Generated `assets/*.model.json` | Main app bundle | Validates model identity, bounds, nodes, attachments, and physical-contact bindings |
+| Material-free board mesh | Generated `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by RealityKit after access and SHA-256 validation |
 
 `scripts/stage-board-packages.py` copies each validated regular-file package
 tree into the app resources while excluding each model presentation's
-`assetPath` and CAD authoring sources (`<slug>.FCStd` and optional
-`suspension.json`). It stages excluded USDZ files for ODR separately. For a CAD
-package it writes the `board.json` generated from the FCStd's
-`HangTenBoardManifest` and any suspension sidecar into the staged package.
+`assetPath` and the standalone generated `assets/suspension.json` after merging
+its runtime metadata. The flat source `Hangboards/<slug>.FCStd` sits outside
+the package tree and is never staged. Excluded USDZ files are staged for ODR
+separately. For a CAD package the script writes `board.json` generated from the
+FCStd's `HangTenBoardManifest` and validated suspension artifact into the staged package.
 Therefore `board.json` and the descriptor remain ordinary bundled metadata; the
 cord is not part of the downloaded model asset. Android stages with the same
 script (`--target android`), which keeps the USDZ inline instead of splitting it
 out for ODR.
+
+Run `rtk proxy bash scripts/build-board-assets.sh` before package validation,
+or `rtk proxy bash scripts/build-runtime-assets.sh` before a fresh-checkout app
+build. The pinned native build derives the USDZ, descriptor, and optional physics
+descriptor and solved suspension artifact from retained source inputs. Cord and
+simulation authoring is embedded in document-level `App::PropertyString`
+`HangTenSuspensionAuthoring` and `HangTenRopePhysics`. These runtime files are ignored by Git;
+CI consumers download the producer artifact before staging. The authoring
+boundary is described in [generated artifacts](GENERATED_ARTIFACTS.md).
 
 `BoardPackageStore` parses and validates bundled package metadata, registers an
 ODR `BoardModelResource` for an on-demand USDZ, and passes the parsed suspension
@@ -92,13 +102,17 @@ even if its USDZ hashes happen to match.
 ## Re-audit the current inventory
 
 Discover model packages at execution time; never copy a historical package
-count into a decision. The closed manifest is
-The historical cord-evidence archive was removed; current suspension metadata
-is validated directly from each package's `suspension.json`.
-The validator requires exact equality between discovered model packages and
-audit records.
+count into a decision. Validate current suspension directly from the native
+manifest, embedded suspension authoring, and generated `assets/suspension.json`,
+and read each board's retained
+source audit. There is no supplied catalog-wide cord-audit manifest.
 
-Every record has these independent parts:
+The optional `audit-cords --manifest <cord-audit.json>` command accepts an
+explicit closed source-audit document and requires exact equality between its
+records and the discovered model packages. A generated suspension artifact does not have
+that schema and must not be passed as an audit manifest.
+
+When using a closed cord audit, each record has these independent parts:
 
 - `sourceFact`: `documentedSuspension` or `noDocumentedSuspension`;
 - `decision`: `represented` or `excluded`;
@@ -116,9 +130,10 @@ safe for a particular load.
 Current validated `sourceFact`, retained evidence, and audit outcome are the
 decision authority. Older design documents are historical context, not a
 reason to reverse a later source-backed ruling. Native `yy.baguette-evo` uses
-source-backed `cadRoutedCord` from its descriptor-bound `suspension.json`,
-authored with `ropeSolver.method: "nativeRoutes"`, alongside orientation
-metadata. Preserve that current contract; do not remove its suspension or
+source-backed `cadRoutedCord` from its CAD-contained
+`HangTenSuspensionAuthoring`, compiled into source/descriptor-bound
+`assets/suspension.json`, authored with `ropeSolver.method: "nativeRoutes"`,
+alongside orientation metadata. Preserve that current contract; do not remove its suspension or
 restore a historical topology because an older orientation design said
 otherwise.
 
@@ -131,12 +146,18 @@ pairs use the standard CAD passage void, measured channel length and
 independent visible leads, exterior wraps and unknown interior joins use
 `cadRoutedCord` with authoring `ropeSolver.method: "nativeRoutes"`; do not
 invent a hidden connection. Generate every canonical pose against the actual
-native solid with `solve_threaded_rope.py --apply`, reproduce it with `--check`,
-and retain native-solid clearance, length, tube and topology checks. The table
+native solid through the pinned build's `compile_suspension.py` and native
+solvers. For focused reproduction, use the
+[pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction),
+then run `solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`.
+Retain native-solid clearance, length, tube and topology checks. The table
 below governs older non-CAD packages; migrate their cords to the native method
 matching the evidence when they move to CAD. Do not retain hand-authored routes
 or `pairedLeadCord` on a CAD board; extend the solver with evidence and tests
-when the supported native methods do not fit.
+when the supported native methods do not fit. Captain Fingerfood POCKET's
+existing `HangTenBoardManifest` suspension remains the intentional legacy
+exception pending a separate evidence-backed cord revision. Consolidation
+preserves that existing CAD-contained representation without changing topology.
 
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
@@ -212,36 +233,43 @@ attachment just to explain the presentation.
 For exterior point-passage branches, `meshWrap.clearance` selects the shared
 mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
 connected U-shaped channels in its FCStd, each with two mouth points in
-`suspension.json`. The user confirmed one continuous loop per end, including
+`HangTenSuspensionAuthoring`. The user confirmed one continuous loop per end, including
 the visible lower curve in Lattice's end photo. `windingByPassageID` records
 which side of the ovoid each lead follows. This one-time threading choice is
 necessary because mouth and anchor coordinates alone admit two exterior
 paths. The CAD-section solver computes settled bearing points for every grip
-pose from the native solid and caches them in `suspension.json`; the renderer
+pose from the native solid and caches them in generated `assets/suspension.json`; the renderer
 uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
 positions, channel and cord diameters, anchor offset,
-and clearance are labeled display estimates. A sidecar's `modelSHA256` must
-match its descriptor; package validation checks that binding.
+and clearance are labeled display estimates. CAD authoring retains topology,
+dimensions, solver settings, evidence, pose rotations/cameras, and optional
+`offsetXZ: [x, z]`; it contains no hashes, settled heights, or solved routes.
+The generated artifact's source hash, model hashes, and authoring payload must
+match the current source and descriptors; package validation checks those bindings.
 
 ## Make an evidence-backed correction
 
 1. Reproduce the failure with the exact board, presentation, and position.
    Record whether the model loaded and whether the app build contains the
    current renderer and metadata commits.
-2. Run the cord audit before editing. Inspect the current record and each
-   retained snapshot. If the source fact is unresolved, stop at evidence
+2. Validate the package and inspect its current source audit and retained
+   evidence before editing. Validate a closed cord-audit manifest when one is
+   supplied. If the source fact is unresolved, stop at evidence
    collection and human review.
 3. Add a failing focused test or negative manifest mutation for the missing
    contract. Prove the failure is caused by missing/incorrect suspension data
    or runtime behavior rather than by the test fixture.
 4. Prefer the smallest approved correction. When model geometry and node
-   bindings are unchanged, edit `board.json` suspension metadata only and
-   preserve the USDZ and descriptor bytes. For a package with a native
-   `<slug>.FCStd` source, there is no committed `board.json`; it is generated
-   from the FCStd and optional adjacent `suspension.json` at build time. Edit
-   the sidecar when present; otherwise change suspension in the FCStd's
-   `HangTenBoardManifest` with `Tools/HangboardCAD/set_board_manifest.py`
-   (which leaves every geometry member byte-identical). Inspect the generated
+   bindings are unchanged, edit authored suspension metadata and preserve the
+   generated USDZ and descriptor bytes. Catalog packages retain native
+   flat `Hangboards/<slug>.FCStd` sources; their `board.json` is generated from
+   the FCStd and validated `assets/suspension.json` at build time. Edit
+   `HangTenSuspensionAuthoring` with `Tools/HangboardCAD/set_cad_authoring.py`
+   (which leaves every geometry member byte-identical), then run
+   `rtk proxy bash scripts/build-board-assets.sh --package <slug>` to regenerate
+   every pose. Never save solved heights or routes into CAD or edit the artifact
+   as a source. POCKET's pre-existing manifest suspension is the legacy exception
+   described above. Inspect the generated
    result with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
@@ -261,9 +289,9 @@ change.
 
 | Boundary | Required evidence |
 | --- | --- |
-| Source decision | Closed audit accepts every discovered model package; represented/excluded decisions agree with independent `sourceFact`, evidence, and approval |
+| Source decision | Current per-board evidence supports the decision; when a closed audit is supplied, it accepts every discovered model package and agrees with independent `sourceFact`, evidence, and approval |
 | Package/schema | Parser rejects unknown/duplicate members and invalid topology, poses, nodes, frames, finite/positive dimensions, and too-short rest lengths |
-| Asset boundary | USDZ and descriptor paths and bytes are unchanged for metadata-only corrections; staged USDZ bytes match source and descriptor SHA-256 |
+| Asset boundary | USDZ and descriptor paths and bytes are unchanged for metadata-only corrections; suspension artifact matches source hash, authoring payload, and model descriptors; staged USDZ bytes match descriptor SHA-256 |
 | Solver/renderer | Relevant `SuspendedBoardPresentationTests`, `BoardModelTests`, and package-store tests pass for real packages and malformed fixtures |
 | Geometry | Every canonical pose passes sampled length, self-intersection, board/tube clearance away from the attachment interface, and camera framing |
 | Picking/accessibility | The active contact remains the nearest descriptor-bound triangle; cord groups cannot become a hit or accessibility element |
@@ -272,30 +300,28 @@ change.
 Repository commands from the checkout root:
 
 ```sh
+rtk proxy bash scripts/build-board-assets.sh
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-rtk scripts/hangboard-packages.sh audit-cords --root Hangboards \
-  --manifest <package suspension manifest>
-rtk .context/hangboard-packages-venv/bin/python -m pytest \
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
   Tools/HangboardPackages/tests -q
 rtk proxy env PYTHONPATH=Tools/HangboardModels \
   .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardModels/test_contact_model_descriptor.py \
-  Tools/HangboardModels/test_contact_model_package.py \
-  Tools/HangboardModels/test_import_contact_model_source.py \
-  Tools/HangboardModels/test_verify_yy_baguette_evo.py -q
-rtk .context/hangboard-packages-venv/bin/python -m pytest \
+  Tools/HangboardModels -q
 rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```
 
-`Tools/HangboardModels/check_production_cord_clearance.rb` is a retained
-SceneKit-era regression and still expects old renderer source signatures. It
-does not validate the current RealityKit `internalLoop` path. For connected
-passages, use the native solid-intersection and all-pose review described in
+When an explicit source-audit document is available, additionally run
+`rtk scripts/hangboard-packages.sh audit-cords --root Hangboards --manifest
+<cord-audit.json>`. Use the native source and rope solver checks in the
+[CAD cord guide](HANGBOARD_CORD_AUTHORING.md) for connected or independently
+routed CAD suspension; the retired Blender board tools are not a validation lane.
+
+Use the native solid-intersection and all-pose checks described in
 [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), alongside current package
-and iOS tests. A convex-hull-only clearance check cannot establish that the
-mouth transition avoids the wooden solid.
+and RealityKit iOS tests. The obsolete SceneKit clearance helpers were retired.
+A convex-hull-only clearance check cannot establish that the mouth transition
+avoids the wooden solid.
 
 Also parse each edited JSON document directly and run the focused XCTest
 selectors for `SuspendedBoardPresentationTests`, `BoardModelTests`, and
@@ -353,7 +379,8 @@ resources alone.
 
 Completion requires all of the following:
 
-- the current closed audit truthfully covers every discovered model package;
+- retained exact-revision source evidence supports the current suspension
+  decisions, and any supplied closed audit covers every discovered model package;
 - the chosen topology and every numeric estimate are evidence-traceable;
 - USDZ/descriptor bytes and hashes remain unchanged unless model geometry was
   explicitly in scope and independently reviewed;

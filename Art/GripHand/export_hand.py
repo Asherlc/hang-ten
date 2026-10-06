@@ -1,5 +1,5 @@
 """Export the saved Blender actions as evaluated, post-subdivision surfaces."""
-import bpy, json
+import bpy, json, argparse, sys
 from mathutils import Matrix, Vector
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -48,4 +48,11 @@ def export():
     OUTPUT.parent.mkdir(parents=True,exist_ok=True)
     OUTPUT.write_text(json.dumps(result,separators=(",",":"))+"\n")
     print(f"Exported {len(result['digitIndices'])} vertices, {len(result['indices'])//3} triangles, {len(result['poses'])} poses; {OUTPUT.stat().st_size:,} bytes")
-if __name__ == "__main__": export()
+if __name__ == "__main__":
+    if bpy.app.version != (5, 2, 0):
+        raise RuntimeError("hand exports require pinned Blender 5.2.0")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=OUTPUT)
+    arguments = parser.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
+    OUTPUT = arguments.output
+    export()

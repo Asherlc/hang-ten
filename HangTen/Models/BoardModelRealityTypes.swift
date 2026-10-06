@@ -121,8 +121,6 @@ struct BoardModelResourceAccess {
     }
 }
 
-
-
 /// Errors specific to board model RealityKit loading and caching.
 enum BoardModelRealityError: Error, Equatable {
     case resourceUnavailable

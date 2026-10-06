@@ -1,5 +1,0 @@
-{'sourceSHA256': '21ca3e79f2750bf9a501e5ace231411a633772b52f30bb1dc92ec453d61db73d', 'axis': 'Y=0 rear wall; negative Y forward; Z up', 'topContacts': {'jug-14-center': {'ymin': -87.03782167933223, 'ymax': -0.00099990000000477}, 'round-sloper-3-center': {'ymin': -65.0000001, 'ymax': 1.000001140338511e-07}, 'flat-sloper-2-left': {'ymin': -55.00000010000018, 'ymax': 1.000000192174087e-07}, 'jug-1-left': {'ymin': -94.0000001, 'ymax': 1.0000004263e-07}, 'flat-sloper-2-right': {'ymin': -55.00000010000018, 'ymax': 1.000000192174087e-07}, 'jug-1-right': {'ymin': -94.0000001, 'ymax': 1.0000004263e-07}}}
-
-								
-								
-								

@@ -2802,7 +2802,7 @@ def _is_compiled_model_asset(root: Path, asset: str) -> bool:
     CAD authoring source. Every other missing asset is still an error, so this
     cannot be used to drop an arbitrary asset.
     """
-    source = root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}"
+    source = cad_source.package_source_path(root)
     if not source.is_file():
         return False
     board = cad_source.load_board(source)
@@ -2816,20 +2816,12 @@ def _validate_finished_shape(
 ) -> Mapping[tuple[str, str], NormalizedFrame]:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
-    cad_source_name = cad_source.package_source_path(root).name
     required = (
-        (_PACKAGE_ENTRIES - {"board.json"}) | {cad_source_name}
+        _PACKAGE_ENTRIES - {"board.json"}
         if cad_source.is_cad_package(root)
         else _PACKAGE_ENTRIES
     )
-    allowed = set(required | {cad_source_name})
-    if cad_source.is_cad_package(root) and "suspension.json" in entries:
-        allowed.add("suspension.json")
-    if cad_source.is_cad_package(root) and any(
-        isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path
-        for p in board.presentations
-    ):
-        allowed.add("rope-physics.json")
+    allowed = set(required)
     unknown = entries - allowed
     missing = required - entries
     if unknown:
@@ -2849,6 +2841,8 @@ def _validate_finished_shape(
             expected_assets.add(presentation.media.descriptor_path)
             if presentation.media.physics_descriptor_path:
                 expected_assets.add(presentation.media.physics_descriptor_path)
+    if cad_source.is_cad_package(root) and cad_source.load_suspension_authoring(cad_source.package_source_path(root)) is not None:
+        expected_assets.add("assets/suspension.json")
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -3239,6 +3233,11 @@ def _unpack_png_samples(row: bytes, bit_depth: int, width: int) -> tuple[int, ..
 def load_board_package(package_root: Path) -> BoardPackage:
     root = Path(package_root)
     if root.is_symlink() or not root.is_dir():
+        if cad_source.is_cad_package(root):
+            raise ValueError(
+                f"Hangboards/{root.name} is missing generated package resources; "
+                "run scripts/build-board-assets.sh"
+            )
         raise ValueError(f"board package does not exist as a regular directory: {root}")
     _require_no_symlinks(root)
     board_path = root / "board.json"
@@ -3295,7 +3294,7 @@ def _generated_board_document(root: Path) -> tuple[str, bytes]:
     if source.is_symlink() or not source.is_file():
         raise ValueError(f"CAD source must be a regular non-symlink file: {source}")
     try:
-        generated = cad_source.generate_board_json(source)
+        generated = cad_source.generate_board_json(source, package_root=root)
     except (cad_source.ManifestError, OSError) as error:
         raise ValueError(
             f"cannot generate board.json for Hangboards/{root.name}: {error}"
@@ -3360,13 +3359,29 @@ def discover_board_packages(
     packages: list[BoardPackage] = []
     drafts: list[Path] = []
     identifiers: set[str] = set()
-    for entry in sorted(root.iterdir(), key=lambda path: path.name):
+    entries = sorted(root.iterdir(), key=lambda path: path.name)
+    source_stems = set()
+    directories = set()
+    for entry in entries:
         if entry.is_symlink():
             raise ValueError(f"Hangboards direct child must not be a symlink: {entry}")
-        if not entry.is_dir():
-            continue
-        if not is_board_package_slug(entry.name):
-            raise ValueError(f"Hangboards directory name is invalid: {entry.name}")
+        if entry.suffix == cad_source.SOURCE_SUFFIX:
+            if not is_board_package_slug(entry.stem):
+                raise ValueError(f"Hangboards CAD source name is invalid: {entry.name}")
+            if not entry.is_file():
+                raise ValueError(f"CAD source must be a regular non-symlink file: {entry}")
+            source_stems.add(entry.stem)
+        elif entry.is_dir():
+            if not is_board_package_slug(entry.name):
+                raise ValueError(f"Hangboards directory name is invalid: {entry.name}")
+            directories.add(entry.name)
+    for slug in sorted(source_stems | directories):
+        entry = root / slug
+        if slug in source_stems and not entry.is_dir():
+            raise ValueError(
+                f"Hangboards/{slug} is missing generated package resources; "
+                "run scripts/build-board-assets.sh"
+            )
         board_path = entry / "board.json"
         if board_path.exists() or board_path.is_symlink() or cad_source.is_cad_package(entry):
             package = load_board_package(entry)

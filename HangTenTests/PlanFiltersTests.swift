@@ -3,6 +3,15 @@ import XCTest
 @testable import HangTen
 
 final class PlanFiltersTests: XCTestCase {
+    private func canonicalPlanDefinition() throws -> PlanLibraryDefinition {
+        let bundle = Bundle(for: PlanFiltersTests.self)
+        let url = try XCTUnwrap(
+            bundle.url(forResource: "PlanLibrary", withExtension: "json"),
+            "Expected canonical PlanLibrary.json in the test bundle."
+        )
+        return try JSONDecoder().decode(PlanLibraryDefinition.self, from: Data(contentsOf: url))
+    }
+
     private func metadata(
         level: String = "Intermediate",
         provenance: RoutineProvenance = .official,
@@ -204,7 +213,7 @@ final class PlanFiltersTests: XCTestCase {
     }
 
     func testExerciseDetectionReadsSourceTasksWithGenericMinuteTitlesAndExcludesNegativeCues() throws {
-        let definitions = BuiltInPlanLibraryDefinition.document
+        let definitions = try canonicalPlanDefinition()
         let store = try PlanLibraryStore(definition: definitions)
         let contact = try XCTUnwrap(store.plan(id: "metolius.contact.entry"))
         let rings = try XCTUnwrap(store.plan(id: "metolius.rock-rings.ten-minute"))
@@ -277,17 +286,20 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertTrue(workout(timing: .undefined).browserDurationLabel.hasPrefix("Approx."))
     }
 
-    func testSourceRangesDoNotMakeFixedNelsonTimerDefaultsEstimated() {
-        for plan in [
-            LegacyPlanSeedCatalog.nelsonRecruitmentBeginner,
-            LegacyPlanSeedCatalog.nelsonRecruitmentExpert,
-            LegacyPlanSeedCatalog.nelsonVelocityBeginner,
-            LegacyPlanSeedCatalog.nelsonVelocityExpert
+    func testSourceRangesDoNotMakeFixedNelsonTimerDefaultsEstimated() throws {
+        let store = try PlanLibraryStore(definition: canonicalPlanDefinition())
+        for id in [
+            "coach.nelson-recruitment-pulls.beginner",
+            "coach.nelson-recruitment-pulls.expert",
+            "coach.nelson-velocity-pulls.beginner",
+            "coach.nelson-velocity-pulls.expert"
         ] {
+            let plan = try XCTUnwrap(store.plan(id: id))
             XCTAssertFalse(plan.hasEstimatedDuration, plan.id)
             XCTAssertEqual(plan.browserDurationLabel, plan.durationLabel, plan.id)
         }
-        XCTAssertTrue(LegacyPlanSeedCatalog.nelsonDensityExpert.hasEstimatedDuration)
+        let density = try XCTUnwrap(store.plan(id: "coach.nelson-density-hangs.expert"))
+        XCTAssertTrue(density.hasEstimatedDuration)
     }
 
     func testOptionalFocusMetadataDecodesLegacyAndRoundTrips() throws {
@@ -301,8 +313,8 @@ final class PlanFiltersTests: XCTestCase {
         XCTAssertEqual(try JSONDecoder().decode(PlanMetadata.self, from: JSONEncoder().encode(classified)), classified)
     }
 
-    func testFocusClassificationUsesAuditedGoalsAndLeavesUnsupportedGoalsAbsent() {
-        let lookup = PlanLibraryStore.metadataByPlanID(BuiltInPlanLibraryDefinition.document.plans)
+    func testFocusClassificationUsesAuditedGoalsAndLeavesUnsupportedGoalsAbsent() throws {
+        let lookup = PlanLibraryStore.metadataByPlanID(try canonicalPlanDefinition().plans)
         XCTAssertEqual(lookup["research.max-hangs"]?.focus, .fingerStrength)
         XCTAssertEqual(lookup["research.force-feedback-f80"]?.focus, .fingerEndurance)
         XCTAssertEqual(lookup["method.intermediate-hangboarding.emom"]?.focus, .mixed)
