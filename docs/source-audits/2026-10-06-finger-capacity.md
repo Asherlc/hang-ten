@@ -38,3 +38,16 @@ training prescriptions do not change. Native assets are rebuilt because their
 descriptors and suspension metadata bind to the complete source hash. Package
 validation and the iOS reader require explicit capacities, and regression tests
 check that the authored values agree with these mappings.
+
+## App review
+
+The reviewed app images show the normal Grindstone Mk2, the selected 15 mm edge
+with explicit capacity 4, and both highlighted holds for the three-finger
+7/3 Repeaters preview at step 48. These are unmodified simulator captures of
+the audited catalog values.
+
+| Normal board | Selected edge and capacity |
+| --- | --- |
+| ![Normal Grindstone Mk2](2026-10-06-finger-capacity-review/resolute-fireant-train-normal.png) | ![Selected 15 mm edge with capacity 4](2026-10-06-finger-capacity-review/resolute-fireant-hold-specs.png) |
+
+![Three-finger preview highlights both holds](2026-10-06-finger-capacity-review/resolute-fireant-rest-preview.png)
