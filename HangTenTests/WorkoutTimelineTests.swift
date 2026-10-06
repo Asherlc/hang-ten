@@ -2883,12 +2883,21 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 }
 
 final class WorkoutAudioSessionConfigurationTests: XCTestCase {
+    func testCountdownPreparationMixesWithoutDuckingOrInterruptingOtherAudio() {
+        let configuration = WorkoutAudioSessionConfiguration.countdownPreparation
+
+        XCTAssertEqual(configuration.category, .playback)
+        XCTAssertEqual(configuration.mode, .default)
+        XCTAssertEqual(configuration.options, [.mixWithOthers])
+    }
+
     // Catches a spoken-audio session mode that interrupts background playback instead of ducking it.
     func testCountdownCuesUsePlaybackDefaultModeAndDuckOtherAudio() {
         let configuration = WorkoutAudioSessionConfiguration.countdownCues
 
         XCTAssertEqual(configuration.category, .playback)
         XCTAssertEqual(configuration.mode, .default)
+        XCTAssertTrue(configuration.options.contains(.mixWithOthers))
         XCTAssertTrue(configuration.options.contains(.duckOthers))
         XCTAssertFalse(configuration.options.contains(.interruptSpokenAudioAndMixWithOthers))
     }
@@ -2899,11 +2908,15 @@ final class WorkoutAudioCoachTests: XCTestCase {
     // Catches constructing the default scheduler and its audio backend before an athlete starts a countdown.
     func testCountdownSchedulerFactoryWaitsForPreparationRequest() {
         var factoryCallCount = 0
+        let audioSession = RecordingWorkoutAudioSession()
         let scheduler = RecordingCountdownAudioScheduler()
         let coach = WorkoutAudioCoach(
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
-            audioSession: RecordingWorkoutAudioSession(),
+            audioSession: audioSession,
             countdownSchedulerFactory: {
+                XCTAssertEqual(audioSession.preparationConfigurationCount, 1)
+                XCTAssertEqual(audioSession.configurationCount, 0)
+                XCTAssertEqual(audioSession.activationCount, 0)
                 factoryCallCount += 1
                 return scheduler
             },
@@ -2911,6 +2924,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         )
 
         XCTAssertEqual(factoryCallCount, 0)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 0)
         coach.stop()
         XCTAssertEqual(factoryCallCount, 0)
         XCTAssertEqual(coach.countdownPreparationState, .idle)
@@ -2919,6 +2933,53 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
         XCTAssertEqual(factoryCallCount, 1)
         XCTAssertEqual(scheduler.prewarmCallCount, 1)
+        XCTAssertEqual(audioSession.activationCount, 0)
+    }
+
+    func testFailedPreparationConfigurationDoesNotConstructAudioBackendAndCanRetry() {
+        var factoryCallCount = 0
+        let audioSession = RecordingWorkoutAudioSession(failedPreparationConfigurationAttempts: 1)
+        let scheduler = RecordingCountdownAudioScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: audioSession,
+            countdownSchedulerFactory: {
+                factoryCallCount += 1
+                return scheduler
+            },
+            countdownCompletionScheduler: RecordingWorkoutCountdownCompletionScheduler()
+        )
+
+        XCTAssertFalse(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        XCTAssertEqual(coach.countdownPreparationState, .failed)
+        XCTAssertEqual(factoryCallCount, 0)
+        XCTAssertEqual(scheduler.prewarmCallCount, 0)
+        XCTAssertEqual(audioSession.activationCount, 0)
+
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 200))
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+        XCTAssertEqual(factoryCallCount, 1)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 2)
+        XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1"]])
+        XCTAssertEqual(audioSession.activationCount, 1)
+    }
+
+    func testCountdownPreparationPreservesAnActiveSpokenCueSession() {
+        let audioSession = RecordingWorkoutAudioSession()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: audioSession,
+            countdownScheduler: RecordingCountdownAudioScheduler()
+        )
+
+        coach.speak("Rest")
+        coach.prepareCountdownAudio()
+
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 0)
+        XCTAssertEqual(audioSession.configurationCount, 1)
+        XCTAssertEqual(audioSession.activationCount, 1)
     }
 
     // Catches app launch prewarming the countdown engine before an athlete requests it.
@@ -3633,6 +3694,7 @@ private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing
 
 @MainActor
 private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
+    private(set) var preparationConfigurationCount = 0
     private(set) var configurationCount = 0
     private(set) var activationCount = 0
     private(set) var deactivationAttemptCount = 0
@@ -3640,9 +3702,19 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
     private(set) var didDeactivateWithNotification = false
     var onSuccessfulNotificationAwareDeactivation: (() -> Void)?
     private var failedDeactivationAttempts: Int
+    private var failedPreparationConfigurationAttempts: Int
 
-    init(failedDeactivationAttempts: Int = 0) {
+    init(failedDeactivationAttempts: Int = 0, failedPreparationConfigurationAttempts: Int = 0) {
         self.failedDeactivationAttempts = failedDeactivationAttempts
+        self.failedPreparationConfigurationAttempts = failedPreparationConfigurationAttempts
+    }
+
+    func configureForCountdownPreparation() throws {
+        preparationConfigurationCount += 1
+        guard failedPreparationConfigurationAttempts == 0 else {
+            failedPreparationConfigurationAttempts -= 1
+            throw RecordingWorkoutAudioSessionError.configurationFailed
+        }
     }
 
     func configureForSpokenCues() throws {
@@ -3667,6 +3739,7 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
 }
 
 private enum RecordingWorkoutAudioSessionError: Error {
+    case configurationFailed
     case deactivationFailed
 }
 
