@@ -34,6 +34,15 @@ workouts is tapped; Cancel discards the draft. Filter groups combine with AND,
 and exercises/difficulties allow any selected value within their group. Duration
 ranges are under 10 minutes, 10 to under 20 minutes, and 20 minutes or more.
 Removing applied filters or clearing them leaves the current focus unchanged.
+
+On plan detail, the first-hold preview includes the first work step's sourced
+instruction and accessory text, skipping any leading rests. Session-flow rest
+entries retain their recovery instructions and timing and also show the next
+work instruction. Consecutive rests share that next-work cue; final rests and
+empty next-work instructions omit it. Repeated sequences stay separate when
+their next-work instructions differ, so one rest preview cannot describe a
+different upcoming prescription.
+
 At accessibility text sizes, board names and workout titles use the full row
 width, with the favorite action below the workout. The filter action uses a
 shorter label and exposes its matching count to accessibility. Empty My routines

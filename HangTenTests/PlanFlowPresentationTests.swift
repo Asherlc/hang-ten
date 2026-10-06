@@ -16,19 +16,21 @@ final class PlanFlowPresentationTests: XCTestCase {
         XCTAssertEqual(group.duration, 70)
     }
 
-    func testConsecutiveHangRestCyclesShowBothStagesInOneRepeatedSequence() throws {
+    func testConsecutiveHangRestCyclesKeepFinalRecoveryOutsideTheNextHoldPreview() throws {
         let steps = (1...3).flatMap { repeatNumber in
             [step(number: repeatNumber * 2 - 1), step(number: repeatNumber * 2, phase: .rest)]
         }
 
         let groups = PlanFlowPresentation.groups(for: steps)
 
-        XCTAssertEqual(groups.count, 1)
+        XCTAssertEqual(groups.count, 3)
         let group = try XCTUnwrap(groups.first)
-        XCTAssertEqual(group.repeatCount, 3)
+        XCTAssertEqual(group.repeatCount, 2)
         XCTAssertEqual(group.children.map(\.title), ["Edge hang", "Rest"])
-        XCTAssertEqual(group.duration, 30)
-        XCTAssertEqual(group.sourceSteps, steps)
+        XCTAssertEqual(group.children.last?.nextInstruction, "Hang for 7 seconds.")
+        XCTAssertNil(groups.last?.nextInstruction)
+        XCTAssertEqual(groups.reduce(0) { $0 + $1.duration }, 30)
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
     }
 
     func testNumberedTitlesGroupWithoutRemovingHoldSizesOrExerciseCounts() {
@@ -69,8 +71,8 @@ final class PlanFlowPresentationTests: XCTestCase {
 
         let group = try XCTUnwrap(PlanFlowPresentation.groups(for: steps).first)
 
-        XCTAssertEqual(group.repeatCount, 3)
-        XCTAssertEqual(group.sourceSteps.count, 9)
+        XCTAssertEqual(group.repeatCount, 2)
+        XCTAssertEqual(group.sourceSteps.count, 6)
         XCTAssertEqual(group.children.count, 2)
         XCTAssertEqual(group.children.first?.repeatCount, 2)
         XCTAssertEqual(group.children.first?.children.first?.title, "Repeaters")
@@ -94,10 +96,10 @@ final class PlanFlowPresentationTests: XCTestCase {
 
         let groups = PlanFlowPresentation.groups(for: plan.steps)
 
-        XCTAssertEqual(groups.count, 4)
-        XCTAssertEqual(groups.first?.repeatCount, 6)
+        XCTAssertEqual(groups.count, 6)
+        XCTAssertEqual(groups.first?.repeatCount, 5)
         XCTAssertEqual(groups.first?.children.map { $0.sourceSteps[0].duration }, [7, 3])
-        XCTAssertEqual(groups.dropFirst().flatMap(\.sourceSteps).map(\.duration), [7, 173, 180])
+        XCTAssertEqual(groups.dropFirst().flatMap(\.sourceSteps).map(\.duration), [7, 3, 7, 173, 180])
         XCTAssertEqual(groups.flatMap(\.sourceSteps), plan.steps)
     }
 
@@ -149,6 +151,46 @@ final class PlanFlowPresentationTests: XCTestCase {
         XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
         XCTAssertEqual(groups.map(\.title), steps.map(\.title))
         XCTAssertTrue(PlanFlowPresentation.groups(for: []).isEmpty)
+    }
+
+    func testRestPreviewsWithDifferentUpcomingInstructionsDoNotCollapse() {
+        let steps = [
+            step(number: 1), step(number: 2, phase: .rest),
+            step(number: 3), step(number: 4, phase: .rest),
+            step(number: 5, instruction: "Use the next grip.")
+        ]
+
+        let groups = PlanFlowPresentation.groups(for: steps)
+
+        XCTAssertEqual(groups.count, 5)
+        XCTAssertTrue(groups.allSatisfy { $0.repeatCount == 1 })
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
+        XCTAssertEqual(groups[1].nextInstruction, "Hang for 7 seconds.")
+        XCTAssertEqual(groups[3].nextInstruction, "Use the next grip.")
+    }
+
+    func testRestPreviewSkipsConsecutiveRestsAndRetainsTheirSourceContent() throws {
+        let steps = [
+            step(number: 1, phase: .rest), step(number: 2, phase: .rest),
+            step(number: 3, instruction: "Use the next grip.")
+        ]
+        let groups = PlanFlowPresentation.groups(for: steps)
+        let rest = try XCTUnwrap(groups.first?.children.first)
+
+        XCTAssertEqual(rest.nextInstruction, "Use the next grip.")
+        XCTAssertEqual(rest.sourceSteps.first?.instruction, "")
+        XCTAssertEqual(rest.sourceSteps.first?.accessory, "3s rest")
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
+    }
+
+    func testRestPreviewOmitsEmptyUpcomingInstructionsInsteadOfUsingLaterWork() {
+        let steps = [
+            step(number: 1, phase: .rest),
+            step(number: 2, instruction: " \n "),
+            step(number: 3, instruction: "Use the later grip.")
+        ]
+
+        XCTAssertNil(PlanFlowPresentation.groups(for: steps).first?.nextInstruction)
     }
 
     func testEveryCatalogPlanRetainsAllSourceStepsAndExactTotalDuration() {

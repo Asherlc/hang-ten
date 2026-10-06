@@ -125,7 +125,7 @@ struct PlanDetailView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 21) {
                         titleBlock(for: currentPlan)
-                        if let firstStep = currentPlan.steps.first,
+                        if let firstStep = currentPlan.steps.first(where: { !$0.isRestStep }),
                            !firstStep.workRequirements.isEmpty {
                             boardPreview(for: currentPlan)
                         }
@@ -449,7 +449,7 @@ struct PlanDetailView: View {
 
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
-        let firstStep = currentPlan.steps.first
+        let firstStep = currentPlan.steps.first { !$0.isRestStep }
         let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
         // Prefer a pose-backed hold so Dual-style multi-pose boards face the lit contact.
         let firstStepHold = board.contacts.first { hold in
@@ -491,8 +491,13 @@ struct PlanDetailView: View {
                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
+            if let firstStep {
+                PlanStepInstructions(step: firstStep)
+            }
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.firstHoldCue")
     }
 
     private func stepsCard(for currentPlan: TrainingPlan) -> some View {
@@ -713,7 +718,10 @@ private struct PlanFlowRows: View {
                     .accessibilityIdentifier("plan.flow.repeat.\(depth).\(group.id)")
                     .padding(.bottom, isLast ? 0 : 14)
                 } else if let step = group.sourceSteps.first {
-                    StepRow(step: step, title: group.title, isLast: isLast, showsNumber: !isNested)
+                    StepRow(
+                        step: step, title: group.title, nextInstruction: group.nextInstruction,
+                        isLast: isLast, showsNumber: !isNested
+                    )
                 }
             }
         }
@@ -723,6 +731,7 @@ private struct PlanFlowRows: View {
 private struct StepRow: View {
     let step: WorkoutStep
     let title: String
+    let nextInstruction: String?
     let isLast: Bool
     let showsNumber: Bool
 
@@ -761,29 +770,45 @@ private struct StepRow: View {
                         .font(.system(.caption, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangMuted)
                 }
-                ForEach(
-                    Array(
-                        InstructionAccessoryCardContent.rows(
-                            instruction: step.instruction,
-                            accessory: step.accessory
-                        ).enumerated()
-                    ),
-                    id: \.offset
-                ) { _, row in
-                    switch row.kind {
-                    case .instruction:
-                        Text(row.text)
-                            .font(.system(.footnote, design: .rounded, weight: .medium))
-                            .foregroundStyle(Color.hangMuted)
-                            .fixedSize(horizontal: false, vertical: true)
-                    case .accessory:
-                        Text(row.text)
-                            .font(.system(.caption2, design: .rounded, weight: .bold))
-                            .foregroundStyle(step.phase.textTint)
-                    }
+                PlanStepInstructions(step: step)
+                if let nextInstruction {
+                    SectionLabel(title: "Next hold")
+                        .padding(.top, 5)
+                    Text(nextInstruction)
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .padding(.bottom, isLast ? 0 : 12)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.flow.step.\(step.id)")
+    }
+}
+
+private struct PlanStepInstructions: View {
+    let step: WorkoutStep
+
+    var body: some View {
+        ForEach(
+            Array(InstructionAccessoryCardContent.rows(
+                instruction: step.instruction,
+                accessory: step.accessory
+            ).enumerated()),
+            id: \.offset
+        ) { _, row in
+            switch row.kind {
+            case .instruction:
+                Text(row.text)
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            case .accessory:
+                Text(row.text)
+                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                    .foregroundStyle(step.phase.textTint)
+            }
         }
     }
 }
