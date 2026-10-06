@@ -27,14 +27,8 @@ struct MotherboardWorkoutRecorder {
     private var stepOrder: [String] = []
     private(set) var currentStepID: String?
 
-    private(set) var currentLoadKGF: Double?
     private(set) var currentPeakLoadKGF: Double?
     private(set) var currentLoadedDuration: TimeInterval = 0
-
-    var isLoaded: Bool {
-        guard let currentStepID else { return false }
-        return states[currentStepID]?.openStart != nil
-    }
 
     init(configuration: MotherboardDetectionConfiguration = .init()) {
         self.configuration = configuration
@@ -48,7 +42,6 @@ struct MotherboardWorkoutRecorder {
         stepStartElapsed: TimeInterval? = nil,
         isActive: Bool
     ) {
-        currentLoadKGF = measurement.aggregateLoadKGF
         if currentStepID != stepID {
             currentPeakLoadKGF = nil
             currentLoadedDuration = 0

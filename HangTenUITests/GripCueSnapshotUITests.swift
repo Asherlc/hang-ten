@@ -341,11 +341,14 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
         skip.tap()
         XCTAssertTrue(app.buttons["Cancel countdown"].waitForExistence(timeout: 5))
-        app.buttons["Cancel countdown"].tap()
+        // The countdown can finish between the existence query and the tap.
+        // Its primary control keeps this identifier when its label becomes Pause.
+        app.buttons["workout.primaryControl"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
+        XCTAssertEqual(skip.label, "Skip step 3: Max hang · set 2")
 
         let cancelledCountdown = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        cancelledCountdown.name = "Next work step paused after cancelling skip countdown"
+        cancelledCountdown.name = "Next work step paused after skipping rest"
         cancelledCountdown.lifetime = .keepAlways
         add(cancelledCountdown)
     }

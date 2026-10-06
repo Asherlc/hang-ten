@@ -28,7 +28,6 @@ from typing import Sequence
 
 from pxr import Gf, Sdf, Usd, UsdGeom, UsdShade, UsdUtils, Vt
 
-COORDINATE_FRAME = "hang-ten-board-v1"
 NODE_ID = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _METERS_PER_MILLIMETRE = 0.001
 

@@ -96,11 +96,6 @@ final class LiveRopeMesh {
             vertexLayouts:[.init(bufferIndex:0,bufferStride:MemoryLayout<RopeTubeVertex>.stride)],
             indexCapacity:(capacity-1)*radialSegments*6+(radialSegments-2)*6,indexType:.uint32))
     }
-    func update(snapshot: RopeFrameSnapshot) throws {
-        guard snapshot.metrics.geometryAccepted,let rope=snapshot.ropes.first,
-              abs(Float(rope.radius)-radius)<1e-8 else { throw RopePhysicsError.invalid("Rejected dynamic tube frame") }
-        try update(positions:rope.positions)
-    }
     func update(positions: [SIMD3<Double>]) throws {
         let points=positions.map { SIMD3<Float>(Float($0.x),Float($0.y),Float($0.z)) }
         let vertices=try RopeTubeGeometry.vertices(points:points,radialSegments:radialSegments,radius:radius)

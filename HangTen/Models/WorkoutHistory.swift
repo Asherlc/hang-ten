@@ -172,7 +172,6 @@ enum WorkoutHistorySource: Equatable {
 }
 
 struct WorkoutHistorySnapshot: Equatable {
-    static let empty = WorkoutHistorySnapshot(entries: [], source: .unavailable)
 
     let entries: [WorkoutHistoryEntry]
     let source: WorkoutHistorySource

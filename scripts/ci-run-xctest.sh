@@ -179,6 +179,12 @@ run_xcodebuild_with_watchdog() {
     CODE_SIGNING_REQUIRED=YES
     CODE_SIGN_IDENTITY="-"
   )
+  if [[ "$action" == "test-without-building" ]]; then
+    # Xcode's simctl diagnose can stall for ten minutes after passing UI tests.
+    # Retain xcresult attachments/logs and the watchdog's timeout diagnostics
+    # without waiting for automatic verbose simulator diagnostics.
+    cmd+=(-collect-test-diagnostics never)
+  fi
   if [[ -n "$result_bundle" ]]; then
     rm -rf "$result_bundle"
     cmd+=(-resultBundlePath "$result_bundle")

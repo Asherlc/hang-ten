@@ -9,12 +9,10 @@ HangTen/Models/AppStore.swift
 HangTen/Models/BoardModelRealityTypes.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardStorage.swift
-HangTen/Models/ClimbroProtocol.swift
 HangTen/Models/CountdownAudioScheduler.swift
 HangTen/Models/CustomRoutineDraft.swift
 HangTen/Models/CustomRoutineStore.swift
 HangTen/Models/DeepLinkManager.swift
-HangTen/Models/EntralpiProtocol.swift
 HangTen/Models/ForceSensorModels.swift
 HangTen/Models/FreeWorkoutDecimalText.swift
 HangTen/Models/FreeWorkoutDraft.swift

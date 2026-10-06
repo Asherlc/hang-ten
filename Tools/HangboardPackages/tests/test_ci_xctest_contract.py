@@ -312,20 +312,21 @@ def run_mock_xctest(
 
 
 @pytest.mark.parametrize(
-    ("failed_phase", "expected_calls"),
+    ("failed_phase", "expected_calls", "expected_status"),
     [
-        ("build-for-testing", ["build-for-testing"]),
-        ("test-without-building", ["build-for-testing", "test-without-building"]),
+        ("", ["build-for-testing", "test-without-building"], 0),
+        ("build-for-testing", ["build-for-testing"], 23),
+        ("test-without-building", ["build-for-testing", "test-without-building"], 23),
     ],
 )
 @pytest.mark.parametrize("toolchain", ["", "com.apple.dt.toolchain.Metal.123"])
-def test_xctest_runner_stops_after_first_failed_phase(
-    tmp_path: Path, failed_phase: str, expected_calls: list[str], toolchain: str
+def test_xctest_runner_runs_once_without_verbose_diagnostics_and_preserves_status(
+    tmp_path: Path, failed_phase: str, expected_calls: list[str], expected_status: int, toolchain: str
 ) -> None:
     result, calls, event_lines = run_mock_xctest(
         tmp_path, failed_phase=failed_phase, toolchain=toolchain
     )
-    assert result.returncode == 23, result.stdout + result.stderr
+    assert result.returncode == expected_status, result.stdout + result.stderr
     assert calls == expected_calls
     build_for_testing = next(
         index for index, event in enumerate(event_lines) if event.startswith("xcodebuild:")
@@ -343,6 +344,13 @@ def test_xctest_runner_stops_after_first_failed_phase(
             assert ("-toolchain " in event) == bool(toolchain)
             if toolchain:
                 assert f"-toolchain {toolchain} " in event
+            if event.endswith(" test-without-building"):
+                # A completed test run must not wait on simctl diagnose. Keep
+                # XCTest's own failure status authoritative, including failures
+                # that occur after the last test assertion.
+                assert "-collect-test-diagnostics never " in event
+            else:
+                assert "-collect-test-diagnostics " not in event
     assert sum(event.startswith("xcrun:simctl boot ") for event in event_lines) == 1
     assert "-destination platform=iOS Simulator,id=22452A91-4697-4369-8812-53ADB77EB73B" in event_lines[build_for_testing]
 

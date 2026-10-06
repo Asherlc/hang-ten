@@ -1129,7 +1129,7 @@ final class BoardModelRealityTests: XCTestCase {
     func testUSDZLoadsAndBindsDescriptor() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation
-        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        guard case .model = presentation.media else { return XCTFail("model media required") }
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
 
         // Verify geometry loaded
@@ -1147,7 +1147,7 @@ final class BoardModelRealityTests: XCTestCase {
     func testContactEntitiesPopulatedAndMatchBoardContacts() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation
-        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        guard case .model = presentation.media else { return XCTFail("model media required") }
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
 
         // Verify contactEntities is populated
@@ -1175,7 +1175,7 @@ final class BoardModelRealityTests: XCTestCase {
 
     func testPerspectiveFitUsesFieldOfViewAndViewportAspect() throws {
         let framing = SuspendedCameraFraming(
-            target: .zero, direction: SIMD3(0, 0, -1), viewDirection: SIMD3(0, 0, -1),
+            target: .zero, direction: SIMD3(0, 0, -1),
             right: SIMD3(1, 0, 0), up: SIMD3(0, 1, 0), distance: 1,
             width: 4, height: 2, depth: 0.5, fitPadding: 1.2, includedPoints: []
         )
@@ -1218,13 +1218,7 @@ final class BoardModelRealityTests: XCTestCase {
         if let instances = media.instances {
             for (index, instance) in instances.enumerated() {
                 let entity = scene.instanceEntities[index]
-                // The entity transform should reflect the instance's baseTransform
-                let baseTranslation = SIMD3<Float>(
-                    Float(instance.baseTransform.translation[0]),
-                    Float(instance.baseTransform.translation[1]),
-                    Float(instance.baseTransform.translation[2])
-                )
-                // Position should be close to baseTransform translation (allowing for model centering)
+                // Position must remain finite after applying the base transform.
                 XCTAssertTrue(entity.position.x.isFinite && entity.position.y.isFinite && entity.position.z.isFinite,
                               "Instance \(index) should have valid transform from baseTransform")
 
@@ -1932,7 +1926,7 @@ final class BoardModelRealityTests: XCTestCase {
     func testSuspensionOrientationDisplayPassedToScene() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation
-        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
+        guard case .model = presentation.media else { return XCTFail("model media required") }
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
 
         // Verify scene has access to suspension, orientation, display through public accessors

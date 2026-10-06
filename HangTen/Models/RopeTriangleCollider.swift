@@ -12,7 +12,6 @@ struct RopeSegmentContact: Sendable {
     let normal: SIMD3<Double>
     let fraction: Double
     let penetrationDepth: Double
-    var timeOfImpact: Double? = nil
 }
 
 /// Exact triangle queries accelerated by an immutable bounding-volume tree.
@@ -255,10 +254,10 @@ struct RopeTriangleCollider: Sendable {
         var time=0.0
         for _ in 0..<256 {
             let a=previousStart+(start-previousStart)*time, b=previousEnd+(end-previousEnd)*time
-            if var hit=segmentContact(from:a,to:b,radius:radius) { hit.timeOfImpact=time; return hit }
+            if let hit=segmentContact(from:a,to:b,radius:radius) { return hit }
             let nearest=closestSegment(a,b), gap=nearest.distance-radius
             if gap <= 1e-9 {
-                var hit=nearest.contact; hit.timeOfImpact=time; return hit
+                return nearest.contact
             }
             if movement <= 1e-12 || time >= 1 { return nil }
             let step=0.8*gap/movement
@@ -267,7 +266,7 @@ struct RopeTriangleCollider: Sendable {
         }
         // A bounded query that cannot establish clearance blocks the move.
         let a=previousStart+(start-previousStart)*time, b=previousEnd+(end-previousEnd)*time
-        var hit=closestSegment(a,b).contact; hit.timeOfImpact=time; return hit
+        return closestSegment(a,b).contact
     }
 
     /// Certify the whole centerline lies in this region, including portal

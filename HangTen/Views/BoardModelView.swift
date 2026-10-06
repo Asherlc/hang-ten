@@ -399,7 +399,7 @@ struct BoardModelRealityView: View {
            positionID == nil || didSelect {
             Task { @MainActor in synchronizedPreparation = preparation }
         }
-        if let positionID, !didSelect {
+        if positionID != nil, !didSelect {
             Task { @MainActor in
                 guard !didReportUnavailable else { return }
                 didReportUnavailable = true

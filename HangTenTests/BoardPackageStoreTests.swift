@@ -4062,7 +4062,7 @@ final class BoardPackageStoreTests: XCTestCase {
             }, "canonical board contact order")
         ]
 
-        for (name, mutation, reason) in mutations {
+        for (_, mutation, reason) in mutations {
             let fixture = try makeOrientableModelFixtureBundle(boardMutation: mutation)
             defer { fixture.remove() }
             assertStoreRejects(fixture.bundle, reasonContaining: reason)

@@ -2176,87 +2176,6 @@ final class WorkoutTimelineTests: XCTestCase {
     }
 }
 
-final class WorkoutClockTests: XCTestCase {
-    deinit {}
-
-    func testElapsedUsesNonUniformMonotonicSamplesInsteadOfCallbackCount() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-
-        clock.start(initialCountdown: 0)
-        now += 0.4
-        XCTAssertEqual(clock.elapsed, 0.4, accuracy: 0.000_1)
-
-        now += 1.3
-        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
-    }
-
-    func testInitialCountdownShowsThreeTwoOneBeforeElapsedBegins() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-
-        clock.start(initialCountdown: 3)
-        XCTAssertEqual(clock.countdownRemaining, 3)
-
-        now += 1
-        XCTAssertEqual(clock.countdownRemaining, 2)
-
-        now += 1
-        XCTAssertEqual(clock.countdownRemaining, 1)
-
-        now += 1
-        XCTAssertEqual(clock.countdownRemaining, 0)
-        XCTAssertEqual(clock.elapsed, 0)
-    }
-
-    func testSeekedClockShowsANewInitialCountdownBeforeElapsedResumes() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-
-        clock.seek(to: 60)
-        clock.start(initialCountdown: 3)
-
-        XCTAssertEqual(clock.countdownRemaining, 3)
-
-        now += 1.1
-        XCTAssertEqual(clock.countdownRemaining, 2)
-
-        now += 1
-        XCTAssertEqual(clock.countdownRemaining, 1)
-
-        now += 1
-        XCTAssertEqual(clock.countdownRemaining, 0)
-        XCTAssertEqual(clock.elapsed, 60.1, accuracy: 0.000_1)
-    }
-
-    func testPauseAndResumePreserveElapsedTime() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-
-        clock.start(initialCountdown: 0)
-        now += 1.7
-        clock.pause()
-        now += 20
-        XCTAssertEqual(clock.elapsed, 1.7, accuracy: 0.000_1)
-
-        clock.start(initialCountdown: 0)
-        now += 0.4
-        XCTAssertEqual(clock.elapsed, 2.1, accuracy: 0.000_1)
-    }
-
-    func testRunningSeekRebasesTheActiveAnchorWithoutDoubleCounting() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-
-        clock.start(initialCountdown: 0)
-        now += 1
-        clock.seek(to: 10)
-        now += 0.4
-
-        XCTAssertEqual(clock.elapsed, 10.4, accuracy: 0.000_1)
-    }
-}
-
 final class CountdownAudioSchedulerTests: XCTestCase {
     // A one-second cadence needs each bundled spoken number to leave a gap before the next slot.
     func testBundledCountdownBuffersMustFitWithinOneSecondSlots() {
@@ -2883,12 +2802,21 @@ final class WorkoutSpeechOwnershipTests: XCTestCase {
 }
 
 final class WorkoutAudioSessionConfigurationTests: XCTestCase {
+    func testCountdownPreparationMixesWithoutDuckingOrInterruptingOtherAudio() {
+        let configuration = WorkoutAudioSessionConfiguration.countdownPreparation
+
+        XCTAssertEqual(configuration.category, .playback)
+        XCTAssertEqual(configuration.mode, .default)
+        XCTAssertEqual(configuration.options, [.mixWithOthers])
+    }
+
     // Catches a spoken-audio session mode that interrupts background playback instead of ducking it.
     func testCountdownCuesUsePlaybackDefaultModeAndDuckOtherAudio() {
         let configuration = WorkoutAudioSessionConfiguration.countdownCues
 
         XCTAssertEqual(configuration.category, .playback)
         XCTAssertEqual(configuration.mode, .default)
+        XCTAssertTrue(configuration.options.contains(.mixWithOthers))
         XCTAssertTrue(configuration.options.contains(.duckOthers))
         XCTAssertFalse(configuration.options.contains(.interruptSpokenAudioAndMixWithOthers))
     }
@@ -2899,11 +2827,15 @@ final class WorkoutAudioCoachTests: XCTestCase {
     // Catches constructing the default scheduler and its audio backend before an athlete starts a countdown.
     func testCountdownSchedulerFactoryWaitsForPreparationRequest() {
         var factoryCallCount = 0
+        let audioSession = RecordingWorkoutAudioSession()
         let scheduler = RecordingCountdownAudioScheduler()
         let coach = WorkoutAudioCoach(
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
-            audioSession: RecordingWorkoutAudioSession(),
+            audioSession: audioSession,
             countdownSchedulerFactory: {
+                XCTAssertEqual(audioSession.preparationConfigurationCount, 1)
+                XCTAssertEqual(audioSession.configurationCount, 0)
+                XCTAssertEqual(audioSession.activationCount, 0)
                 factoryCallCount += 1
                 return scheduler
             },
@@ -2911,6 +2843,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         )
 
         XCTAssertEqual(factoryCallCount, 0)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 0)
         coach.stop()
         XCTAssertEqual(factoryCallCount, 0)
         XCTAssertEqual(coach.countdownPreparationState, .idle)
@@ -2919,6 +2852,53 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
         XCTAssertEqual(factoryCallCount, 1)
         XCTAssertEqual(scheduler.prewarmCallCount, 1)
+        XCTAssertEqual(audioSession.activationCount, 0)
+    }
+
+    func testFailedPreparationConfigurationDoesNotConstructAudioBackendAndCanRetry() {
+        var factoryCallCount = 0
+        let audioSession = RecordingWorkoutAudioSession(failedPreparationConfigurationAttempts: 1)
+        let scheduler = RecordingCountdownAudioScheduler()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: audioSession,
+            countdownSchedulerFactory: {
+                factoryCallCount += 1
+                return scheduler
+            },
+            countdownCompletionScheduler: RecordingWorkoutCountdownCompletionScheduler()
+        )
+
+        XCTAssertFalse(coach.startCountdown(remainingFrom: "3", startUptime: 100))
+        XCTAssertEqual(coach.countdownPreparationState, .failed)
+        XCTAssertEqual(factoryCallCount, 0)
+        XCTAssertEqual(scheduler.prewarmCallCount, 0)
+        XCTAssertEqual(audioSession.activationCount, 0)
+
+        XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 200))
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+        XCTAssertEqual(factoryCallCount, 1)
+        XCTAssertEqual(scheduler.prewarmCallCount, 1)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 2)
+        XCTAssertEqual(scheduler.startedSequences, [["3", "2", "1"]])
+        XCTAssertEqual(audioSession.activationCount, 1)
+    }
+
+    func testCountdownPreparationPreservesAnActiveSpokenCueSession() {
+        let audioSession = RecordingWorkoutAudioSession()
+        let coach = WorkoutAudioCoach(
+            synthesizer: RecordingWorkoutSpeechSynthesizer(),
+            audioSession: audioSession,
+            countdownScheduler: RecordingCountdownAudioScheduler()
+        )
+
+        coach.speak("Rest")
+        coach.prepareCountdownAudio()
+
+        XCTAssertEqual(coach.countdownPreparationState, .ready)
+        XCTAssertEqual(audioSession.preparationConfigurationCount, 0)
+        XCTAssertEqual(audioSession.configurationCount, 1)
+        XCTAssertEqual(audioSession.activationCount, 1)
     }
 
     // Catches app launch prewarming the countdown engine before an athlete requests it.
@@ -3633,6 +3613,7 @@ private final class RecordingWorkoutSpeechSynthesizer: WorkoutSpeechSynthesizing
 
 @MainActor
 private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
+    private(set) var preparationConfigurationCount = 0
     private(set) var configurationCount = 0
     private(set) var activationCount = 0
     private(set) var deactivationAttemptCount = 0
@@ -3640,9 +3621,19 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
     private(set) var didDeactivateWithNotification = false
     var onSuccessfulNotificationAwareDeactivation: (() -> Void)?
     private var failedDeactivationAttempts: Int
+    private var failedPreparationConfigurationAttempts: Int
 
-    init(failedDeactivationAttempts: Int = 0) {
+    init(failedDeactivationAttempts: Int = 0, failedPreparationConfigurationAttempts: Int = 0) {
         self.failedDeactivationAttempts = failedDeactivationAttempts
+        self.failedPreparationConfigurationAttempts = failedPreparationConfigurationAttempts
+    }
+
+    func configureForCountdownPreparation() throws {
+        preparationConfigurationCount += 1
+        guard failedPreparationConfigurationAttempts == 0 else {
+            failedPreparationConfigurationAttempts -= 1
+            throw RecordingWorkoutAudioSessionError.configurationFailed
+        }
     }
 
     func configureForSpokenCues() throws {
@@ -3667,6 +3658,7 @@ private final class RecordingWorkoutAudioSession: WorkoutAudioSessionManaging {
 }
 
 private enum RecordingWorkoutAudioSessionError: Error {
+    case configurationFailed
     case deactivationFailed
 }
 
@@ -3900,27 +3892,6 @@ final class WorkoutSessionPolicyTests: XCTestCase {
 
         XCTAssertEqual(interval.start, sessionStart)
         XCTAssertEqual(interval.end, Date(timeIntervalSinceReferenceDate: 1_024.5))
-    }
-
-    func testCompletionIntervalExcludesPausedGapFromClockElapsedTime() {
-        var now: TimeInterval = 100
-        var clock = WorkoutClock(now: { now })
-        let sessionStart = Date(timeIntervalSinceReferenceDate: 1_000)
-
-        clock.start(initialCountdown: 0)
-        now += 12.5
-        clock.pause()
-        now += 3_600
-        clock.start(initialCountdown: 0)
-        now += 7.5
-
-        let interval = WorkoutSessionPolicy.completedWorkoutInterval(
-            sessionStartedAt: sessionStart,
-            planDuration: 600,
-            elapsed: clock.elapsed
-        )
-
-        XCTAssertEqual(interval.duration, 20, accuracy: 0.000_1)
     }
 
     func testCompletionIntervalCapsExplicitActiveElapsedTimeAtPlanDuration() {
@@ -4891,89 +4862,6 @@ final class WorkoutSessionStateTests: XCTestCase {
 
 }
 
-final class FreeWorkoutTimelineUpdateTests: XCTestCase {
-    private func makeStep(id: String, duration: TimeInterval) -> WorkoutStep {
-        WorkoutStep(
-            id: id,
-            number: 1,
-            title: "Hang",
-            instruction: "Hang.",
-            accessory: "10s hang",
-            duration: duration,
-            phase: .hang,
-            segments: [
-                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: duration)
-            ]
-        )
-    }
-
-    func testUpdateStepDurationShiftsLaterOffsets() {
-        var timeline = WorkoutTimeline(steps: [
-            makeStep(id: "a", duration: 10),
-            makeStep(id: "b", duration: 20),
-        ])
-        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 30)))
-        XCTAssertEqual(timeline.duration, 50)
-        XCTAssertEqual(timeline.startOffset(for: "b"), 30)
-        XCTAssertEqual(timeline.currentSteps.first?.duration, 30)
-    }
-
-    func testUpdateStepWeightAndReps() {
-        var timeline = WorkoutTimeline(steps: [makeStep(id: "a", duration: 10)])
-        XCTAssertTrue(timeline.updateStep(
-            id: "a",
-            FreeWorkoutStepUpdates(externalLoadKGF: 10, repetitions: 5)
-        ))
-        XCTAssertEqual(timeline.currentSteps.first?.externalLoadKGF, 10)
-        XCTAssertEqual(timeline.currentSteps.first?.repetitions, 5)
-    }
-
-    func testUpdateStepClampsTimedWorkToDuration() {
-        var step = makeStep(id: "a", duration: 60)
-        step = WorkoutStep(
-            id: step.id, number: step.number, title: step.title,
-            instruction: step.instruction, accessory: step.accessory,
-            duration: step.duration, phase: step.phase, segments: step.segments,
-            timedWorkDuration: 10
-        )
-        var timeline = WorkoutTimeline(steps: [step])
-        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 5)))
-        XCTAssertEqual(timeline.currentSteps.first?.timedWorkDuration, 5)
-    }
-
-    func testUpdateUnknownStepReturnsFalse() {
-        var timeline = WorkoutTimeline(steps: [makeStep(id: "a", duration: 10)])
-        XCTAssertFalse(timeline.updateStep(id: "missing", FreeWorkoutStepUpdates(duration: 30)))
-        XCTAssertEqual(timeline.duration, 10)
-    }
-
-    func testUpdateStepKeepsCompoundSegmentDurationsConsistent() {
-        let step = WorkoutStep(
-            id: "a",
-            number: 1,
-            title: "Hang",
-            instruction: "Hang.",
-            accessory: "",
-            duration: 60,
-            phase: .hang,
-            segments: [
-                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
-                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50),
-            ],
-            timedWorkDuration: 10
-        )
-        var timeline = WorkoutTimeline(steps: [step])
-        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 30, timedWorkDuration: 20)))
-        let updated = timeline.currentSteps[0]
-        XCTAssertEqual(updated.duration, 30)
-        XCTAssertEqual(updated.timedWorkDuration, 20)
-        XCTAssertEqual(updated.segments[0].duration, 20)
-        XCTAssertEqual(updated.segments[1].duration, 10)
-        XCTAssertEqual(updated.segments.compactMap(\.duration).reduce(0, +), 30)
-    }
-}
-
-
 final class WorkoutRendererReadinessTests: XCTestCase {
     func testFirstModelWorkoutWaitsForBothCurrentHosts() {
         let board = UUID(), hand = UUID()
@@ -5029,7 +4917,6 @@ final class WorkoutRendererReadinessTests: XCTestCase {
         XCTAssertTrue(value.isReady(requiresBoard: false, requiresHands: true))
     }
 }
-
 
 final class WorkoutRendererStartGateTests: XCTestCase {
     func testTerminalFallbackReleasesStartOnlyOnceWithoutClaimingRendererReadiness() {
@@ -5164,7 +5051,6 @@ final class WorkoutRendererStartGateTests: XCTestCase {
     }
 }
 
-
 final class WorkoutRendererPreferenceTests: XCTestCase {
     @MainActor
     func testUnavailableSingleHandReleasesInitialStart() async throws {
@@ -5285,7 +5171,6 @@ final class WorkoutRendererPreferenceTests: XCTestCase {
                       "Actual board readiness must survive the Surface wrapper")
     }
 }
-
 
 #if targetEnvironment(simulator)
 final class WorkoutDrawablePresentationTests: XCTestCase {

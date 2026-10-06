@@ -45,6 +45,24 @@ Resources, while Android keeps it inline.
 
 Board compilation uses eight stable SHA-256 package shards on Ubuntu 24.04,
 up to eight concurrent Linux jobs, and two independent native processes per job.
+Before the shards start, one job restores a platform-independent Git LFS object
+cache and fetches only missing objects for the selected source revision. All
+CAD consumers check out pointers first, then materialize objects through
+`.github/actions/materialize-lfs`. The key depends on the current object IDs,
+so code-only changes reuse it; an older cache can supply unchanged objects when
+CAD sources change. When cache writes are allowed, successful fetches are cached
+immediately, before compilation or tests can fail. The preparation job also
+shares verified objects with the compiler shards and assembly through one
+run-scoped artifact. This handoff avoids repeated downloads when a manual
+release's cache access is read-only or a cache is evicted during compilation.
+Only `.git/lfs/objects` is cached; authentication stays in the
+fetch process's environment. Every consumer verifies cached object hashes against
+HEAD before materializing CAD documents. Cache eviction falls back to fetching
+missing objects. Metadata-only validation needs no CAD sources and skips LFS.
+Automatic releases load the LFS helper from their workflow revision while
+keeping product sources at the exact tested commit, including releases of
+commits that predate the helper.
+
 One Linux job assembles the catalog and exports the hand once. A per-board cache
 records the FCStd digest, all compiler inputs (including depth audits and package/model
 helpers), pinned dependencies/toolchain, platform, and every generated file's

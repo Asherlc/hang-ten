@@ -88,7 +88,6 @@ final class LiveRopeControllerTests: XCTestCase {
     @MainActor
     func testReduceMotionDeliversOnlyAcceptedSettledFrame() async throws {
         let solver = try Self.solverFixture.get()
-        let q = solver.state.orientation
         let ready=expectation(description:"Accepted settled frame")
         var count=0
         let controller=LiveRopeController(solver:solver,sceneID:UUID(),delivery:{ _,_,frame in

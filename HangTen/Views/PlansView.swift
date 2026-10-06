@@ -36,6 +36,7 @@ struct PlansView: View {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var search = ""
     @State private var isCreatingRoutine = false
+    // periphery:ignore - NavigationStack reads and writes the projected $path binding.
     @State private var path: [WorkoutBrowserDestination] = {
         #if DEBUG
         let environment = ProcessInfo.processInfo.environment

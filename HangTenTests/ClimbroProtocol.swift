@@ -1,4 +1,7 @@
 import Foundation
+@testable import HangTen
+
+// Protocol research retained by fixture tests; this device has no live transport.
 
 struct ClimbroProtocolAdapter {
     static let uartServiceUUID = UUID(uuidString: "49535343-FE7D-4AE5-8FA9-9FAFD205E455")!
@@ -6,11 +9,8 @@ struct ClimbroProtocolAdapter {
     static let txUUID = UUID(uuidString: "49535343-8841-43F4-A8D4-ECBE34729BB3")!
     static let controlPointUUID = UUID(uuidString: "49535343-4C8A-39B3-2F49-511CFF073B7E")!
 
-    let profile: ForceSensorProfile
-
     init?(profile: ForceSensorProfile) {
         guard profile == .climbro else { return nil }
-        self.profile = profile
     }
 
     var capabilities: Set<ForceSensorCapability> {
@@ -37,7 +37,7 @@ struct ClimbroProtocolAdapter {
         nil
     }
 
-    func payload(for command: ForceSensorCommand) -> Data? {
+    func payload(for _: ForceSensorCommand) -> Data? {
         nil
     }
 }

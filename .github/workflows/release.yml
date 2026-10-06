@@ -49,8 +49,40 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
-          lfs: true
+          lfs: false
           persist-credentials: false
+
+      - name: Load LFS helper from the release workflow revision
+        id: lfs-helper
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_REVISION: ${{ github.workflow_sha }}
+        run: |
+          set -euo pipefail
+          # The tested product revision can predate this helper. Fetch workflow
+          # tooling from its own revision without moving the tested Git HEAD.
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          helper_root="$PWD/.context/$owner-release-lfs-helper"
+          test ! -e "$helper_root"
+          mkdir -p "$helper_root"
+          printf '%s\n' "$helper_root" > "$helper_root/owned-resources"
+          cleanup_helper() {
+            local result=$?
+            trap - EXIT
+            rm -rf "$helper_root"
+            test ! -e "$helper_root" || exit 1
+            return "$result"
+          }
+          trap cleanup_helper EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          gh api "repos/$GITHUB_REPOSITORY/contents/.github/actions/materialize-lfs/action.yml?ref=$WORKFLOW_REVISION" \
+            -H 'Accept: application/vnd.github.raw+json' > "$helper_root/action.yml"
+          mkdir -p .github/actions/materialize-lfs
+          mv "$helper_root/action.yml" .github/actions/materialize-lfs/action.yml
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Set up catalog validator Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
@@ -148,8 +180,40 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.event.workflow_run.head_sha }}
           fetch-depth: 1
-          lfs: true
+          lfs: false
           persist-credentials: false
+
+      - name: Load LFS helper from the release workflow revision
+        id: lfs-helper
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_REVISION: ${{ github.workflow_sha }}
+        run: |
+          set -euo pipefail
+          # The tested product revision can predate this helper. Fetch workflow
+          # tooling from its own revision without moving the tested Git HEAD.
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          helper_root="$PWD/.context/$owner-release-lfs-helper"
+          test ! -e "$helper_root"
+          mkdir -p "$helper_root"
+          printf '%s\n' "$helper_root" > "$helper_root/owned-resources"
+          cleanup_helper() {
+            local result=$?
+            trap - EXIT
+            rm -rf "$helper_root"
+            test ! -e "$helper_root" || exit 1
+            return "$result"
+          }
+          trap cleanup_helper EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          gh api "repos/$GITHUB_REPOSITORY/contents/.github/actions/materialize-lfs/action.yml?ref=$WORKFLOW_REVISION" \
+            -H 'Accept: application/vnd.github.raw+json' > "$helper_root/action.yml"
+          mkdir -p .github/actions/materialize-lfs
+          mv "$helper_root/action.yml" .github/actions/materialize-lfs/action.yml
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       - name: Restore compiled board catalog
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093

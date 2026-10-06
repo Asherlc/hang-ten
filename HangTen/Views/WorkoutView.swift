@@ -109,7 +109,7 @@ struct WorkoutView: View {
 
     var body: some View {
 		GeometryReader { geometry in
-			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+			TimelineView(.periodic(from: .now, by: 0.25)) { _ in
 				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: monotonicTime)
 				let step = step(at: elapsed)
@@ -628,7 +628,6 @@ struct WorkoutView: View {
     private func mountedCueCountdown(_ countdown: Int) -> Int {
         isInitialCountdown ? 0 : countdown
     }
-
 
 	@ViewBuilder
 	private func portraitHandCueCards(
@@ -1852,7 +1851,6 @@ struct WorkoutView: View {
 	}
 }
 
-
 /// Current mounted hosts, not cached resources or proof of a displayed frame.
 struct WorkoutRendererReadiness: Equatable {
     enum Kind: Equatable { case board, hand }
@@ -1889,7 +1887,6 @@ struct WorkoutRendererReadiness: Equatable {
     }
 }
 
-
 struct WorkoutRendererReadinessKey: PreferenceKey {
     static var defaultValue: WorkoutRendererReadiness { .init() }
     static func reduce(value: inout WorkoutRendererReadiness,
@@ -1910,7 +1907,6 @@ extension EnvironmentValues {
         set { self[WorkoutRendererPreparationIDKey.self] = newValue }
     }
 }
-
 
 /// First-start intent is consumed once. Late host changes cannot restart a
 /// cancelled preparation, and resume/Skip never enter this policy.

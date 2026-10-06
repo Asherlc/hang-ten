@@ -100,7 +100,12 @@ the completed session interval and cannot change elapsed duration.
 A visible workout disables the idle timer. Scene inactivity, lock or background
 entry pauses the workout and stops audio. Returning requires explicit Resume.
 
-`WorkoutAudioCoach` configures `.playback` / default mode / `.duckOthers` and
+`WorkoutAudioCoach` applies `.playback` / default mode / `.mixWithOthers` before
+constructing or preparing the countdown backend, so preparation cannot take an
+exclusive audio session or duck other apps. Actual cues add `.duckOthers` while
+preserving mixing, including other apps' spoken audio. Preparation during an
+active cue preserves that cue's session configuration. A preparation
+configuration failure leaves numeric cues silent and can be retried. The coach
 persists the speaker preference. Numeric 3-2-1 buffers are prepared ahead of the
 monotonic boundary and scheduled together using host time. Reviewed bundled
 countdown audio is preferred; unavailable bundled buffers select Apple's PCM
@@ -113,6 +118,9 @@ audio at the preceding 4 tick; a following fixed segment of three seconds or les
 joins the same schedule. Stable audio-moment keys prevent repeat playback on
 timeline ticks. Pause, cue disabling and dismissal cancel scheduled audio;
 speech teardown waits for its delegate before deactivating the audio session.
+Apple's [mixing option](https://developer.apple.com/documentation/avfaudio/avaudiosession/categoryoptions-swift.struct/mixwithothers)
+and [temporary ducking option](https://developer.apple.com/documentation/avfaudio/avaudiosession/categoryoptions-swift.struct/duckothers)
+define the session behavior; Hang Ten omits spoken-audio interruption.
 The reviewed audio authoring process lives in
 [CountdownAudio/README.md](../HangTen/Resources/CountdownAudio/README.md).
 

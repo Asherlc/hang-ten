@@ -564,12 +564,6 @@ enum BoardPresentationMedia: Hashable {
         }
     }
 
-    var assetPath: String {
-        switch self {
-        case .raster(let media): media.assetPath
-        case .model(let media): media.assetPath
-        }
-    }
 }
 
 /// The one path source used for normal contact, highlighting, and hit testing.
@@ -884,100 +878,6 @@ private struct HoldDepthCodingKey: CodingKey {
 enum ContactSide: String, Codable, Hashable {
     case left
     case right
-}
-
-enum SloperType: String, Codable, Hashable {
-    case flat
-    case round
-}
-
-struct SloperMetadata: Codable, Hashable {
-    var type: SloperType
-    var angleDegrees: Double?
-
-    private enum CodingKeys: String, CodingKey {
-        case type
-        case angleDegrees
-    }
-
-    init(type: SloperType, angleDegrees: Double?) {
-        self.type = type
-        self.angleDegrees = angleDegrees
-    }
-
-    init(from decoder: Decoder) throws {
-        let unknownKeys = try decoder.container(keyedBy: SloperAnyCodingKey.self).allKeys.filter {
-            !["type", "angleDegrees"].contains($0.stringValue)
-        }
-        if let unknownKey = unknownKeys.first {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: decoder.codingPath + [unknownKey],
-                    debugDescription: "Unknown key \(unknownKey.stringValue)"
-                )
-            )
-        }
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        type = try container.decode(SloperType.self, forKey: .type)
-        angleDegrees = try container.decodeIfPresent(Double.self, forKey: .angleDegrees)
-        guard isValid else {
-            throw DecodingError.dataCorrupted(
-                DecodingError.Context(
-                    codingPath: decoder.codingPath,
-                    debugDescription: "Sloper angle must be absent for round slopers or finite and in 0...90 for flat slopers."
-                )
-            )
-        }
-    }
-
-    func encode(to encoder: Encoder) throws {
-        guard isValid else {
-            throw EncodingError.invalidValue(
-                self,
-                EncodingError.Context(
-                    codingPath: encoder.codingPath,
-                    debugDescription: "Sloper angle must be absent for round slopers or finite and in 0...90 for flat slopers."
-                )
-            )
-        }
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(type, forKey: .type)
-        try container.encodeIfPresent(angleDegrees, forKey: .angleDegrees)
-    }
-
-    var isValid: Bool {
-        switch (type, angleDegrees) {
-        case (.round, nil), (.flat, nil):
-            true
-        case (.flat, let angle?):
-            angle.isFinite && (0...90).contains(angle)
-        case (.round, .some):
-            false
-        }
-    }
-}
-
-private struct SloperAnyCodingKey: CodingKey {
-    let stringValue: String
-    let intValue: Int?
-
-    init?(stringValue: String) {
-        self.stringValue = stringValue
-        self.intValue = nil
-    }
-
-    init?(intValue: Int) {
-        self.stringValue = String(intValue)
-        self.intValue = intValue
-    }
-}
-
-enum HoldCueStyle: String, Codable, Hashable {
-    case outerJug
-    case slot
-    case pinch
-    case rounded
 }
 
 enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
@@ -1462,9 +1362,6 @@ struct BoardRevision: Identifiable, Hashable {
         }
     }
 
-    func object(id: String) -> EquipmentObject? {
-        equipmentObjects.first { $0.id == id }
-    }
 }
 
 enum WorkoutSegmentKind: String, Codable, Hashable {
@@ -1496,17 +1393,9 @@ enum WorkoutSegmentTarget: Codable, Hashable {
     case tasks([[PlanHandTarget]])
 
     /// Maps a legacy empty-array self-selected prescription or a non-empty
-    /// requirement list. Empty arrays become `.selfSelected`; callers that
-    /// need a hard non-empty requirements value should use `nonEmptyRequirements(_:)`.
+    /// requirement list. Empty arrays become `.selfSelected`.
     static func fromLegacyTargets(_ targets: [ContactRequirement]) -> WorkoutSegmentTarget {
         targets.isEmpty ? .selfSelected : .requirements(targets)
-    }
-
-    /// Non-empty requirements only. Returns nil when `requirements` is empty.
-    /// Named distinctly from the `.requirements` enum case to avoid overload ambiguity.
-    static func nonEmptyRequirements(_ requirements: [ContactRequirement]) -> WorkoutSegmentTarget? {
-        guard !requirements.isEmpty else { return nil }
-        return .requirements(requirements)
     }
 
     var contactRequirements: [ContactRequirement] {
@@ -1659,22 +1548,8 @@ struct WorkoutSegment: Hashable {
         self.duration = duration
     }
 
-    /// Convenience for work segments with an explicit target, or rest with nil.
-    init(
-        kind: WorkoutSegmentKind,
-        timing: WorkoutSegmentTiming,
-        duration: TimeInterval?,
-        target: WorkoutSegmentTarget? = nil
-    ) {
-        self.init(kind: kind, target: target, timing: timing, duration: duration)
-    }
-
     var contactRequirements: [ContactRequirement] {
         target?.contactRequirements ?? []
-    }
-
-    var isSelfSelected: Bool {
-        target?.isSelfSelected == true
     }
 
     func mappingRequirements(_ transform: (ContactRequirement) -> ContactRequirement) -> WorkoutSegment {
@@ -1906,16 +1781,6 @@ struct WorkoutStep: Identifiable, Hashable {
     /// contributes nothing; rest segments are ignored.
     var workRequirements: [ContactRequirement] {
         segments.flatMap(\.contactRequirements)
-    }
-
-    /// True when every work segment is self-selected (or there is no work
-    /// segment carrying requirements).
-    var isSelfSelectedWork: Bool {
-        let workTargets = segments.compactMap { segment -> WorkoutSegmentTarget? in
-            guard segment.kind == .work else { return nil }
-            return segment.target
-        }
-        return !workTargets.isEmpty && workTargets.allSatisfy(\.isSelfSelected)
     }
 
     var activeDuration: TimeInterval {

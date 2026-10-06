@@ -62,22 +62,6 @@ enum WorkoutLabelPresentationContent {
     }
 }
 
-enum PlanFilterPresentationContent {
-    enum Facet: Hashable {
-        case difficulty
-        case category
-        case tags
-    }
-
-    static func visibleFacets(for options: PlanFilterOptions) -> [Facet] {
-        [
-            options.levels.isEmpty ? nil : .difficulty,
-            options.categories.isEmpty ? nil : .category,
-            options.tags.isEmpty ? nil : .tags
-        ].compactMap { $0 }
-    }
-}
-
 enum WorkoutLandscapeControlLayoutPolicy {
     static func usesCompactControls(
         isFirstStart: Bool,

@@ -34,7 +34,6 @@ the FreeCAD GUI is equally valid (it just re-saves the whole document).
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import re
 import stat

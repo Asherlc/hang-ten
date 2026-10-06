@@ -36,6 +36,7 @@ struct TrainView: View {
     @State private var showsDeepLinkedWorkout = false
     @State private var deepLinkedWorkoutPlan: TrainingPlan?
     private let onBrowsePlans: () -> Void
+    // periphery:ignore - Navigation reads and writes the projected $reviewDestination binding.
     @State private var reviewDestination = TrainReviewDestination.initial(
         environment: ProcessInfo.processInfo.environment
     )

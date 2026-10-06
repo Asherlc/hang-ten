@@ -1,6 +1,6 @@
 """Export the saved Blender actions as evaluated, post-subdivision surfaces."""
 import bpy, json, argparse, sys
-from mathutils import Matrix, Vector
+from mathutils import Matrix
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE.parents[1] / "HangTen/Resources/GripHand/hand-mesh.json"
