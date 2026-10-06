@@ -1,8 +1,8 @@
 # Nature Stone Hanger native bearing source binding
 
 The reverse 6 mm bearing regression uses reviewed native face normals from
-[the native bearing audit](2026-09-29-remaining-cad/nature-stone-hanger/display-and-pose-review/raw/fresh-native-bearing/new-native-bearing.json)
-and [the independent contact-preservation check](2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/independent-native-check.json).
+[the native bearing audit](../../Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/display-bearing.json)
+and [the independent contact-preservation check](../../Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/contact-preservation.json).
 The test continues to pin both evidence files, check preservation of all seven
 wood contact surfaces, and verify upward bearing and rear-facing cameras.
 Swapped rotations and reversed cameras must still fail those physical checks.

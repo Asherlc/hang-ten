@@ -4,7 +4,7 @@ This guide is the diagnosis, authoring, and verification reference for cords on
 Hang Ten model-media boards. Use the repository skill
 `audit-3d-hangboard-suspension` when a 3D board is missing an expected cord or
 when an Apple offline/On-Demand Resources cache is suspected.
-For connected internal passages and mesh-derived exterior bearing, read
+For native internal passages and exterior bearing, read
 [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md) before editing a package.
 
 ## The shipping boundary
@@ -127,15 +127,9 @@ user-provided rope or bungee evidence can establish a suspended presentation,
 but it does not establish that the accessory is supplied, integral, rated, or
 safe for a particular load.
 
-Current validated `sourceFact`, retained evidence, and audit outcome are the
-decision authority. Older design documents are historical context, not a
-reason to reverse a later source-backed ruling. Native `yy.baguette-evo` uses
-source-backed `cadRoutedCord` from its CAD-contained
-`HangTenSuspensionAuthoring`, compiled into source/descriptor-bound
-`assets/suspension.json`, authored with `ropeSolver.method: "nativeRoutes"`,
-alongside orientation metadata. Preserve that current contract; do not remove its suspension or
-restore a historical topology because an older orientation design said
-otherwise.
+Current retained evidence and the audit outcome govern representation decisions.
+Preserve each board's CAD-contained topology and solver inputs; a package name
+or older design assumption does not establish an unseen connection.
 
 ## Select the narrowest truthful topology
 
@@ -147,17 +141,20 @@ independent visible leads, exterior wraps and unknown interior joins use
 `cadRoutedCord` with authoring `ropeSolver.method: "nativeRoutes"`; do not
 invent a hidden connection. Generate every canonical pose against the actual
 native solid through the pinned build's `compile_suspension.py` and native
-solvers. For focused reproduction, use the
-[pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction),
-then run `solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`.
-Retain native-solid clearance, length, tube and topology checks. The table
-below governs older non-CAD packages; migrate their cords to the native method
-matching the evidence when they move to CAD. Do not retain hand-authored routes
-or `pairedLeadCord` on a CAD board; extend the solver with evidence and tests
-when the supported native methods do not fit. Captain Fingerfood POCKET's
-existing `HangTenBoardManifest` suspension remains the intentional legacy
-exception pending a separate evidence-backed cord revision. Consolidation
-preserves that existing CAD-contained representation without changing topology.
+solvers. For focused reproduction, adapt and run the complete
+[owned-shell example](../Tools/HangboardCAD/README.md#focused-cord-reproduction)
+for the board and its native solid features. Export the collider and run the
+solver check inside that same shell, before its cleanup removes the environment
+and collider.
+Retain native-solid clearance, length, tube and topology checks. Extend the solver
+with evidence and tests when the supported native methods do not fit.
+
+Five CAD sources retain legacy `pairedLeadCord` directly in their manifests,
+without `HangTenSuspensionAuthoring`: `captain-fingerfood-pocket`,
+`j-bryant-ftg-32`, `lattice-mxedge-lift-large`, `lattice-mxedge-lift-small`, and
+`metolius-light-rail-2`. Preserve these existing representations pending separate
+evidence-backed revisions. They do not authorize new hand-authored CAD routes.
+The table below describes the supported legacy forms and connected branches.
 
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
@@ -171,38 +168,16 @@ anchors. Cord guides, anchor placement, radius, rest length, material, pose,
 and camera values remain `displayEstimate` unless a source establishes the
 specific numeric fact.
 
-Canonical poses may provide `cordContactPoints`: complete, nonempty ordered
-exterior routes keyed by both paired-lead IDs or all four directed-passage IDs.
-For a branch, the first passage's override runs from the anchor toward the
-entry mouth, and the second runs from its entry mouth back toward the anchor.
-These override the branch's entry/exit contacts only; the bore and the fixed
-route between bore exits remain unchanged. Connected `internalLoop` point
-mouths may hold generated settled-route caches; other point-only passages
-and single cords cannot use these overrides. Parsers validate the resolved route,
-including full length and distinct adjacent points.
+Native solved routes belong in generated `assets/suspension.json`; authoring
+inputs retain no hashes, settled heights or route caches. Complete canonical
+pose coverage and source/authoring/model bindings are required before staging.
 
-Older non-CAD Captain pose-specific `attachmentPoints` delimit the visible
-cord at the selected upper channel. They are clipped display endpoints, not
-evidence for additional physical mouths or a hidden interior connection.
-Native revisions instead follow their current CAD source audit.
-
-For native Captain Fingerfood DUAL, the retained maker title photo shows both
-leads descending into the front cavity's two floor openings. Its existing CAD
-bores and front mouth centers are unchanged by the 2026-09-30 review correction.
-Each native lead declares authoring `mouthAxis: [0, 0, 1]` in the importer basis
-to fix the front entry side before native route generation. A path that reaches
-the front terminal through the rear mouth may pass collision checks while
-contradicting this observed threading. The two leads remain independent visible
-strands; no hidden rear connection is established. See the
+Captain Fingerfood DUAL uses independent front-entry leads. Its authoring
+`mouthAxis: [0, 0, 1]` fixes the evidenced entry side in importer coordinates;
+a collision-free path entering from the rear would still contradict the
+threading evidence. See the
 [DUAL source audit](source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/README.md).
-
-Convert retained source coordinates into the descriptor/importer basis before
-using them as model points. Baguette Evo's retained Blender markers are Z-up,
-front -Y; the imported model is Y-up, front +Z, so the correct mapping is
-`(x, y, z) → (x, z, -y)`. Its four evidenced bores therefore run along model Z.
-The Baguette `paired-12-8-6` and `rounded-tray` cameras use a 30° oblique
-display estimate: looking straight along the hanging spans hid the cord behind
-the board. The oblique views keep the selected face and a visible hanging V.
+Convert source points into the descriptor/importer basis before authoring them.
 
 A source's total rope length and the renderer's branch `restLength` answer
 different questions. For two equal exterior leads made from a published 1 m
@@ -230,22 +205,11 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
-For exterior point-passage branches, `meshWrap.clearance` selects the shared
-mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
-connected U-shaped channels in its FCStd, each with two mouth points in
-`HangTenSuspensionAuthoring`. The user confirmed one continuous loop per end, including
-the visible lower curve in Lattice's end photo. `windingByPassageID` records
-which side of the ovoid each lead follows. This one-time threading choice is
-necessary because mouth and anchor coordinates alone admit two exterior
-paths. The CAD-section solver computes settled bearing points for every grip
-pose from the native solid and caches them in generated `assets/suspension.json`; the renderer
-uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
-positions, channel and cord diameters, anchor offset,
-and clearance are labeled display estimates. CAD authoring retains topology,
-dimensions, solver settings, evidence, pose rotations/cameras, and optional
-`offsetXZ: [x, z]`; it contains no hashes, settled heights, or solved routes.
-The generated artifact's source hash, model hashes, and authoring payload must
-match the current source and descriptors; package validation checks those bindings.
+The Mini Bar has two connected U-shaped CAD channels, with one continuous
+loop per end and an explicit winding at each mouth. The native solver measures
+channel length and generates settled bearing routes for every canonical grip.
+See [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md) for this and the supported
+independent-lead, exterior-wrap and groove-guided methods.
 
 ## Make an evidence-backed correction
 
@@ -268,8 +232,8 @@ match the current source and descriptors; package validation checks those bindin
    (which leaves every geometry member byte-identical), then run
    `rtk proxy bash scripts/build-board-assets.sh --package <slug>` to regenerate
    every pose. Never save solved heights or routes into CAD or edit the artifact
-   as a source. POCKET's pre-existing manifest suspension is the legacy exception
-   described above. Inspect the generated
+   as a source. The retained legacy manifest suspensions are described above.
+   Inspect the generated
    result with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
@@ -297,96 +261,41 @@ change.
 | Picking/accessibility | The active contact remains the nearest descriptor-bound triangle; cord groups cannot become a hit or accessibility element |
 | Native visuals | Current-source app captures cover every pose in front, oblique, and active-contact states, plus clear/reappear, orbit/reset, and workout-driven selection |
 
-Repository commands from the checkout root:
+From the checkout root, rebuild and validate the current package:
 
 ```sh
-rtk proxy bash scripts/build-board-assets.sh
+rtk proxy bash scripts/build-board-assets.sh --package <slug>
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardPackages/tests -q
-rtk proxy env PYTHONPATH=Tools/HangboardModels \
-  .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardModels -q
-rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```
 
-When an explicit source-audit document is available, additionally run
-`rtk scripts/hangboard-packages.sh audit-cords --root Hangboards --manifest
-<cord-audit.json>`. Use the native source and rope solver checks in the
-[CAD cord guide](HANGBOARD_CORD_AUTHORING.md) for connected or independently
-routed CAD suspension; the retired Blender board tools are not a validation lane.
+For a supplied closed source audit, also run
+`rtk scripts/hangboard-packages.sh audit-cords --root Hangboards --manifest <cord-audit.json>`.
+Reproduce native routes using the [pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction)
+and `solve_threaded_rope.py --check`. Run affected package/native tests and the
+focused `SuspendedBoardPresentationTests`, `BoardModelTests` and
+`BoardPackageStoreTests`; expand validation when the changed boundary affects
+other consumers. See [package testing](../Tools/HangboardPackages/TESTING.md).
+A convex-hull-only check cannot establish clearance at a real mouth.
 
-Use the native solid-intersection and all-pose checks described in
-[CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), alongside current package
-and RealityKit iOS tests. The obsolete SceneKit clearance helpers were retired.
-A convex-hull-only clearance check cannot establish that the mouth transition
-avoids the wooden solid.
+## Current-source iOS review
 
-Also parse each edited JSON document directly and run the focused XCTest
-selectors for `SuspendedBoardPresentationTests`, `BoardModelTests`, and
-`BoardPackageStoreTests`. If Python `pytest`, Simulator runtimes, or SwiftPM
-dependencies are unavailable, report the exact missing prerequisite; passing
-CLI validation does not become a substitute for a blocked test lane.
-
-`git diff --check` can report whitespace inside a deliberately byte-preserved
-retained HTML snapshot. Inspect the exact path and diff before deciding whether
-it is a source artifact rather than authored whitespace; never rewrite retained
-evidence bytes merely to silence the check.
-
-## Current-source iOS review and Xcode deadlocks
-
-Use `validate-hang-ten-ios` and read `docs/IOS_SIMULATOR_VALIDATION.md` plus
-`docs/IOS_RUNTIME_SERVICES.md` completely. Create the exact isolated Simulator
-name `Hang Ten Paseo <workspace_name> Review`, register its explicit UUID in
-the pending and owned manifests before use, target only that UUID, build into
-workspace `.context/DerivedData`, and keep cleanup traps active across success,
-failure, timeout, and interruption.
-
-Treat `xcodebuild` progress as bounded. A host can deadlock before compilation
-when `SWBBuildService` stalls while probing the compiler with a command shaped
-like `clang -v -E -dM -isysroot … -x c -c /dev/null`. If build output and
-process state show that same probe making no progress:
-
-1. Record the exact build command, destination UUID, last build-service phase,
-   and bounded timeout.
-2. Run the exact compiler probe once outside the build service as a diagnostic.
-   If it succeeds, that distinguishes a build-service/host failure from source
-   compilation; it does not make the app build valid.
-3. Stop only exact processes and resources created by this workspace. Never
-   kill shared Xcode, CoreSimulator, SwiftPM, or other agents' processes and do
-   not delete global DerivedData.
-4. Retry at most through one controlled current-source path or use a CI
-   artifact whose commit provenance includes the current renderer and bundled
-   metadata. A stale local/prebuilt app is not acceptable visual evidence.
-5. If current-source native review remains blocked, report it as blocked and
-   retain no misleading screenshots.
+Use `validate-hang-ten-ios` and the [isolated simulator guide](IOS_SIMULATOR_VALIDATION.md).
+Build the current source into workspace-local DerivedData and target only the
+recorded simulator UUID. A prebuilt app or CI artifact must include the renderer
+and metadata changes under review. Bound stalled commands and clean up only
+processes and resources created by this workspace. A blocked build is not visual
+acceptance evidence.
 
 For every canonical suspended pose, inspect the board/cord junction, free-leg
-clearance, self-intersection, camera framing, active contact, and ignored cord
-picking. Exercise selection clear/reappear, camera orbit followed by canonical
-reset, and workout-driven position resolution. Simulator captures establish
-app integration, not guaranteed physical-device PBR parity.
+clearance, self-intersection, framing and active contact. Exercise ignored cord
+picking, selection clear/reappear, orbit/reset and workout-driven selection.
+If native board geometry changes, also present front/side/top previews beside
+exports built from the prior committed source. Simulator captures establish app
+integration; repeat device-specific appearance and delivery checks on hardware.
 
-## Cleanup and completion
-
-Generated reports, hashes, and captures belong under an owner-prefixed
-workspace `.context` path. Record every exact external resource immediately.
-Cleanup must archive/delete only the owned Simulator UUID, remove the exact
-workspace DerivedData/result bundles/capture staging created by the run, and
-verify those resources are absent. Leave shared, standard, and unknown
-resources alone.
-
-Completion requires all of the following:
-
-- retained exact-revision source evidence supports the current suspension
-  decisions, and any supplied closed audit covers every discovered model package;
-- the chosen topology and every numeric estimate are evidence-traceable;
-- USDZ/descriptor bytes and hashes remain unchanged unless model geometry was
-  explicitly in scope and independently reviewed;
-- focused and affected full test lanes pass, or each environmental block is
-  stated precisely;
-- current-source native screenshots cover every canonical pose and show the
-  visible non-pickable cord without clearance or selection defects; and
-- all exact workspace-owned external resources and temporary artifacts are
-  removed and their cleanup verified.
+Keep raw reports, hashes and captures under an owner-prefixed workspace
+`.context` path. Record external resource ownership immediately, keep cleanup
+traps active and verify deletion of those exact resources before completion.
+Retain reviewed physical-source decisions and necessary visual evidence in the
+source audit. Report any missing build/test prerequisite precisely.

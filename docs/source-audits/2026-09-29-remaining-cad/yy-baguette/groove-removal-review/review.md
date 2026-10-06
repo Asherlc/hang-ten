@@ -1,7 +1,6 @@
 # #16 La Baguette: smooth ends and exterior cords
 
-Human review remains **pending**. This correction supersedes the groove
-interpretation in the initial migration and the first wood-finish app review.
+The [human review record](../human-review.json) records acceptance of the shown revision with unsupported grooves removed, exterior cords on smooth rounded ends, wood finish and all six contacts.
 
 ## User correction and evidence
 
@@ -48,13 +47,7 @@ bearing-station depth is derived from the native 20 mm surface plus the
 1.2 mm radius, 0.2 mm clearance and 0.001 mm numerical outside offset.
 These are solver inputs, not hand-drawn routes or new manufacturer facts.
 
-The old stations fail against the restored wood: the cord would occupy the
-former groove. That raw failure is retained. An exact offset-boundary input
-also fails due to boundary classification; the one-micrometre numerical
-outside offset resolves it. Routes and hanging height are regenerated with
-the unchanged native-solid solver. No shared solver, schema or renderer code
-was changed. Final model-bound apply/check reports and all failed attempts
-are retained separately, without rewriting historical evidence.
+Routes and hanging height are generated against the restored native solid. The numerical outside offset is a solver parameter, not a new physical dimension.
 
 ## Verification and review
 
@@ -66,24 +59,7 @@ original volume without saving. Eleven focused Python regression tests pass.
 The native compiler validates and reimports the actual export, including
 the published depths and exact contact inventory.
 
-The prior geometry, initial wood-only app run, raw failures and intermediate
-results are preserved. Fresh app screenshots and original/prior/revised
-front-side-top comparisons accompany this review. Exact build commands,
-simulator UUID, raw screenshots, package parity, picking probes and verified
-temporary-resource cleanup are retained in the app proof packet.
-
-The fresh iPhone 17 Pro / iOS 26.5 run used simulator
-`6AD4B532-A462-4ADD-9F19-513CE7B67E58`. Its [build log](ios/build.log)
-records the exact invocation. Three targeted iOS tests passed; their
-[raw results](ios/test-results-summary.json) cover finish decoding,
-wood highlighting/restoration, and native cord pose handling. The generic
-wood test uses the Mammut fixture; La Baguette itself is covered by the
-[six-contact app captures and package parity](ios/captures/validation.json)
-and [physical scene picking/orbit/cord probes](ios/runtime-probes/validation.json).
-The [cleanup proof](ios/cleanup-verification.json) confirms deletion of the
-exact simulator, DerivedData and both result bundles. All 135 files in the
-worker's [raw hash manifest](ios/retained-sha256.json) were verified unchanged
-after copying into this retained packet.
+The [six-contact app captures and package parity](ios/captures/validation.json) and [picking, orbit and cord probes](ios/runtime-probes/validation.json) record the displayed revision.
 
 - [Fresh app views](app-review.png) and [all six selections](six-contacts.png).
 - [Prior committed/revised native front, side and top](prior-revised-front-side-top.png).
@@ -94,8 +70,4 @@ This is a display model with estimated details, not manufacturer CAD or a
 manufacturing, ergonomic or safety specification. The rope solver certifies
 the generated static route against the native solid; it does not simulate
 friction, knot behavior, dynamic loading or unconstrained sliding along the
-smooth board. The user must review the displayed revision before acceptance.
-
-Raw compiler and Xcode logs retain their original whitespace. The staged
-whitespace check reports 157 diagnostics confined to those raw logs/stdout;
-these are intentionally not normalized because their bytes are evidence.
+smooth board. The linked human review records acceptance of the displayed revision.

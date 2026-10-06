@@ -24,8 +24,9 @@ document-level string properties `HangTenSuspensionAuthoring` and
 The package generator rejects absent/stale suspension artifacts and authoring
 payload mismatches. Staging writes the same generated document
 into iOS and Android packages. A package may have several presentations, with
-exactly one default. POCKET's pre-existing manifest suspension remains the
-documented legacy exception; an artifact is required for embedded
+exactly one default. Existing manifest-only legacy suspensions do not require
+a separate artifact; the [CAD guide](../HangboardCAD/README.md) lists those
+retained packages. An artifact is required for embedded
 `HangTenSuspensionAuthoring`, not for a source with no such property.
 
 `contacts[]` is the only physical-fact inventory. Each contact has a stable ID,

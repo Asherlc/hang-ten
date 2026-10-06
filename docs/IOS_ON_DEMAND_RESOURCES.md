@@ -1,9 +1,9 @@
 # Apple On-Demand Resources for board models
 
-Hang Ten ships each model-only board's `assets/primary.usdz` through an Apple
+Hang Ten ships each model board's declared `assets/*.usdz` through an Apple
 On-Demand Resources (ODR) tag named `hang-ten-model-<package-slug>`. The base
-app keeps every package's `board.json` and `assets/primary.model.json`, so the
-catalog and descriptor can be validated before model access begins. There is
+app keeps every package's `board.json`, model descriptors and optional physics
+metadata, so catalog validation can precede model access. There is
 no raster, GitHub, or custom-server fallback.
 
 ODR reduces the initial app bundle downloaded to a device. It does not remove
@@ -26,14 +26,16 @@ packages, including the presence, format, and descriptor SHA-256 binding of
 each USDZ. It then produces two build-only trees:
 
 - `${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards` holds
-  normal base resources and omits only model USDZ files.
+  generated `board.json`, descriptors and optional physics. The standalone
+  generated suspension artifact is merged into `board.json`, then omitted.
 - `${DERIVED_FILE_DIR}/HangTenModelODR/<slug>/Hangboards/<slug>/assets` holds
-  that package's unchanged `primary.usdz` for Xcode's tagged folder reference.
+  that package's unchanged declared USDZs for Xcode's tagged folder reference.
 
 Each generated `Hangboards` folder reference has exactly one ODR tag in
 `HangTen.xcodeproj/project.pbxproj`. Keeping the folder reference rooted at
 `Hangboards` preserves the runtime path
-`Hangboards/<slug>/assets/primary.usdz` inside every asset pack.
+`Hangboards/<slug>/assets/<model>.usdz` inside every asset pack. A package with
+several model presentations keeps them under the same package tag.
 
 The Debug target sets `EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES` so local and
 Simulator builds can serve their asset packs without an external host. Release
@@ -43,10 +45,15 @@ Apple's default hosting.
 
 At runtime, `BoardModelResourceAccess` creates a fresh
 `NSBundleResourceRequest` for the package tag, waits for successful access,
-then resolves the model from the main bundle. The request remains retained by
-the loaded model scene and ends when that scene leaves the view/cache
-lifecycle. Request, path, hash, or RealityKit/ModelIO failures all produce the existing
-explicit unavailable state.
+then resolves the model from the main bundle. Its lease remains retained during
+loading and scene use and balances access on release. DEBUG Simulator builds
+may resolve the packaged ODR file directly when the installer has not registered
+its nested asset pack. Request, path, hash, or RealityKit/ModelIO failures produce
+the explicit unavailable state.
+
+Suspension is bundled metadata rendered as transient geometry, so a loaded
+model's missing cord is diagnosed in [the suspension guide](3D_SUSPENSION_AND_ODR.md).
+Android staging keeps the same USDZs inline in generated packages.
 
 Apple references:
 
@@ -60,10 +67,10 @@ Apple references:
    malformed, extra, or hash-mismatched source assets must still fail before
    any build resource tree is installed.
 2. Build Debug and inspect `HangTen.app/Hangboards`: descriptors and
-   `board.json` files must be present, with no `primary.usdz` beneath that base
+   `board.json` files must be present, with no USDZ beneath that base
    directory. Inspect `HangTen.app/OnDemandResources`: there must be one asset
-   pack per model tag, each containing only its exact
-   `Hangboards/<slug>/assets/primary.usdz` hierarchy.
+   pack per model tag, containing only its declared models under
+   `Hangboards/<slug>/assets/`.
 3. Archive Release without `EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE` and without
    `ASSET_PACK_MANIFEST_URL_PREFIX`. Confirm the archive/export reports the
    expected ODR tags and asset packs before upload.

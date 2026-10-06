@@ -1,11 +1,10 @@
-# Training plan source audit — 2026-08-10
+# Training plan source mappings
 
-Four bundled plan entries cover the first three requested resources below:
-one from Hooper's Beta, two from Method Climbing, and one from REI. All are
-classified `adapted`: the sources are not current Metolius built-ins, and Hang
-Ten supplies runnable rows, manual timing defaults, or board resolution where
-the source is a weekly template or prose guidance. Section 4 documents Rock
-Prodigy, which is not bundled.
+This record maps the Hooper's Beta, Method Climbing, REI, and Rock Prodigy
+sources to their bundled routines. The first four entries are classified
+`adapted`: Hang Ten supplies runnable rows, manual timing defaults, or board
+resolution where a source is a weekly template or prose guidance. Rock Prodigy
+retains its official self-selected set template.
 
 ## 1. Hooper's Beta introductory home hangboard routine
 
@@ -68,20 +67,19 @@ the range to 7s, uses an app-only 25-minute warm-up preview, and adds a
 light-stretch/recovery row. The full-day-or-two recovery warning and stop-at-
 pain warning remain in the plan instructions/metadata.
 
-## 4. Rock Prodigy Training Center intermediate routine
+## 4. Rock Prodigy Training Center 7/3 Repeaters
 
 Product source: <https://trango.com/products/rock-prodigy-training-center>
 
-Manual audit source: <https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155>
+Prescription source: <https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155>
 
-Classification: manufacturer/device-specific prescription. The official use
-guide supports the routine's sequence and seven broad grip names, but the
-board-specific target mappings require a complete physical hold package.
+The bundled `rptc.seven-three-repeaters` routine is the official set template:
+seven two-handed 7-second hangs with 3-second rests, the table's 2 minute
+53 second recovery to 4:00, and a separate 3-minute between-set rest.
+The guide leaves the choice of 5–10 grips and 1–3 sets per grip to the athlete.
+The app therefore supplies two `target: "any"` hand entries, without a fixed
+grip order, invented contact depths, or a fixed full-workout duration.
 
-The 2026-08-13 direct-source re-audit found that the former detailed hold model
-relied on a retailer-hosted depth-guide mirror and pre-migration Swift data for
-facts not exhausted by Trango's current official product page, image, and use
-guide. Hang Ten therefore removed the board from the registry and removed this
-routine from the bundled plan library rather than infer exact targets. The
-source-backed prescription remains documented here for future work after a
-direct official exhaustive hold guide becomes available.
+The catalog includes the native Training Center board, but that inventory
+does not add a prescription to this routine. Source-generic work and
+board-specific physical contact facts remain separate.

@@ -4,13 +4,11 @@ Each wooden CAD package chooses `media.display.surfaceFinish: "wood"` once in
 its native `HangTenBoardManifest`. The iOS renderer applies the same warm matte
 procedural grain to every body and hold mesh, including complete recesses and
 new importer children. Attachment-role nodes remain neutral; cords retain their
-independent material. This removes the need to enumerate every mesh to get
-complete coverage.
+independent material.
 
-USDZ packages remain unbound and texture-free. Only the native display metadata
-changes through `set_board_manifest.py`; every other FCStd archive member and
-all USDZ/descriptor bytes are verified unchanged. Geometry and physical contact
-facts are unchanged.
+USDZ packages remain unbound and texture-free. Edit the finish through
+`Tools/HangboardCAD/set_board_manifest.py`; the renderer supplies its appearance
+from the embedded display metadata.
 
 The color and grain are a deliberately subtle visual adaptation, not a
 manufacturer-exact reproduction of a wood species, stain, veneer, or plywood
@@ -58,7 +56,7 @@ product pages retain FSC certification and wooden product imagery.
 | `the-hangboard.the-hangboard` | [Product source](https://thehangboard.com/products/hangboard) | Body and contact nodes; attachments excluded |
 | `nature.stoak-board-iii` | [Product source](https://natureclimbing.com/products/stoak-board-iii) | Wood with three source-backed granite inserts (see below) |
 
-## Board-wide coverage and Stoak correction
+## Board-wide coverage and Stoak inserts
 
 `surfaceFinish` is `wood`, `plastic`, `granite`, or `neutral`. Omission preserves the legacy
 neutral default. The native CAD catalog explicitly chooses one finish for every
@@ -78,32 +76,9 @@ selection is independent of contact identity, so a mixed contact highlights and
 restores both finishes together. See
 [the approved evidence and CAD partition audit](source-audits/2026-09-29-stoak-granite-surfaces.md).
 
-The granite appearance is supplied at runtime. USDZ meshes stay unbound and
-texture-free; no per-pixel height cutoff paints wood gray. The CAD splits actual
-surfaces at explicitly authored material boundaries. The retained parametric
-solid and physical contact metadata are unchanged. Legacy node names remain
-identity strings, not material evidence.
-
-The previous correction introduced `woodNeutralBands` and hand-selected height
-cutoffs to paint pocket bottoms gray. That answered a different appearance
-question and preserved the reported symptom. Those estimates, their schema,
-and their shader branch have been removed. They must not be used as material
-or geometry authoring precedent.
-
-The earlier process checked that chosen material parameters survived selection,
-but did not establish that the resulting appearance met the user’s request.
-The acceptance check now starts with an unhighlighted whole-board render:
-inspect the complete walls, rear faces, floors, lips and transitions of every
-pocket. Then exercise selection and clearing to ensure the same finish returns.
-A passing material-type test alone does not establish visual correctness.
-
-The catalog audit covers 35 native CAD boards: 24 wood, 11 plastic and 480
-body/contact descriptor meshes. A catalog test requires a board-level finish
-for every native source. An iOS catalog test loads every opted-in model and
-checks all imported body/hold meshes for its finish. A regression also verifies
-that an unlisted imported mesh inherits the board finish while an attachment
-stays neutral. These are coverage checks; actual app screenshots remain the
-appearance acceptance evidence.
+The granite appearance is supplied at runtime. The CAD splits actual surfaces
+at explicitly authored material boundaries; coordinate cutoffs and legacy node
+names do not establish a material classification.
 
 Plastic boards choose `surfaceFinish: "plastic"`; see
 [CAD plastic appearance](CAD_PLASTIC_APPEARANCE.md). The renderer contains no
@@ -125,6 +100,8 @@ screenshots with the audit. `BoardModelRealityTests` covers catalog mesh coverag
 new-mesh inheritance, attachment isolation and full highlight restoration.
 
 The [catalog finish audit](source-audits/2026-09-30-catalog-model-finishes.md)
-adds the remaining wooden model packages to this finish, including Whetstone,
-Honestone, Original Grindstone and VerticalBoard Evo. The catalog coverage test
-now rejects omitted or neutral board finishes across every model package.
+retains additional product mappings, including Whetstone, Honestone, Original
+Grindstone and VerticalBoard Evo. Catalog coverage rejects omitted or neutral
+board finishes across every model package. Tests establish decoding, imported
+mesh coverage, attachment isolation, and highlight restoration; app screenshots
+establish visual acceptance.

@@ -1,23 +1,19 @@
 # Nature Climbing Stone Hanger — Granite
 
+Source facts, reference geometry and rights for `nature-stone-hanger`. The current authored model is `Hangboards/nature-stone-hanger.FCStd`; use the [CAD guide](../../../../../../../Tools/HangboardCAD/README.md) to build it. The geometry and material mappings below describe the retained reference asset.
+
+
 Editable, evidence-constrained display asset for independent hold highlighting.
 
 **Revision identification:** updated standard natural-oak / Granite product in the manufacturer's gallery accessed **2026-09-11**. Manufacturer SKU `STONE_HANGER`; Shopify product `8768741048658`; non-personalized Granite variant `47783638597970`. No numbered revision or precise production change date is published. `current-gallery-2026-09-11` is this project's snapshot key, not a manufacturer revision number. The older 23 mm Stone Hanger and Stone Hanger Mini are excluded.
 
 **Fidelity limits:** overall dimensions and nominal edge depths are published. The fine machining dimensions below are visual approximations. Unknown internal cord routing is not reconstructed. Branding is omitted because no redistribution license for the artwork was established. This is a display model, not an exact manufacturing reconstruction.
 
-**One requested deliverable is blocked:** no real Blender Outliner screenshot could be captured. The runtime denied local display sockets, and its approval policy rejected the request to start a virtual display. `scripts/outliner_view.py` prepares a real GUI view when run in desktop Blender. The mesh inventory and selection proof are provided separately and are not represented as screenshots.
+## Retained records
 
-## Included files
-
-- `Nature-Climbing-Stone-Hanger.blend`: clean, editable source scene, Blender **4.0.2**.
-- `Nature-Climbing-Stone-Hanger.glb`: additional embedded-texture runtime export.
-- `integration.json`: complete object, hold and passage mapping.
-- `textures/` and `texture-manifest.md`: two original 1K base-color textures; also packed into the Blender file.
-- `renders/`: five labeled views of the actual mesh under neutral studio lighting.
-- `evidence/`: retained source images, original product metadata, page snapshots, URL indexes and source assessments.
-- `qa/`: independent validation results and hold selection proof.
-- `scripts/`: editable model generator, texture generator, validation and desktop Outliner view setup.
+- `integration.json` records reference contact and passage mappings.
+- `qa/` contains the reference validation results.
+- [texture-manifest.md](texture-manifest.md) records original material provenance and rights.
 
 ## Published specification
 
@@ -34,7 +30,7 @@ Editable, evidence-constrained display asset for independent hold highlighting.
 | Capacity claim | Current page says over 100 kg; recorded as a manufacturer claim only |
 | Included items | Cord is shown with the product. No complete product-specific hardware packing list was located. Carabiners and exercise accessories in use photos do not establish inclusion. |
 
-Sources and conflicts are assessed in [evidence/sources.md](evidence/sources.md). In particular, the generic mounting, stone-type and treatment sections on the store page apply to other product families and do not establish screw mounting or a surface coating for this product.
+The [manufacturer source register](../../../../../2026-09-29-remaining-cad/nature-stone-hanger/source-register.json) identifies the retained product metadata, photographs and technical drawing. In particular, the generic mounting, stone-type and treatment sections on the store page apply to other product families and do not establish screw mounting or a surface coating for this product.
 
 ## Coordinates and scene contract
 
@@ -86,7 +82,7 @@ Three U-shaped front-to-reverse adjustment grooves are modeled on each side at Z
 
 ## Unpublished parameters and approximations
 
-These values are editable in `scripts/build_asset.py`. **They are not verified product measurements or additional published specifications.** They establish a visually proportioned display surface from M01–M04, with M07 used for contact semantics.
+These are parameters of the retained reference geometry. **They are not verified product measurements or additional published specifications.** They establish a visually proportioned display surface from M01–M04, with M07 used for contact semantics.
 
 | Parameter | Display approximation / limitation |
 |---|---|
@@ -111,20 +107,4 @@ Two self-contained Principled BSDF materials are used: `Oak | neutral matte` and
 
 The oak map is a uniform warm neutral color: it does not invent a board-specific wood grain. The granite map contains original, low-contrast, isotropic mineral-like variation; it does not reproduce a photographed stone sample. No photo pixels, logo, engraving, stains, chalk deposits, shadows, reflections or backgrounds are incorporated in either texture.
 
-Original texture maps and generator code are offered under **CC0-1.0**, to the extent rights exist in them. See `texture-manifest.md` and `LICENSE-original-assets.txt`. Manufacturer/reviewer photographs and page snapshots in `evidence/` remain third-party reference material; no redistribution license was established for them. Keep that folder out of a shipped app. This is an unofficial descriptive model; the project does not grant trademark or product-design rights.
-
-## Rebuild and verify
-
-The source generator uses Blender 4.0.2 mesh-normal APIs. Final renders use Blender 4.2.0 LTS with CPU OpenImageDenoise. Run the source build and validation in Blender 4.0.2, and the dedicated render script in Blender 4.2 LTS:
-
-```sh
-blender --background --factory-startup --python scripts/build_asset.py
-blender --background Nature-Climbing-Stone-Hanger.blend --python scripts/validate_asset.py
-blender --background Nature-Climbing-Stone-Hanger.blend --python scripts/render_asset.py
-python scripts/label_renders.py
-blender Nature-Climbing-Stone-Hanger.blend --python scripts/outliner_view.py
-```
-
-Run `python scripts/make_textures.py` only if regenerating the original maps; it requires NumPy and Pillow. The label script requires Pillow. A render rig is created only while rendering the saved clean asset. It is never written back into the delivered `.blend`. Original unlabeled render pixels are retained in `renders/raw/`.
-
-The final independent check reopens the saved file and verifies the hold/marker inventory, transforms, bounds, materials, packed textures and UV validity. The five labeled PNGs show the front, reverse, oblique, attachment/hold detail and neutral material close-up. Render labels are presentation captions, not product markings.
+Original texture maps and generator code are offered under **CC0-1.0**, to the extent rights exist in them. The original material provenance is recorded in [texture-manifest.md](texture-manifest.md). Manufacturer/reviewer photographs and page snapshots in `evidence/` remain third-party reference material; no redistribution license was established for them. Keep third-party source images out of shipped assets. This is an unofficial descriptive model; the project does not grant trademark or product-design rights.

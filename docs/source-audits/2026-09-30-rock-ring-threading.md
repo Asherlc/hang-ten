@@ -1,4 +1,4 @@
-# Rock Ring connected cord passages, 2026-09-30
+# Rock Ring cord evidence and CAD mapping
 
 The owner requested cords through the side holes and two displayed instances
 of one ring model. They confirmed one continuous cord per ring, with two
@@ -25,8 +25,7 @@ mounting hardware is added.
 
 ## CAD and metadata mapping
 
-The previous roof bores ended at model Y=84 mm; lateral recesses were centered
-at Y=48 mm, and were disconnected. `ContinuousCordChannel` is a native boolean
+`ContinuousCordChannel` is a native boolean
 union of cylinders and spherical elbow clearances, with a linked ordered
 `ContinuousCordSpine`. It is subtracted through the existing `Recesses`/`Body`
 feature chain. The imported single-ring node/contact-slot inventory is retained.
@@ -39,13 +38,14 @@ implement the owner-confirmed connection while retaining the established
 external envelope and contact geometry. The hidden channel is native CAD void,
 not a rendered hole decal. Its measured spine length is 259.298221 mm.
 
-`threadedLoopCord` represents one loop with two top mouths, rather than adding
-another physical loop to satisfy the historical two-branch schema. It reuses
+`threadedLoopCord` represents one loop with two top mouths, with one physical loop per ring. It uses
 the internal-loop solver/renderer with one ordered passage pair. Its complete
 CAD-spine points are transient cord geometry: the opaque board occludes the
 interior portion and exposes it only at the real openings. USDZ contains no
-cord, materials, or textures. Schema-2 `suspension.json` binds both instance
-suspensions to the one descriptor hash. No generated `board.json` is committed.
+cord, materials, or textures. The flat source `Hangboards/metolius-rock-rings-3d.FCStd` stores both instance
+setups in its schema-2 `HangTenSuspensionAuthoring` property. The build generates
+`assets/suspension.json`, checks its source and descriptor hashes, and merges it
+into bundled `board.json`. Neither generated JSON file is committed.
 
 Cord radius 2 mm, total loop rest length 520 mm, invisible anchor offset 98 mm
 above the model bounds, camera padding/direction, and ±105 mm instance spacing
@@ -61,32 +61,10 @@ both rings and their cords. All eight physical contacts keep their independent
 left/right identities; transient cord entities have no picking or accessibility
 bindings.
 
-## Verification
+## Review and regeneration
 
-- Package/manifest suite: 485 tests passed. Three new single-loop solver tests
-  pass, including rejection of a path through the solid and an undersized cord.
-- Full package inventory validation and existing native CAD checks pass.
-- Native channel measurement matches 259.298221 mm. The applied and checked
-  solve reports 520.000000 mm total cord length and 3.685190 mm minimum
-  centerline clearance against the exact CAD solid for each instance. Native
-  inside-solid samples are explicitly rejected as negative clearance.
-- Prior/changed front, side, and top renders were reviewed and retained at
-  [CAD comparison](../pr-screenshots/rock-ring-threading/cad-comparison.png).
-- iOS Debug build passed using `xcodebuild -project HangTen.xcodeproj -scheme
-  HangTen -configuration Debug -destination 'platform=iOS Simulator,id=AD913955-2A20-478F-B18C-DBDA574F5DA8'
-  -derivedDataPath .context/DerivedData build`. XCTest bundles compiled, but
-  execution and app visual review could not complete: the isolated iOS 26.5
-  simulator stalled at boot, and a controlled iOS 26.4 retry
-  (`D2619ED2-1C49-437B-8DFC-D26E9E36299C`) stalled during data migration and
-  app launch. No app screenshot is claimed as validation. Both owned simulators
-  were cleaned up; shared simulators were left alone.
-
-PR review follow-up: 495 package/manifest/solver tests pass after adding
-clearance-margin, invalid-mouth, malformed-instance, and duplicate-ID coverage.
-Native measurement and solve/check still match the lengths and clearance above.
-Native placement and empty-spine probes pass. A fresh generic iOS Simulator
-Debug build passes. The channel span is now between its free spans and is part
-of the centerline and camera fit. Selection tests assert successful selection;
-canonical member-order validation also checks instance-level suspensions.
-The original commit's GitHub CI completed the iOS unit and UI suites despite
-the local Simulator startup limitation.
+The retained [front, side, and top comparison](../pr-screenshots/rock-ring-threading/cad-comparison.png)
+shows the connected channel revision. Regenerate resources and check the
+current native routes using the [CAD build guide](../../Tools/HangboardCAD/README.md)
+and [cord authoring guide](../HANGBOARD_CORD_AUTHORING.md). Change the authored
+CAD parameters and rebuild; keep computed heights and cord paths out of source.

@@ -19,18 +19,23 @@ separate factual inventory.
 4. Add plan and block data directly to the canonical
    `HangTen/Resources/PlanLibrary.json` without inventing segments or exercises.
    Mark provenance honestly and commit the JSON with its source mappings.
-5. Target the narrowest truthful semantic `PlanContactPredicate` for each hand;
-   never embed board contact IDs or visual references in a routine.
+5. Express each sourced hand target through the supported
+   `PlanContactPredicate` fields: kind, shape, depth, and fingerCapacity.
+   Catalog routines use semantic predicates rather than board contact IDs.
+   Follow the checked-out schema in `PlanStorage.swift`; board inventory fields
+   do not automatically become plan target fields.
 6. Generate board assets before validating factual board compatibility. Board
    metadata comes from each flat `Hangboards/<slug>.FCStd` document's
    `HangTenBoardManifest` and validated generated suspension. Cord/simulation
    inputs remain embedded CAD data; their generated artifacts do not establish
    training prescriptions. Run `rtk proxy bash scripts/build-board-assets.sh`
    and `rtk scripts/validate-plan-work-targets.sh`, then run the plan tests.
-   Both apps bundle the checked-in canonical JSON; there is no Swift plan
-   authoring catalog or exporter.
-7. Verify each factual requirement remains compatible with every board where
-   the plan appears. Keep source-generic work as explicit athlete self-selection.
+   Both apps bundle the checked-in canonical JSON.
+7. Check semantic resolution and incompatibility with representative boards.
+   Retain every source-backed predicate even when the app records unresolved
+   board-agnostic work as self-selected. Explicitly author unspecified holds
+   only when the source leaves the choice to the athlete and the current
+   `PlanStorage` validation allows it.
 8. Preview representative text, timer, audio, hand cue, and active-hold states
    in the dedicated simulator after `rtk proxy bash scripts/build-runtime-assets.sh`.
 

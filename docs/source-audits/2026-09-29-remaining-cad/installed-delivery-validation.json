@@ -869,7 +869,7 @@
       "failures": 0
     },
     "cleanupVerified": true,
-    "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+    "report": "Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/runtime-validation.json",
     "humanAcceptance": "accepted",
     "humanReviewAnswer": "Y",
     "acceptedDate": "2026-10-01",

@@ -1,1 +1,0 @@
-[rtk] /opt/homebrew/bin/axe: process terminated by signal 11

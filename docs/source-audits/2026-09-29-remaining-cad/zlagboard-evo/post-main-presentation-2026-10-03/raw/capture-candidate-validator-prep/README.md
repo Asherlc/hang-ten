@@ -1,5 +1,0 @@
-Prospective offline validation only. Invoke against a completed candidate run, redirect stdout to a NEW report and retain exit status/stderr separately. No current run has been read or validated during preparation.
-
-Accepts only Evo/Pro and control/action/reversal, with the exact frozen console capture helper SHA. Checks the released source-reference snapshot (approved, baselineOnly:false), recorded parity report hash and every recorded equal flag/count; it does not dereference parity entry paths into obsolete installed app locations. The parity report itself must remain available at the released path. It checks the single recorded nonblocking simctl launch and presence of retained app streams. Receipt content and visual results require separate review.
-
-The original 44 capture/hash/clock/deadline/cleanup and no-in-run-input checks are retained. Only control/reversal allow SKIP_NONINTERACTIVE_PRESENTATION=1; action omits it. Raw evidence is never rewritten. Actual phase labels, board/hands appearance, successful receipt interpretation, and causal conclusions are outside mechanical validation. No CPU brackets exist.

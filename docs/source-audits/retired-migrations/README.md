@@ -1,12 +1,10 @@
-# Retained migration evidence
+# Product source evidence
 
-These reviewed mappings, primary images, source manifests, screenshots, and the
-authored Escape GLB were previously checked in under `.context/`. They are
-historical evidence, rather than inputs to the current native CAD compiler. The
-relative paths below this directory preserve their former layout. Original
-`.context/` paths inside immutable reports refer to that former location.
+This directory retains manufacturer images, source manifests, factual mappings,
+reviewed screenshots, and the authored Escape GLB used to establish product
+shape and contact facts. It is not a tooling entrypoint.
 
-One-off Python programs and compiled USDZ/descriptor copies were retired. Their
-exact historical versions remain available in Git at `769817bcc`. Current board
-geometry and metadata come from `Hangboards/<slug>/<slug>.FCStd`; generate runtime
-resources with `scripts/build-runtime-assets.sh`.
+Author current boards in `Hangboards/<slug>.FCStd` and use the
+[native CAD guide](../../../Tools/HangboardCAD/README.md). Keep new working
+plans and execution output in `.context`; retain only source evidence and
+mappings needed to justify authored facts here.

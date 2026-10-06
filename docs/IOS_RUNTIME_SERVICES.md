@@ -1,31 +1,25 @@
 # iOS runtime services
 
-This document records the runtime behavior that spans the workout UI, audio,
-orientation, and Apple Health. Use it with the isolated simulator guide when
-changing any of those systems.
+This reference covers navigation, scale tracking, workout timing, audio,
+orientation, recording and Apple Health. Use the
+[isolated simulator guide](IOS_SIMULATOR_VALIDATION.md) for review commands.
 
-## Primary navigation
+## Navigation and reports
 
-Train is the default root tab. It shows the selected board and favorite plans;
-`train.changeBoard` opens the full-page board picker and `train.settings` opens
-Settings. Plans exposes the same picker through `plans.changeBoard`. Picker
-choices use `boardPicker.board.<TrainingBoard.id>`, persist the selection, and
-dismiss back to the originating tab. History is a separate root tab that opens
-directly to the chronological saved-session list.
+Train is the default tab, with the selected board and favorite plans. Both
+`train.changeBoard` and `plans.changeBoard` open the full-page board picker;
+`boardPicker.board.<BoardRevision.id>` persists the choice and returns to the
+originating tab. `train.settings` opens Settings. History opens the chronological
+list of detailed local sessions.
 
-Board detail and active workout sessions expose **Report a problem**
-(`boardDetail.reportProblem` / `workout.reportProblem`). When Sentry is
-configured, reports submit through Sentry User Feedback with typed ID tags only
-(`report_source`, `board_id`, and
-optional `hold_id` / `plan_id` / `step_id`); the optional email field is
-user-typed follow-up contact. Without Sentry configuration, submission is a
-no-op.
+Board detail and active workouts expose Report a problem through
+`boardDetail.reportProblem` and `workout.reportProblem`. Configured Sentry User
+Feedback receives the user's message, optional typed email, and ID tags
+(`report_source`, `board_id`, optional `hold_id`, `plan_id`, `step_id`). Without
+Sentry configuration, submission is a no-op.
 
-The DEBUG routes `HANGTEN_REVIEW_BOARD_PICKER=1`,
-`HANGTEN_REVIEW_SETTINGS=1`, and `HANGTEN_REVIEW_HISTORY=1` open those states
-directly. `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_MOTHERBOARD=1` also
-open Settings from Train. Release builds ignore all review-only tab and
-navigation routing.
+DEBUG review routes can open tabs, board detail, Settings and visual fixtures.
+Release ignores those routes; see the simulator guide for supported variables.
 
 Plans uses native focus browsing, All workouts, and My routines. Focus is
 optional source-audited editorial metadata; unsupported categories and empty
@@ -47,416 +41,201 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-## Supported Bluetooth scales
+## Scale and manual tracking
 
-An optional supported scale is a live force input, not a workout timer. On a
-routine's plan page, Weight tracking defaults to **Skip**. The athlete can
-instead choose **Scale**, select any supported profile, and connect or
-disconnect inline before tapping Start routine. **Manual** keeps the numeric
-weight, unit, and Add bodyweight controls on that same page. Scale discovery
-and connection remain explicit user actions, so iOS Bluetooth permission
-follows clear intent on physical devices rather than an automatic production
-launch.
+On plan detail, Weight tracking defaults to Skip. Manual retains the entered
+weight, unit and Add bodyweight choice. Scale permits explicit profile selection,
+discovery, connection and disconnection before Start routine. Bluetooth
+permission follows that user action. Start remains available when the scale is
+unavailable; the workout records the Scale choice without fabricated samples.
+Deep links have no plan-page setup state and default to Skip.
 
-Start routine is always available. Selecting Scale does not require a
-successful connection and never presents a blocking pairing sheet. The
-selected Skip, Scale, or Manual configuration is snapshotted when Start routine
-is tapped, retained while a purchase sheet is open, and passed into the workout.
-Workout deep links have no plan-page setup state, so they default to Skip and
-continue to auto-start.
+The tracking choice is snapshotted at Start and retained across the purchase
+sheet. Skip and Manual omit scale preparation, the meter and samples; an unused
+scale disconnect does not interrupt them. Scale activates tracking only when
+initial preparation completes or is explicitly skipped. A scale that begins
+streaming after an unprepared start is ignored for that session. Manual and
+Skip persist the neutral Automatic profile, keeping configured scale state out
+of those records.
 
-The Motherboard profile scans for its Bluetooth service, connects, enables TX
-notifications, requests calibration rows, and starts its 30 Hz stream only
-after complete four-sensor calibration. Other supported profiles use their
-reviewed adapters and capabilities.
+The Motherboard profile scans its service, enables TX notifications, requests
+four-sensor calibration and starts the 30 Hz stream after complete calibration.
+Its parser handles fragmented or combined CRLF rows and 16-byte hex packets;
+a 4,096-byte buffer cap clears overflow and reports an error. Calibration maps
+ADC values to kgf; Tare subtracts current per-sensor values. Loaded-time recording
+uses notification timestamps, threshold, release ratio, debounce and merge gap.
+Rest is unmeasured, and the workout clock remains the planned-time authority.
+Setup parser errors are fatal. During streaming, two consecutive parser errors
+are tolerated; the third clears transient measurements/calibration and exposes
+an error while leaving timer controls usable. A valid frame resets that streak.
 
-Notifications may be fragmented or contain more than one line. The service
-buffers them until CRLF-delimited calibration rows, stream acknowledgements,
-or 16-byte hex raw packets can be parsed, with a 4,096-byte receive-buffer cap;
-overflow clears the buffer and emits a parser error. Calibration maps each sensor's ADC
-values to kgf, and Tare subtracts the current per-sensor reading. The workout
-recorder uses the notification timestamp and the configured kgf threshold,
-release ratio, debounce, and merge gap to calculate loaded intervals; the
-workout clock remains the authority for planned time. Rest steps stay
-unmeasured. Setup parser errors are fatal. During an active stream, parser
-errors are tolerated through two consecutive errors; the third consecutive
-error clears the transient measurement and calibration state, records the
-unavailable/error state, and leaves the workout timer controls usable. A valid
-raw frame resets that streak. Completed summaries can therefore include both
-measured and unmeasured steps.
+Motherboard's UART UUIDs, calibration format and commands are reverse-engineered,
+not an official SDK or certified force measurement. For compatibility with the
+unofficial `hangtime-grip-connect` reference, the first three channels represent
+left, center and right; center/right are negated before tare, and center is split
+between the two displayed sides. The fourth channel participates in calibration
+and tare but remains diagnostic-only. These wiring assumptions require physical
+device validation after firmware changes. Other supported profiles use their
+own adapters and capabilities.
 
-Eligible raw ADC measurements are persisted with the completed session up to
-`MotherboardWorkoutMeasurementCollector.maximumMeasurementCount` (20,000).
-When additional measurements are received, they are dropped and
-`WorkoutSessionRecord` records that truncation occurred. History remains capped
-at the 20 newest session records.
+Completed detailed sessions retain at most 20,000 eligible raw measurements and
+record truncation when further samples are dropped. `WorkoutSessionStore` keeps
+the 20 newest detailed sessions.
 
-The UART-style service UUIDs, calibration-row format, stream commands, and raw
-packet layout are reverse-engineered from observed Motherboard behavior. They
-are not an official manufacturer SDK or protocol guarantee. Do not treat the
-displayed load as a certified measurement, and revalidate against the physical
-device after firmware changes.
+`HANGTEN_REVIEW_MOTHERBOARD=1` substitutes a deterministic DEBUG transport that
+sends calibration and raw frames through the real service and recorder paths.
+Combine `HANGTEN_REVIEW_SENSOR_DISCONNECTED=1` to exercise an explicit Connect
+action. The fixture validates app integration, not radio permissions, GATT,
+firmware, disconnect timing or measurement accuracy. Release always uses the
+CoreBluetooth transport.
 
-For compatibility with the unofficial `hangtime-grip-connect` reference, the
-first three calibrated values are interpreted as left, center, and right zones.
-Calibrated center and right values are negated before tare correction.
-The unchanged two-side UI splits the center zone neutrally between left and
-right. The fourth raw/calibrated value remains available to the four-sensor
-calibration and tare lifecycle, but is diagnostic-only and excluded from force
-aggregate and balance calculations; this is an unverified third-party
-compatibility choice, not manufacturer-verified wiring.
+## Workout clock, audio and navigation
 
-`HANGTEN_REVIEW_MOTHERBOARD=1` is a DEBUG-only simulator review route. It
-opens Settings from Train and replaces the CoreBluetooth transport with a deterministic
-fixture that sends real calibration and raw notification frames through
-`MotherboardBluetoothService`. Its deterministic unloaded, loaded, peak, and
-released pattern repeats while streaming, but every raw notification is stamped
-when it is delivered so a routine started after launch can be recorded. The
-same service, meter, settings, threshold, and recorder paths are exercised
-without system Bluetooth. Release builds always construct
-`CoreBluetoothMotherboardTransport` regardless of that environment variable.
-The fixture does not validate radio
-permissions, discovery, GATT behavior, device calibration accuracy, firmware
-compatibility, disconnect timing, or force accuracy; all of those require a
-physical Motherboard before release.
+`WorkoutView` uses a monotonic system-uptime clock; `TimelineView` samples it
+four times per second. Pause retains elapsed time and Resume starts from that
+value. The initial three-second countdown shares the same clock. Stopwatch
+start, pause, display and finalization also use uptime; absolute dates identify
+the completed session interval and cannot change elapsed duration.
 
-Combine `HANGTEN_REVIEW_SENSOR_DISCONNECTED=1` with the Motherboard fixture
-to leave it disconnected at launch and exercise Connect supported scale on the
-plan page. The fixture still streams after that inline action.
+A visible workout disables the idle timer. Scene inactivity, lock or background
+entry pauses the workout and stops audio. Returning requires explicit Resume.
 
-Manual sessions save the entered weight and Add bodyweight choice, with the
-legacy load adjustment set to zero. Skip sessions explicitly persist an
-untracked source. Manual and Skip sessions do not show the scale meter, collect
-scale samples, run scale preparation, or mark steps interrupted when an unused
-scale disconnects. Scale sessions retain preparation, measurement, and
-interruption behavior when a scale is streaming, and omit manual weight. If a
-selected scale is unavailable, the workout still starts and records the Scale
-choice without fabricated measurements. A scale that starts streaming only
-after that nonblocking start is ignored for the remainder of the session;
-tracking activates only when the initial scale preparation was completed or
-explicitly skipped. Skip and Manual records persist the neutral Automatic
-profile so a connected or configured scale cannot leak into those sessions.
+`WorkoutAudioCoach` configures `.playback` / default mode / `.duckOthers` and
+persists the speaker preference. Numeric 3-2-1 buffers are prepared ahead of the
+monotonic boundary and scheduled together using host time. Reviewed bundled
+countdown audio is preferred; unavailable bundled buffers select Apple's PCM
+speech renderer during preparation. Empty voice renders have bounded prewarm
+retries. Failed preparation leaves numeric cues silent rather than speaking them
+late. Nonnumeric cues use normal speech synthesis.
 
-## Workout clock and spoken cues
+Initial and skip countdowns wait for preparation. Fixed segments arm final-three
+audio at the preceding 4 tick; a following fixed segment of three seconds or less
+joins the same schedule. Stable audio-moment keys prevent repeat playback on
+timeline ticks. Pause, cue disabling and dismissal cancel scheduled audio;
+speech teardown waits for its delegate before deactivating the audio session.
+The reviewed audio authoring process lives in
+[CountdownAudio/README.md](../HangTen/Resources/CountdownAudio/README.md).
 
-`WorkoutView` uses one elapsed session clock backed by monotonic system uptime.
-`TimelineView` samples it four times per second but is not the time source,
-while each `WorkoutStep.duration` determines the active step. Pause stores
-elapsed time; resume starts from that value. A new routine starts three seconds
-in the future, which makes the initial 3-2-1 countdown part of the same clock
-instead of a second timer.
+New sessions begin at step 1. Routine selection and Skip are disabled through
+the initial countdown. Selecting another step rebases elapsed time to its start,
+preserving running or paused state; selecting the current step is a no-op.
+Skipping a nonfinal step moves to the next start and runs a five-second countdown
+before that step, including when initiated while paused. During that countdown,
+controls and hold/grip cues are inactive. Cancellation or scene interruption
+leaves the destination paused. Skipping the final step completes immediately.
+Every seek stops old speech and reanchors cues to the new elapsed position.
 
-Stopwatch start, pause, display, and finalization use that same monotonic uptime
-source. `Date` remains only the absolute start timestamp and is paired with the
-monotonic elapsed duration to derive the completed HealthKit interval, so wall
-clock adjustments cannot change observed activity durations.
+Official Metolius source-cycle steps keep `timedWorkDuration == nil`: speech says
+“Begin minute …” and the athlete completes all listed tasks, then rests within
+that minute. The generic adapted expansions instead expose guided task and rest
+steps. Never derive a rest boundary from the first hang in a multi-task source
+cycle. See [routine authoring](ADDING_A_ROUTINE.md).
 
-While a workout is visible, Hang Ten disables the idle timer. If the scene
-becomes inactive because the device locks or the athlete switches apps, the
-routine pauses and stops speech instead of letting the clock cross silent cue
-boundaries while iOS suspends the app. Returning to the app requires an
-explicit resume.
+When `fingerConfiguration` is omitted, hand cues display index, middle, ring and
+pinky with `4 fingers (assumed)`. Explicit selections override this display
+default. The fallback is not a sourced prescription and does not populate the
+omitted routine or recorded field. See [the grip hand contract](grip-hand-model.md).
 
-`WorkoutAudioCoach` wraps `AVSpeechSynthesizer` and configures
-`AVAudioSession` as `.playback` with the default mode and `.duckOthers`. The
-speaker preference is persisted with `@AppStorage`. Numeric `3`, `2`, `1`
-buffers are rendered before their monotonic start boundary and host-time
-scheduled together as one sequence. Cold, empty voice renders are retried only
-during prewarm; exhaustion leaves numeric audio silent and never starts a late
-live-speech fallback. Initial and skip countdowns wait for prewarm, then audio
-and the visual `3` share one monotonic boundary. Fixed segments arm the sequence
-at the preceding `4` tick for the future `3` boundary. When the following fixed
-segment is three seconds or shorter, its complete remaining numeric sequence is
-appended to that same host-time schedule before the segment starts. The visible
-countdown remains exact; the already-current `3` tick never starts a late or
-competing player schedule. One audio session is retained through the final
-scheduled slot, and later timeline updates do not enqueue numeric cues again.
-Nonnumeric cues
-continue through normal speech synthesis and deactivate the session when
-speech finishes. Pausing, disabling cues, or exiting cancels scheduled
-countdown playback immediately. Cancellation waits for the speech delegate
-before deactivation, preventing an AVAudioSession-busy teardown from leaving
-other audio ducked.
+## Activity recording and local history
 
-Audio moments are derived from clock state:
+Completion records the exact selected `BoardRevision`. Source-backed plan
+predicates resolve against its factual contacts and applicable position; catalog
+plans do not contain contact IDs. Athlete-authored custom routines may select
+exact contacts. Resolution failure does not substitute a hold or broaden a
+predicate. Explicit self-selected work records that choice without an invented
+contact snapshot.
 
-- initial 3, 2, 1;
-- skip countdown 5, 4, 3, 2, 1;
-- the current minute/task start;
-- the final 3, 2, 1 of a fixed segment;
-- an explicit rest transition for routines with a fixed rest segment;
-- session complete.
+Resolved work retains board/revision identity, optional model hash, the factual
+requirement or per-hand targets, resolved contact IDs and applicable position.
+Ordered source segments remain ordered records. Rest has identity and duration
+but no target. Fixed work stores prescribed active duration; stopwatch work
+stores observed active seconds. Never-started stopwatch and genuinely untimed
+work omit duration.
 
-Skip countdown keys are stable and speak each number once before the
-destination step's start cue.
+Stopwatch controls begin at `00:00` and expose Start, Stop and Resume. They do
+not advance the enclosing workout clock. Workout pause or scene interruption
+pauses a running stopwatch. Entering rest, navigating, skipping, logging or
+dismissing finalizes its value; revisiting the step retains that stopped value.
 
-Metolius task-cycle steps intentionally have `timedWorkDuration == nil`.
-Speech says “Begin minute …” and the full minute remains visible because the
-athlete completes all listed tasks, then rests for the remainder. The app must
-not announce a fabricated rest boundary after the first numeric hang.
+Log session creates a detailed local record through `WorkoutSessionStore` and
+passes a pending record to `WorkoutHistoryService` for optional HealthKit sync.
+The local detailed History list is distinct from the HealthKit-derived progress
+snapshot, so a visible History row does not prove a HealthKit save or import.
+End session dismisses without completion logging or a HealthKit write.
 
-When adding audio, make the audio moment `Hashable` and stable for its whole
-window so SwiftUI's `onChange` speaks once rather than on every timeline tick.
-Stop speech on view dismissal and when the user disables cues.
-For a three-second segment, pre-arm the complete `3`, `2`, `1` PCM sequence as
-part of the preceding schedule; do not let periodic view updates interrupt,
-duplicate, or start a count after its visible boundary.
+## Apple Health authorization and synchronization
 
-## Workout step navigation
+Only Connect Apple Health requests workout read/write authorization. Settings
+appearance and scene activation refresh sharing status without prompting.
+`HangTen.healthAuthorizationRequested.v1` gates history queries and uploads;
+refreshing an already-authorized sharing status also reconciles a missing flag
+and enables sync. Before either event, initialization and completion use local
+fallback history.
 
-A new workout session starts at step 1. Step selection and Skip step are
-disabled until the initial three-second countdown has finished, and remain
-disabled while that countdown is running.
+The target requires `HealthKit.framework`, the
+`com.apple.developer.healthkit = true` entitlement, and nonempty
+`NSHealthShareUsageDescription` / `NSHealthUpdateUsageDescription` values. The
+read description explains restoration of progress on a new device.
 
-The Routine sheet lets the athlete select any other step directly. A running
-seek rebases the elapsed clock at the selected step's start and stays running;
-a paused seek replaces the paused elapsed position and stays paused. Selecting
-the current step is a no-op. Skip step seeks to the end of the current
-`WorkoutStep`, including its timed rest interval, so it advances to the next
-step's start. Skipping a non-final step seeks to the next step's start, then
-schedules a five-second 5-4-3-2-1 countdown before that step begins
-automatically. This happens from both running and paused sessions; the session
-is running after the countdown. During the countdown, Routine and Skip step
-are disabled and board/grip cues remain inactive. Cancelling or interrupting
-the countdown leaves the destination step paused and preserves the original
-session start. Skipping the final step still reaches completion immediately
-without a countdown.
+Accepted HealthKit records must have functional-strength activity type, brand
+`Hang Ten` and a nonempty `HangTen.PlanName`. New writes include the pending
+UUID as `HangTen.SessionID`; this is the primary reconciliation key. Legacy
+records can match normalized plan title and exact start/end dates, and the
+HealthKit workout UUID is retained for retry reconciliation.
 
-Every seek stops the active audio utterance and re-anchors audio to the new
-elapsed position. The normal cue for the selected step can therefore play once
-without a stale cue continuing from the prior step.
+Pending/fallback records use `HangTen.pendingWorkoutHistory.v2`. They are written
+locally before HealthKit upload and removed only after a readable query confirms
+a matching workout. Successful uploads retain their HealthKit UUID while read
+privacy hides them; failures remain retryable and do not discard local history.
+An empty query is ambiguous and does not prove denied read access or no workouts.
+Readable accepted HealthKit records govern the synced progress snapshot. Hang
+Ten has no network history synchronization.
 
-## Grip finger display default
+The Apple Health card uses sharing/write authorization for its status; Connected
+does not establish readable history. The action mapping is:
 
-When a plan step omits `fingerConfiguration`, inline hand cues assume index,
-middle, ring, and pinky and label the
-fallback `4 fingers (assumed)`. Explicit selections always override that
-display default, including reduced-finger configurations. The default is a
-product behavior requested by the operator, not a claim from a training-plan
-source. Source plan fields and recorded activity metadata retain their
-original unspecified value.
+| Sharing state | Status | Action |
+| --- | --- | --- |
+| unavailable | Unavailable | none |
+| not determined | Not connected | Connect Apple Health |
+| denied | Access denied | Open app settings |
+| authorized | Connected | Open app settings for local fallback; otherwise none |
 
-## Completed activity recording
+History source is displayed separately as synced, syncing, local fallback or
+unavailable. The unavailable source alone does not create an action. Query/write
+errors appear in the Health card while keeping local records. Returning from
+system app settings refreshes status and enabled history without a new prompt.
 
-The completion handoff records the exact `TrainingBoard` selected for the
-session. `WorkoutView` passes that board together with the plan and finalized
-stopwatch values to `AppStore`; the recorder does not substitute a default
-board or infer one from the plan. A factual `ContactRequirement` resolves
-strictly against the selected board's `contacts[]`; its explicit selection
-policy determines whether one contact, a documented bilateral pair, or all
-matches are recorded. There is no semantic alias, direct-contact-ID plan
-target, or fallback-feature lookup. Failure to resolve the exact factual
-requirement fails recording rather than broadening it.
+Health writes use `HKWorkoutBuilder` to begin collection, add Hang Ten metadata,
+end collection and finish. The workout retains its functional-strength type,
+plan title, session interval, board ID/name and `HangTen.ActivitySegments.v2`
+metadata. That versioned JSON rejects unknown fields and omits unsupported
+values. Every builder stage reports failures. Saves require write authorization
+and a positive interval; the end is capped at the earlier of planned active end
+or Log session time so early completion cannot write a future end date.
 
-Resolved work stores an immutable `ResolvedContactSnapshot`: board and revision
-identity, optional model hash, the exact factual requirement, and resolved
-contact IDs. Source-linked generic work that does not prescribe a board target
-stores `.selfSelected`; the app does not translate source wording into a
-board-specific fact. Separate source segments and repetitions remain separate
-records.
+## Orientation and validation
 
-The recorder preserves the routine's ordered `RecordedActivitySegment` values.
-Work and rest are separate segments: rest carries its step identity and
-duration but no target metadata. A fixed work duration is the prescribed active
-duration and excludes rest. A stopwatch work duration is the athlete's
-observed active seconds, including any start/stop and pause/resume accumulation.
-If a stopwatch was never started, its duration is omitted. Genuinely untimed
-work also omits duration; the app never invents one from the surrounding cycle.
+The target supports portrait and both landscape orientations on iPhone, and all
+orientations on iPad. Layout follows actual view dimensions and shares workout
+state, so rotation preserves time, pause state and highlights. DEBUG orientation
+routes request scene geometry; production follows device/user orientation.
 
-Stopwatch activities expose a count-up control in both portrait and landscape.
-The control shows `00:00` before start, has explicit Start, Stop, and Resume
-states, and does not alter the enclosing workout clock. A normal workout pause
-or scene/background interruption pauses a running stopwatch without finalizing
-it. The current stopwatch is finalized when the athlete crosses into rest,
-navigates to another step, skips a step, completes/logs the session, or
-dismisses the workout. A stopped value remains stable when revisiting the step.
+Use an owned simulator to review countdown, seek/skip, stopwatch, background
+pause, both layouts, explicit and assumed finger cues, local logging, End
+session, and Health authorization/source/error states. Run affected focused
+tests rather than treating a build as behavioral validation.
 
-The completed `HKWorkout` keeps the existing title, functional-strength
-activity type, and session date interval. Its custom metadata includes
-`HangTen.PlanName`, `HangTen.BoardID`, `HangTen.BoardName`, and
-`HangTen.ActivitySegments.v2`. The last value is strict version-2 JSON with
-ordered segments and optional measurements. Unknown fields are rejected at the
-metadata, segment, target, resolved-snapshot, measurement, pending-record, and
-pending-context boundaries, including legacy hold-named keys. Optional fields
-are omitted rather than encoded as fabricated values. The metadata is attached during the existing
-`HKWorkoutBuilder` sequence. There is no local activity database: the
-completed HealthKit workout metadata is the activity source of record. A
-metadata or HealthKit write failure keeps the local completion and surfaces the
-existing Health error state.
+Compile-only builds may disable signing; Health permission reviews require the
+simulator signature and effective HealthKit entitlement. Simulator `codesign`
+output can be empty while `HangTen.app-Simulated.xcent` retains the entitlement.
+For a device app, inspect it with:
 
-The completed “Log session” path records the activity. The destructive “End
-session” path still dismisses without marking the routine complete and without
-writing an Apple Health workout.
+```sh
+rtk proxy codesign -d --entitlements :- <path-to-HangTen.app>
+```
 
-## Portrait and landscape
-
-The target supports portrait, landscape-left, and landscape-right on iPhone,
-and all orientations on iPad through generated Info.plist settings in
-`HangTen.xcodeproj/project.pbxproj`.
-
-`WorkoutView` switches layouts from actual `GeometryReader` dimensions. The
-landscape layout keeps the board centered, mirrors the left/right hand cue
-cards around it, and moves the timer and cue text into available horizontal
-space. It does not keep a separate workout state, so rotation must not reset
-the timer, current minute, pause state, or highlights.
-
-`HANGTEN_REVIEW_LANDSCAPE` requests scene geometry only in DEBUG. Production
-orientation remains user/device controlled.
-
-## Apple Health authorization
-
-Hang Ten uses `HKObjectType.workoutType()` for both HealthKit sharing (write)
-and reading. Authorization is requested only by the visible Connect Apple
-Health action. `AppSettingsView` appearance and scene-activation refreshes may update
-the sharing status without presenting an authorization sheet or prompting;
-they query HealthKit history only after the persisted request flag is enabled.
-When `refreshHealthAuthorization` observes `.authorized` while that flag is
-missing, it persists the flag and enables HealthKit sync without prompting,
-then refreshes/imports history.
-
-`HangTen.healthAuthorizationRequested.v1` gates history synchronization. Sync
-remains gated until either the user taps Connect Apple Health or
-`refreshHealthAuthorization` observes current `.authorized` and reconciles the
-missing flag without prompting. Until then, initialization, Settings
-appearance, scene activation, and completion logging use only the local
-`UserDefaults` history fallback; a `.notDetermined` status does not change that
-behavior. Once the flag is true, refresh and completion reconciliation may query
-HealthKit, import history, and upload pending records.
-
-Required configuration:
-
-- `HealthKit.framework` linked by the target;
-- `HangTen/HangTen.entitlements` with
-  `com.apple.developer.healthkit = true`;
-- `NSHealthShareUsageDescription` in generated Info.plist settings with the
-  value `Hang Ten reads your Apple Health workout history to restore your
-  progress on a new device.`;
-- `NSHealthUpdateUsageDescription` in generated Info.plist settings;
-- a user-initiated Connect Apple Health button.
-
-`HealthKitService.requestAuthorization` requests both read and write
-permission for the workout type. HealthKit query results are filtered before
-they become history. Hang Ten imports only records that have all of the
-following:
-
-- activity type `.functionalStrengthTraining`;
-- the exact `HKMetadataKeyWorkoutBrandName` value `Hang Ten`;
-- a non-empty `HangTen.PlanName` metadata value.
-
-New records include the plan title and a `HangTen.SessionID` metadata value
-equal to the UUID of the local pending record created for that session. This
-stable ID is the primary reconciliation key. Older Hang Ten records without
-`HangTen.SessionID` remain importable when their normalized plan titles match
-(surrounding whitespace trimmed) and their start and end dates match exactly.
-A HealthKit workout UUID is also kept for retry reconciliation. Matching
-records are deduplicated so a migrated local session and its HealthKit workout
-count as one session.
-
-HealthKit-derived history is authoritative whenever an accepted Hang Ten
-workout is readable. Local `UserDefaults` records under
-`HangTen.pendingWorkoutHistory.v1` are pending/fallback records, not a
-permanent mirror. Hang Ten writes the local record before attempting the
-HealthKit save. After Connect Apple Health grants authorization, pending
-records are uploaded and retained until a later HealthKit query confirms them;
-unmatched local records remain visible while they are pending. A successful
-upload that is still hidden by read privacy remains marked as attempted, so a
-later refresh does not save a duplicate. There is no network history sync.
-
-An empty HealthKit query result is ambiguous because Apple hides denied read
-access in the same way as a genuinely empty readable result. The app must not
-interpret an empty result as proof that no workouts exist or that access was
-denied. It retains local pending records and uses them as fallback until a
-readable HealthKit result can reconcile them.
-
-`HealthAuthorizationState` drives the authorization portion of the Apple
-Health card in Settings. Its current status copy is:
-
-| State | Label | Detail | Action |
-| --- | --- | --- | --- |
-| unavailable | `Unavailable` | `Apple Health is not available on this device.` | none |
-| not determined | `Not connected` | `Connect once to save completed routines as functional strength workouts.` | `Connect Apple Health` |
-| denied | `Access denied` | `Workout access is off. You can enable it for Hang Ten in Settings.` | `Open app settings` |
-| authorized | `Connected` | `Completed routines will be saved automatically to Apple Health.` | `Open app settings` for `.localFallback`; none when accepted HealthKit history is visible |
-
-The authorization state reflects the workout sharing/write state exposed by
-HealthKit; `Connected` does not prove that workout reads are visible, and
-HealthKit does not expose a separate readable-history authorization state. The
-Settings action is driven by the current HealthAuthorizationState. Before
-authorization is determined it offers Connect Apple Health. Once HealthKit
-reports authorized access, it never offers Connect Apple Health, including for
-an empty .healthKit snapshot or when the persisted history-sync request flag
-is false. Local fallback may offer Open app settings, while denied and
-unavailable behavior remains as shown in the table.
-
-The `.unavailable` history source does not create an action by itself. In
-`AppSettingsView.healthAction`, any Connect or Settings action shown alongside that
-source comes from the current authorization state plus the local fallback
-history; an unavailable history source alone has no action.
-
-The history source copy is:
-
-- `.healthKit`: `History synced from Apple Health.`
-- `.localFallback`: `History stored on this device until Apple Health is connected.`
-- `.syncing`: `Syncing Hang Ten history with Apple Health…`
-- `.unavailable`: `Apple Health history is unavailable; completed sessions stay on this device.`
-
-If a completion cannot sync, the Settings Apple Health card reports
-`Session was saved locally and will retry Apple Health sync.` If a refresh
-cannot sync, it reports `Apple Health history could not sync. Local history
-remains available.` A request error supplied by HealthKit is shown using its
-localized description. These errors do not discard the local record.
-
-`saveCompletedWorkout` uses `HKWorkoutBuilder`: begin collection, attach Hang
-Ten brand, plan, and session metadata, end collection, then finish the
-workout. It runs only when write authorization is granted and the end date is
-later than the start date.
-Every builder stage reports failure back to `AppStore`; the local session stays
-logged, while the Settings Apple Health card explains that the Health write
-failed. The
-saved interval keeps the session's original start date and ends at the earlier
-of the planned active-duration end or the athlete's Log session time. This
-prevents an early completion from writing a future HealthKit end date.
-
-The denied-state button is labeled Open app settings because iOS does not
-provide a public deep link to the exact Health permission row. Authorization
-status refreshes whenever Settings appears or its scene becomes active again.
-History refreshes at those lifecycle points only after the request flag is
-true; before then, the app reloads the local fallback. Returning from Settings
-therefore refreshes status and, when enabled, history without prompting.
-
-Do not trigger Health authorization at launch. Apple permission sheets must
-follow a clear user action. Do not mark a routine complete or save a workout
-when the user confirms “End session”; only the completed “Log session” path
-records it.
-
-## Validation notes
-
-- Compile-only simulator builds can disable signing; Health permission tests
-  cannot.
-- Inspect the built app entitlement when HealthKit behaves as unavailable or
-  fails silently. A device archive can be inspected with:
-
-  ```sh
-  codesign -d --entitlements :- <path-to-HangTen.app>
-  ```
-
-  For an iOS Simulator build, Xcode can emit the effective entitlement as an
-  intermediate `HangTen.app-Simulated.xcent` while the final simulator app's
-  `codesign` output remains empty. Locate that file under the target's Derived
-  Data intermediates and verify it contains
-  `com.apple.developer.healthkit = true`.
-
-- Exercise permission states and completion on a dedicated simulator, then
-  repeat HealthKit writes on a physical device before release. A simulator can
-  validate the permission flow and entitlement, but cross-device HealthKit
-  restoration must be tested on physical devices using the same HealthKit
-  account; Hang Ten does not provide network synchronization.
-- Verify audio with the simulator unmuted and once while other audio is playing
-  to confirm ducking behavior.
-- Rotate during countdown, running, and paused states.
-- Lock the simulator or background the app during a session; verify that it
-  pauses and does not skip an audio transition.
-- For a stopwatch step, verify the `workout.stopwatch` value is `00:00` before
-  start, `workout.stopwatch.toggle` is labeled “Start stopwatch,” the control
-  changes to “Stop stopwatch” while running, and the stopped observed value is
-  retained.
+Repeat radio/force checks, HealthKit writes and cross-device restoration on
+signed physical devices before release. Review audible timing with audio enabled
+and alongside other audio to verify ducking. Simulator fixtures and UI tests do
+not establish device measurement accuracy or cross-device Health restoration.

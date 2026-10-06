@@ -1,9 +1,0 @@
-Prospective capture only; no runtime authorization. Root supplies candidate source whitelist, exact new binary/package parity, and an enabled release. Source reference requires approvedByRoot:true and baselineOnly:false; all supplied source/parity bytes are checked before and after capture.
-
-Allowed boards: zlagboard.evo, zlagboard.pro. Allowed arms: control, action, reversal. Run ID is placid-badger-cad-second-half-post-main-<boardID with dots replaced by hyphens>-<arm>.
-
-Release launchReviewFlags must equal the three existing BOARD_ID, PLAN_ID=research.max-hangs, LANDSCAPE=1 flags, plus SKIP_NONINTERACTIVE_PRESENTATION=1 only for control/reversal. Action omits it. All inherited SIMCTL_CHILD_HANGTEN_REVIEW_* flags are removed. No hand, Train-unmount, auto-start, timing, or frame-renderer flags are permitted.
-
-Passive schedule remains exactly 44 captures: seconds1–18,90,190–214. Source routine remains Main10s Hang/180s Rest/10s Hang with initial3s countdown; screenshots determine actual phase, and openurl completion is only an external anchor. Bounds, clock checks, source/hash checks, muted argv, awake assertion, exact app/child cleanup, and setup-only AX remain unchanged. No console capture, scene instrumentation, new observation, or additional setup retry is added. The system Open confirmation must already be resolved in separate bounded setup; no tap occurs in measured capture.
-
-Checklist before root release: bind exact owned Simulator/controller/ownership hash; bind candidate files and source commit; bind all new installed parity checks and binary; select board/arm/run ID/output; set the exact flags; independently confirm setup readiness; then explicitly authorize. A template is deliberately disabled and contains unbound candidate values. This helper does not implement the candidate or assert its behavior. No same-binary result or causal claim exists yet.

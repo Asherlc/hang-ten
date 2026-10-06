@@ -14,6 +14,6 @@ Exact reviewed package: `.context/placid-badger/forge-review15/preflight/placid-
 - USDZ: `6af1091171a5251914983b6d9c17859eb7e85fe35e15628d5c3c164fe2b8ba61`
 - Descriptor: `ec716c7eddbfeeae7ca4881b146dd824138af137299ed23c10b5706076b989e6`
 
-The adjacent JSON binds all seven whole source images, six directly viewed final images, scripts and reports by SHA-256. User presentation images are [whole front/side/top comparison](../native-author/stable-bindings/final-whole-views/comparison-front-side-top.png) and [current whole oblique](../native-author/stable-bindings/final-whole-views/current-oblique.png). These show CAD geometry; app shader appearance is unverified. Old app frames bind only the original asset, not this final export.
+The adjacent JSON binds all seven whole source images, six directly viewed final images, scripts and reports by SHA-256. User presentation images are [whole front/side/top comparison](../views/comparison-front-side-top.png) and [current whole oblique](../views/current-oblique.png). These show CAD geometry; app shader appearance is unverified. Old app frames bind only the original asset, not this final export.
 
 All eight jobs owned by this author lane have absent process groups and deleted exact temporary directories, reverified in `native-author/final-lifecycle-verification.json`. Independent preflight cleanup receipts are also pinned. This agent changed no canonical package or shared code. Root owns installation and integration; human acceptance is pending.

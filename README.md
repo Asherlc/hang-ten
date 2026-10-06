@@ -5,7 +5,7 @@ athlete the exact holds to use, the intended grip and fingers, and the current
 task without making them translate a paper routine while they train.
 
 Each catalog board retains one flat native FreeCAD source containing its
-geometry, schema-v3 contact-first metadata, and authored cord/simulation inputs.
+geometry, schema-v3 contact-first metadata, and optional cord/simulation inputs.
 The build generates a material-free USDZ, hash-bound contact descriptor, and
 optional suspension/physics artifacts; staging generates `board.json` from the
 embedded manifest and validated generated suspension. `contacts[]` owns sourced physical
@@ -21,7 +21,8 @@ rendering, highlighting, and interaction data.
 - All three source-linked Metolius board-flexible ten-minute sequences: Entry,
   Intermediate, and Advanced, represented as faithful task-order expansions
   with adapted guided timing.
-- Source-linked adapted protocols already merged into the project: Max Hangs,
+- Official board-specific Metolius Contact, Simulator 3D and Rock Rings sequences.
+- Source-linked adapted protocols: Max Hangs,
   F80/F100 force-board sessions, Eva IntHangs, 7/3 Repeaters, Abrahangs,
   7–53 Max Hangs, 3–6–9 Ladders, Density Hangs, and Zlagboard 60/60.
 - A runnable minute-by-minute session with pause/resume, direct step selection,
@@ -31,8 +32,8 @@ rendering, highlighting, and interaction data.
 - Portrait and landscape workout layouts.
 - An explicit Apple Health permission card. Completed sessions save as
   functional-strength workouts after authorization.
-- A Motherboard Bluetooth sensor card for live force, calibration, tare, and
-  threshold-based loaded-time recording. Its protocol is reverse-engineered;
+- Supported Bluetooth scale profiles for live force and loaded-time recording,
+  alongside Skip and Manual tracking choices. The Motherboard protocol is reverse-engineered;
   see [runtime-service notes](docs/IOS_RUNTIME_SERVICES.md) for its limits and
   physical-device validation requirements.
 - A source-linked plan library and lightweight local session progress.
@@ -91,7 +92,7 @@ test service. Run them only after Xcode has opened this project and successfully
 run the shared **HangTen** scheme with `HangTen.storekit` active:
 
 ```sh
-HANGTEN_RUN_STOREKIT_LIVE_TESTS=1 rtk xcodebuild test \
+rtk proxy env HANGTEN_RUN_STOREKIT_LIVE_TESTS=1 xcodebuild test \
   -project HangTen.xcodeproj \
   -scheme HangTen \
   -destination 'platform=iOS Simulator,id=<isolated-simulator-uuid>' \
@@ -109,9 +110,8 @@ create a non-consumable for the existing `com.hangten.training` app with product
 ID `com.hangten.training.lifetime`, reference name **Hang Ten Lifetime Unlock**,
 and the $2.99 price tier. Add the product to the release, complete its required
 localization and review metadata, then use a Sandbox Apple Account to exercise
-purchase and Restore Purchases on a signed build. The product has not been
-created by this repository change; App Store Connect and Sandbox setup are an
-external release handoff.
+purchase and Restore Purchases on a signed build. App Store Connect product
+configuration and Sandbox testing are required release setup.
 
 ## Maintainer-generated countdown audio
 
@@ -154,16 +154,22 @@ and restrict it to the `main` branch. Add these environment secrets:
 - `APPSTORE_CERTIFICATES_FILE_BASE64`: a base64-encoded Apple Distribution
   `.p12` containing its private key.
 - `APPSTORE_CERTIFICATES_PASSWORD`: the `.p12` password.
+- `SENTRY_AUTH_TOKEN`: a token authorized to upload debug symbols.
 
 Add these environment variables:
 
 - `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
-- `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the existing GitHub OAuth App's public
-  client ID; its Device Flow option must be enabled. The workflow maps it to
-  the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
-  secret.
+- `SENTRY_ORG`: the Sentry organization slug.
+- `SENTRY_IOS_PROJECT`: the Sentry iOS project slug.
+
+The App Store Connect API key needs provisioning-profile access. App Store
+Connect must contain an app record for `com.hangten.training` and an App Store
+provisioning profile for that bundle ID. The workflow generates the marketing
+version as `1.0.<workflow run number>` and a build number unique to each run and
+retry. It uploads the tested archive and its debug symbols; Apple controls
+App Review and the final public App Store release.
 
 ## Analytics CI configuration
 
@@ -184,15 +190,6 @@ the signed TestFlight archive includes analytics. A missing key remains a safe
 no-op rather than failing CI. The workflows place this value in a mode-`0600`
 temporary xcconfig, pass only that file path to Xcode, and remove it when the
 job step exits so the key is not interpolated into captured build logs.
-
-The API key needs the Admin role for provisioning-profile access, and App Store
-Connect must already contain an app record for `com.hangten.training` plus an
-App Store provisioning profile for that bundle ID. The workflow assigns a
-unique build number for each run and retry. Update `MARKETING_VERSION` in the
-Xcode project when shipping a new App Store version.
-
-This automates delivery to App Store Connect/TestFlight. Apple still controls
-App Review and the final public App Store release decision.
 
 In a parallel-agent environment, do not install to an arbitrary `booted`
 simulator. Follow [the isolated simulator guide](docs/IOS_SIMULATOR_VALIDATION.md).
@@ -253,20 +250,18 @@ there is no separate Swift authoring catalog or plan exporter.
 ## Routine scope
 
 Metolius publishes a generic ten-minute guide whose tasks name hold types such
-as “Round Sloper” and “Large Edge,” without defining a Compact II contact map.
-Hang Ten preserves those three source sequences as ten 60-second cycles and
-records their work as the athlete's explicit self-selection. It does not turn
-generic wording into a board-specific requirement. The app expands each cycle
+as “Round Sloper” and “Large Edge.” Hang Ten preserves those three sequences as
+ten 60-second cycles and resolves audited predicates against the selected
+board's factual contacts. The app expands each cycle
 into guided task and rest steps; when the source gives no duration, the app-defined
 adaptation uses five seconds per pull-up and one second per other counted
 repetition. Those timing defaults are app guidance, not Metolius prescriptions.
 
-Metolius also publishes separate Contact and Simulator 3D guides. Those use
-numbered holds tied to their respective boards, so they are intentionally not
-presented as Compact II routines. Add each only after its physical board map is
-implemented and its numbered holds can be resolved exactly.
+The separate Contact, Simulator 3D and Rock Rings guides use holds tied to their
+respective boards. Their catalog plans retain source-governed minute cycles and
+are shown only for those boards.
 
-The Metolius task expansions and the additional research and coach protocols
+The generic Metolius task expansions and the additional research and coach protocols
 are visibly marked Adapted because
 their app versions add guidance, warm-up/cooldown steps, or Compact II hold
 mapping. Their individual source links remain attached; they are not presented

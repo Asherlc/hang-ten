@@ -18,6 +18,11 @@ before reporting completion. Leave shared, standard, and unknown resources
 alone. The archive hook is a failsafe, not permission to skip an agent's own
 cleanup.
 
+Keep working plans, investigation diaries, command output, and cleanup receipts
+in `.context`. Commit current reusable guidance and source mappings that justify
+authored product or training facts. Update an existing guide or source mapping
+when it covers the change; keep completed execution history in Git and CI.
+
 ## Training-plan Fidelity
 
 All plan instructions, grip and finger cues, and accessory or instruction-box
@@ -126,10 +131,12 @@ routes with `solve_threaded_rope.py --check` and retain native-solid clearance,
 length, tube and topology checks. Change CAD authoring parameters and rebuild;
 never apply solved heights or routes into the source. Do not hand-author cord routes or keep a
 `pairedLeadCord` when a board moves to CAD; extend the solver with evidence and
-tests when the supported native methods do not fit. Captain Fingerfood POCKET's
-existing `HangTenBoardManifest` suspension is the documented legacy exception,
-preserved unchanged pending a separate evidence-backed cord revision; it does
-not authorize new hand-authored routes.
+tests when the supported native methods do not fit. Existing manifest-only
+`pairedLeadCord` setups remain in Captain Fingerfood POCKET, J. Bryant FTG-32,
+both Lattice MXEdge Lift sizes, and Metolius Light Rail II. Preserve their
+evidenced facts during unrelated edits; new or revised cord authoring must use
+native solver inputs and computed routes. Their retained caches do not
+authorize new hand-authored routes or establish native route certification.
 
 ## CodeGraph
 

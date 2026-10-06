@@ -1,6 +1,6 @@
 # Flash Board #14 — independent native export gate
 
-**PASS for native export. No source-supported shape blocker.** Final cord, exported package, app and human acceptance remain pending.
+This native geometry review found no source-supported shape blocker. The later [human review record](../../human-review.json) records acceptance of the shown shape and cord display, with its scope and estimate limits.
 
 Reviewed all four complete approved manufacturer photos and all 21 complete prior/candidate/contact frames. The refined source restores the broad front shelf, two separated reverse shelves and tall rounded shelf-end transitions visible in FlashBoard2/3/4. Circular ends and the cylinder envelope remain. The small crimps stay distinct above the reverse shelves. All seven contact overlays select actual cavity surfaces rather than broad exterior shelf masks.
 
@@ -10,6 +10,4 @@ Front/reverse relief depths 8/10 mm, their extents, reverse stop Z56 mm, 3 mm en
 
 Native source SHA-256: `003741b6be2c5631bb271880e184da0bff91028b0e9c56c8f478d3273979b450`.
 
-[Whole prior/current and contact views](../shape-review/native-refinement/review.html). [Exact gate and image/proof hashes](native-export-verdict.json).
-
-No external resources were created; this review wrote only its owned output directory. Plateau history and canonical/shared files are untouched.
+[Whole prior/current and contact views](../index.html). [Exact gate and image/proof hashes](native-export-verdict.json).
