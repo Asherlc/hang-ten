@@ -12,7 +12,8 @@ final class GripHandCueCardTests: XCTestCase {
                 let card = GripHandCueCard(posture: .halfCrimp, fingerConfiguration: nil,
                                            side: side, usesSharedPairPreview: sharedPreview)
                 XCTAssertEqual(card.fingerSummary, "4 fingers (assumed)")
-                XCTAssertEqual(card.accessibilityLabel, "Half crimp, 4 fingers (assumed)")
+                let hand = side == .left ? "Left hand" : "Right hand"
+                XCTAssertEqual(card.accessibilityLabel, "\(hand), Half crimp, 4 fingers (assumed)")
             }
         }
     }
@@ -22,7 +23,7 @@ final class GripHandCueCardTests: XCTestCase {
         let fingers = try XCTUnwrap(FingerConfiguration(engagedFingers: [.middle, .ring]))
         let card = GripHandCueCard(posture: .twoFingerPocket, fingerConfiguration: fingers, side: .left)
         XCTAssertEqual(card.fingerSummary, "Exact fingers: middle and ring")
-        XCTAssertEqual(card.accessibilityLabel, "Two-finger pocket, Exact fingers: middle and ring")
+        XCTAssertEqual(card.accessibilityLabel, "Left hand, Two-finger pocket, Exact fingers: middle and ring")
     }
 
     func testHandCueArtworkFacesTheBoardCenter() {

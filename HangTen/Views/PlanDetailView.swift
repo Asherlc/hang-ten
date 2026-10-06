@@ -124,11 +124,11 @@ struct PlanDetailView: View {
             if let currentPlan {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 21) {
+                        titleBlock(for: currentPlan)
                         if let firstStep = currentPlan.steps.first,
                            !firstStep.workRequirements.isEmpty {
                             boardPreview(for: currentPlan)
                         }
-                        titleBlock(for: currentPlan)
                         stepsCard(for: currentPlan)
                         sourceCard(for: currentPlan)
                     }
@@ -211,7 +211,7 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Label(store.board(for: currentPlan).name, systemImage: "rectangle.portrait")
+            Text(store.board(for: currentPlan).name)
                 .font(.system(.footnote, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.hangMuted)
 
@@ -258,16 +258,20 @@ struct PlanDetailView: View {
                     plan: currentPlan,
                     initialWeight: initialWeightConfiguration
                 ) {
-                    startRoutineLabel(for: currentPlan)
+                    startRoutineLabel
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .tint(.hangGreenDark)
                 .accessibilityIdentifier("plan.startRoutine")
             case .unavailable(let requirement):
                 VStack(alignment: .leading, spacing: 8) {
                     Button(action: {}) {
-                        startRoutineLabel(for: currentPlan)
+                        startRoutineLabel
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .tint(.hangGreenDark)
                     .disabled(true)
                     Text(requirement)
                         .font(.system(.footnote, design: .rounded, weight: .semibold))
@@ -282,13 +286,7 @@ struct PlanDetailView: View {
 
     private var initialWeightSetupCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            VStack(alignment: .leading, spacing: 5) {
-                SectionLabel(title: "Weight tracking")
-                Text("Optional. Skip tracking, connect a supported scale, or enter a weight manually before you start.")
-                    .font(.system(.footnote, design: .rounded, weight: .medium))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            SectionLabel(title: "Weight tracking · Optional")
 
             Picker("Weight tracking", selection: $initialWeightSource) {
                 ForEach(WorkoutInitialWeightSource.allCases) { source in
@@ -301,10 +299,7 @@ struct PlanDetailView: View {
 
             switch initialWeightSource {
             case .untracked:
-                Text("No weight or scale data will be recorded. You can still run and save the routine.")
-                    .font(.system(.footnote, design: .rounded, weight: .medium))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
+                EmptyView()
             case .sensor:
                 scaleSetup
             case .manual:
@@ -319,12 +314,15 @@ struct PlanDetailView: View {
     private var manualWeightSetup: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
+                Text("Weight")
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 TextField(
                     "Weight",
                     value: $manualWeight,
                     format: .number.precision(.fractionLength(1))
                 )
                 .keyboardType(.decimalPad)
+                .textFieldStyle(.roundedBorder)
                 .accessibilityIdentifier("workout.initialWeight.manualField")
                 .accessibilityLabel("Manual weight")
 
@@ -333,23 +331,13 @@ struct PlanDetailView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
-            HStack {
-                Button("Add bodyweight") {
-                    manualWeightIncludesBodyweight.toggle()
-                }
-                .buttonStyle(.plain)
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("workout.initialWeight.addBodyweight.label")
-                Spacer(minLength: 12)
-                Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
-                    .labelsHidden()
-                    .fixedSize()
-                    .accessibilityIdentifier("workout.initialWeight.addBodyweight")
-                    .accessibilityLabel("Add bodyweight")
-            }
+            Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
+                .toggleStyle(FullRowSwitchToggleStyle())
+                .accessibilityIdentifier("workout.initialWeight.addBodyweight")
 
-            Text("Off records a standalone weight. On records this as added load on top of bodyweight.")
+            Text(manualWeightIncludesBodyweight
+                 ? "Recorded as added load on top of bodyweight."
+                 : "Recorded as a standalone weight.")
                 .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
@@ -453,19 +441,10 @@ struct PlanDetailView: View {
         }
     }
 
-    private func startRoutineLabel(for plan: TrainingPlan) -> some View {
-        HStack {
-            Image(systemName: "play.fill")
-            Text("Start routine")
-            Spacer()
-            Text(plan.durationLabel)
-                .font(.system(.caption, design: .rounded, weight: .bold))
-        }
+    private var startRoutineLabel: some View {
+        Label("Start routine", systemImage: "play.fill")
+            .frame(maxWidth: .infinity)
         .font(.system(.callout, design: .rounded, weight: .bold))
-        .foregroundStyle(Color.hangInk)
-        .padding(.horizontal, 17)
-        .padding(.vertical, 15)
-        .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
@@ -659,6 +638,35 @@ struct PlanDetailView: View {
             dismiss()
         } catch {
             lifecycleError = error.localizedDescription
+        }
+    }
+}
+
+/// Keep touch handling on the whole row while exposing one native switch to
+/// assistive technology. The visual switch never competes with the row's tap.
+private struct FullRowSwitchToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            HStack {
+                configuration.label
+                Spacer(minLength: 12)
+                Toggle("", isOn: configuration.$isOn)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityRepresentation {
+            Toggle(isOn: configuration.$isOn) {
+                configuration.label
+            }
+            .toggleStyle(.switch)
         }
     }
 }

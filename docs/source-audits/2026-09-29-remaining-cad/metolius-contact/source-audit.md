@@ -23,18 +23,18 @@ Git commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`; USDZ SHA-256 `b3ebd064731
 
 ## Native construction and verification
 
-The canonical source is `Hangboards/metolius-contact/metolius-contact.FCStd`. It contains 135 fully constrained Sketcher profiles with a symmetric analytic silhouette, continuous native cubic front relief, a separate planar center sloper roof, 26 capsule-pocket lofts and final-solid surface binders. The source embeds the original board metadata exactly and reopens/recomputes without authoring scripts, Python callbacks or an external mesh dependency. Named depth parameters drive the physical cavity floors. The obsolete on-disk `board.json` was removed only after an exact metadata roundtrip.
+The canonical source is `Hangboards/metolius-contact.FCStd`. Its 140 constrained Sketcher profiles include the five analytic rail sections added by the accepted pinch correction. The retained construction includes a symmetric analytic silhouette, continuous native cubic front relief, a separate planar center sloper roof, 26 capsule-pocket lofts and final-solid surface binders. Board metadata is embedded in the document, which reopens/recomputes without authoring scripts, Python callbacks or an external mesh dependency. Named depth parameters drive the physical cavity floors.
 
 The manufacturer envelope is 826 x 279 x 67 mm. The native checks enforce that envelope, all 26 published pocket depths, the 53 mm center flat-sloper depth and both 63 mm round-sloper regions. The first smooth envelope was rejected during dimensional/visual review because it overshot the outer width; the final ruled silhouette loft remains within the declared perimeter. Aperture sizes and centers, relief curves, corner radii, center roof angle and unmeasured transitions are operator-selected display estimates. Original hand-capacity metadata is retained unchanged; the independent #516 capacity work was not incorporated or overwritten.
 
-Native checking passed validity for 1 solid(s), all 33 stable contact IDs, body-surface membership, absence of contact sheets on the rear plane and pairwise contact-surface non-overlap. Editing `Depth_edge_16_center` from 15 to 17 mm changed the physical body and only edge-16-center; restoring the parameter restored every contact bound and left the saved source bytes unchanged. The pinned compiler passed all ten source/archive, geometry, binding, depth, reimport, descriptor and staged-package stages. The final runtime contains 34 nodes and 32,262 triangles with no material/shader prims or material bindings. Hashes, dimensions, native checks, original source mappings and compiler evidence are retained beside this record.
+The accepted pinch revision preserves all 33 contact facts and all 31 non-pinch contact constructions. Its native and export checks cover mirrored opposing pinch surfaces, final-solid contact membership and parameter edit/restore. The accepted export contains 34 nodes and 36,299 triangles with no material/shader prims or material bindings. Revision-specific identities and checks are retained in the [pinch correction validation](pinch-rails-review/runtime-validation.json).
 
-| View | Prior and native CAD |
+| View | Original migration comparison, before the pinch correction |
 | --- | --- |
 | Front | [Comparison](review/comparison-front.png) |
 | Side | [Comparison](review/comparison-side.png) |
 | Top | [Comparison](review/comparison-top.png) |
 
-All three final comparisons were visually inspected alongside the retained manufacturer imagery. The exact prior asset comes from commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`. Renders use the shared `preview.py` renderer, including its corrected positive-X side and positive-Z top painter order. Native-app selection and performance acceptance remain root integration work.
+These baseline comparisons use the prior asset from commit `d0e4e95191e4a76822815bb4eeef3a32caa6fea0`. The accepted projecting rails and app selections are shown in the [pinch correction review](pinch-rails-review/review.md).
 
 The CPU review renders shade triangle face normals; the runtime export retains native CAD surface normals. Native-app screenshots remain the final appearance check.

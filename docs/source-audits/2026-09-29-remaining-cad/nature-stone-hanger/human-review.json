@@ -30,7 +30,7 @@
   "approvalLimit": "Displayed geometry/material/cord/pose estimates only. No hidden construction, supplied rope dimensions, load safety, continuum/global equilibrium or manufacturer-exact texture certification.",
   "globalRecordsUpdatedByThisBuilder": true,
   "reviewPacket": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/index.html",
-  "runtimeValidation": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+  "runtimeValidation": "Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/runtime-validation.json",
   "datePrepared": "2026-10-02",
   "technicalGates": "pass",
   "postIntegrationTests": {

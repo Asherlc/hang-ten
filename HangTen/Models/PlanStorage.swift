@@ -1,5 +1,30 @@
 import Foundation
 
+/// A routine's training goal is authored from retained source evidence, not
+/// inferred from its title or the presence of a particular exercise.
+enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
+    case fingerStrength, fingerEndurance, pullingStrength, mixed
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .fingerStrength: "Finger strength"
+        case .fingerEndurance: "Finger endurance"
+        case .pullingStrength: "Pulling strength"
+        case .mixed: "Mixed workouts"
+        }
+    }
+    var subtitle: String {
+        switch self {
+        case .fingerStrength: "Workouts focused on finger strength"
+        case .fingerEndurance: "Workouts focused on finger endurance"
+        case .pullingStrength: "Workouts focused on pulling strength"
+        case .mixed: "Workouts that combine different exercises"
+        }
+    }
+}
+
+
 private struct PlanLibraryCodingKey: CodingKey {
     let stringValue: String
     let intValue: Int?
@@ -81,6 +106,8 @@ struct PlanMetadata: Codable, Hashable {
     /// Curated athlete-facing labels. Unlike `tags`, these never expose
     /// library provenance or runtime requirements in the Plans filter.
     let workoutLabels: [String]
+    /// Source-audited training goal; absent for unclassified and legacy routines.
+    let focus: WorkoutFocus?
     let tags: [String]
     let notes: [String]
     /// Deprecated fields preserved for round-trip fidelity with old plan
@@ -98,6 +125,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance: RoutineProvenance,
         category: String = "general",
         workoutLabels: [String] = [],
+        focus: WorkoutFocus? = nil,
         tags: [String] = [],
         notes: [String] = [],
         equipment: [String]? = nil,
@@ -111,6 +139,7 @@ struct PlanMetadata: Codable, Hashable {
         self.provenance = provenance
         self.category = category
         self.workoutLabels = workoutLabels
+        self.focus = focus
         self.tags = tags
         self.notes = notes
         self.equipment = equipment
@@ -133,6 +162,7 @@ struct PlanMetadata: Codable, Hashable {
         case provenance
         case category
         case workoutLabels
+        case focus
         case tags
         case notes
         case equipment
@@ -149,6 +179,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance = try container.decode(RoutineProvenance.self, forKey: .provenance)
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
+        focus = try container.decodeIfPresent(WorkoutFocus.self, forKey: .focus)
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
         equipment = try container.decodeIfPresent([String].self, forKey: .equipment)
@@ -167,6 +198,7 @@ struct PlanMetadata: Codable, Hashable {
         if !workoutLabels.isEmpty {
             try container.encode(workoutLabels, forKey: .workoutLabels)
         }
+        try container.encodeIfPresent(focus, forKey: .focus)
         try container.encode(tags, forKey: .tags)
         try container.encode(notes, forKey: .notes)
         try container.encodeIfPresent(equipment, forKey: .equipment)
@@ -1441,7 +1473,15 @@ enum PlanLibraryValidator {
     private static let plansAllowingExplicitSelfSelectedWork: Set<String> = [
         "rptc.seven-three-repeaters",
         "coach.bechtel-three-six-nine",
-        "research.eva-int-hangs"
+        "research.eva-int-hangs",
+        "beastmaker-max-hangs",
+        "beastmaker-repeaters",
+        "rei-hangboard-training-101",
+        "rock-prodigy.original-beginner",
+        "rock-prodigy.original-advanced",
+        "rock-prodigy.rptc-intermediate",
+        "rock-prodigy.pivot-introductory",
+        "rock-prodigy.pivot-intermediate"
     ]
 
     /// Whether catalog validation may accept `.selfSelected` work (or compact
@@ -1478,6 +1518,22 @@ enum PlanLibraryValidator {
         in plan: PlanDefinition,
         terminalStep: WorkoutStepDefinition
     ) -> Bool {
+        // These source tables explicitly retain recovery on their final cycle.
+        // Limit the exception to the audited terminal identity and duration.
+        let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
+            "beastmaker-repeaters": ("beastmaker-repeaters.grip-rest", 180),
+            "tension-6-and-10": ("tension-6-and-10.set-4.rest-5", 10),
+            "rock-prodigy.pivot-introductory": ("rp-pivot-intro-6-3", 10),
+            "rock-prodigy.pivot-intermediate": ("rp-pivot-intermediate-10-5", 5)
+        ]
+        if let expected = publishedTerminalRests[plan.id],
+           plan.metadata.provenance == .adapted,
+           terminalStep.id == expected.id,
+           let rest = terminalStep.segments.last,
+           rest.kind == .rest, rest.timing == .fixed,
+           rest.duration == expected.duration {
+            return true
+        }
         if plan.id == "research.abrahangs",
            plan.metadata.provenance == .adapted,
            plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE"),

@@ -903,10 +903,8 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTFail("Expected model media"); return
         }
         XCTAssertNil(media.orientation)
-        XCTAssertEqual(
-            media.descriptor.modelSHA256,
-            "4f09ef7de6c599ec95655c8f7076b10980cdf625c7372807901b9b6c4476084b"
-        )
+        // Model integrity is checked against the generated USDZ by package validation;
+        // its byte hash can differ between macOS and Linux builds.
         XCTAssertEqual(suspension.strands.filter { $0.kind == "lead" }.count, 4)
         XCTAssertEqual(suspension.strands.filter { $0.kind == "segment" }.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))

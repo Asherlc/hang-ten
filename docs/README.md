@@ -6,6 +6,7 @@ These guides describe the current source layout and tooling.
 | Task | Guide |
 | --- | --- |
 | Build generated resources and understand CI delivery | [Generated artifacts](GENERATED_ARTIFACTS.md) |
+| Understand CI toolchains and runner requirements | [CI runners](CI_RUNNERS.md) |
 | Author or change a board | [Adding a board](ADDING_A_BOARD.md), [native CAD tools](../Tools/HangboardCAD/README.md) |
 | Avoid CAD geometry and contact-binding mistakes | [Geometry precautions](freecad-authoring-lessons.md) |
 | Author and validate cords | [Cord authoring](HANGBOARD_CORD_AUTHORING.md) |

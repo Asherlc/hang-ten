@@ -305,7 +305,7 @@
           "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851"
         }
       },
-      "appReview": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "appReview": "../../../Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/runtime-validation.json",
       "appReviewPage": "nature-stone-hanger/granite-seat-review/index.html",
       "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
       "humanReviewRecord": "nature-stone-hanger/human-review.json",
@@ -326,7 +326,7 @@
         "hiddenConnection": "Visible side-hole entry and exterior notch guidance are established; the concealed connection remains unspecified."
       },
       "latestRevision": "nature-stone-hanger/granite-seat-review/review.md",
-      "runtimeRevision": "nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "runtimeRevision": "../../../Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/runtime-validation.json",
       "reviewAnswer": "Y",
       "acceptedDate": "2026-10-01",
       "acceptedScope": "Displayed corrected Stone Hanger: fitted granite insert and clean wood seam, runtime wood and granite finishes, shortened cords entering side holes within the notch guides, and the shown hold positions."

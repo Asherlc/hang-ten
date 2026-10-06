@@ -293,6 +293,9 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 | --- | --- |
 | `HANGTEN_REVIEW_PLAN=1` | Open the featured plan detail from Train. |
 | `HANGTEN_REVIEW_PLANS=1` | Select the full Plans tab. |
+| `HANGTEN_REVIEW_CHOOSER_RESULTS=1` | With `HANGTEN_REVIEW_PLANS=1`, open All workouts. |
+| `HANGTEN_REVIEW_CHOOSER_FILTERS=1` | With `HANGTEN_REVIEW_PLANS=1`, open All workouts and its filter sheet. |
+| `HANGTEN_REVIEW_CHOOSER_MY_ROUTINES=1` | With `HANGTEN_REVIEW_PLANS=1`, open My routines. |
 | `HANGTEN_REVIEW_HISTORY=1` | Select the History tab. |
 | `HANGTEN_REVIEW_BOARD_PICKER=1` | Open the full-page board picker from Train. |
 | `HANGTEN_REVIEW_SETTINGS=1` | Open Settings from Train. |
