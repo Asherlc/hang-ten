@@ -11,8 +11,8 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         addStep(title: "Rest", rest: true, in: app)
         addStep(title: "Finish", rest: false, in: app)
         tap("customRoutine.addRepeat", in: app)
-        tap("customRoutine.repeatEnd", in: app)
-        app.buttons["2. Rest"].tap()
+        XCTAssertTrue(app.navigationBars["Repeat steps"].waitForExistence(timeout: 10))
+        selectMenuOption("2. Rest", from: "customRoutine.repeatEnd", in: app)
         changeCount(by: 4, in: app)
         XCTAssertTrue(app.staticTexts["Run 6 times"].exists)
         capture(app, name: "Repeat range and count")
@@ -120,6 +120,23 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         let suffix = delta > 0 ? "Increment" : "Decrement"
         let button = stepper.buttons["customRoutine.repeatCount-\(suffix)"]
         for _ in 0..<abs(delta) { button.tap() }
+    }
+
+    private func selectMenuOption(_ label: String, from identifier: String, in app: XCUIApplication) {
+        let option = app.buttons[label].firstMatch
+        tap(identifier, in: app)
+        // A newly presented sheet can ignore the first menu tap. Retry only
+        // while the option is absent so an open menu is never toggled closed.
+        if !option.waitForExistence(timeout: 5) {
+            tap(identifier, in: app)
+        }
+        XCTAssertTrue(option.waitForExistence(timeout: 5), "Picker option is unavailable: \(label)")
+        option.tap()
+        let selected = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label CONTAINS %@", label),
+            object: app.buttons[identifier].firstMatch
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed)
     }
 
     private func tap(_ identifier: String, in app: XCUIApplication) {
