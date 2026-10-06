@@ -220,8 +220,8 @@ enum CustomRoutineValidator {
         }
         if definition.steps.isEmpty {
             issues.append(.missingSteps)
-        } else if definition.steps.last.map(stepEndsInRestAfterNormalization) == true {
-            issues.append(.terminalRestStep)
+        } else if let issue = terminalRestIssue(for: definition) {
+            issues.append(issue)
         }
         issues += repeatIssues(for: definition)
 
@@ -405,6 +405,10 @@ enum CustomRoutineValidator {
                 }
             }
         }
+    }
+
+    static func terminalRestIssue(for definition: CustomRoutineDefinition) -> CustomRoutineValidationIssue? {
+        definition.steps.last.map(stepEndsInRestAfterNormalization) == true ? .terminalRestStep : nil
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -620,10 +624,11 @@ final class CustomRoutineStore: CustomRoutineStoring {
         let metadata = Self.metadata(for: definition)
         var blocks: [WorkoutBlockDefinition] = []
         var references: [WorkoutBlockReference] = []
+        let stepIDs = definition.steps.map(\.id)
         var index = 0
         while index < definition.steps.count {
-            let group = definition.repeatGroups.first { $0.stepIDs.first == definition.steps[index].id }
-            let end = index + (group?.stepIDs.count ?? 1)
+            let group = definition.repeatGroups.first { $0.range(in: stepIDs)?.lowerBound == index }
+            let end = group?.range(in: stepIDs)?.upperBound ?? index + 1
             let block = WorkoutBlockDefinition(
                 id: "\(definition.id).custom-block-\(index)",
                 steps: Array(definition.steps[index..<end])

@@ -310,7 +310,7 @@ struct CustomRoutineEditorView: View {
         }
         if definition.steps.isEmpty {
             issues.append("Add at least one step.")
-        } else if definition.steps.last?.phase == .rest {
+        } else if CustomRoutineValidator.terminalRestIssue(for: definition) == .terminalRestStep {
             issues.append("End the routine with a work step.")
         }
         for (index, step) in definition.steps.enumerated() where !step.duration.isFinite || step.duration <= 0 {

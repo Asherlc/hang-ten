@@ -878,6 +878,34 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
     }
 
+    func testEditorLocalValidationShowsTerminalRestMessageAfterNormalization() {
+        let steps = [
+            WorkoutStepDefinition(
+                id: "implicit-rest", title: "Implicit rest", instruction: "", accessory: "",
+                duration: 12, phase: .hang, activeDuration: 8
+            ),
+            WorkoutStepDefinition(
+                id: "compound-rest", title: "Compound rest", instruction: "", accessory: "",
+                duration: 12, phase: .hang,
+                segments: [
+                    .init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 8),
+                    .init(kind: .rest, target: nil, timing: .fixed, duration: 4)
+                ]
+            )
+        ]
+        for step in steps {
+            let definition = CustomRoutineDefinition(
+                id: "custom.terminal-rest", title: "Terminal rest", subtitle: "",
+                difficulty: nil, category: nil, tags: [], targetMode: .generic, steps: [step]
+            )
+            XCTAssertTrue(
+                CustomRoutineEditorView.localValidationIssues(for: definition)
+                    .contains("End the routine with a work step."),
+                "The editor must explain the normalized trailing rest in \(step.id)"
+            )
+        }
+    }
+
     func testDuplicateDraftPreservesStopwatchAsOneSimpleStep() throws {
         let source = CustomRoutineDefinition(
             id: "custom.max",
