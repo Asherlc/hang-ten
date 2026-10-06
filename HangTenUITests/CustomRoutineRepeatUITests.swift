@@ -123,18 +123,17 @@ final class CustomRoutineRepeatUITests: XCTestCase {
     }
 
     private func selectMenuOption(_ label: String, from identifier: String, in app: XCUIApplication) {
+        let picker = app.buttons[identifier].firstMatch
         let option = app.buttons[label].firstMatch
-        tap(identifier, in: app)
-        // A newly presented sheet can ignore the first menu tap. Retry only
-        // while the option is absent so an open menu is never toggled closed.
-        if !option.waitForExistence(timeout: 5) {
-            tap(identifier, in: app)
-        }
-        XCTAssertTrue(option.waitForExistence(timeout: 5), "Picker option is unavailable: \(label)")
+        reveal(picker, in: app)
+        // Xcode 26.5 chooses an activation point on the value label that
+        // leaves this sheet's menu closed. Tap the visible picker row instead.
+        picker.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        XCTAssertTrue(option.waitForExistence(timeout: 10), "Picker option is unavailable: \(label)")
         option.tap()
         let selected = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label CONTAINS %@", label),
-            object: app.buttons[identifier].firstMatch
+            object: picker
         )
         XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed)
     }
