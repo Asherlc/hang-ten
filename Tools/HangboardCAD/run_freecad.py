@@ -18,7 +18,6 @@ HANGTEN_CAD_PYTHONPATH to any extra site directory (for example one containing
 
 from __future__ import annotations
 
-import argparse
 import os
 import subprocess
 import sys

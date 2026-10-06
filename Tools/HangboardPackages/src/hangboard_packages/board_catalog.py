@@ -1781,7 +1781,6 @@ def _load_presentations(value: Any, source: str) -> tuple[BoardPresentation, ...
         raise ValueError("duplicate presentation id")
     if sum(presentation.is_default for presentation in presentations) != 1:
         raise ValueError("board.json.presentations must have exactly one default presentation")
-    presentation_ids = {presentation.id for presentation in presentations}
     for presentation in presentations:
         if presentation.source_presentation_id is not None:
             source = next(

@@ -408,28 +408,6 @@ private struct WorkoutSummaryContent: View {
         }
     }
 
-    private func actionText(for action: WorkoutAction) -> String {
-        switch action {
-        case .hang: "Hang"
-        case .isometricPull: "Isometric pull"
-        case .loadedLift: "Loaded lift"
-        }
-    }
-
-    private func sideText(for side: WorkoutSide) -> String {
-        switch side {
-        case .left: "Left hand"
-        case .right: "Right hand"
-        case .both: "Both hands"
-        }
-    }
-
-    private func externalLoadText(for step: WorkoutStepMeasurement) -> String? {
-        step.externalLoadKGF.map {
-            WorkoutStepFormatting.externalLoadText($0, unit: .kilograms)
-        }
-    }
-
     private func peakText(for step: WorkoutStepMeasurement) -> String {
         guard let peakLoadKGF = step.peakLoadKGF else { return "Not measured" }
         return String(format: "%.1f %@", unit.value(fromKilogramsForce: peakLoadKGF), unit.label)

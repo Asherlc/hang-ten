@@ -265,8 +265,6 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         completion: @escaping (Result<UUID, Error>) -> Void
     ) {
         saveCompletedWorkout(
-            id: id,
-            title: title,
             startDate: startDate,
             endDate: endDate,
             metadata: [
@@ -335,8 +333,6 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
         }
 
         saveCompletedWorkout(
-            id: id,
-            title: title,
             startDate: startDate,
             endDate: endDate,
             metadata: metadata,
@@ -345,8 +341,6 @@ final class HealthKitService: WorkoutHealthStore, HealthWorkoutSaving {
     }
 
     private func saveCompletedWorkout(
-        id: UUID,
-        title: String,
         startDate: Date,
         endDate: Date,
         metadata: [String: Any],

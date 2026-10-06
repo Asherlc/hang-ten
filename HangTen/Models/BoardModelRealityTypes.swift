@@ -126,15 +126,10 @@ enum BoardModelRealityError: Error, Equatable {
     case resourceUnavailable
     case sha256Mismatch(expected: String, actual: String)
     case fileReadError(underlying: String)
-    case invalidUSDZ(reason: String)
     case loadGateCancelled
-    case loadFailed(reason: String)
     case presentationNotModel
-    case cacheError(reason: String)
-    case missingModelEntity
     case missingContactDescriptor(contactID: String)
     case invalidSuspension
-    case clearanceCheckFailed
     case geometryProcessingFailed(reason: String)
 }
 
@@ -155,7 +150,6 @@ final class BoardModelRealityScene {
 
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
-    private var verifiedPresentations: [String: (BoardModelSolvedSuspension, ModelEntity)] = [:]
     private var meshWrapSection: [SIMD2<Float>]?
     private var canonicalFraming: SuspendedCameraFraming?
     private var currentFraming: SuspendedCameraFraming?
@@ -216,9 +210,8 @@ final class BoardModelRealityScene {
     private let physics: RopePhysicsInput?
     private let presentationID: String?
 
-    // Retain the resource lease until the scene is deallocated,
-    // because RealityKit may still stream textures from the USDZ asynchronously.
-    // The lease is released automatically when BoardModelRealityResourceLease deinitializes.
+    // RealityKit can read the USDZ asynchronously; ARC releases access with the scene.
+    // periphery:ignore - Retains on-demand resource access for the scene lifetime.
     private let resourceLease: BoardModelRealityResourceLease
 
     // Testing accessors
@@ -226,7 +219,6 @@ final class BoardModelRealityScene {
     var displayForTesting: BoardModelDisplay { display }
     var orientationForTesting: BoardModelOrientation? { orientation }
     var suspensionForTesting: BoardModelSuspension? { suspension }
-    var instancesForTesting: [BoardModelInstance]? { instances }
 
     init(descriptor: BoardModelDescriptor, display: BoardModelDisplay, suspension: BoardModelSuspension?, orientation: BoardModelOrientation?, allowedPositionIDs: Set<String>, instances: [BoardModelInstance]? = nil, physics: RopePhysicsInput? = nil, presentationID: String? = nil, resourceLease: BoardModelRealityResourceLease) {
         self.descriptor = descriptor
@@ -499,7 +491,6 @@ final class BoardModelRealityScene {
         currentFraming = SuspendedCameraFraming(
             target: target,
             direction: direction,
-            viewDirection: direction,
             right: right,
             up: up,
             distance: distance,
@@ -558,11 +549,6 @@ final class BoardModelRealityScene {
         return framing(points: rotatedCorners(bounds, by: rotation, pivot: boundsCenter(bounds)), display: display)
     }
 
-    static func framing(descriptor: BoardModelDescriptor,
-                        display: BoardModelDisplay) -> SuspendedCameraFraming? {
-        framing(bounds: descriptor.modelBounds, display: display)
-    }
-
     static func framing(bounds: BoardModelBounds,
                         display: BoardModelDisplay) -> SuspendedCameraFraming? {
         framing(points: boundsCorners(bounds), display: display)
@@ -592,7 +578,7 @@ final class BoardModelRealityScene {
               let depthSpan = depth.max().flatMap({ hi in depth.min().map { hi - $0 } }),
               width.isFinite, height.isFinite, depthSpan.isFinite, width > 0, height > 0 else { return nil }
         let fitPadding = Float(1 + camera.fitPadding * 2)
-        return SuspendedCameraFraming(target: target, direction: direction, viewDirection: direction,
+        return SuspendedCameraFraming(target: target, direction: direction,
                                       right: right, up: up, distance: max(width, max(height, depthSpan)) * fitPadding,
                                       width: width, height: height, depth: depthSpan,
                                       fitPadding: fitPadding, includedPoints: points)
@@ -1101,7 +1087,7 @@ final class BoardModelRealityScene {
         for entity in allEntities {
             let highlightColor: Color = highlightedEntities.contains(entity)
                 ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
-            applyHighlight(to: entity, color: highlightColor, mode: mode)
+            applyHighlight(to: entity, color: highlightColor)
         }
     }
 
@@ -1321,13 +1307,6 @@ final class BoardModelRealityScene {
         return distance.isFinite && distance > 0 ? distance : nil
     }
 
-    func fittedOrthographicScale(in size: CGSize) -> Double? {
-        guard let framing = currentFraming else { return nil }
-        guard size.width > 0, size.height > 0 else { return nil }
-        let aspect = Float(size.width / size.height)
-        return Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
-    }
-
     private func buildContactEntities() throws {
         // For schema v2 (reusable model), descriptor.contacts is keyed by physical contact ID.
         // Each instance has contactIDsBySlotID mapping slotID -> physicalContactID.
@@ -1451,7 +1430,7 @@ final class BoardModelRealityScene {
         }
     }
 
-    private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
+    private func applyHighlight(to entity: ModelEntity, color: Color) {
         guard let baseline = baselineMaterials[entity] else { return }
 
         if color == .clear {
@@ -1603,7 +1582,7 @@ final class BoardModelRealityScene {
             let height = 2 * (relative.map { abs(simd_dot($0, up)) }.max() ?? framing.height / 2)
             let depth = 2 * (relative.map { abs(simd_dot($0, backward)) }.max() ?? framing.depth / 2)
             fitted = SuspendedCameraFraming(
-                target: orbitTarget, direction: -backward, viewDirection: -backward,
+                target: orbitTarget, direction: -backward,
                 right: right, up: up, distance: framing.distance,
                 width: width, height: height, depth: depth,
                 fitPadding: framing.fitPadding, includedPoints: points)
@@ -1759,36 +1738,17 @@ struct BoardModelRealityKey: Hashable, Sendable {
 }
 
 /// Resource lease for on-demand model assets.
-/// This class is @unchecked Sendable because all mutations happen on the MainActor
-/// via the @MainActor release() method. The deinit fallback is best-effort.
+/// Immutable ownership keeps resource access alive until the last owner releases it.
 final class BoardModelRealityResourceLease: @unchecked Sendable {
     let url: URL
-    nonisolated(unsafe) private var lease: BoardModelResourceLease?
-    nonisolated(unsafe) private var isReleased = false
+    // periphery:ignore - ARC releases the underlying ODR request with this owner.
+    private let lease: BoardModelResourceLease?
 
     init(url: URL, lease: BoardModelResourceLease? = nil) {
         self.url = url
         self.lease = lease
     }
 
-    /// Explicitly release the underlying resource lease.
-    /// Must be called on the main actor to ensure thread-safe resource cleanup.
-    @MainActor
-    func release() {
-        guard !isReleased else { return }
-        isReleased = true
-        lease = nil // BoardModelResourceLease's deinit will call endAccessingResources
-    }
-
-    deinit {
-        // Fallback: if release() wasn't called explicitly, clean up.
-        // Note: deinit runs on arbitrary thread; BoardModelResourceLease's deinit
-        // calls endAccessingResources() which may not be thread-safe.
-        // Prefer calling release() explicitly on MainActor.
-        if !isReleased {
-            lease = nil // This triggers BoardModelResourceLease.deinit which calls endAccessingResources()
-        }
-    }
 }
 
 /// Cache for loaded RealityKit model sources.

@@ -26,7 +26,7 @@ sys.path[:0] = [
 
 import FreeCAD as App  # noqa: E402
 import Part  # noqa: E402
-import Sketcher  # noqa: E402
+import Sketcher  # noqa: E402, F401 -- Registers native sketch types before reopening FCStd.
 
 FAILURES: list[str] = []
 

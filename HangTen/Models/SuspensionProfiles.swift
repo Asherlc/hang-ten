@@ -38,7 +38,6 @@ struct SolvedCordBranch {
 struct SuspendedCameraFraming {
     let target: SIMD3<Float>
     let direction: SIMD3<Float>
-    let viewDirection: SIMD3<Float>
     let right: SIMD3<Float>
     let up: SIMD3<Float>
     let distance: Float
@@ -66,12 +65,8 @@ struct SolvedSuspension {
     let tubeRadius: Float
     let requiredClearance: Float
 
-    var transform: simd_float4x4 { boardTransform }
-    var attachment: SIMD3<Float> { transformedAttachment }
-    var anchor: SIMD3<Float> { fixedAnchor }
     var centerlineSamples: [SIMD3<Float>] { cord.samples }
     var tangentSamples: [SIMD3<Float>] { cord.tangents }
-    var cordSamples: [SIMD3<Float>] { cord.samples }
     var cordArcLength: Float { cord.arcLength }
 }
 
@@ -226,7 +221,7 @@ enum SuspensionProfileSolver {
         let distance = max(width, max(height, depthSpan)) * fitPadding
         guard target.allFinite, distance.isFinite, distance > 0 else { throw SuspendedPresentationError.invalidCamera }
         return SuspendedCameraFraming(
-            target: target, direction: direction, viewDirection: direction, right: right, up: up,
+            target: target, direction: direction, right: right, up: up,
             distance: distance, width: width, height: height, depth: depthSpan,
             fitPadding: fitPadding, includedPoints: points
         )
@@ -263,10 +258,6 @@ enum SuspendedCordSolver {
             arcLength: endpointDistance,
             isTaut: true
         )
-    }
-
-    static func solve(from start: SIMD3<Float>, to end: SIMD3<Float>, restLength: Float) throws -> SolvedCordBranch {
-        try solve(start: start, end: end, restLength: restLength)
     }
 
     static func hasSelfIntersection(

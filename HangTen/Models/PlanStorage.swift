@@ -24,7 +24,6 @@ enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
     }
 }
 
-
 private struct PlanLibraryCodingKey: CodingKey {
     let stringValue: String
     let intValue: Int?
@@ -37,18 +36,6 @@ private struct PlanLibraryCodingKey: CodingKey {
     init?(intValue: Int) {
         stringValue = String(intValue)
         self.intValue = intValue
-    }
-}
-
-private extension Decoder {
-    /// Silently ignores deprecated plan-library keys so that old JSON files
-    /// (which included `schemaVersion`, `version`, or `boardMappings`) can
-    /// still be loaded.  Individual plan/block definitions will still reject
-    /// structurally incompatible data via their own strict decoders.
-    func ignoreFormerPlanLibraryKeys(_ keys: Set<String>) throws {
-        // Intentionally a no-op.  The keys are present but unused, so
-        // `container(keyedBy:)` simply skips them.
-        _ = try self.container(keyedBy: PlanLibraryCodingKey.self)
     }
 }
 
@@ -82,7 +69,6 @@ struct PlanLibraryMetadata: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.ignoreFormerPlanLibraryKeys(["version"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
@@ -1005,10 +991,6 @@ struct PlanLibraryDefinition: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.ignoreFormerPlanLibraryKeys([
-            "schemaVersion",
-            "board" + "Mappings"
-        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         metadata = try container.decode(PlanLibraryMetadata.self, forKey: .metadata)
         blocks = try container.decode([WorkoutBlockDefinition].self, forKey: .blocks)
@@ -1029,12 +1011,6 @@ struct PlanValidationIssue: Codable, Hashable, CustomStringConvertible {
     var description: String {
         "\(path): \(message)"
     }
-}
-
-struct PlanValidationReport: Hashable {
-    let issues: [PlanValidationIssue]
-
-    var isValid: Bool { issues.isEmpty }
 }
 
 enum PlanLibraryStoreError: LocalizedError {
@@ -1100,7 +1076,6 @@ enum PlanLibraryValidator {
                 path: path,
                 blockByID: blockByID,
                 boardByID: boardByID,
-                availableBoards: availableBoards,
                 issues: &issues
             )
         }
@@ -1355,7 +1330,6 @@ enum PlanLibraryValidator {
         path: String,
         blockByID: [String: WorkoutBlockDefinition],
         boardByID: [String: [BoardRevision]],
-        availableBoards: [BoardRevision],
         issues: inout [PlanValidationIssue]
     ) {
         let metadataPath = "\(path).metadata"
@@ -1438,7 +1412,6 @@ enum PlanLibraryValidator {
                             planBoardID: plan.boardID,
                             stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
                             boardByID: boardByID,
-                            availableBoards: availableBoards,
                             handUse: step.handUse,
                             side: step.side,
                             gripType: step.gripType,
@@ -1599,7 +1572,6 @@ enum PlanLibraryValidator {
         planBoardID: String?,
         stepPath: String,
         boardByID: [String: [BoardRevision]],
-        availableBoards: [BoardRevision],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         gripType: GripType?,
@@ -1677,7 +1649,6 @@ enum PlanLibraryValidator {
 
 struct PlanDefinitionResolver {
     let library: PlanLibraryDefinition
-    let availableBoards: [BoardRevision]
 
     init(
         library: PlanLibraryDefinition,
@@ -1688,7 +1659,6 @@ struct PlanDefinitionResolver {
             throw PlanLibraryStoreError.validationFailed(issues)
         }
         self.library = library
-        self.availableBoards = availableBoards
     }
 
     func resolveAll() throws -> [TrainingPlan] {
@@ -1766,7 +1736,6 @@ struct PlanDefinitionResolver {
 struct PlanLibraryStore {
     let definition: PlanLibraryDefinition
     let plans: [TrainingPlan]
-    let validationReport: PlanValidationReport
 
     init(
         definition: PlanLibraryDefinition,
@@ -1779,7 +1748,6 @@ struct PlanLibraryStore {
         let resolver = try PlanDefinitionResolver(library: definition, availableBoards: availableBoards)
         self.definition = definition
         self.plans = try resolver.resolveAll()
-        self.validationReport = PlanValidationReport(issues: issues)
     }
 
     init(
@@ -1813,38 +1781,12 @@ struct PlanLibraryStore {
         )
     }
 
-    init(
-        contentsOf url: URL,
-        decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [BoardRevision] = BoardCatalog.all
-    ) throws {
-        do {
-            try self.init(
-                data: Data(contentsOf: url),
-                decoder: decoder,
-                availableBoards: availableBoards
-            )
-        } catch let error as PlanLibraryStoreError {
-            throw error
-        } catch {
-            throw PlanLibraryStoreError.decoding(error)
-        }
-    }
-
     func encodedData(prettyPrinted: Bool = false) throws -> Data {
         let encoder = JSONEncoder()
         if prettyPrinted {
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         }
         return try encoder.encode(definition)
-    }
-
-    func write(
-        to url: URL,
-        prettyPrinted: Bool = true,
-        options: Data.WritingOptions = []
-    ) throws {
-        try encodedData(prettyPrinted: prettyPrinted).write(to: url, options: options)
     }
 
     func plan(id: String) -> TrainingPlan? {
@@ -1874,8 +1816,6 @@ struct PlanLibraryStore {
     }
 }
 
-typealias PlanStore = PlanLibraryStore
-
 private final class PlanLibraryBundleToken {}
 
 // MARK: - Plan catalog
@@ -1894,20 +1834,7 @@ enum PlanCatalog {
     static let metoliusAdvanced = required("metolius.generic-ten-minute.advanced")
     static let metoliusTenMinute = metoliusEntry
     static let maxHangs = required("research.max-hangs")
-    static let forceF80 = required("research.force-feedback-f80")
-    static let forceF100 = required("research.force-feedback-f100")
-    static let evaIntHangs = required("research.eva-int-hangs")
-    static let repeaters = required("research.seven-three-repeaters")
     static let abrahangs = required("research.abrahangs")
-    static let horst753 = required("coach.horst-seven-fifty-three")
-    static let ladders = required("coach.bechtel-three-six-nine")
-    static let densityHangs = required("coach.density-hangs")
-    static let zlagboardEndurance = required("device.zlagboard-sixty-sixty")
-    static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
-    static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
-    static let methodEMOM = required("method.intermediate-hangboarding.emom")
-    static let reiHangboardSample = required("rei.hangboard-sample-workout")
-    static let metoliusRockRing = required("metolius.rock-rings.ten-minute")
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)
@@ -1915,10 +1842,6 @@ enum PlanCatalog {
 
     static func metadata(for id: String) -> PlanMetadata? {
         metadataByID[id]
-    }
-
-    static var definition: PlanLibraryDefinition {
-        store.definition
     }
 
     private static func required(_ id: String) -> TrainingPlan {
