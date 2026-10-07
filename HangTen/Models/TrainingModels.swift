@@ -1875,6 +1875,21 @@ enum RoutineProvenance: String, Codable, Hashable {
 
 }
 
+/// An authored repetition over the plan's expanded runtime intervals.
+struct WorkoutStepRepeat: Hashable {
+    let stepRange: Range<Int>
+    let repeatCount: Int
+    let patternTitles: [String]
+
+    init(stepRange: Range<Int>, repeatCount: Int, patternTitles: [String] = []) {
+        self.stepRange = stepRange
+        self.repeatCount = repeatCount
+        self.patternTitles = patternTitles
+    }
+
+    var patternStepCount: Int { stepRange.count / repeatCount }
+}
+
 struct TrainingPlan: Identifiable, Hashable {
     let id: String
     let title: String
@@ -1885,6 +1900,7 @@ struct TrainingPlan: Identifiable, Hashable {
     let provenance: RoutineProvenance
     let boardID: String?
     let steps: [WorkoutStep]
+    var stepRepeats: [WorkoutStepRepeat] = []
     var isFreeWorkout: Bool = false
 
     var duration: TimeInterval {
@@ -1953,7 +1969,8 @@ enum MaxHangsEdgeSelection {
         return TrainingPlan(
             id: plan.id, title: plan.title, subtitle: plan.subtitle, level: plan.level,
             sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
-            provenance: plan.provenance, boardID: plan.boardID, steps: steps
+            provenance: plan.provenance, boardID: plan.boardID, steps: steps,
+            stepRepeats: plan.stepRepeats
         )
     }
 }

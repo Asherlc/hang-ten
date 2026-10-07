@@ -634,6 +634,32 @@ final class CustomRoutineStore: CustomRoutineStoring {
         metadata: PlanMetadata,
         id: String
     ) throws -> CustomRoutineDefinition {
+        var steps: [WorkoutStepDefinition] = []
+        var repeatGroups: [CustomRoutineRepeatGroup] = []
+        var index = 0
+        for item in plan.stepRepeats.sorted(by: { $0.stepRange.lowerBound < $1.stepRange.lowerBound }) {
+            guard item.repeatCount > 1,
+                  CustomRoutineRepeatGroup.supportedCounts.contains(item.repeatCount),
+                  item.stepRange.lowerBound >= index,
+                  item.stepRange.upperBound <= plan.steps.count,
+                  !item.stepRange.isEmpty,
+                  item.stepRange.count % item.repeatCount == 0,
+                  item.patternTitles.isEmpty || item.patternTitles.count == item.patternStepCount else { continue }
+            steps += plan.steps[index..<item.stepRange.lowerBound].map { WorkoutStepDefinition.from($0) }
+            let patternRange = item.stepRange.lowerBound..<(item.stepRange.lowerBound + item.patternStepCount)
+            let pattern = plan.steps[patternRange].enumerated().map { offset, step in
+                WorkoutStepDefinition.from(
+                    step, title: item.patternTitles.isEmpty ? nil : item.patternTitles[offset]
+                )
+            }
+            steps += pattern
+            repeatGroups.append(CustomRoutineRepeatGroup(
+                id: "\(id).repeat-\(repeatGroups.count + 1)",
+                stepIDs: pattern.map(\.id), repeatCount: item.repeatCount
+            ))
+            index = item.stepRange.upperBound
+        }
+        steps += plan.steps[index...].map { WorkoutStepDefinition.from($0) }
         let definition = normalize(
             CustomRoutineDefinition(
                 id: id,
@@ -643,7 +669,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 category: metadata.category,
                 tags: metadata.tags,
                 targetMode: plan.boardID.map { .boardSpecific(boardID: $0) } ?? .generic,
-                steps: plan.steps.map { WorkoutStepDefinition.from($0) }
+                steps: steps,
+                repeatGroups: repeatGroups
             )
         )
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)

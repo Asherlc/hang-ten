@@ -810,11 +810,12 @@ extension WorkoutStepDefinition {
     /// including explicit segment timing and one-segment rest rows.
     static func from(
         _ step: WorkoutStep,
-        id: String? = nil
+        id: String? = nil,
+        title: String? = nil
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
             id: id ?? step.id,
-            title: step.title,
+            title: title ?? step.title,
             instruction: step.instruction,
             accessory: step.accessory,
             duration: step.duration,
@@ -915,20 +916,24 @@ struct WorkoutBlockDefinition: Codable, Hashable {
 struct WorkoutBlockReference: Codable, Hashable {
     let blockID: String
     /// Optional IDs let a shared block preserve a routine's historic IDs.
-    /// The count must match the referenced block's step count when supplied.
+    /// One pattern supplies stems; a complete expanded list supplies exact IDs.
     let stepIDs: [String]
     let repeatCount: Int
+    /// Original occurrence labels can vary without duplicating the prescription.
+    let stepTitles: [String]
 
-    init(blockID: String, stepIDs: [String] = [], repeatCount: Int = 1) {
+    init(blockID: String, stepIDs: [String] = [], repeatCount: Int = 1, stepTitles: [String] = []) {
         self.blockID = blockID
         self.stepIDs = stepIDs
         self.repeatCount = repeatCount
+        self.stepTitles = stepTitles
     }
 
     private enum CodingKeys: String, CodingKey {
         case blockID
         case stepIDs
         case repeatCount
+        case stepTitles
     }
 
     init(from decoder: Decoder) throws {
@@ -936,6 +941,7 @@ struct WorkoutBlockReference: Codable, Hashable {
         blockID = try container.decode(String.self, forKey: .blockID)
         stepIDs = try container.decodeIfPresent([String].self, forKey: .stepIDs) ?? []
         repeatCount = try container.decodeIfPresent(Int.self, forKey: .repeatCount) ?? 1
+        stepTitles = try container.decodeIfPresent([String].self, forKey: .stepTitles) ?? []
     }
 
     func encode(to encoder: Encoder) throws {
@@ -947,6 +953,22 @@ struct WorkoutBlockReference: Codable, Hashable {
         if repeatCount != 1 {
             try container.encode(repeatCount, forKey: .repeatCount)
         }
+        if !stepTitles.isEmpty {
+            try container.encode(stepTitles, forKey: .stepTitles)
+        }
+    }
+
+    func resolvedStepID(for step: WorkoutStepDefinition, index: Int, repetition: Int, patternCount: Int) -> String {
+        if repeatCount > 1, stepIDs.count == patternCount * repeatCount {
+            return stepIDs[repetition * patternCount + index]
+        }
+        let stem = stepIDs.indices.contains(index) ? stepIDs[index] : step.id
+        return repeatCount > 1 ? "\(stem)-\(repetition + 1)" : stem
+    }
+
+    func resolvedStepTitle(for step: WorkoutStepDefinition, index: Int, repetition: Int, patternCount: Int) -> String {
+        let offset = stepTitles.count == patternCount ? index : repetition * patternCount + index
+        return stepTitles.indices.contains(offset) ? stepTitles[offset] : step.title
     }
 }
 
@@ -1372,8 +1394,12 @@ enum PlanLibraryValidator {
             if reference.repeatCount < 1 {
                 issues.append(PlanValidationIssue(path: "\(referencePath).repeatCount", message: "Repeat count must be at least one."))
             }
-            if !reference.stepIDs.isEmpty && reference.stepIDs.count != block.steps.count {
-                issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must match the referenced block's step count."))
+            let expandedCount = block.steps.count * max(0, reference.repeatCount)
+            if !reference.stepIDs.isEmpty && reference.stepIDs.count != block.steps.count && reference.stepIDs.count != expandedCount {
+                issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must match one pattern or the complete expanded block."))
+            }
+            if !reference.stepTitles.isEmpty && reference.stepTitles.count != block.steps.count && reference.stepTitles.count != expandedCount {
+                issues.append(PlanValidationIssue(path: "\(referencePath).stepTitles", message: "Step title overrides must match one pattern or the complete expanded block."))
             }
             if Set(reference.stepIDs).count != reference.stepIDs.count {
                 issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must be unique."))
@@ -1382,9 +1408,9 @@ enum PlanLibraryValidator {
             let repetitions = max(0, reference.repeatCount)
             for repetition in 0..<repetitions {
                 for (stepIndex, step) in block.steps.enumerated() {
-                    let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
-                    let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
-                    let resolvedID = sourceID + suffix
+                    let resolvedID = reference.resolvedStepID(
+                        for: step, index: stepIndex, repetition: repetition, patternCount: block.steps.count
+                    )
                     for expandedID in expandedIDsEmittedByNormalizer(
                         for: step,
                         resolvedID: resolvedID
@@ -1429,7 +1455,13 @@ enum PlanLibraryValidator {
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep),
-               !allowsSourceRequiredTerminalRest(in: plan, terminalStep: terminalStep) {
+               !allowsSourceRequiredTerminalRest(
+                    in: plan, terminalStep: terminalStep,
+                    resolvedID: reference.resolvedStepID(
+                        for: terminalStep, index: block.steps.count - 1,
+                        repetition: reference.repeatCount - 1, patternCount: block.steps.count
+                    )
+               ) {
                 issues.append(
                     PlanValidationIssue(
                         path: "\(path).blocks[\(index)].steps[\(block.steps.count - 1)]",
@@ -1489,7 +1521,8 @@ enum PlanLibraryValidator {
     /// the usual end-on-work-step convention.
     private static func allowsSourceRequiredTerminalRest(
         in plan: PlanDefinition,
-        terminalStep: WorkoutStepDefinition
+        terminalStep: WorkoutStepDefinition,
+        resolvedID: String
     ) -> Bool {
         // These source tables explicitly retain recovery on their final cycle.
         // Limit the exception to the audited terminal identity and duration.
@@ -1501,7 +1534,7 @@ enum PlanLibraryValidator {
         ]
         if let expected = publishedTerminalRests[plan.id],
            plan.metadata.provenance == .adapted,
-           terminalStep.id == expected.id,
+           resolvedID == expected.id,
            let rest = terminalStep.segments.last,
            rest.kind == .rest, rest.timing == .fixed,
            rest.duration == expected.duration {
@@ -1510,7 +1543,7 @@ enum PlanLibraryValidator {
         if plan.id == "research.abrahangs",
            plan.metadata.provenance == .adapted,
            plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE"),
-           terminalStep.id == "abrahangs-grip-6-rep-1",
+           resolvedID == "abrahangs-grip-6-rep-1",
            terminalStep.duration == 60,
            terminalStep.activeDuration == 10,
            terminalStep.segments.count == 2,
@@ -1525,7 +1558,7 @@ enum PlanLibraryValidator {
         guard plan.id == "research.megos-one-arm-7-3",
               plan.metadata.provenance == .adapted,
               plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=urTeUObQlsg"),
-              terminalStep.id == "megos-7-3-set-6-right-rep-4",
+              resolvedID == "megos-7-3-set-6-right-rep-4",
               terminalStep.duration == 10,
               terminalStep.activeDuration == 7,
               terminalStep.segments.count == 2,
@@ -1672,6 +1705,7 @@ struct PlanDefinitionResolver {
 
         let blocks = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
         var steps: [WorkoutStep] = []
+        var stepRepeats: [WorkoutStepRepeat] = []
         steps.reserveCapacity(definition.blocks.reduce(0) { count, reference in
             count + (blocks[reference.blockID]?.steps.count ?? 0) * max(0, reference.repeatCount)
         })
@@ -1680,16 +1714,31 @@ struct PlanDefinitionResolver {
             guard let block = blocks[reference.blockID] else {
                 throw PlanLibraryStoreError.missingBlock(reference.blockID)
             }
+            let start = steps.count
+            var patternTitles: [String] = []
             for repetition in 0..<reference.repeatCount {
                 for (stepIndex, stepDefinition) in block.steps.enumerated() {
-                    let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
-                    let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
-                    let resolvedStep = stepDefinition.resolvedStep(id: resolvedID, number: steps.count + 1)
+                    let resolvedID = reference.resolvedStepID(
+                        for: stepDefinition, index: stepIndex, repetition: repetition, patternCount: block.steps.count
+                    )
+                    let title = reference.resolvedStepTitle(
+                        for: stepDefinition, index: stepIndex, repetition: repetition, patternCount: block.steps.count
+                    )
+                    let resolvedStep = stepDefinition.resolvedStep(id: resolvedID, number: steps.count + 1, title: title)
                     let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)
                     for normalizedStep in try WorkoutStepNormalizer.expand(canonicalStep) {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
                     }
+                    if repetition == 0 && reference.repeatCount > 1 {
+                        let template = WorkoutStepNormalizer.materializingImplicitSegments(stepDefinition.resolvedStep())
+                        patternTitles += try WorkoutStepNormalizer.expand(template).map(\.title)
+                    }
                 }
+            }
+            if reference.repeatCount > 1 {
+                stepRepeats.append(WorkoutStepRepeat(
+                    stepRange: start..<steps.count, repeatCount: reference.repeatCount, patternTitles: patternTitles
+                ))
             }
         }
 
@@ -1702,18 +1751,19 @@ struct PlanDefinitionResolver {
             sourceURL: definition.metadata.sourceURL,
             provenance: definition.metadata.provenance,
             boardID: definition.boardID,
-            steps: steps
+            steps: steps,
+            stepRepeats: stepRepeats
         )
     }
 
 }
 
 extension WorkoutStepDefinition {
-    func resolvedStep(id: String? = nil, number: Int = 0) -> WorkoutStep {
+    func resolvedStep(id: String? = nil, number: Int = 0, title: String? = nil) -> WorkoutStep {
         WorkoutStep(
             id: id ?? self.id,
             number: number,
-            title: title,
+            title: title ?? self.title,
             instruction: instruction,
             accessory: accessory,
             duration: duration,

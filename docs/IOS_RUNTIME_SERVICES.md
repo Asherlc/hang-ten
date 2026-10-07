@@ -39,9 +39,19 @@ On plan detail, the first-hold preview includes the first work step's sourced
 instruction and accessory text, skipping any leading rests. Session-flow rest
 entries retain their recovery instructions and timing and also show the next
 work instruction. Consecutive rests share that next-work cue; final rests and
-empty next-work instructions omit it. Repeated sequences stay separate when
-their next-work instructions differ, so one rest preview cannot describe a
-different upcoming prescription.
+empty next-work instructions omit it. In a declared repeat, a rest entry shows
+an upcoming instruction only when it applies to every run; differing final
+transitions omit that cue.
+
+Session flow renders the repetition declared by the plan's block references.
+The resolver retains each reference's repeat count, expanded interval range and
+template display titles on the resolved plan. It preserves the original per-run
+IDs and numbered labels for playback and history. The preview does not compare
+prescriptions, detect repeating patterns or rewrite position counters; equal
+unmarked steps remain separate. Max-hang edge selections preserve the declared
+repeat ranges. Duplicating a catalog routine converts its declared repeats into
+editable custom repeat ranges, retaining one template with its display labels
+and the original expanded interval timings and targets.
 
 At accessibility text sizes, board names and workout titles use the full row
 width, with the favorite action below the workout. The filter action uses a

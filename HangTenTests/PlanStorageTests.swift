@@ -1,7 +1,129 @@
+import CryptoKit
 import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+
+    func testRepeatedBlockPreservesExactPerRunIDsAndTitles() throws {
+        let step = WorkoutStepDefinition(
+            id: "template", title: "Edge hang", instruction: "Hang.", accessory: "7s hang",
+            duration: 7, phase: .hang,
+            segments: [WorkoutSegmentDefinition(
+                kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 7
+            )]
+        )
+        let reference = try JSONDecoder().decode(WorkoutBlockReference.self, from: Data(#"""
+        {
+            "blockID": "test.block", "repeatCount": 2,
+            "stepIDs": ["old-first", "old-second"],
+            "stepTitles": ["Hang 1 of 2", "Hang 2 of 2"]
+        }
+        """#.utf8))
+        let original = makeLibrary(steps: [step])
+        let plan = original.plans[0]
+        let library = PlanLibraryDefinition(
+            metadata: original.metadata, blocks: original.blocks,
+            plans: [PlanDefinition(id: plan.id, metadata: plan.metadata, boardID: plan.boardID, blocks: [reference])]
+        )
+        XCTAssertEqual(library.validationIssues(availableBoards: BoardCatalog.all), [])
+        let resolved = try PlanDefinitionResolver(library: library).resolveAll()[0]
+        XCTAssertEqual(resolved.steps.map(\.id), ["old-first", "old-second"])
+        XCTAssertEqual(resolved.steps.map(\.title), ["Hang 1 of 2", "Hang 2 of 2"])
+        XCTAssertEqual(resolved.steps.map(\.duration), [7, 7])
+        XCTAssertEqual(resolved.stepRepeats, [WorkoutStepRepeat(
+            stepRange: 0..<2, repeatCount: 2, patternTitles: ["Edge hang"]
+        )])
+        XCTAssertEqual(try JSONDecoder().decode(WorkoutBlockReference.self, from: JSONEncoder().encode(reference)), reference)
+    }
+
+
+    func testExpandedCanonicalPrescriptionsMatchBeforeDeduplication() throws {
+        // Captured from the audited canonical source at 07b9127. Includes every
+        // original ID/title, metadata field, ordered target, cue and duration.
+        let expected: [String: String] = [
+            "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
+            "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
+            "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
+            "cameron-horst-two-handed-7-53": "e5ca641aa9a5724a85566cd8ea56e8e789c7830d3bd527d4483f85035d839e38",
+            "coach.bechtel-three-six-nine": "4ff3403811ccfb835dcf0929839af591296cd365c10613c59662af4ebff2adc7",
+            "coach.density-hangs": "f080de85b989211942e260e2c7809bd80bd9c49ae8525973b0a4bb87d3dc9bcf",
+            "coach.horst-seven-fifty-three": "b351983dc8bd900680967c191dfc1c3b4ada7e9e9a0008c677fe62f7b4b6b87e",
+            "coach.nelson-density-hangs.expert": "fcf17ad7e5614d8a2a2ec9cc03abf8e8437d52388a41569294e25e233dfa25e6",
+            "coach.nelson-recruitment-pulls.beginner": "4c251749aa7ce0e206c136737c0bb7d60b3942a250d45a1f1099f2cb6a50937b",
+            "coach.nelson-recruitment-pulls.expert": "25f752f28ef109633b45df3e3ada5660e11409872c4c4c6addb8dda746c3f65d",
+            "coach.nelson-velocity-pulls.beginner": "bc9249693745a8d0e5de9cfa72f53b5762d30576bb9d9be3851094039890a868",
+            "coach.nelson-velocity-pulls.expert": "4f9621797f2eb70c13c7510089cb421ad183aef790d0aca91d944c132bee7a24",
+            "device.zlagboard-sixty-sixty": "d8871c8cd3daee20f23971cd66dcb84e1f659c35c62a8a9ddfd4cda9f36c711e",
+            "hoopers-beta.introductory-home-hangboard": "026dee2d886fc512058fc9da60f67b0f6ed5c17a747b375554c02bf4d65948b8",
+            "method.intermediate-hangboarding.emom": "c3c7e62acada655428406089987a82133adf257aefddd92d4209ee0ae68e5d65",
+            "method.intermediate-hangboarding.repeaters": "c73ed40bf148696078eec86abc58c1d49b4a62b9da48b5ab922501f45ab8b909",
+            "metolius.contact.advanced": "0da2a63e7fd843ec412e605ada037d224ca3ffbeecc141b8c7d0345d5afdd04d",
+            "metolius.contact.entry": "a5ebd0328577f58c127e15cf222934ba89d29895762c1b7a3a5cde3abd3b078c",
+            "metolius.contact.intermediate": "1297a76f9eefb94b967e5b1929ee96a63edc82c18389066f9a2c9fd069f28121",
+            "metolius.generic-ten-minute.advanced": "f3ec308e3f128b9ef43e4f5b37124cebd966f5292e5332075e3a46d2282c65b6",
+            "metolius.generic-ten-minute.entry": "bd9f18db936973141f29cd2dee2d1be6ee04bcef0f26c723216cf9b1a268f356",
+            "metolius.generic-ten-minute.intermediate": "ce8f12f205768a621d7306fa054a5621bab39899583f51a0ba4cda6c4a9b8fe1",
+            "metolius.rock-rings.ten-minute": "af137d7aeed7706bb79174cf298a853be0559acd69bdcd3b11df3a0cc1a9a003",
+            "metolius.simulator-3d.advanced": "fae59a3a6afd418a465af41a99283ad18c1ca867feb846cb0b88b3f8b331a542",
+            "metolius.simulator-3d.entry": "a8529c7ca3daa0d5928795477dc5511367252d83540d228f26e7d494a705b8a7",
+            "metolius.simulator-3d.intermediate": "793f860f0212e55c71cf743da65ec19f3d5459c74fc59ea41bf55e2c51bd068e",
+            "rei-hangboard-training-101": "f7f505a1e1c96673ede1c74f3fab2ba761f63917131414d4252d214ffc8e5902",
+            "rei.hangboard-sample-workout": "a9dba5b4b5d7d3ecb2afce4ae286aabc6e4da9da698d99a47d4e675ef1408c6c",
+            "research.abrahangs": "fbc3f6b6c5dbce69fcdaecd072e4f6d8e9206db051ff6fb97501d3fc84eebfd9",
+            "research.eva-int-hangs": "30aa76b3ddcffbf3e4ca9becf4a29862535190786ecf98e04a3116a2a4ac88ee",
+            "research.force-feedback-f100": "31dac2f62ae6f91db25db14bab22c747d3a21f8a770e4238989ed74362b20375",
+            "research.force-feedback-f80": "d6d415aeb5a3e89aa16efc9f81c81c45fe945d8c17b7ff29e7e8256ce751bb66",
+            "research.max-hangs": "0ac1426de92362319e028d6ae39bdc6eefa501f1f121455e2db4f56d098e875c",
+            "research.megos-one-arm-7-3": "069b713030fd32fbae5b5e47c2f1797fe1ed36a8da41d8282307b98fc76c8538",
+            "research.seven-three-repeaters": "3fda2dfbe46c33b325977c3b931ef0c1359a0208129db60a236786cd128a028e",
+            "rock-prodigy.original-advanced": "fd39b9ace30c97dfad1cf092d53bffbcf74dfaeaf6c84d83c1d21fde087acbb8",
+            "rock-prodigy.original-beginner": "6f2d1013077d583e7268b8b4e4ea2382db4344f1bc554c3d92994730b18b3298",
+            "rock-prodigy.pivot-intermediate": "6d3c228cf46f04cbf5ebd3f517ab6540820271e2315d204a500a9f19ab324999",
+            "rock-prodigy.pivot-introductory": "329429e47a09b10dfef40ff01f11b49a93f81d65ed3b322c1f46408bdffef163",
+            "rock-prodigy.rptc-intermediate": "3b8654fb3e13c1ba66821ed397491c7e8365adaf1e60e1f89cd307c91834eab9",
+            "rptc.seven-three-repeaters": "24ad51f906cb766a6d72aa7530c4d665a64a3e9e9aa568eac01907f995efc819",
+            "tension-6-6-6-plus": "6c532322e23274b389769dc275af35161fa7f5e93446e2163622af8309f53463",
+            "tension-6-and-10": "1b395c05eb721a15177477b27269f18279e4a01d5cd8c5c176b74848a28b264d",
+            "tension-long-hangs": "0d8b02ccf1200ef454fc1f6259d694f9a512f3bc2cc79bafb455055ab0a314af",
+            "tension-single-hangs": "44c57d1915789b9198242d1df26ee77878fbb4184c65685a05741c33fa800abc",
+        ]
+        let library = try XCTUnwrap(JSONSerialization.jsonObject(with: bundledPlanLibraryData()) as? [String: Any])
+        let blocks = Dictionary(uniqueKeysWithValues: (library["blocks"] as! [[String: Any]]).map {
+            ($0["id"] as! String, $0["steps"] as! [[String: Any]])
+        })
+        let plans = library["plans"] as! [[String: Any]]
+        XCTAssertEqual(Set(plans.map { $0["id"] as! String }), Set(expected.keys))
+        for plan in plans {
+            var steps: [[String: Any]] = []
+            for reference in plan["blocks"] as! [[String: Any]] {
+                let pattern = blocks[reference["blockID"] as! String]!
+                let count = reference["repeatCount"] as? Int ?? 1
+                let ids = reference["stepIDs"] as? [String] ?? []
+                let titles = reference["stepTitles"] as? [String] ?? []
+                for repetition in 0..<count {
+                    for (index, template) in pattern.enumerated() {
+                        var step = template
+                        if count > 1 && ids.count == pattern.count * count {
+                            step["id"] = ids[repetition * pattern.count + index]
+                        } else {
+                            let stem = ids.isEmpty ? template["id"] as! String : ids[index]
+                            step["id"] = count > 1 ? "\(stem)-\(repetition + 1)" : stem
+                        }
+                        if !titles.isEmpty {
+                            step["title"] = titles.count == pattern.count
+                                ? titles[index] : titles[repetition * pattern.count + index]
+                        }
+                        steps.append(step)
+                    }
+                }
+            }
+            var body: [String: Any] = ["id": plan["id"]!, "metadata": plan["metadata"]!, "steps": steps]
+            body["boardID"] = plan["boardID"]
+            let canonical = try JSONSerialization.data(withJSONObject: body, options: [.sortedKeys, .withoutEscapingSlashes])
+            let actual = SHA256.hash(data: canonical).map { String(format: "%02x", $0) }.joined()
+            XCTAssertEqual(actual, expected[plan["id"] as! String], plan["id"] as! String)
+        }
+    }
 
     func testPublishedHangboardPresetsAreSourceLinkedAndDistinct() throws {
         let ids: Set<String> = [
@@ -2844,8 +2966,18 @@ final class PlanStorageTests: XCTestCase {
         }
 
         XCTAssertEqual(PlanLibraryStore.builtIn.definition, CanonicalPlanSourceFixture.definition)
-        XCTAssertEqual(PlanLibraryStore.builtIn.plans, expectedPlans)
-        XCTAssertEqual(PlanCatalog.all, expectedPlans)
+        // Repeat metadata is checked separately; this comparison covers the
+        // literalized workout and every retained source/metadata field.
+        func withoutRepeatMetadata(_ plan: TrainingPlan) -> TrainingPlan {
+            TrainingPlan(
+                id: plan.id, title: plan.title, subtitle: plan.subtitle, level: plan.level,
+                sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
+                provenance: plan.provenance, boardID: plan.boardID, steps: plan.steps,
+                isFreeWorkout: plan.isFreeWorkout
+            )
+        }
+        XCTAssertEqual(PlanLibraryStore.builtIn.plans.map(withoutRepeatMetadata), expectedPlans)
+        XCTAssertEqual(PlanCatalog.all.map(withoutRepeatMetadata), expectedPlans)
     }
 
     func testBuiltInPlanLibraryVisibleCueFieldsHaveSourceAuditCoverage() throws {
@@ -3806,12 +3938,18 @@ enum CanonicalPlanSourceFixture {
                 }
                 for repetition in 0..<reference.repeatCount {
                     for (index, step) in block.steps.enumerated() {
-                        let sourceID = reference.stepIDs.indices.contains(index)
-                            ? reference.stepIDs[index] : step.id
-                        let id = reference.repeatCount > 1
-                            ? "\(sourceID)-\(repetition + 1)" : sourceID
+                        let id: String
+                        if reference.repeatCount > 1 && reference.stepIDs.count == block.steps.count * reference.repeatCount {
+                            id = reference.stepIDs[repetition * block.steps.count + index]
+                        } else {
+                            let stem = reference.stepIDs.indices.contains(index) ? reference.stepIDs[index] : step.id
+                            id = reference.repeatCount > 1 ? "\(stem)-\(repetition + 1)" : stem
+                        }
+                        let titleIndex = reference.stepTitles.count == block.steps.count
+                            ? index : repetition * block.steps.count + index
+                        let title = reference.stepTitles.indices.contains(titleIndex) ? reference.stepTitles[titleIndex] : step.title
                         steps.append(WorkoutStep(
-                            id: id, number: steps.count + 1, title: step.title,
+                            id: id, number: steps.count + 1, title: title,
                             instruction: step.instruction, accessory: step.accessory,
                             duration: step.duration, phase: step.phase,
                             segments: step.segments.map {

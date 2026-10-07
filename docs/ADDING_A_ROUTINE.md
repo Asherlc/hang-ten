@@ -96,6 +96,15 @@ definitions before segment expansion and verify the resulting runtime plans.
 
 Commit the canonical JSON and source mappings for every changed field. There
 is no separate Swift authoring catalog or plan export step.
+Use reusable blocks and `repeatCount` for identical prescribed steps or cycles.
+The count includes the first run. Keep different final efforts, recoveries,
+targets or instructions separate. Reference `stepIDs` and `stepTitles` may
+preserve the complete expanded sequence of historic identities and numbered
+labels without copying the prescription. Do not flatten repeated blocks into
+copied source rows to make the preview look repetitive: previews now render
+only authored repetition. See the [canonical library mapping](source-audits/2026-10-05-canonical-plan-library.md)
+for the override format and lossless authoring checks.
+
 For a complete fresh-checkout app build run `scripts/build-runtime-assets.sh`
 before Xcode. See [generated artifacts](GENERATED_ARTIFACTS.md).
 

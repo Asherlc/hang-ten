@@ -12,11 +12,11 @@ final class PlanFlowUITests: XCTestCase {
 
     func testRepeaterPreviewGroupsCyclesAndRetainsExceptionalRecovery() {
         let app = launchPlan("rptc.seven-three-repeaters")
-        reveal("Repeat 5 times", in: app)
+        reveal("Repeat 6 times", in: app)
         XCTAssertTrue(app.staticTexts["15 cues"].exists)
         XCTAssertTrue(app.staticTexts["RPTC repeater set"].exists)
         XCTAssertFalse(app.staticTexts["RPTC repeater set · rep 2 of 7"].exists)
-        attachScreenshot(named: "Repeater grouped cycles", app: app, centering: "Repeat 5 times")
+        attachScreenshot(named: "Repeater grouped cycles", app: app, centering: "Repeat 6 times")
 
         reveal("RPTC repeater set · rep 7 of 7", in: app)
         XCTAssertTrue(app.staticTexts["173s rest"].exists)
@@ -24,7 +24,7 @@ final class PlanFlowUITests: XCTestCase {
         attachScreenshot(named: "Repeater final recovery", app: app)
     }
 
-    func testRepeatedRoundsAlsoGroupTheirInnerHangRestCycles() {
+    func testRepeatedRoundsUseTheirDeclaredHangRestCycles() {
         let app = launchPlan("method.intermediate-hangboarding.repeaters")
         reveal("Repeat 4 times", in: app)
         XCTAssertGreaterThanOrEqual(app.staticTexts.matching(NSPredicate(format: "label == %@", "Repeat 4 times")).count, 2)
@@ -34,10 +34,10 @@ final class PlanFlowUITests: XCTestCase {
         ).allElementsBoundByIndex
         let identifiers = repeatCards.map(\.identifier)
         XCTAssertGreaterThanOrEqual(identifiers.count, 2)
-        XCTAssertEqual(Set(identifiers).count, identifiers.count, "Nested repeat cards must have distinct identifiers")
+        XCTAssertEqual(Set(identifiers).count, identifiers.count, "Declared repeat cards must have distinct identifiers")
         XCTAssertTrue(app.staticTexts["Repeaters"].exists)
         XCTAssertTrue(app.staticTexts["105s recovery"].exists)
-        attachScreenshot(named: "Nested repeated rounds", app: app)
+        attachScreenshot(named: "Declared repeated rounds", app: app)
     }
 
     func testFirstHoldPreviewShowsItsInstructionsBeforeStarting() {
