@@ -19,8 +19,12 @@ contract governs its cord metadata and native solver authoring.
 Collect primary manufacturer evidence for the current revision: product page,
 dimensions, straight and oblique views, and any official numbered/depth guide.
 Record URLs, review date, revision decision, and field-by-field mappings in a
-tracked source audit. Omit any optional measurement, capacity, side, pairing,
-grip type, or feature the evidence does not establish.
+tracked source audit. Every contact must specify `fingerCapacity`. Prefer a
+published count; when it is unavailable, review the retained physical hold and
+record an explicitly labeled estimate, its contact IDs, reasoning, source URLs,
+and review date. See the [catalog capacity audit](source-audits/2026-10-06-finger-capacity.md).
+Omit any optional measurement, hand capacity, side, pairing, grip type, or
+feature the evidence does not establish.
 
 Board facts do not define routine prescriptions. Catalog plans contain only
 contact predicates justified by their own source audits; the resolver matches
@@ -39,9 +43,17 @@ explicitly documented reciprocal relationship; never infer pairing or symmetry.
 
 Each contact owns facts only:
 
-- required `id`, `equipmentObjectID`, `name`, and `kind`;
-- optional `side`, `pairedContactID`, `shape`, `depth`, `fingerCapacity`,
-  `handCapacity`, and `gripTypes`, only when directly supported. `shape` is
+- required `id`, `equipmentObjectID`, `name`, `kind`, `gripTypes`, and
+  `fingerCapacity`. Use `gripTypes: []` when no sourced grip classification exists.
+  Finger capacity is an integer from 1 through 4: the practical number of
+  non-thumb fingers from one hand that can engage the physical contact.
+  It is independent of `handCapacity`; an open edge or two-handed jug can have
+  a capacity of 4 per hand. Review narrow pockets individually. A contact
+  highlight patch is not necessarily the physical boundary of the usable hold.
+  Estimates describe capacity, not prescribed grips or guaranteed fit for every
+  hand size. Package readers reject missing, null, or out-of-range capacities;
+- optional `side`, `pairedContactID`, `shape`, `depth`, and `handCapacity`,
+  only when directly supported. `shape` is
   one of `flat`, `round`, `incut`, or `slot`. `depth` is exactly one factual
   representation: either `{ "range": { "minimum": ..., "maximum": ... } }`
   for a published measurement or `{ "category": "large" }` (and the other

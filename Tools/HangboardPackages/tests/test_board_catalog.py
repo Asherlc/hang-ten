@@ -56,6 +56,27 @@ def test_board_schema_decodes_category_and_range_depths_without_legacy_members()
     )
 
 
+@pytest.mark.parametrize("kind", ["edge", "pocket", "jug", "sloper", "pinch"])
+def test_board_schema_requires_authored_finger_capacity_for_every_hold_kind(kind: str) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["contacts"][0]["kind"] = kind
+    document["contacts"][0].pop("fingerCapacity", None)
+
+    with pytest.raises(ValueError, match="fingerCapacity"):
+        module._load_board(document)
+
+
+@pytest.mark.parametrize("capacity", [None, True, 0, 5, 2.5, "4"])
+def test_board_schema_rejects_invalid_finger_capacity(capacity: object) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["contacts"][0]["fingerCapacity"] = capacity
+
+    with pytest.raises(ValueError, match="fingerCapacity"):
+        module._load_board(document)
+
+
 def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
     return (
         struct.pack(">I", len(body))

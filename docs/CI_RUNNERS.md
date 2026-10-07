@@ -72,6 +72,16 @@ height, branch identities, native-solid clearance and the prescribed sling
 length. Dedicated cases reject new bends, reversed direction and backtracking.
 No CAD, model, suspension cache or rendered geometry changes are involved.
 
+## XCTest time budgets
+
+`scripts/ci-run-xctest.sh` applies `XCTEST_RUN_TIMEOUT_SECONDS` independently
+to `build-for-testing` and `test-without-building`. Simulator startup and a
+cold compile do not shorten the time allowed to execute the selected suite.
+Each phase still collects diagnostics and terminates its process group on
+timeout, and the first failure stops the runner without retrying. The Actions
+job timeout bounds the entire job, including setup and both Xcode phases.
+Required UI selectors and check aggregation apply regardless of cache warmth.
+
 ## Upstream verification
 
 The separate runner audit merged in main `68861ede3` (PR #552) recorded:

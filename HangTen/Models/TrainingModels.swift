@@ -1015,6 +1015,8 @@ struct PhysicalContact: Identifiable, Hashable {
     let name: String
     let kind: HoldKind
     let shape: HoldShape?
+    // Catalog packages require a count; synthetic contacts and older activity
+    // snapshots can still have an unknown capacity.
     let fingerCapacity: Int?
     let handCapacity: Int?
     let depth: HoldDepth?

@@ -52,6 +52,7 @@
           "id": "hold-left",
           "name": "Left hold",
           "kind": "jug",
+          "fingerCapacity": 4,
           "equipmentObjectID": "primary",
           "gripTypes": []
         }
@@ -154,8 +155,8 @@
         }
       }],
       "contacts": [
-        {"id": "edge-left", "equipmentObjectID": "left-unit", "name": "Left edge", "kind": "edge", "gripTypes": []},
-        {"id": "edge-right", "equipmentObjectID": "right-unit", "name": "Right edge", "kind": "edge", "gripTypes": []}
+        {"id": "edge-left", "equipmentObjectID": "left-unit", "name": "Left edge", "kind": "edge", "fingerCapacity": 4, "gripTypes": []},
+        {"id": "edge-right", "equipmentObjectID": "right-unit", "name": "Right edge", "kind": "edge", "fingerCapacity": 4, "gripTypes": []}
       ]
     },
     "descriptor": {
@@ -479,6 +480,7 @@
           "id": "hold-left",
           "name": "Left hold",
           "kind": "jug",
+          "fingerCapacity": 4,
           "equipmentObjectID": "primary",
           "gripTypes": []
         }
@@ -660,6 +662,7 @@
           "id": "hold-left",
           "name": "Left hold",
           "kind": "jug",
+          "fingerCapacity": 4,
           "equipmentObjectID": "primary",
           "gripTypes": []
         }
@@ -959,6 +962,7 @@
           "id": "hold-left",
           "name": "Left hold",
           "kind": "jug",
+          "fingerCapacity": 4,
           "equipmentObjectID": "primary",
           "gripTypes": []
         }
@@ -1057,7 +1061,7 @@
         }
       }],
       "positions": [{ "id": "primary", "presentationID": "primary" }],
-      "contacts": [{ "id": "hold-left", "name": "Left hold", "kind": "jug", "equipmentObjectID": "primary", "gripTypes": [] }],
+      "contacts": [{ "id": "hold-left", "name": "Left hold", "kind": "jug", "fingerCapacity": 4, "equipmentObjectID": "primary", "gripTypes": [] }],
       "revisionID": "2026-09-contact-first",
       "equipmentObjects": [{ "id": "primary" }]
     },

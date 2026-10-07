@@ -17,8 +17,12 @@ geometry, and validation contract.
 2. Research that revision using official front, oblique, dimensional, and
    hold-guide sources. Record URLs, review date, field mappings, and explicit
    caveats for any archival third-party image in a source audit.
-3. Freeze the physical hold inventory. Omit optional measurements, capacities,
-   posture, and feature metadata that the sources do not support.
+3. Freeze the physical hold inventory. Require `fingerCapacity` (1–4 non-thumb
+   fingers per hand) on every contact. Prefer published counts; otherwise review
+   the physical hold and document an explicitly labeled estimate with contact
+   IDs, reasoning, source URLs, and review date. Do not infer capacity from a
+   highlight patch alone. Omit unsupported optional measurements, hand capacity,
+   posture, and feature metadata.
 4. Create or refine one flat `Hangboards/<slug>.FCStd`, the retained native
    geometry and embedded board/cord/simulation input source. **REQUIRED SUB-SKILL:** Use
    `migrate-hangboard-to-3d` for geometry or model integration work. Embed

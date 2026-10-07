@@ -61,13 +61,13 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         waitForExpectations(timeout: 15)
         addScreenshot(named: "Beastmaker manual orbit after selection")
         let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
-        XCTAssertTrue(pocket.waitForExistence(timeout: 10))
-        // Wrapped names and full-sized row targets can put this hold below
-        // the viewport. Start on the legend so the 3D orbit gesture cannot win.
+        // Lazy grid rows may not exist until scrolled into the viewport.
+        // Start on the legend so the 3D orbit gesture cannot win.
         for _ in 0..<3 {
-            if pocket.isHittable { break }
+            if pocket.exists && pocket.isHittable { break }
             try scrollHoldLegend(in: app, upward: true)
         }
+        XCTAssertTrue(pocket.waitForExistence(timeout: 10))
         XCTAssertTrue(pocket.isHittable)
         pocket.tap()
         try scrollHoldLegend(in: app, upward: false)
@@ -86,11 +86,17 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     }
 
     private func scrollHoldLegend(in app: XCUIApplication, upward: Bool) throws {
-        let viewport = app.scrollViews.firstMatch.frame.intersection(app.frame)
+        var viewport = app.scrollViews["boardDetail.screen"].frame.intersection(app.frame)
+        // A partially visible row can be hittable even when its center is
+        // behind the floating tab bar, where a drag switches tabs instead.
+        let tabBar = app.tabBars.firstMatch
+        if tabBar.exists {
+            viewport.size.height = min(viewport.height, max(0, tabBar.frame.minY - viewport.minY))
+        }
         let rows = app.buttons.matching(NSPredicate(
             format: "identifier BEGINSWITH %@", "boardDetail.holdLegend."
         )).allElementsBoundByIndex.filter {
-            $0.isHittable && viewport.contains(CGPoint(x: $0.frame.midX, y: $0.frame.midY))
+            $0.isHittable && viewport.contains($0.frame)
         }
         let ordered = rows.sorted { $0.frame.midY < $1.frame.midY }
         let anchor = try XCTUnwrap(upward ? ordered.last : ordered.first,

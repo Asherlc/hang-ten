@@ -732,8 +732,15 @@ enum ContactResolver {
         if let kind = requirement.kind, contact.kind != kind { return false }
         if let shape = requirement.shape, contact.shape != shape { return false }
         if let depth = requirement.depth, !depth.matches(contact.depth) { return false }
-        if let fingerCapacity = requirement.fingerCapacity,
-           contact.fingerCapacity != fingerCapacity { return false }
+        if let fingerCapacity = requirement.fingerCapacity {
+            // Edge grips require room for the engaged fingers. An omitted
+            // edge capacity adds no restriction; named pocket sizes stay exact.
+            if contact.kind == .edge {
+                if let capacity = contact.fingerCapacity, capacity < fingerCapacity { return false }
+            } else if contact.fingerCapacity != fingerCapacity {
+                return false
+            }
+        }
         if let handCapacity = requirement.handCapacity,
            contact.handCapacity != handCapacity { return false }
         return true

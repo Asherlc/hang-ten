@@ -202,6 +202,7 @@ def _physical_contact(contact_id: str, name: str) -> dict[str, object]:
         "equipmentObjectID": "primary",
         "name": name,
         "kind": "jug",
+        "fingerCapacity": 4,
         "gripTypes": [],
     }
 
@@ -424,6 +425,7 @@ def write_v3_model_package(
             "equipmentObjectID": "primary",
             "name": contact_id.replace("-", " ").title(),
             "kind": "edge",
+            "fingerCapacity": 4,
             "gripTypes": [],
         }
         for contact_id in contacts

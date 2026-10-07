@@ -1688,12 +1688,11 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
     payload = _mapping(value, source)
     _closed(
         payload,
-        {"id", "equipmentObjectID", "name", "kind", "gripTypes"},
+        {"id", "equipmentObjectID", "name", "kind", "gripTypes", "fingerCapacity"},
         source,
         optional={
             "depth",
             "shape",
-            "fingerCapacity",
             "handCapacity",
             "side",
             "pairedContactID",
@@ -1731,13 +1730,11 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
         raise ValueError(f"{source}.gripTypes contains an unsupported grip type")
     if len(grip_types) != len(set(grip_types)):
         raise ValueError(f"{source}.gripTypes must be unique")
-    finger_capacity = None
-    if "fingerCapacity" in payload:
-        finger_capacity = _positive_integer(
-            payload["fingerCapacity"], f"{source}.fingerCapacity"
-        )
-        if finger_capacity not in range(1, 5):
-            raise ValueError(f"{source}.fingerCapacity must be in 1...4")
+    finger_capacity = _positive_integer(
+        payload["fingerCapacity"], f"{source}.fingerCapacity"
+    )
+    if finger_capacity not in range(1, 5):
+        raise ValueError(f"{source}.fingerCapacity must be in 1...4")
     hand_capacity = None
     if "handCapacity" in payload:
         hand_capacity = _positive_integer(

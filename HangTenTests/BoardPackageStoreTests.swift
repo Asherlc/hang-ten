@@ -2027,6 +2027,26 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsMissingFingerCapacityForEveryHoldKind() throws {
+        for kind in ["edge", "pocket", "jug", "sloper", "pinch"] {
+            let fixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var contacts = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                    contacts[0]["kind"] = kind
+                    contacts[0].removeValue(forKey: "fingerCapacity")
+                    board["contacts"] = contacts
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), kind) { error in
+                XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
+            }
+        }
+    }
+
     func testStoreAcceptsOmittedAndRejectsExplicitNullForOptionalContactShapeAndDepth() throws {
         for field in ["shape", "depth"] {
             let omittedFixture = try makeFixtureBundle { hangboardsURL in
@@ -2078,7 +2098,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(board.dimensions)
         XCTAssertNil(hold.depth)
         XCTAssertTrue(hold.gripTypes.isEmpty)
-        XCTAssertNil(hold.fingerCapacity)
+        XCTAssertEqual(hold.fingerCapacity, 4)
         XCTAssertNil(hold.handCapacity)
         XCTAssertNil(hold.shape)
         XCTAssertEqual(hold.equipmentObjectID, "primary")
@@ -2482,7 +2502,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(frame.rect.size.height, expectedFrame.size.height, accuracy: 1e-12)
         XCTAssertNil(firstHold.depth)
         XCTAssertTrue(firstHold.gripTypes.isEmpty)
-        XCTAssertNil(firstHold.fingerCapacity)
+        XCTAssertEqual(firstHold.fingerCapacity, 4)
         XCTAssertNil(firstHold.handCapacity)
         XCTAssertNil(firstHold.shape)
         XCTAssertEqual(board.presentations.count, 1)
@@ -4504,11 +4524,13 @@ final class BoardPackageStoreTests: XCTestCase {
                     [
                         "id": "left-edge", "equipmentObjectID": "primary",
                         "name": "Left Edge", "kind": "edge",
+                        "fingerCapacity": 4,
                         "gripTypes": [],
                     ],
                     [
                         "id": "right-edge", "equipmentObjectID": "primary",
                         "name": "Right Edge", "kind": "edge",
+                        "fingerCapacity": 4,
                         "gripTypes": [],
                     ],
                 ]
@@ -5164,6 +5186,7 @@ final class BoardPackageStoreTests: XCTestCase {
                     "equipmentObjectID": "primary",
                     "name": "Left hold",
                     "kind": "jug",
+                    "fingerCapacity": 4,
                     "gripTypes": []
                 ]]
             ],

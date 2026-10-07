@@ -1,0 +1,1669 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-06",
+  "definition": "Practical number of non-thumb fingers from one hand that can engage the authored physical contact, capped at four. Hand capacity is independent. Reviewed estimates vary with hand size and are not manufacturer measurements.",
+  "boards": [
+    {
+      "slug": "beastmaker-1000",
+      "boardID": "beastmaker-1000",
+      "sourceURL": "https://www.beastmaker.co.uk/collections/fingerboards/products/beastmaker-1000-series",
+      "nativeSource": "Hangboards/beastmaker-1000.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-35-left",
+            "sloper-35-right",
+            "sloper-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "beastmaker-2000",
+      "boardID": "beastmaker-2000",
+      "sourceURL": "https://www.beastmaker.co.uk/products/beastmaker-2000-series",
+      "nativeSource": "Hangboards/beastmaker-2000.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-sloper-1",
+            "top-sloper-2",
+            "top-sloper-3",
+            "top-sloper-4",
+            "hold-28"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "captain-fingerfood-dual",
+      "boardID": "captain-fingerfood.dual",
+      "sourceURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+      "nativeSource": "Hangboards/captain-fingerfood-dual.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 1,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimate for the short end wall of the continuous cavity, distinct from its full-width edge lips. The retained native wall spans about 26 mm vertically; estimate one supporting finger.",
+          "contactIDs": [
+            "pocket-end-wall-20"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "straight-edge-20",
+            "outer-jug",
+            "curved-edge-20"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "captain-fingerfood-pocket",
+      "boardID": "captain-fingerfood.pocket",
+      "sourceURL": "https://en.captainfingerfood.rocks/products/lines-hangboard",
+      "nativeSource": "Hangboards/captain-fingerfood-pocket.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-15",
+            "edge-20",
+            "jug-outer-rim"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "captain-fingerfood-unlevel",
+      "boardID": "captain-fingerfood.unlevel",
+      "sourceURL": "https://en.captainfingerfood.rocks/products/unlevel-hangboard",
+      "nativeSource": "Hangboards/captain-fingerfood-unlevel.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 1,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimate for the short end wall of the continuous cavity, distinct from its full-width edge lips. The retained native wall spans about 22 mm vertically; estimate one supporting finger.",
+          "contactIDs": [
+            "pocket-end-wall-20-25"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "curved-edge-20",
+            "outer-jug",
+            "curved-edge-25"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "clavellium-training-block",
+      "boardID": "clavellium-training-block",
+      "sourceURL": "https://www.etsy.com/listing/1740404071",
+      "nativeSource": "Hangboards/clavellium-training-block.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "cd-pinch-80mm-negative-x",
+            "cd-pinch-80mm-positive-x",
+            "cd-pinch-90mm-front",
+            "cd-pinch-90mm-back",
+            "cd-pinch-100mm-top",
+            "cd-pinch-100mm-bottom"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "crimptonite-helium-mobile",
+      "boardID": "crimptonite.helium-mobile",
+      "sourceURL": "https://crimptonite.com/product/helium-mobile/",
+      "nativeSource": "Hangboards/crimptonite-helium-mobile.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-14",
+            "center-edge-18",
+            "edge-22",
+            "center-edge-10",
+            "back-jug-sloper",
+            "top-jug"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "dewoodstok-woodbord",
+      "boardID": "dewoodstok-woodbord",
+      "sourceURL": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+      "nativeSource": "Hangboards/dewoodstok-woodbord.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 2,
+          "basis": "reviewedEstimate",
+          "reason": "The manufacturer publishes two- and four-finger pocket families. Reviewed position mapping assigns two to the four narrow upper/lower apertures (positions 2 and 5), and four to the twelve wide apertures. This mapping is reviewed rather than a published numbered hold guide.",
+          "contactIDs": [
+            "front-upper-2",
+            "front-upper-5",
+            "front-lower-2",
+            "front-lower-5"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "The manufacturer publishes two- and four-finger pocket families. Reviewed position mapping assigns two to the four narrow upper/lower apertures (positions 2 and 5), and four to the twelve wide apertures. This mapping is reviewed rather than a published numbered hold guide.",
+          "contactIDs": [
+            "front-upper-1",
+            "front-upper-3",
+            "front-upper-4",
+            "front-upper-6",
+            "front-middle-1",
+            "front-middle-2",
+            "front-middle-3",
+            "front-middle-4",
+            "front-lower-1",
+            "front-lower-3",
+            "front-lower-4",
+            "front-lower-6"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-rim"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "escape-beta-22",
+      "boardID": "escape-beta-22",
+      "sourceURL": "https://escapeclimbing.com/products/ec72100",
+      "nativeSource": "Hangboards/escape-beta-22.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "hold-01-left",
+            "hold-01-right",
+            "hold-02-left",
+            "hold-02-right",
+            "hold-03-left",
+            "hold-03-right",
+            "hold-04-left",
+            "hold-04-right",
+            "hold-05-left",
+            "hold-05-right",
+            "hold-06-left",
+            "hold-06-right",
+            "hold-07-left",
+            "hold-07-right",
+            "hold-08-left",
+            "hold-08-right",
+            "hold-09-left",
+            "hold-09-right",
+            "hold-10-left",
+            "hold-10-right",
+            "hold-11-left",
+            "hold-11-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "escape-unlimited",
+      "boardID": "escape.unlimited",
+      "sourceURL": "https://escapeclimbing.com/products/ec72000",
+      "nativeSource": "Hangboards/escape-unlimited.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-sloper-60",
+            "edge-45-left",
+            "edge-45-right",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-15-left",
+            "edge-15-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "evolv-kilter-basic-long",
+      "boardID": "evolv-kilter-basic-long",
+      "sourceURL": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+      "nativeSource": "Hangboards/evolv-kilter-basic-long.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-rounded",
+            "edge-20",
+            "edge-15",
+            "edge-10"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "frictitious-doormount-pro-7",
+      "boardID": "frictitious.doormount-pro-7",
+      "sourceURL": "https://frictitiousclimbing.com/en-ca/products/doormount-pro",
+      "nativeSource": "Hangboards/frictitious-doormount-pro-7.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 2,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimate for the two compact pocket openings in the retained native source, about 36 mm across; estimate two supporting fingers.",
+          "contactIDs": [
+            "hold-6",
+            "hold-7"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug",
+            "edge-35-left",
+            "edge-35-right",
+            "mixed-25-pocket-left",
+            "mixed-25-pocket-right",
+            "hold-8",
+            "hold-9",
+            "hold-10",
+            "hold-11",
+            "hold-12",
+            "hold-13"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "frictitious-megalith",
+      "boardID": "frictitious.megalith",
+      "sourceURL": "https://frictitiousclimbing.com/products/megalith",
+      "nativeSource": "Hangboards/frictitious-megalith.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug",
+            "center-edge-25",
+            "edge-8-left",
+            "edge-10-left",
+            "edge-12-left",
+            "edge-12-right",
+            "edge-10-right",
+            "edge-8-right",
+            "edge-30-left",
+            "edge-40-pocket-left",
+            "edge-40-pocket-right",
+            "edge-30-right",
+            "edge-15-left",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-15-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "frictitious-nug",
+      "boardID": "frictitious.nug",
+      "sourceURL": "https://frictitiousclimbing.com/products/the-nug",
+      "nativeSource": "Hangboards/frictitious-nug.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-20",
+            "edge-25",
+            "edge-8",
+            "edge-13",
+            "jug-40",
+            "pinch-60"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "frictitious-port-a-board",
+      "boardID": "frictitious.port-a-board",
+      "sourceURL": "https://frictitiousclimbing.com/products/the-port-a-board-portable-and-mountable-portable-hangboard",
+      "nativeSource": "Hangboards/frictitious-port-a-board.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-30",
+            "edge-25",
+            "edge-20",
+            "edge-15",
+            "edge-12",
+            "edge-10",
+            "edge-8",
+            "jug-outer-rim",
+            "pinch-body"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "j-bryant-ftg-32",
+      "boardID": "j-bryant.ftg-32",
+      "sourceURL": "https://www.amazon.com/dp/B0FZGY19T9",
+      "nativeSource": "Hangboards/j-bryant-ftg-32.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-16",
+            "edge-25"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lattice-mini-bar",
+      "boardID": "lattice.mini-bar",
+      "sourceURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
+      "nativeSource": "Hangboards/lattice-mini-bar.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "ergonomic-jug",
+            "edge-10",
+            "edge-20",
+            "mini-pinch"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lattice-mxedge-lift-large",
+      "boardID": "lattice.mxedge-lift-large",
+      "sourceURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
+      "nativeSource": "Hangboards/lattice-mxedge-lift-large.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 1,
+          "basis": "manufacturerDefinition",
+          "reason": "The manufacturer 2025 catalogue identifies this 28 mm contact as a mono (one finger).",
+          "contactIDs": [
+            "mono-28"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-22",
+            "edge-16",
+            "edge-12"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lattice-mxedge-lift-small",
+      "boardID": "lattice.mxedge-lift-small",
+      "sourceURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
+      "nativeSource": "Hangboards/lattice-mxedge-lift-small.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 1,
+          "basis": "manufacturerDefinition",
+          "reason": "The manufacturer 2025 catalogue identifies this 25 mm contact as a mono (one finger).",
+          "contactIDs": [
+            "mono-25"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-18",
+            "edge-14",
+            "edge-8"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "lattice-triple-rung",
+      "boardID": "lattice-triple-rung",
+      "sourceURL": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+      "nativeSource": "Hangboards/lattice-triple-rung.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-45",
+            "edge-10",
+            "edge-20"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "mammut-diamond-finger",
+      "boardID": "mammut.diamond-finger",
+      "sourceURL": "https://www.mammut.com/us/en/products/2060-00020/diamond-finger-hangboard",
+      "nativeSource": "Hangboards/mammut-diamond-finger.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 1,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimates from the retained manufacturer manual and native contact regions: named monos one, narrow nested upper insets two, and the three broad upper pockets four. The manual does not publish numerical capacities.",
+          "contactIDs": [
+            "mam-mono-l",
+            "mam-mono-r"
+          ]
+        },
+        {
+          "fingerCapacity": 2,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimates from the retained manufacturer manual and native contact regions: named monos one, narrow nested upper insets two, and the three broad upper pockets four. The manual does not publish numerical capacities.",
+          "contactIDs": [
+            "mam-upper-inset-l",
+            "mam-upper-inset-r"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimates from the retained manufacturer manual and native contact regions: named monos one, narrow nested upper insets two, and the three broad upper pockets four. The manual does not publish numerical capacities.",
+          "contactIDs": [
+            "mam-upper-pocket-l",
+            "mam-upper-pocket-r",
+            "mam-upper-pocket-c"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "mam-jug-l",
+            "mam-jug-r",
+            "mam-sloper-c",
+            "mam-mid-edge-c",
+            "mam-lateral-ledge-l",
+            "mam-lateral-ledge-r",
+            "mam-lower-edge-c",
+            "mam-upper-open-bay-l",
+            "mam-upper-open-bay-r"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-climbers-edge",
+      "boardID": "metolius.climbers-edge",
+      "sourceURL": "https://www.metoliusclimbing.com/products/climbers-edge-board",
+      "nativeSource": "Hangboards/metolius-climbers-edge.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "flat-sloper-left",
+            "round-sloper-center",
+            "flat-sloper-right",
+            "jug-right",
+            "edge-20-left",
+            "edge-15-left",
+            "edge-10-center",
+            "edge-15-right",
+            "edge-20-right",
+            "edge-17-5-left",
+            "edge-12-5-left",
+            "edge-7-5-center",
+            "edge-12-5-right",
+            "edge-17-5-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-contact",
+      "boardID": "metolius.contact",
+      "sourceURL": "https://www.metoliusclimbing.com/products/contact-training-board",
+      "nativeSource": "Hangboards/metolius-contact.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "pinch-left",
+            "jug-left",
+            "flat-sloper-center",
+            "edge-16-center",
+            "edge-17-center",
+            "edge-18-center",
+            "edge-19-center",
+            "round-sloper-3-left",
+            "round-sloper-3-right",
+            "jug-right",
+            "pinch-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-foundry",
+      "boardID": "metolius.foundry",
+      "sourceURL": "https://www.metoliusclimbing.com/products/foundry-training-board",
+      "nativeSource": "Hangboards/metolius-foundry.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "pinch-1-left",
+            "jug-2-left",
+            "sloper-8-center",
+            "edge-9-center",
+            "edge-10-center",
+            "edge-11-center",
+            "jug-2-right",
+            "pinch-1-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-light-rail-2",
+      "boardID": "metolius.light-rail-2",
+      "sourceURL": "https://www.metoliusclimbing.com/products/light-rail",
+      "nativeSource": "Hangboards/metolius-light-rail-2.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-40-20mm-side",
+            "edge-20",
+            "jug-40-15mm-side",
+            "edge-15"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-prime-rib",
+      "boardID": "metolius.prime-rib",
+      "sourceURL": "https://www.metoliusclimbing.com/products/prime-rib",
+      "nativeSource": "Hangboards/metolius-prime-rib.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-38",
+            "edge-23",
+            "edge-15"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-project",
+      "boardID": "metolius.project",
+      "sourceURL": "https://www.metoliusclimbing.com/products/project-training-board",
+      "nativeSource": "Hangboards/metolius-project.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-1-left",
+            "round-sloper-8-center",
+            "jug-1-right",
+            "flat-sloper-2-left",
+            "flat-sloper-2-right",
+            "edge-4-left",
+            "edge-9-center",
+            "edge-10-center",
+            "edge-4-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-rock-rings-3d",
+      "boardID": "metolius.rock-rings-3d",
+      "sourceURL": "https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d",
+      "nativeSource": "Hangboards/metolius-rock-rings-3d.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-simulator-3d",
+      "boardID": "metolius.simulator-3d",
+      "sourceURL": "https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board",
+      "nativeSource": "Hangboards/metolius-simulator-3d.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-1-left",
+            "flat-sloper-2-left",
+            "round-sloper-3-center",
+            "jug-14-center",
+            "flat-sloper-2-right",
+            "jug-1-right",
+            "edge-5-left",
+            "edge-6-left",
+            "edge-7-left",
+            "edge-11-left",
+            "edge-11-right",
+            "edge-7-right",
+            "edge-6-right",
+            "edge-5-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-wood-grips-compact-ii",
+      "boardID": "metolius.wood-grips-compact-ii",
+      "sourceURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+      "nativeSource": "Hangboards/metolius-wood-grips-compact-ii.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "sloper-flat-left",
+            "sloper-round-center",
+            "sloper-flat-right",
+            "jug-right",
+            "edge-29-left",
+            "edge-29-right",
+            "edge-19-left",
+            "edge-19-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "metolius-wood-grips-deluxe-ii",
+      "boardID": "metolius.wood-grips-deluxe-ii",
+      "sourceURL": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+      "nativeSource": "Hangboards/metolius-wood-grips-deluxe-ii.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-1-left",
+            "sloper-2-flat-left",
+            "sloper-12-round-center",
+            "sloper-2-flat-right",
+            "jug-1-right",
+            "edge-3-31-left",
+            "edge-3-31-right",
+            "edge-6-25-left",
+            "edge-6-25-right",
+            "edge-9-19-left",
+            "edge-9-19-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "moon-armstrong",
+      "boardID": "moon.armstrong",
+      "sourceURL": "https://moonclimbing.com/moon-armstrong-fingerboard-beech.html",
+      "nativeSource": "Hangboards/moon-armstrong.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "sloper-left",
+            "sloper-right",
+            "jug-left",
+            "jug-right",
+            "center-jug",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-10-left",
+            "edge-10-right",
+            "edge-8-left",
+            "edge-8-right",
+            "center-edge-22",
+            "center-edge-18"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nature-stoak-board-iii",
+      "boardID": "nature.stoak-board-iii",
+      "sourceURL": "https://natureclimbing.com/products/stoak-board-iii",
+      "nativeSource": "Hangboards/nature-stoak-board-iii.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug",
+            "edge-22-center",
+            "gradient-edge-left",
+            "gradient-edge-right",
+            "lower-composite-left",
+            "lower-composite-right",
+            "lower-composite-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nature-stone-hanger-mini-karma8a",
+      "boardID": "nature.stone-hanger-mini-karma8a",
+      "sourceURL": "https://natureclimbing.com/products/mini-hanger",
+      "nativeSource": "Hangboards/nature-stone-hanger-mini-karma8a.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "wood-edge-15",
+            "granite-edge-15",
+            "pinch-60"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nature-stone-hanger-mini",
+      "boardID": "nature.stone-hanger-mini",
+      "sourceURL": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+      "nativeSource": "Hangboards/nature-stone-hanger-mini.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "pull-up-jug",
+            "wood-edge-15-incut",
+            "granite-edge-15",
+            "pinch-60"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "nature-stone-hanger",
+      "boardID": "nature.stone-hanger",
+      "sourceURL": "https://natureclimbing.com/products/stone-hanger-1",
+      "nativeSource": "Hangboards/nature-stone-hanger.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-front-15mm-incut",
+            "edge-front-15mm-flat",
+            "edge-front-20mm-wood-flat",
+            "edge-front-20mm-granite",
+            "edge-reverse-10mm-incut",
+            "edge-reverse-10mm-flat",
+            "edge-reverse-06mm-flat",
+            "edge-reverse-06mm-incut"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "owl-climb-poker",
+      "boardID": "owl-climb.poker",
+      "sourceURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
+      "nativeSource": "Hangboards/owl-climb-poker.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "face-a-left-outer-slot",
+            "face-a-center-pull-up-slot",
+            "face-a-right-outer-slot",
+            "face-b-left-outer-slot",
+            "face-b-left-deep-sloper",
+            "face-b-center-pull-up-slot",
+            "face-b-right-deep-sloper",
+            "face-b-right-outer-slot",
+            "face-c-left-outer-slot",
+            "face-c-left-shallow-half-round",
+            "face-c-center-pull-up-slot",
+            "face-c-right-shallow-half-round",
+            "face-c-right-outer-slot",
+            "face-d-left-outer-slot",
+            "face-d-left-deep-rounded-recess",
+            "face-d-center-pull-up-slot",
+            "face-d-right-deep-rounded-recess",
+            "face-d-right-outer-slot"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "plateau-lifting-edge",
+      "boardID": "plateau.lifting-edge",
+      "sourceURL": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
+      "nativeSource": "Hangboards/plateau-lifting-edge.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-18"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "soill-iron-palm-2",
+      "boardID": "soill.iron-palm-2",
+      "sourceURL": "https://soillholds.com/products/iron-palm-2-0",
+      "nativeSource": "Hangboards/soill-iron-palm-2.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "sloper-left",
+            "sloper-right",
+            "pinch-left",
+            "top-incut-jug",
+            "rounded-edge-40",
+            "flat-edge-35",
+            "flat-edge-15",
+            "pinch-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "soill-split-palm",
+      "boardID": "soill.split-palm",
+      "sourceURL": "https://soillholds.com/products/split-palm",
+      "nativeSource": "Hangboards/soill-split-palm.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "left-top-jug",
+            "left-large-sloper",
+            "left-small-sloper-pinch",
+            "left-outer-crimp",
+            "left-sloping-rail",
+            "left-flat-rail",
+            "left-bottom-crimp",
+            "right-top-jug",
+            "right-large-sloper",
+            "right-small-sloper-pinch",
+            "right-outer-crimp",
+            "right-sloping-rail",
+            "right-flat-rail",
+            "right-bottom-crimp"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "soill-training-tiles",
+      "boardID": "soill.training-tiles",
+      "sourceURL": "https://soill.ca/products/training-tiles-so-ill-x-meagan-martin",
+      "nativeSource": "Hangboards/soill-training-tiles.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for each broad top pocket, based on the retained native openings and manufacturer product imagery; the source specifies pocket depth but no finger count.",
+          "contactIDs": [
+            "top-pocket-outer-left",
+            "top-pocket-outer-right",
+            "top-pocket-inner-left",
+            "top-pocket-inner-right"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "upper-sloper-outer-left",
+            "upper-sloper-outer-right",
+            "upper-sloper-inner-left",
+            "upper-sloper-inner-right",
+            "middle-edge-outer-left",
+            "middle-edge-outer-right",
+            "middle-edge-inner-left",
+            "middle-edge-inner-right",
+            "bottom-edge-center-left",
+            "bottom-edge-center-right",
+            "bottom-edge-inner-left",
+            "bottom-edge-inner-right",
+            "bottom-edge-outer-left",
+            "bottom-edge-outer-right",
+            "top-jug-left",
+            "top-jug-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "surfaces-for-climbing-transgression-2011",
+      "boardID": "surfaces-for-climbing-transgression-2011",
+      "sourceURL": "https://en-eva-lopez.blogspot.com/2012/04/transgression-fingerboard-for-high.html",
+      "nativeSource": "Hangboards/surfaces-for-climbing-transgression-2011.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-top",
+            "edge-18",
+            "edge-14",
+            "edge-12",
+            "edge-10",
+            "edge-9",
+            "edge-8",
+            "edge-7",
+            "edge-6"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "surfaces-for-climbing-transgression-2013",
+      "boardID": "surfaces-for-climbing-transgression-2013",
+      "sourceURL": "https://en-eva-lopez.blogspot.com/2012/04/transgression-fingerboard-for-high.html",
+      "nativeSource": "Hangboards/surfaces-for-climbing-transgression-2013.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-top",
+            "edge-18",
+            "edge-14",
+            "edge-12",
+            "edge-10",
+            "edge-9",
+            "edge-8",
+            "edge-7",
+            "edge-6"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "target10a-linebreaker-base",
+      "boardID": "target10a.linebreaker-base",
+      "sourceURL": "https://www.target10a.com/en/linebreaker-boards/409-linebreaker-base-trainingsboard.html",
+      "nativeSource": "Hangboards/target10a-linebreaker-base.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-32-left",
+            "sloper-32-right",
+            "sloper-bar-35-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-flash-board",
+      "boardID": "tension.flash-board",
+      "sourceURL": "https://tensionclimbing.com/products/flash-board-2",
+      "nativeSource": "Hangboards/tension-flash-board.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "three-edge-left",
+            "three-edge-center",
+            "three-edge-right",
+            "two-edge-left",
+            "two-edge-right",
+            "small-crimp-left",
+            "small-crimp-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-grindstone-original",
+      "boardID": "tension.grindstone-original",
+      "sourceURL": "https://www.tensionclimbing.com/hangboards/new-board",
+      "nativeSource": "Hangboards/tension-grindstone-original.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-35-left",
+            "edge-35-right",
+            "edge-30-left",
+            "edge-25-left",
+            "edge-50-center",
+            "edge-30-right",
+            "edge-25-right",
+            "edge-20-left",
+            "edge-15-left",
+            "edge-22-center",
+            "edge-20-right",
+            "edge-15-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-grindstone-pro",
+      "boardID": "tension.grindstone-pro",
+      "sourceURL": "https://www.tensionclimbing.com/hangboards/grindstone-pro",
+      "nativeSource": "Hangboards/tension-grindstone-pro.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "phone-slot",
+            "edge-35-left",
+            "edge-35-right",
+            "edge-7-incut",
+            "edge-20-left",
+            "edge-30-center",
+            "edge-20-right",
+            "edge-15-left",
+            "edge-10-left",
+            "edge-22-center",
+            "edge-15-right",
+            "edge-10-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-grindstone",
+      "boardID": "tension.grindstone",
+      "sourceURL": "https://tensionclimbing.com/products/grindstone",
+      "nativeSource": "Hangboards/tension-grindstone.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug",
+            "edge-50-center",
+            "edge-10-left",
+            "edge-8-left",
+            "edge-8-right",
+            "edge-10-right",
+            "edge-30-left",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-30-right",
+            "edge-20-left",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-20-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-honestone",
+      "boardID": "tension.honestone",
+      "sourceURL": "https://tensionclimbing.com/products/honestone",
+      "nativeSource": "Hangboards/tension-honestone.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "macro-sloper-left",
+            "edge-25-center",
+            "edge-20-left",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-20-right",
+            "edge-10-left",
+            "edge-8-left",
+            "edge-8-right",
+            "edge-10-right",
+            "macro-sloper-right-center",
+            "macro-sloper-left-center",
+            "macro-sloper-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "tension-whetstone",
+      "boardID": "tension.whetstone",
+      "sourceURL": "https://tensionclimbing.com/products/whetstone",
+      "nativeSource": "Hangboards/tension-whetstone.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-ergo-jug",
+            "edge-40-center",
+            "edge-40-left",
+            "edge-30-left",
+            "edge-30-right",
+            "edge-40-right",
+            "edge-25-left",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-25-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "the-hangboard",
+      "boardID": "the-hangboard.the-hangboard",
+      "sourceURL": "https://thehangboard.com/products/hangboard",
+      "nativeSource": "Hangboards/the-hangboard.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-40-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "trango-rock-prodigy-forge",
+      "boardID": "trango.rock-prodigy-forge",
+      "sourceURL": "https://trango.com/products/rock-prodigy-forge",
+      "nativeSource": "Hangboards/trango-rock-prodigy-forge.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "sloper-30-left",
+            "sloper-30-right",
+            "sloper-40-left",
+            "sloper-40-right",
+            "large-flat-edge-left",
+            "large-flat-edge-right",
+            "slopey-crimper-left",
+            "slopey-crimper-right",
+            "variable-edge-rail-left",
+            "variable-edge-rail-right",
+            "closed-crimp-left",
+            "closed-crimp-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "trango-rock-prodigy-training-center",
+      "boardID": "trango.rock-prodigy-training-center",
+      "sourceURL": "https://trango.com/products/rock-prodigy-training-center",
+      "nativeSource": "Hangboards/trango-rock-prodigy-training-center.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 2,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimates preserve the existing physical inventory distinctions: the named three-finger slots take three; the index/middle and middle/ring paired pockets take two. This does not add training cues or prescriptions.",
+          "contactIDs": [
+            "pocket-index-middle-deep-left",
+            "pocket-index-middle-deep-right",
+            "pocket-middle-ring-deep-left",
+            "pocket-middle-ring-deep-right",
+            "pocket-index-middle-medium-shallow-left",
+            "pocket-index-middle-medium-shallow-right",
+            "pocket-middle-ring-shallow-left",
+            "pocket-middle-ring-shallow-right"
+          ]
+        },
+        {
+          "fingerCapacity": 3,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed estimates preserve the existing physical inventory distinctions: the named three-finger slots take three; the index/middle and middle/ring paired pockets take two. This does not add training cues or prescriptions.",
+          "contactIDs": [
+            "pocket-three-finger-slot-left",
+            "pocket-three-finger-slot-right"
+          ]
+        },
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "edge-large-vder-left",
+            "edge-shallow-vder-left",
+            "edge-thin-crimp-left",
+            "edge-thin-crimp-right",
+            "pinch-medium-left",
+            "pinch-wide-left",
+            "edge-large-vder-right",
+            "edge-shallow-vder-right",
+            "pinch-medium-right",
+            "pinch-wide-right",
+            "sloper-left",
+            "sloper-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-baguette-evo",
+      "boardID": "yy.baguette-evo",
+      "sourceURL": "https://www.yyvertical.com/en/products/baguette-evo",
+      "nativeSource": "Hangboards/yy-baguette-evo.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-20-left",
+            "edge-10-left",
+            "edge-25-left",
+            "edge-15-left",
+            "edge-15-right",
+            "edge-25-right",
+            "edge-10-right",
+            "edge-20-right",
+            "edge-12-left",
+            "edge-12-right",
+            "edge-8-left",
+            "edge-8-right",
+            "edge-6-upper",
+            "edge-6-lower",
+            "edge-central-30",
+            "edge-central-25",
+            "edge-central-20",
+            "edge-central-6",
+            "rounded-tray"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-baguette",
+      "boardID": "yy.baguette",
+      "sourceURL": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+      "nativeSource": "Hangboards/yy-baguette.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-30",
+            "tray",
+            "edge-20",
+            "edge-25",
+            "edge-15",
+            "edge-10"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-penta-evo",
+      "boardID": "yy.penta-evo",
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "nativeSource": "Hangboards/yy-penta-evo.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "edge-25-left",
+            "edge-20-left",
+            "edge-15-left",
+            "edge-10-left",
+            "tray-left",
+            "edge-20-right",
+            "edge-25-right",
+            "edge-10-right",
+            "edge-15-right",
+            "tray-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-travelboard",
+      "boardID": "yy.travelboard",
+      "sourceURL": "https://www.yyvertical.com/en/products/la-travelboard-poutre-dentrainement",
+      "nativeSource": "Hangboards/yy-travelboard.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "tray",
+            "edge-25",
+            "edge-15",
+            "edge-10"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-verticalboard-evo",
+      "boardID": "yy.verticalboard-evo",
+      "sourceURL": "https://www.yyvertical.com/en/products/verticalboard-evo",
+      "nativeSource": "Hangboards/yy-verticalboard-evo.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-43-left",
+            "sloper-43-right",
+            "sloper-38-left",
+            "sloper-38-right",
+            "sloper-30-center",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-20-outer-left",
+            "edge-20-outer-right",
+            "edge-40-center",
+            "center-handle",
+            "edge-inclined-30-left",
+            "edge-inclined-30-right",
+            "edge-18-left",
+            "edge-18-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-verticalboard-first",
+      "boardID": "yy.verticalboard-first",
+      "sourceURL": "https://www.yyvertical.com/en/products/verticalboard-first",
+      "nativeSource": "Hangboards/yy-verticalboard-first.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-35-left",
+            "sloper-35-right",
+            "sloper-20-center",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-45-left",
+            "edge-45-right",
+            "edge-33-left",
+            "edge-33-right",
+            "edge-40-center",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-22-left",
+            "edge-22-right",
+            "edge-24-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-verticalboard-light",
+      "boardID": "yy.verticalboard-light",
+      "sourceURL": "https://www.yyvertical.com/en/products/verticalboard-light",
+      "nativeSource": "Hangboards/yy-verticalboard-light.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-30-left",
+            "sloper-30-right",
+            "sloper-20-center",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-45-left",
+            "edge-45-right",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-40-center"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "yy-verticalboard-one",
+      "boardID": "yy.verticalboard-one",
+      "sourceURL": "https://www.yyvertical.com/en/products/verticalboard-one",
+      "nativeSource": "Hangboards/yy-verticalboard-one.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "jug-left",
+            "jug-right",
+            "sloper-35-left",
+            "sloper-35-right",
+            "sloper-20-center",
+            "edge-25-left",
+            "edge-25-right",
+            "edge-45-left",
+            "edge-45-right",
+            "edge-inclined-25-left",
+            "edge-inclined-25-right",
+            "center-handle",
+            "edge-20-left",
+            "edge-20-right",
+            "edge-18-left",
+            "edge-18-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "zlagboard-evo",
+      "boardID": "zlagboard.evo",
+      "sourceURL": "https://www.zlagboard.com/hangboards",
+      "nativeSource": "Hangboards/zlagboard-evo.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug-left",
+            "top-sloper-32-left",
+            "top-sloper-20-left",
+            "top-sloper-jug-center",
+            "top-sloper-20-right",
+            "top-sloper-32-right",
+            "top-jug-right",
+            "edge-30-left",
+            "sloper-edge-30-left",
+            "sloper-edge-25-left",
+            "edge-35-center",
+            "sloper-edge-25-right",
+            "sloper-edge-30-right",
+            "edge-30-right",
+            "edge-20-left",
+            "sloper-edge-25-lower-left",
+            "edge-30-inner-left",
+            "sloper-edge-30-center",
+            "edge-30-inner-right",
+            "sloper-edge-25-lower-right",
+            "edge-20-right"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "zlagboard-pro",
+      "boardID": "zlagboard.pro",
+      "sourceURL": "https://www.zlagboard.com/hangboards",
+      "nativeSource": "Hangboards/zlagboard-pro.FCStd",
+      "records": [
+        {
+          "fingerCapacity": 4,
+          "basis": "reviewedEstimate",
+          "reason": "Reviewed four-finger estimate for these whole-hand contact regions in the retained native board. The source establishes the hold identity and shape; this capacity is an operator estimate, not a published measurement or a workout prescription.",
+          "contactIDs": [
+            "top-jug-left",
+            "top-jug-right",
+            "top-sloper-32-left",
+            "top-sloper-32-right",
+            "top-sloper-20-left",
+            "top-sloper-20-right",
+            "top-sloper-jug-center",
+            "edge-30-left",
+            "sloper-edge-30-left",
+            "sloper-edge-25-left",
+            "edge-35-center",
+            "sloper-edge-25-right",
+            "sloper-edge-30-right",
+            "edge-30-right",
+            "edge-20-left",
+            "sloper-edge-25-lower-left",
+            "edge-30-inner-left",
+            "sloper-edge-30-center",
+            "edge-30-inner-right",
+            "sloper-edge-25-lower-right",
+            "edge-20-right",
+            "edge-incut-15-left",
+            "edge-15-left",
+            "edge-incut-30-left",
+            "edge-incut-10-center",
+            "edge-incut-30-right",
+            "edge-15-right",
+            "edge-incut-15-right"
+          ]
+        }
+      ]
+    }
+  ]
+}

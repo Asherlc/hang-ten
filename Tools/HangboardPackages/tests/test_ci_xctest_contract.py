@@ -222,6 +222,95 @@ def test_build_required_gate_rejects_missing_required_validation(
     assert result.returncode == expected, result.stdout + result.stderr
 
 
+def run_mock_xctest(
+    tmp_path: Path,
+    *,
+    failed_phase: str = "",
+    toolchain: str = "",
+    setup_seconds: int = 0,
+    build_seconds: int = 0,
+    test_seconds: int = 0,
+    timeout_seconds: int = 20,
+) -> tuple[subprocess.CompletedProcess[str], list[str], list[str]]:
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    calls = tmp_path / "xcodebuild-calls.txt"
+    events = tmp_path / "tool-events.txt"
+    calls.touch()
+    events.touch()
+    mock_xcodebuild = bin_dir / "xcodebuild"
+    mock_xcodebuild.write_text(
+        "#!/usr/bin/env python3\n"
+        "import os, sys, time\n"
+        "with open(os.environ['MOCK_XCODEBUILD_CALLS'], 'a') as log:\n"
+        "    log.write(sys.argv[-1] + '\\n')\n"
+        "with open(os.environ['MOCK_TOOL_EVENTS'], 'a') as log:\n"
+        "    log.write('xcodebuild:' + ' '.join(sys.argv[1:]) + '\\n')\n"
+        "delay_key = 'MOCK_BUILD_SECONDS' if sys.argv[-1] == 'build-for-testing' else 'MOCK_TEST_SECONDS'\n"
+        "time.sleep(float(os.environ[delay_key]))\n"
+        "sys.exit(23 if sys.argv[-1] == os.environ['MOCK_FAIL_PHASE'] else 0)\n"
+    )
+    mock_xcodebuild.chmod(0o755)
+    mock_xcrun = bin_dir / "xcrun"
+    mock_xcrun.write_text(
+        "#!/usr/bin/env python3\n"
+        "import json, os, sys, time\n"
+        "args = sys.argv[1:]\n"
+        "with open(os.environ['MOCK_TOOL_EVENTS'], 'a') as log:\n"
+        "    log.write('xcrun:' + ' '.join(args) + '\\n')\n"
+        "if args == ['--sdk', 'iphonesimulator', '--show-sdk-version']:\n"
+        "    print('26.5')\n"
+        "elif args[0:3] == ['simctl', 'list', 'devices']:\n"
+        "    print(json.dumps({'devices': {'com.apple.CoreSimulator.SimRuntime.iOS-26-5': [{\n"
+        "        'udid': '22452A91-4697-4369-8812-53ADB77EB73B',\n"
+        "        'name': 'iPhone 17 Pro', 'state': 'Shutdown', 'isAvailable': True\n"
+        "    }]}}))\n"
+        "elif args[0:2] == ['simctl', 'bootstatus']:\n"
+        "    time.sleep(float(os.environ['MOCK_SETUP_SECONDS']))\n"
+        "elif args[0:2] not in (['simctl', 'boot'], ['simctl', 'bootstatus'], ['simctl', 'spawn']):\n"
+        "    raise SystemExit('unexpected xcrun arguments: ' + repr(args))\n"
+    )
+    mock_xcrun.chmod(0o755)
+    # The watchdog polls every five seconds in production. Keep this contract
+    # test focused on invocation counts rather than waiting for its poll period.
+    mock_sleep = bin_dir / "sleep"
+    mock_sleep.write_text("#!/bin/sh\nexec /bin/sleep 0.01\n")
+    mock_sleep.chmod(0o755)
+    mock_sample = bin_dir / "sample"
+    mock_sample.write_text("#!/bin/sh\nexit 0\n")
+    mock_sample.chmod(0o755)
+
+    environment = os.environ.copy()
+    environment.update(
+        PATH=f"{bin_dir}{os.pathsep}{environment['PATH']}",
+        MOCK_XCODEBUILD_CALLS=str(calls),
+        MOCK_TOOL_EVENTS=str(events),
+        MOCK_FAIL_PHASE=failed_phase,
+        MOCK_SETUP_SECONDS=str(setup_seconds),
+        MOCK_BUILD_SECONDS=str(build_seconds),
+        MOCK_TEST_SECONDS=str(test_seconds),
+        XCTEST_TOOLCHAIN=toolchain,
+        XCTEST_LABEL="mock-xctest",
+        XCTEST_DERIVED_DATA=str(tmp_path / "derived-data"),
+        XCTEST_LOG_ROOT=str(tmp_path / "logs"),
+        XCTEST_RESULT_ROOT=str(tmp_path / "results"),
+        XCTEST_XCCONFIG=str(tmp_path / "analytics.xcconfig"),
+        XCTEST_ONLY_TESTING="HangTenTests",
+        XCTEST_PARALLEL_WORKERS="1",
+        XCTEST_RUN_TIMEOUT_SECONDS=str(timeout_seconds),
+    )
+    result = subprocess.run(
+        ["bash", str(REPO_ROOT / "scripts/ci-run-xctest.sh")],
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    return result, calls.read_text().splitlines(), events.read_text().splitlines()
+
+
 @pytest.mark.parametrize(
     ("failed_phase", "expected_calls", "expected_status"),
     [
@@ -234,73 +323,11 @@ def test_build_required_gate_rejects_missing_required_validation(
 def test_xctest_runner_runs_once_without_verbose_diagnostics_and_preserves_status(
     tmp_path: Path, failed_phase: str, expected_calls: list[str], expected_status: int, toolchain: str
 ) -> None:
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir()
-    calls = tmp_path / "xcodebuild-calls.txt"
-    events = tmp_path / "tool-events.txt"
-    mock_xcodebuild = bin_dir / "xcodebuild"
-    mock_xcodebuild.write_text(
-        "#!/usr/bin/env python3\n"
-        "import os, sys\n"
-        "with open(os.environ['MOCK_XCODEBUILD_CALLS'], 'a') as log:\n"
-        "    log.write(sys.argv[-1] + '\\n')\n"
-        "with open(os.environ['MOCK_TOOL_EVENTS'], 'a') as log:\n"
-        "    log.write('xcodebuild:' + ' '.join(sys.argv[1:]) + '\\n')\n"
-        "sys.exit(23 if sys.argv[-1] == os.environ['MOCK_FAIL_PHASE'] else 0)\n"
+    result, calls, event_lines = run_mock_xctest(
+        tmp_path, failed_phase=failed_phase, toolchain=toolchain
     )
-    mock_xcodebuild.chmod(0o755)
-    mock_xcrun = bin_dir / "xcrun"
-    mock_xcrun.write_text(
-        "#!/usr/bin/env python3\n"
-        "import json, os, sys\n"
-        "args = sys.argv[1:]\n"
-        "with open(os.environ['MOCK_TOOL_EVENTS'], 'a') as log:\n"
-        "    log.write('xcrun:' + ' '.join(args) + '\\n')\n"
-        "if args == ['--sdk', 'iphonesimulator', '--show-sdk-version']:\n"
-        "    print('26.5')\n"
-        "elif args == ['simctl', 'list', 'devices', 'available', '--json']:\n"
-        "    print(json.dumps({'devices': {'com.apple.CoreSimulator.SimRuntime.iOS-26-5': [{\n"
-        "        'udid': '22452A91-4697-4369-8812-53ADB77EB73B',\n"
-        "        'name': 'iPhone 17 Pro', 'state': 'Shutdown', 'isAvailable': True\n"
-        "    }]}}))\n"
-        "elif args[0:2] not in (['simctl', 'boot'], ['simctl', 'bootstatus'], ['simctl', 'spawn']):\n"
-        "    raise SystemExit('unexpected xcrun arguments: ' + repr(args))\n"
-    )
-    mock_xcrun.chmod(0o755)
-    # The watchdog polls every five seconds in production. Keep this contract
-    # test focused on invocation counts rather than waiting for its poll period.
-    mock_sleep = bin_dir / "sleep"
-    mock_sleep.write_text("#!/bin/sh\nexec /bin/sleep 0.01\n")
-    mock_sleep.chmod(0o755)
-
-    environment = os.environ.copy()
-    environment.update(
-        PATH=f"{bin_dir}{os.pathsep}{environment['PATH']}",
-        MOCK_XCODEBUILD_CALLS=str(calls),
-        MOCK_TOOL_EVENTS=str(events),
-        MOCK_FAIL_PHASE=failed_phase,
-        XCTEST_TOOLCHAIN=toolchain,
-        XCTEST_LABEL="mock-xctest",
-        XCTEST_DERIVED_DATA=str(tmp_path / "derived-data"),
-        XCTEST_LOG_ROOT=str(tmp_path / "logs"),
-        XCTEST_RESULT_ROOT=str(tmp_path / "results"),
-        XCTEST_XCCONFIG=str(tmp_path / "analytics.xcconfig"),
-        XCTEST_ONLY_TESTING="HangTenTests",
-        XCTEST_PARALLEL_WORKERS="1",
-        XCTEST_RUN_TIMEOUT_SECONDS="20",
-    )
-    result = subprocess.run(
-        ["bash", str(REPO_ROOT / "scripts/ci-run-xctest.sh")],
-        env=environment,
-        capture_output=True,
-        text=True,
-        timeout=30,
-        check=False,
-    )
-
     assert result.returncode == expected_status, result.stdout + result.stderr
-    assert calls.read_text().splitlines() == expected_calls
-    event_lines = events.read_text().splitlines()
+    assert calls == expected_calls
     build_for_testing = next(
         index for index, event in enumerate(event_lines) if event.startswith("xcodebuild:")
     )
@@ -326,6 +353,37 @@ def test_xctest_runner_runs_once_without_verbose_diagnostics_and_preserves_statu
                 assert "-collect-test-diagnostics " not in event
     assert sum(event.startswith("xcrun:simctl boot ") for event in event_lines) == 1
     assert "-destination platform=iOS Simulator,id=22452A91-4697-4369-8812-53ADB77EB73B" in event_lines[build_for_testing]
+
+
+@pytest.mark.parametrize("setup_seconds", [0, 2])
+def test_xctest_setup_and_build_do_not_consume_test_phase_timeout(
+    tmp_path: Path, setup_seconds: int
+) -> None:
+    # Each Xcode phase fits the four-second limit; startup and compilation
+    # together exceed it. Exercise the real shell watchdog with slow tools.
+    result, calls, _ = run_mock_xctest(
+        tmp_path, setup_seconds=setup_seconds, build_seconds=2, test_seconds=2, timeout_seconds=4
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert calls == ["build-for-testing", "test-without-building"]
+
+
+@pytest.mark.parametrize(
+    ("build_seconds", "test_seconds", "phase", "expected_calls"),
+    [
+        (4, 0, "build-for-testing", ["build-for-testing"]),
+        (1, 4, "test-without-building", ["build-for-testing", "test-without-building"]),
+    ],
+)
+def test_xctest_watchdog_still_bounds_each_phase(
+    tmp_path: Path, build_seconds: int, test_seconds: int, phase: str, expected_calls: list[str]
+) -> None:
+    result, calls, _ = run_mock_xctest(
+        tmp_path, build_seconds=build_seconds, test_seconds=test_seconds, timeout_seconds=2
+    )
+    assert result.returncode == 124, result.stdout + result.stderr
+    assert calls == expected_calls
+    assert f"XCTest run ({phase}) exceeded" in result.stdout
 
 
 @pytest.mark.parametrize(

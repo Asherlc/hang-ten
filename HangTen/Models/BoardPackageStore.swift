@@ -656,8 +656,7 @@ struct BoardPackageStore {
                     reason: "contact \(contact.id) references unknown equipment object \(contact.equipmentObjectID)"
                 )
             }
-            if let capacity = contact.fingerCapacity,
-               !PhysicalContact.validFingerCapacityRange.contains(capacity) {
+            if !PhysicalContact.validFingerCapacityRange.contains(contact.fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "contact \(contact.id) has an invalid finger capacity"
@@ -3622,7 +3621,7 @@ private struct BoardPackageContactDocument: Decodable {
     let name: String
     let kind: HoldKind
     let shape: HoldShape?
-    let fingerCapacity: Int?
+    let fingerCapacity: Int
     let handCapacity: Int?
     let depth: HoldDepth?
     let gripTypes: [GripType]
@@ -3649,9 +3648,7 @@ private struct BoardPackageContactDocument: Decodable {
         shape = container.contains(.shape)
             ? try container.decode(HoldShape.self, forKey: .shape)
             : nil
-        fingerCapacity = container.contains(.fingerCapacity)
-            ? try container.decode(Int.self, forKey: .fingerCapacity)
-            : nil
+        fingerCapacity = try container.decode(Int.self, forKey: .fingerCapacity)
         handCapacity = container.contains(.handCapacity)
             ? try container.decode(Int.self, forKey: .handCapacity)
             : nil
