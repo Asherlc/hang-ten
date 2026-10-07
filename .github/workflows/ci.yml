@@ -222,6 +222,7 @@ jobs:
           ../HangboardCAD/tests/test_runtime_asset_catalog.py
           ../../scripts/tests/test_runtime_catalog_selection.py
           ../../scripts/tests/test_cad_ci_dependencies.py
+          ../../scripts/tests/test_blender_ci_dependencies.py
           ../../scripts/tests/test_materialize_lfs.py
           ../HangboardCAD/tests/test_compile_suspension.py
           ../HangboardCAD/tests/test_cad_consumers.py

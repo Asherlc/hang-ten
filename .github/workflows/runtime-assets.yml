@@ -144,8 +144,40 @@ jobs:
 
       - name: Install headless Blender runtime libraries
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 xz-utils
+          set -euo pipefail
+          missing=()
+          for package in libegl1 libgl1 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 xz-utils; do
+            if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != 'install ok installed' ]]; then
+              missing+=("$package")
+            fi
+          done
+          if (( ${#missing[@]} == 0 )); then
+            echo "Headless Blender runtime libraries are already installed."
+            exit 0
+          fi
+          printf 'Missing Blender runtime library: %s\n' "${missing[@]}"
+          apt_options=(-o Acquire::Retries=2 -o Acquire::http::Timeout=15 -o Acquire::https::Timeout=15)
+          install_missing() {
+            sudo timeout --kill-after=10s 120s apt-get "${apt_options[@]}" \
+              install -y --no-install-recommends "${missing[@]}"
+          }
+          # Use the runner's existing indexes first; refreshing every configured
+          # repository stalled a previous run for the entire 15-minute job.
+          if install_missing; then
+            exit 0
+          else
+            status=$?
+          fi
+          # Only retry apt's package error (e.g. stale indexes), never a killed
+          # or timed-out install that may have left dpkg partially configured.
+          if [[ "$status" != 100 ]]; then
+            echo "Blender runtime library installation failed with status $status." >&2
+            exit "$status"
+          fi
+          echo "Installation failed; refreshing package indexes and retrying once."
+          sudo timeout --kill-after=10s 120s apt-get "${apt_options[@]}" \
+            -o APT::Update::Error-Mode=any update
+          install_missing
 
       - name: Export authored hand once
         run: |
