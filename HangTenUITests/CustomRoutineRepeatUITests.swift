@@ -23,8 +23,7 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Run 5 times"].exists)
         capture(app, name: "Inline step repeat reopened and edited")
 
-        toggle.switches.firstMatch.tap()
-        XCTAssertEqual(toggle.value as? String, "0")
+        setRepeatEnabled(false, in: app)
         XCTAssertFalse(app.steppers["customRoutine.stepRepeatCount"].exists)
         capture(app, name: "Inline repeat turned off")
         expandStep(titled: "Hang", in: app)
@@ -93,8 +92,7 @@ final class CustomRoutineRepeatUITests: XCTestCase {
             reveal(toggle, in: app)
             XCTAssertEqual(toggle.value as? String, "0")
             XCTAssertFalse(app.steppers["customRoutine.stepRepeatCount"].exists)
-            toggle.switches.firstMatch.tap()
-            XCTAssertEqual(toggle.value as? String, "1")
+            setRepeatEnabled(true, in: app)
             changeCount(by: repeatCount - 2, in: app)
             XCTAssertTrue(app.staticTexts["Run \(repeatCount) times"].exists)
             capture(app, name: "\(title) repeat configured during step creation")
@@ -124,6 +122,20 @@ final class CustomRoutineRepeatUITests: XCTestCase {
         let suffix = delta > 0 ? "Increment" : "Decrement"
         let button = stepper.buttons["\(identifier)-\(suffix)"]
         for _ in 0..<abs(delta) { button.tap() }
+    }
+
+    private func setRepeatEnabled(_ enabled: Bool, in app: XCUIApplication) {
+        let toggle = app.switches["customRoutine.stepRepeat"]
+        // Stepper scrolling can move the repeat row. Tap the identified Toggle
+        // after revealing it, rather than an implementation-specific child switch.
+        reveal(toggle, in: app)
+        toggle.tap()
+        let changed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", enabled ? "1" : "0"),
+            object: toggle
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 5), .completed,
+                       "Repeat must become \(enabled ? "enabled" : "disabled") after one tap")
     }
 
     private func tap(_ identifier: String, in app: XCUIApplication) {
