@@ -1887,7 +1887,7 @@ struct WorkoutStepRepeat: Hashable {
         self.patternTitles = patternTitles
     }
 
-    var patternStepCount: Int { stepRange.count / repeatCount }
+    var patternStepCount: Int { repeatCount > 0 ? stepRange.count / repeatCount : 0 }
 }
 
 struct TrainingPlan: Identifiable, Hashable {

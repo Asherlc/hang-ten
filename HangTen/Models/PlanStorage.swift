@@ -1730,6 +1730,8 @@ struct PlanDefinitionResolver {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
                     }
                     if repetition == 0 && reference.repeatCount > 1 {
+                        // Preview labels come from the authored template. stepTitles
+                        // preserves numbered occurrence labels for playback/history.
                         let template = WorkoutStepNormalizer.materializingImplicitSegments(stepDefinition.resolvedStep())
                         patternTitles += try WorkoutStepNormalizer.expand(template).map(\.title)
                     }
