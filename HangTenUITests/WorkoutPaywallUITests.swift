@@ -475,6 +475,10 @@ final class WorkoutPaywallUITests: XCTestCase {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_FREE_WORKOUTS_USED"] = "2"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
+        // Keep access handoffs independent of the board persisted by previous
+        // tests and its on-demand model download. This is the bundled weight fixture.
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.grindstone-original"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         return app
     }
 
