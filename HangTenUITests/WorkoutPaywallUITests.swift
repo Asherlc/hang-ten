@@ -67,8 +67,13 @@ final class CustomRoutineEditorUITests: XCTestCase {
 
         let name = app.textFields["customRoutine.name"]
         XCTAssertTrue(name.isHittable)
-        name.tap()
+        // Tap the text area; the empty center of this SwiftUI field can miss
+        // input focus even when XCTest reports the whole row as hittable.
+        name.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.5)).tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5),
+                      "Correcting the routine name must first focus its text field")
         name.typeText("My routine")
+        XCTAssertEqual(name.value as? String, "My routine")
         let updated = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label CONTAINS %@ AND NOT label CONTAINS %@",
                                    "Add at least one step.", "A routine name is required."),
@@ -76,6 +81,10 @@ final class CustomRoutineEditorUITests: XCTestCase {
         )
         XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed)
         XCTAssertTrue(save.exists)
+        let corrected = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        corrected.name = "Routine validation updates after entering a name"
+        corrected.lifetime = .keepAlways
+        add(corrected)
     }
 }
 
