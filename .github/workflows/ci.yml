@@ -66,6 +66,7 @@ jobs:
       needs.changes.outputs.ios != 'true' &&
       needs.changes.outputs.workflow != 'true' &&
       needs.changes.outputs.shared_board_content != 'true'
+    # Validates resolved Debug/Release build settings with xcodebuild.
     runs-on: macos-26
     timeout-minutes: 15
 
@@ -75,7 +76,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -89,10 +90,26 @@ jobs:
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: scripts/validate-app-store-metadata.sh
 
+  board-assets:
+    name: Compile runtime assets
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.python == 'true' ||
+      needs.changes.outputs.cad == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.workflow == 'true'
+    uses: ./.github/workflows/runtime-assets.yml
+    with:
+      source-ref: ${{ github.sha }}
+
   python:
     name: Test (Python)
     needs:
       - changes
+      - board-assets
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.python == 'true' ||
@@ -112,7 +129,10 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
 
       # actions/setup-python v7.0.0
       - name: Set up Python
@@ -121,6 +141,12 @@ jobs:
           python-version: '3.11'
           cache: pip
           cache-dependency-path: Tools/HangboardPackages/pyproject.toml
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       - name: Validate canonical board packages
         working-directory: ${{ github.workspace }}
@@ -136,7 +162,7 @@ jobs:
         run: python3 Tools/HangboardCAD/board_manifest.py --all
 
       - name: Install Python package and test dependencies
-        run: python -m pip install -e ".[dev]"
+        run: python -m pip install -e ".[dev]" numpy==2.2.6 usd-core==26.8
 
       - name: Stage board packages into a temporary app resource root
         working-directory: ${{ github.workspace }}
@@ -168,8 +194,8 @@ jobs:
             --target android \
             --repository-root "$GITHUB_WORKSPACE" \
             --destination "$asset_root/Hangboards"
-          for source in Hangboards/*/*.FCStd; do
-            slug=$(basename "$(dirname "$source")")
+          for source in Hangboards/*.FCStd; do
+            slug=$(basename "$source" .FCStd)
             test -s "$asset_root/Hangboards/$slug/board.json"
             test -s "$asset_root/Hangboards/$slug/assets/primary.usdz"
           done
@@ -179,7 +205,7 @@ jobs:
           fi
 
       - name: Run pytest suite
-        run: python -m pytest tests -q --junitxml=pytest-results.xml
+        run: python -m pytest tests ../HangboardModels -q --junitxml=pytest-results.xml
 
       - name: Validate original routine prescriptions
         working-directory: ${{ github.workspace }}
@@ -190,6 +216,16 @@ jobs:
         run: >-
           python -m pytest
           ../HangboardCAD/tests/test_board_manifest.py
+          ../HangboardCAD/tests/test_embedded_authoring.py
+          ../HangboardCAD/tests/test_prepare_assets.py
+          ../HangboardCAD/tests/test_freecad_launcher.py
+          ../HangboardCAD/tests/test_runtime_asset_catalog.py
+          ../../scripts/tests/test_runtime_catalog_selection.py
+          ../../scripts/tests/test_cad_ci_dependencies.py
+          ../../scripts/tests/test_materialize_lfs.py
+          ../HangboardCAD/tests/test_compile_suspension.py
+          ../HangboardCAD/tests/test_cad_consumers.py
+          ../HangboardCAD/tests/test_cad_sidecars.py
           ../HangboardCAD/tests/test_contract.py
           ../HangboardCAD/tests/test_whetstone_package.py
           ../HangboardCAD/tests/test_transgression_packages.py
@@ -213,57 +249,70 @@ jobs:
     name: Test (Transgression native CAD)
     needs:
       - changes
+      - board-assets
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
+    # Native CAD uses FreeCAD/OpenUSD, with no Apple SDK dependency.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       - name: Set up Python
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: '3.11'
 
-      - name: Install pinned FreeCAD 1.1.3
+      - name: Install headless native CAD system libraries
         run: |
           set -euo pipefail
-          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
-          cad_root="$PWD/.context/$owner-transgression-native-ci"
-          mkdir -p "$cad_root/mount"
-          cleanup_mount() {
-            if mount | grep -Fq " on $cad_root/mount "; then
-              hdiutil detach "$cad_root/mount"
-            fi
-            if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
-          }
-          trap cleanup_mount EXIT
-          case "$(uname -m)" in
-            arm64) digest=f5c0ece7cd7c932466d6effadc0fc6e179b0538a9d9a6a77a6769eae3af2667c ;;
-            x86_64) digest=8434bd6ad32f597605d184e5b996f496e9cbc7e6d8ffb6db4dbd6e2ce6d1612b ;;
-            *) exit 1 ;;
-          esac
-          curl --fail --location --retry 3 \
-            "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-macOS-$(uname -m)-py311.dmg" \
-            --output "$cad_root/FreeCAD.dmg"
-          echo "$digest  $cad_root/FreeCAD.dmg" | shasum -a 256 -c -
-          # Record ownership before mounting; the trap deletes only this mount.
-          echo "$cad_root/mount" > "$cad_root/owned-mount"
-          hdiutil attach "$cad_root/FreeCAD.dmg" -nobrowse -readonly -mountpoint "$cad_root/mount"
-          ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
-          echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y libegl1 libgl1 libglu1-mesa libopengl0 squashfs-tools
 
       - name: Run native CAD, cord and YY persisted-edit regressions
         run: |
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
+          if [[ -e "$cad_root" ]]; then
+            echo "error: refusing to reuse an existing native CAD toolchain directory: $cad_root" >&2
+            exit 1
+          fi
+          mkdir -p "$cad_root"
+          # Record ownership before installing the extracted AppImage and USD staging.
+          printf '%s\n' "$cad_root" "$cad_root/freecad" "$cad_root/usd" > "$cad_root/owned-resources"
+          cleanup_cad() {
+            local result=$?
+            trap - EXIT
+            rm -rf "$cad_root"
+            if [[ -e "$cad_root" ]]; then
+              echo "error: workspace-owned native CAD toolchain was not removed: $cad_root" >&2
+              exit 1
+            fi
+            return "$result"
+          }
+          trap cleanup_cad EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          HANGTEN_FREECAD_CMD=$(scripts/install-freecad.sh "$cad_root/freecad")
+          export HANGTEN_FREECAD_CMD
+          export QT_QPA_PLATFORM=offscreen
+          export HANGTEN_REQUIRE_NATIVE_CAD=true
           # Preserve upstream cord-regression pins alongside owned USD compiler staging.
           install_native_dependencies() {
             local attempt="$1"
@@ -283,16 +332,20 @@ jobs:
           fi
           python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
           export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
-          # Fail instead of silently skipping the required YY native checks.
+          # Fail instead of silently skipping the required native checks.
           test -f "$HANGTEN_FREECAD_CMD"
           test -x "$HANGTEN_FREECAD_CMD"
           test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"
+          python -c 'import numpy, pxr, trimesh, shapely, rtree, scipy, networkx'
           python -m pytest \
             Tools/HangboardCAD/tests/test_transgression_packages.py \
             Tools/HangboardCAD/tests/test_clavellium_native.py \
             Tools/HangboardCAD/tests/test_confirmed_cord_diameter.py \
             Tools/HangboardCAD/tests/test_rope_physics_export.py \
-            Tools/HangboardCAD/tests/test_exterior_rope.py \
+            Tools/HangboardCAD/tests/test_native_pose_terminals.py \
+            Tools/HangboardCAD/tests/test_solver_sidecar_dispatch.py \
+            Tools/HangboardCAD/tests/test_native_cord_routes.py \
+            Tools/HangboardCAD/tests/test_compile_v2_depths.py \
             Tools/HangboardCAD/tests/test_rectangular_channel_section.py \
             Tools/HangboardCAD/tests/test_verticalboards_native.py \
             Tools/HangboardCAD/tests/test_verticalboard_validation_reporting.py -q
@@ -303,11 +356,12 @@ jobs:
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
-          if mount | grep -Fq " on $cad_root/mount "; then
-            hdiutil detach "$cad_root/mount"
+          if [[ -e "$cad_root" ]]; then
+            # Failsafe for a cancelled shell: delete only the exact recorded owner.
+            test -f "$cad_root/owned-resources"
+            grep -Fxq "$cad_root" "$cad_root/owned-resources"
+            rm -rf "$cad_root"
           fi
-          if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
-          rm -rf "$cad_root"
           test ! -e "$cad_root"
 
   workflow-lint:
@@ -326,7 +380,7 @@ jobs:
 
       # reviewdog/action-actionlint v1.73.2
       - name: Validate workflow syntax
-        uses: reviewdog/action-actionlint@320fcdd9c860767cf17fab3b20e22e739d5d02b8
+        uses: reviewdog/action-actionlint@1129829fb3230509a1c9aa4e93cec2b234746a68
         with:
           reporter: github-check
           filter_mode: nofilter
@@ -344,21 +398,28 @@ jobs:
       - test-unit
       - test-ui
       - transgression-native
+      - board-assets
     if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Report required build status
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
+          BOARD_ASSETS_RESULT: ${{ needs.board-assets.result }}
+          BOARD_ASSETS_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.python == 'true' || needs.changes.outputs.cad == 'true' || needs.changes.outputs.shared_board_content == 'true' || needs.changes.outputs.workflow == 'true' }}
           NATIVE_CAD_RESULT: ${{ needs.transgression-native.result }}
           NATIVE_CAD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.cad == 'true' || needs.changes.outputs.workflow == 'true' }}
           UNIT_TEST_RESULT: ${{ needs.test-unit.result }}
           UI_TEST_RESULT: ${{ needs.test-ui.result }}
-          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.shared_board_content == 'true' || needs.changes.outputs.cad == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+          if [[ "$BOARD_ASSETS_REQUIRED" == "true" && "$BOARD_ASSETS_RESULT" != "success" ]]; then
+            echo "Board runtime compilation did not succeed: $BOARD_ASSETS_RESULT" >&2
             exit 1
           fi
           if [[ "$NATIVE_CAD_REQUIRED" == "true" && "$NATIVE_CAD_RESULT" != "success" ]]; then
@@ -390,6 +451,7 @@ jobs:
     name: Build (Release device)
     needs:
       - changes
+      - board-assets
     if: github.event_name == 'push'
     runs-on: macos-26
     timeout-minutes: 30
@@ -400,7 +462,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -456,9 +527,12 @@ jobs:
     name: "Test (iOS Simulator: HangTenTests)"
     needs:
       - changes
+      - board-assets
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     env:
@@ -475,7 +549,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -607,9 +690,12 @@ jobs:
     name: "Test (iOS Simulator: HangTenUITests / purchase, settings and workouts)"
     needs:
       - changes
+      - board-assets
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     env:
@@ -622,6 +708,8 @@ jobs:
           # complete: test_ci_xctest_contract.py audits every method exactly once.
           - shard: purchase-settings-workouts
             only_testing: >-
+              HangTenUITests/CustomRoutineEditorUITests
+              HangTenUITests/CustomRoutineRepeatUITests
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession
@@ -638,13 +726,16 @@ jobs:
               HangTenUITests/WorkoutPaywallUITests/testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure
               HangTenUITests/WorkoutPaywallUITests/testRestoreFailureUsesRestoreSpecificFeedback
               HangTenUITests/SettingsUITests
+              HangTenUITests/WorkoutChooserUITests
               HangTenUITests/PlanFlowUITests
+              HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
+              HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
     timeout-minutes: 70
 
     steps:
@@ -653,7 +744,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -732,9 +832,12 @@ jobs:
     name: "Test (iOS Simulator: HangTenUITests / boards, grips and picker)"
     needs:
       - changes
+      - board-assets
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: xcode-27
     env:
@@ -745,9 +848,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Reuse one simulator and build for these suites. Keep selectors
-          # complete: test_ci_xctest_contract.py audits every method exactly once.
-          - shard: boards-grips-picker
+          # Keep model, layout, and grip checks in separate runs so simulator
+          # startup and compilation leave enough of the one-hour test budget.
+          # test_ci_xctest_contract.py audits every method exactly once.
+          - shard: board-models-picker
             only_testing: >-
               HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMount
               HangTenUITests/Batch05BoardModelInteractionUITests/testEvo
@@ -756,13 +860,18 @@ jobs:
               HangTenUITests/Batch05BoardModelInteractionUITests/testNatural
               HangTenUITests/Batch05BoardModelInteractionUITests/testPro
               HangTenUITests/Batch05BoardModelInteractionUITests/testForge
+              HangTenUITests/BeastmakerBoardPickerInteractionUITests
+              HangTenUITests/BoardPickerUITests
+          - shard: board-layout
+            only_testing: >-
               HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
+          - shard: grips-weight
+            only_testing: >-
               HangTenUITests/GripCueDiagnosticScreenshotUITests
               HangTenUITests/DefaultGripFingersUITests
               HangTenUITests/DualMaxHangsHighlightUITests
               HangTenUITests/InitialWeightSetupUITests
               HangTenUITests/OneHandedHandChoiceUITests
-              HangTenUITests/BeastmakerBoardPickerInteractionUITests
     timeout-minutes: 70
 
     steps:
@@ -771,7 +880,16 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
+          lfs: false
+
+      - name: Materialize cached CAD sources
+        uses: ./.github/actions/materialize-lfs
+
+      - name: Restore compiled board catalog
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.board-assets.outputs.artifact-name }}
+          path: .
 
       # actions/cache v4.2.3
       - name: Restore Swift package sources
@@ -925,7 +1043,7 @@ jobs:
           CHANGES_RESULT: ${{ needs.changes.result }}
           PAYWALL_RESULT: ${{ needs.test-ui-paywall.result }}
           MAP_RESULT: ${{ needs.test-ui-map.result }}
-          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.shared_board_content == 'true' || needs.changes.outputs.cad == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" != "success" ]]; then

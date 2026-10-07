@@ -81,7 +81,7 @@ V1_BOARD = {
 def make_package(root: Path, package: str = "example", board_id: str = "example") -> Path:
     directory = root / "Hangboards" / package
     directory.mkdir(parents=True)
-    source = directory / f"{package}.FCStd"
+    source = directory.parent / f"{package}.FCStd"
     with zipfile.ZipFile(source, "w", zipfile.ZIP_DEFLATED) as archive:
         archive.writestr("Document.xml", DOCUMENT.replace("{board_id}", board_id))
         archive.writestr("Body.Shape.brp", b"geometry bytes that must never change")
@@ -172,7 +172,7 @@ def test_v2_reusable_slot_board_round_trips():
     instances = board["presentations"][0]["media"]["instances"]
     assert all("contactIDsBySlotID" in instance for instance in instances)
     model_bounds = json.loads(
-        (committed_source("metolius-rock-rings-3d").parent / "assets" / "primary.model.json").read_text()
+        (REPOSITORY / "Hangboards/metolius-rock-rings-3d/assets/primary.model.json").read_text()
     )["modelBounds"]
     for instance in instances:
         offset = instance["suspension"]["anchor"]["offsetFromBoardBounds"]
@@ -204,8 +204,8 @@ def test_generated_board_json_is_written_only_outside_the_package(tmp_path):
     expected = cad_source.render_board(V1_BOARD)
 
     with pytest.raises(cad_source.ManifestError, match="must not exist in the package"):
-        board_manifest.write_board_json(source, source.parent / "board.json")
-    assert not (source.parent / "board.json").exists()
+        board_manifest.write_board_json(source, source.parent / source.stem / "board.json")
+    assert not (source.parent / source.stem / "board.json").exists()
 
     output = tmp_path / "out" / "board.json"
     assert board_manifest.write_board_json(source, output)
@@ -273,12 +273,13 @@ def test_input_id_must_match_the_cad_board_id(tmp_path):
 def test_an_lfs_pointer_is_rejected_with_a_fetch_hint(tmp_path):
     directory = tmp_path / "Hangboards" / "example"
     directory.mkdir(parents=True)
-    (directory / "example.FCStd").write_text(
+    source = directory.parent / "example.FCStd"
+    source.write_text(
         "version https://git-lfs.github.com/spec/v1\noid sha256:" + "0" * 64 + "\nsize 1\n"
     )
     with pytest.raises(cad_source.ManifestError, match="LFS"):
-        cad_source.generate_board_json(directory / "example.FCStd")
-    rendering = board_manifest.describe_source(directory / "example.FCStd")
+        cad_source.generate_board_json(source)
+    rendering = board_manifest.describe_source(source)
     assert rendering.startswith("Git LFS pointer")
 
 

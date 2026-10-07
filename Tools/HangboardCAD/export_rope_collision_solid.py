@@ -6,7 +6,7 @@ Environment variables:
   HANGTEN_ROPE_SOLID_OUTPUT   workspace-owned JSON path
 
 Run with FreeCAD's Python interpreter. Coordinates in the output are the
-same meter-based model frame used by suspension.json. This is an authoring
+same meter-based model frame used by generated assets/suspension.json. This is an authoring
 intermediate, never a bundled model or USDZ material.
 """
 
@@ -15,7 +15,11 @@ from __future__ import annotations
 import json
 import hashlib
 import os
+import sys
 from pathlib import Path
+
+# FreeCAD executes this through a temporary wrapper outside the tools directory.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import FreeCAD as App
 
@@ -53,7 +57,7 @@ def main():
     package = os.environ["HANGTEN_ROPE_PACKAGE"]
     feature_name = os.environ["HANGTEN_ROPE_SOLID_FEATURE"]
     destination = Path(os.environ["HANGTEN_ROPE_SOLID_OUTPUT"])
-    source = root / "Hangboards" / package / f"{package}.FCStd"
+    source = root / "Hangboards" / f"{package}.FCStd"
     document = App.openDocument(str(source))
     try:
         feature = document.getObject(feature_name)

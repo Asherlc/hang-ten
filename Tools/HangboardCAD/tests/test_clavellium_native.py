@@ -10,14 +10,55 @@ import pytest
 ROOT = Path(__file__).resolve().parents[3]
 TOOLS = ROOT / "Tools/HangboardCAD"
 FREECAD = Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"))
-pytestmark = pytest.mark.skipif(not FREECAD.is_file(), reason="native FreeCAD unavailable")
+pytestmark = pytest.mark.skipif(
+    not FREECAD.is_file() and os.environ.get("HANGTEN_REQUIRE_NATIVE_CAD", "").lower() != "true",
+    reason="native FreeCAD unavailable outside the required native lane",
+)
+
+
+def assert_same_cord_route(actual, expected):
+    """Compare ordered geometry, allowing only redundant collinear samples."""
+    import numpy as np
+
+    routes = [np.asarray(points, dtype=float) for points in (actual, expected)]
+    stations = [np.r_[0, np.cumsum(np.linalg.norm(np.diff(route, axis=0), axis=1))]
+                for route in routes]
+    # Cached coordinates are rounded to nine decimal places in meters. A
+    # redundant midpoint may differ by half that rounding unit per axis.
+    tolerance = 2e-9
+    np.testing.assert_allclose(routes[0][[0, -1]], routes[1][[0, -1]], rtol=0, atol=tolerance)
+    assert stations[0][-1] == pytest.approx(stations[1][-1], rel=0, abs=tolerance)
+    assert all(np.all(np.diff(distance) > 0) for distance in stations)
+    normalized = [distance / distance[-1] for distance in stations]
+    # Check every bend from BOTH routes at the same traveled fraction. Equal
+    # endpoints or proximity alone would miss bends, reversals or backtracking.
+    samples = np.unique(np.concatenate(normalized))
+    interpolated = [np.column_stack([np.interp(samples, distance, route[:, axis])
+                                    for axis in range(3)])
+                    for route, distance in zip(routes, normalized)]
+    np.testing.assert_allclose(*interpolated, rtol=0, atol=tolerance)
+
+
+def test_cord_route_comparison_accepts_redundant_collinear_samples():
+    assert_same_cord_route([[0, 0, 0], [0, 1, 0], [1, 1, 0]],
+                           [[0, 0, 0], [0, 0.5, 0], [0, 1, 0], [1, 1, 0]])
+
+
+@pytest.mark.parametrize("changed", [
+    [[0, 0, 0], [0.001, 0.5, 0], [0, 1, 0], [1, 1, 0]],  # New bend.
+    [[1, 1, 0], [0, 1, 0], [0, 0, 0]],  # Reversed route.
+    [[0, 0, 0], [0, 1, 0], [0, 0, 0], [0, 1, 0], [1, 1, 0]],  # Backtracking.
+])
+def test_cord_route_comparison_rejects_changed_geometry_or_order(changed):
+    with pytest.raises(AssertionError):
+        assert_same_cord_route(changed, [[0, 0, 0], [0, 1, 0], [1, 1, 0]])
 
 
 def test_all_three_sling_channels_are_open_and_contacts_stay_valid(tmp_path):
     script = tmp_path / "check.py"
     script.write_text('''import FreeCAD as App
 from pathlib import Path
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 s = d.getObject("Pinch100BottomReliefCut").Shape
 assert s.isValid() and len(s.Solids) == 1
 for x, z in [(0, 2.5), (-24, -33.5), (24, -33.5)]:
@@ -47,7 +88,7 @@ def test_all_pinch_contact_faces_point_outward(tmp_path):
     script = tmp_path / "pinch_normals.py"
     script.write_text('''import FreeCAD as App
 from pathlib import Path
-d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block.FCStd").resolve()))
 for name, expected in {
     "Pinch80Left": (-1, 0, 0), "Pinch80Right": (1, 0, 0),
     "Pinch90Front": (0, -1, 0), "Pinch90Back": (0, 1, 0),
@@ -87,12 +128,14 @@ def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     source = json.loads(solid_path.read_text())
     mesh = trimesh.Trimesh(vertices=source["vertices"], faces=source["triangles"], process=False)
     package = ROOT / "Hangboards/clavellium-training-block"
-    sidecar = json.loads((package / "suspension.json").read_text())
+    sidecar = json.loads((package / "assets/suspension.json").read_text())
     assert sidecar["suspension"]["branches"][0]["radius"] == 0.0035, "owner-confirmed 7 mm diameter"
     descriptor = json.loads((package / "assets/primary.model.json").read_text())
     solved = solve_package("clavellium-training-block", mesh, sidecar, descriptor)["front"]
     pose = sidecar["suspension"]["canonicalPoses"]["front"]
-    assert solved["contacts"] == pose["cordContactPoints"]
+    assert solved["contacts"].keys() == pose["cordContactPoints"].keys()
+    for branch_id, points in solved["contacts"].items():
+        assert_same_cord_route(points, pose["cordContactPoints"][branch_id])
     assert solved["height"] == pose["translation"][1]
     assert solved["lengths"]["sling-loop"] == pytest.approx(0.55, rel=0, abs=1e-6)
     # The solver itself rejects any sampled native-solid collision. Also
@@ -125,13 +168,13 @@ for axis,length in [("x",10),("y",20),("z",30)]:
  assert abs(values[0][index])<1e-9 and abs(values[1][index]-length)<1e-9
 App.closeDocument(d.Name)
 p=Path("Hangboards/clavellium-training-block")
-d=App.openDocument(str((p/"clavellium-training-block.FCStd").resolve()))
+d=App.openDocument(str(p.with_suffix(".FCStd").resolve()))
 for name in ["CenterChannelTool","LowerLeftChannelTool","LowerRightChannelTool"]:
  box=d.getObject(name)
  assert box.HangTenChannelAxis=="y" and float(box.Width)==92
  samples=box_axis_samples(box)
  assert abs(samples[0].distanceToPoint(samples[-1])-92)<1e-9
-s=json.loads((p/"suspension.json").read_text())["suspension"]
+s=json.loads(d.HangTenSuspensionAuthoring)["suspension"]
 passages=s["passages"]["left"]
 samples=channel_samples(d.getObject("CenterChannelTool"),"CenterChannelTool")
 stations=[station_on_spine(model_to_native(p["pointInModel"]),samples) for p in passages]

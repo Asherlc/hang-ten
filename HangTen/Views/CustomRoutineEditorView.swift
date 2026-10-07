@@ -8,8 +8,11 @@ struct CustomRoutineEditorView: View {
     @State private var draft: CustomRoutineDraft
     @State private var selectedMode: EditorTargetMode
     @State private var selectedBoardID: String
-    @State private var validationErrors: [String] = []
     @State private var persistenceError: String?
+    @State private var hasAttemptedSave = false
+    @State private var validationScrollRequest = 0
+    @State private var editMode = EditMode.inactive
+    @State private var repeatEditorGroup: CustomRoutineRepeatGroup?
 
     init(
         draft: CustomRoutineDraft,
@@ -45,31 +48,73 @@ struct CustomRoutineEditorView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                routineSection
-                stepsSection
-            }
-            .navigationTitle(isExistingRoutine ? "Edit routine" : "Create routine")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
+            ScrollViewReader { scrollProxy in
+                List {
+                    if !validationIssues.isEmpty {
+                        Section("Check routine") {
+                            Text(validationIssues.joined(separator: "\n"))
+                                .foregroundStyle(.red)
+                                .accessibilityIdentifier("customRoutine.validationErrors")
+                        }
+                        .id("customRoutine.validation")
+                    }
+                    routineSection
+                    stepsSection
+                    repeatsSection
+                }
+                .environment(\.editMode, $editMode)
+                .scrollContentBackground(.hidden)
+                .background(Color.hangBackground)
+                .onChange(of: draft.steps.count) { _, count in
+                    if count < 2 { editMode = .inactive }
+                }
+                .onChange(of: validationScrollRequest) { _, _ in
+                    guard !validationIssues.isEmpty else { return }
+                    withAnimation {
+                        scrollProxy.scrollTo("customRoutine.validation", anchor: .top)
                     }
                 }
-                ToolbarItem(placement: .topBarTrailing) {
-                    EditButton()
-                        .accessibilityIdentifier("customRoutine.reorder")
+                .navigationTitle(isExistingRoutine ? "Edit routine" : "Create routine")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") {
+                            save()
+                            if !validationIssues.isEmpty {
+                                validationScrollRequest += 1
+                            }
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .tint(.hangGreenDark)
+                        .accessibilityIdentifier("customRoutine.save")
+                    }
                 }
-            }
-            .alert("Couldn’t save routine", isPresented: persistenceAlertBinding) {
-                Button("OK", role: .cancel) {
-                    persistenceError = nil
+                .alert("Couldn’t save routine", isPresented: persistenceAlertBinding) {
+                    Button("OK", role: .cancel) {
+                        persistenceError = nil
+                    }
+                } message: {
+                    Text(persistenceError ?? "An unknown persistence error occurred.")
                 }
-            } message: {
-                Text(persistenceError ?? "An unknown persistence error occurred.")
+                .sheet(item: $repeatEditorGroup) { group in
+                    CustomRoutineRepeatEditor(
+                        group: group,
+                        steps: draft.steps,
+                        otherGroups: draft.repeatGroups.filter { $0.id != group.id },
+                        onSave: { draft.updateRepeatGroup($0) }
+                    )
+                }
             }
         }
+    }
+
+    private var validationIssues: [String] {
+        hasAttemptedSave ? Self.localValidationIssues(for: draft.definition()) : []
     }
 
     private var routineSection: some View {
@@ -123,14 +168,18 @@ struct CustomRoutineEditorView: View {
     }
 
     private var stepsSection: some View {
-        Section("Steps") {
+        Section {
             ForEach(draft.steps) { step in
                 CustomRoutineStepEditor(
                     step: binding(for: step),
+                    repeatGroup: repeatBinding(for: step),
                     targetMode: draft.targetMode,
                     board: selectedBoard,
-                    onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) }
+                    onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) },
+                    onEditRepeatGroup: { repeatEditorGroup = $0 },
+                    repeatSummary: draft.repeatGroups.first(where: { $0.stepIDs.contains(step.id) }).map(repeatSummary)
                 )
+                .deleteDisabled(editMode.isEditing)
             }
             .onMove { offsets, destination in
                 draft.moveSteps(from: offsets, to: destination)
@@ -146,20 +195,61 @@ struct CustomRoutineEditorView: View {
             }
             .accessibilityIdentifier("customRoutine.addStep")
 
-            if !validationErrors.isEmpty {
-                VStack(alignment: .leading, spacing: 4) {
-                    ForEach(validationErrors, id: \.self) { error in
-                        Text(error)
+        } header: {
+            HStack {
+                Text("Steps")
+                    .accessibilityIdentifier("customRoutine.steps")
+                Spacer()
+                if draft.steps.count > 1 {
+                    Button(editMode.isEditing ? "Done" : "Reorder") {
+                        withAnimation {
+                            editMode = editMode.isEditing ? .inactive : .active
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+                    .foregroundStyle(Color.hangGreenDark)
+                    .frame(minHeight: 44)
+                    .accessibilityIdentifier("customRoutine.reorder")
+                }
+            }
+            .textCase(nil)
+        }
+    }
+
+    @ViewBuilder
+    private var repeatsSection: some View {
+        let groups = draft.repeatGroups.filter { $0.stepIDs.count > 1 }.sorted {
+            ($0.range(in: draft.steps.map(\.id))?.lowerBound ?? 0) <
+            ($1.range(in: draft.steps.map(\.id))?.lowerBound ?? 0)
+        }
+        if !groups.isEmpty {
+            Section {
+                ForEach(groups) { group in
+                    Button {
+                        repeatEditorGroup = group
+                    } label: {
+                        Label(repeatSummary(group), systemImage: "repeat")
+                    }
+                    .accessibilityIdentifier("customRoutine.repeat.\(group.id)")
+                    .swipeActions {
+                        Button("Remove repeat", role: .destructive) {
+                            draft.removeRepeatGroup(id: group.id)
+                        }
                     }
                 }
-                .font(.footnote)
-                .foregroundStyle(.red)
+            } header: {
+                Text("Repeat groups")
+            } footer: {
+                Text("Grouped steps move together when reordered.")
             }
-
-            Button("Save", action: save)
-                .accessibilityIdentifier("customRoutine.save")
         }
-        .accessibilityIdentifier("customRoutine.steps")
+    }
+
+    private func repeatSummary(_ group: CustomRoutineRepeatGroup) -> String {
+        guard let range = group.range(in: draft.steps.map(\.id)) else { return "Choose steps to repeat" }
+        let steps = range.count == 1 ? "Step \(range.lowerBound + 1)" : "Steps \(range.lowerBound + 1)–\(range.upperBound)"
+        return "\(steps) · \(group.repeatCount) \(group.repeatCount == 1 ? "time" : "times")"
     }
 
     private var persistenceAlertBinding: Binding<Bool> {
@@ -177,6 +267,19 @@ struct CustomRoutineEditorView: View {
         Binding(
             get: { draft.steps.first(where: { $0.id == step.id }) ?? step },
             set: { draft.updateStep($0) }
+        )
+    }
+
+    private func repeatBinding(for step: CustomRoutineStepDraft) -> Binding<CustomRoutineRepeatGroup?> {
+        Binding(
+            get: { draft.repeatGroups.first(where: { $0.stepIDs.contains(step.id) }) },
+            set: { group in
+                if let group {
+                    draft.updateRepeatGroup(group)
+                } else if let existing = draft.repeatGroups.first(where: { $0.stepIDs == [step.id] }) {
+                    draft.removeRepeatGroup(id: existing.id)
+                }
+            }
         )
     }
 
@@ -199,14 +302,11 @@ struct CustomRoutineEditorView: View {
     }
 
     private func save() {
+        hasAttemptedSave = true
         let definition = draft.definition()
         let issues = Self.localValidationIssues(for: definition)
-        guard issues.isEmpty else {
-            validationErrors = issues
-            return
-        }
+        guard issues.isEmpty else { return }
 
-        validationErrors = []
         do {
             try onSave(definition)
             dismiss()
@@ -222,6 +322,8 @@ struct CustomRoutineEditorView: View {
         }
         if definition.steps.isEmpty {
             issues.append("Add at least one step.")
+        } else if CustomRoutineValidator.terminalRestIssue(for: definition) == .terminalRestStep {
+            issues.append("End the routine with a work step.")
         }
         for (index, step) in definition.steps.enumerated() where !step.duration.isFinite || step.duration <= 0 {
             issues.append("Step \(index + 1) needs a positive duration.")
@@ -237,6 +339,17 @@ struct CustomRoutineEditorView: View {
         }
         for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
             issues.append("Step \(index + 1) needs a finite external load.")
+        }
+        for issue in CustomRoutineValidator.repeatIssues(for: definition) {
+            switch issue {
+            case let .invalidRepeatCount(index):
+                issues.append("Repeat \(index + 1) needs a count from 1 to 100.")
+            case let .overlappingRepeatSteps(index):
+                issues.append("Repeat \(index + 1) overlaps another repeat.")
+            case let .invalidRepeatSteps(index), let .duplicateRepeatGroupID(index):
+                issues.append("Repeat \(index + 1) needs a consecutive group of steps.")
+            default: break
+            }
         }
         return issues
     }
@@ -258,9 +371,12 @@ private enum EditorTargetMode: String, CaseIterable, Identifiable {
 
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
+    @Binding var repeatGroup: CustomRoutineRepeatGroup?
     let targetMode: CustomRoutineTargetMode
     let board: BoardRevision
     let onAddPair: (CustomRoutineStepDraft) -> Void
+    let onEditRepeatGroup: (CustomRoutineRepeatGroup) -> Void
+    let repeatSummary: String?
 
     @State private var activeHoldID: String?
     @State private var genericDepthSelection: GenericDepthSelection = .none
@@ -279,7 +395,7 @@ private struct CustomRoutineStepEditor: View {
     }
 
     var body: some View {
-        DisclosureGroup(step.title.isEmpty ? "New step" : step.title) {
+        DisclosureGroup {
             TextField("Step title", text: $step.title)
                 .accessibilityIdentifier("customRoutine.stepTitle")
             TextField("Instruction", text: $step.instruction, axis: .vertical)
@@ -308,6 +424,8 @@ private struct CustomRoutineStepEditor: View {
             TextField("Duration (seconds)", value: $step.duration, format: .number)
                 .keyboardType(.decimalPad)
                 .accessibilityIdentifier("customRoutine.stepDuration")
+
+            repeatControls
 
             if step.isRest {
                 LabeledContent("Timing") {
@@ -374,6 +492,72 @@ private struct CustomRoutineStepEditor: View {
                 .accessibilityIdentifier("customRoutine.addLeftRightPair")
 
                 targetEditor
+            }
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(step.title.isEmpty ? "New step" : step.title)
+                if let repeatSummary {
+                    Label(repeatSummary, systemImage: "repeat")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    private var isGroupedRepeat: Bool {
+        (repeatGroup?.stepIDs.count ?? 0) > 1
+    }
+
+    private var repeatEnabledBinding: Binding<Bool> {
+        Binding(
+            get: { repeatGroup != nil },
+            set: { enabled in
+                guard !isGroupedRepeat else { return }
+                if enabled {
+                    if repeatGroup == nil {
+                        repeatGroup = CustomRoutineRepeatGroup(stepIDs: [step.id])
+                    }
+                } else {
+                    repeatGroup = nil
+                }
+            }
+        )
+    }
+
+    private var repeatCountBinding: Binding<Int> {
+        Binding(
+            get: { repeatGroup?.repeatCount ?? 2 },
+            set: { count in
+                guard var group = repeatGroup, group.stepIDs == [step.id] else { return }
+                group.repeatCount = count
+                repeatGroup = group
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var repeatControls: some View {
+        Toggle("Repeat", isOn: repeatEnabledBinding)
+            .tint(.hangGreenDark)
+            .disabled(isGroupedRepeat)
+            .accessibilityIdentifier("customRoutine.stepRepeat")
+
+        if let repeatGroup {
+            if isGroupedRepeat {
+                Button("Edit group repeat") {
+                    onEditRepeatGroup(repeatGroup)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("customRoutine.editStepRepeatGroup")
+            } else {
+                Stepper(value: repeatCountBinding, in: CustomRoutineRepeatGroup.supportedCounts) {
+                    Text("Run \(repeatGroup.repeatCount) \(repeatGroup.repeatCount == 1 ? "time" : "times")")
+                }
+                .accessibilityIdentifier("customRoutine.stepRepeatCount")
+                Text("The count includes the first run.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -565,6 +749,107 @@ private struct CustomRoutineStepEditor: View {
     private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
         CustomRoutineBoardPreview.toggle(hold, in: &step, on: board)
+    }
+}
+
+private struct CustomRoutineRepeatEditor: View {
+    @Environment(\.dismiss) private var dismiss
+    let group: CustomRoutineRepeatGroup
+    let steps: [CustomRoutineStepDraft]
+    let otherGroups: [CustomRoutineRepeatGroup]
+    let onSave: (CustomRoutineRepeatGroup) -> Void
+
+    @State private var firstStepID: String
+    @State private var lastStepID: String
+    @State private var repeatCount: Int
+
+    init(
+        group: CustomRoutineRepeatGroup,
+        steps: [CustomRoutineStepDraft],
+        otherGroups: [CustomRoutineRepeatGroup],
+        onSave: @escaping (CustomRoutineRepeatGroup) -> Void
+    ) {
+        self.group = group
+        self.steps = steps
+        self.otherGroups = otherGroups
+        self.onSave = onSave
+        _firstStepID = State(initialValue: group.stepIDs.first ?? "")
+        _lastStepID = State(initialValue: group.stepIDs.last ?? "")
+        _repeatCount = State(initialValue: group.repeatCount)
+    }
+
+    private var availableIndices: [Int] {
+        let usedIDs = Set(otherGroups.flatMap(\.stepIDs))
+        return steps.indices.filter { !usedIDs.contains(steps[$0].id) }
+    }
+
+    private var endIndices: [Int] {
+        guard let start = steps.firstIndex(where: { $0.id == firstStepID }) else { return [] }
+        let available = Set(availableIndices)
+        return Array(steps.indices.dropFirst(start).prefix { available.contains($0) })
+    }
+
+    private var selectedStepIDs: [String] {
+        guard let start = steps.firstIndex(where: { $0.id == firstStepID }),
+              let end = endIndices.first(where: { steps[$0].id == lastStepID }) else { return [] }
+        return steps[start...end].map(\.id)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Steps to repeat") {
+                    Picker("From step", selection: $firstStepID) {
+                        ForEach(availableIndices, id: \.self) { index in
+                            Text(stepLabel(at: index)).tag(steps[index].id)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .accessibilityIdentifier("customRoutine.repeatStart")
+                    .onChange(of: firstStepID) { _, _ in
+                        if !endIndices.contains(where: { steps[$0].id == lastStepID }) {
+                            lastStepID = firstStepID
+                        }
+                    }
+                    Picker("Through step", selection: $lastStepID) {
+                        ForEach(endIndices, id: \.self) { index in
+                            Text(stepLabel(at: index)).tag(steps[index].id)
+                        }
+                    }
+                    .pickerStyle(.navigationLink)
+                    .accessibilityIdentifier("customRoutine.repeatEnd")
+                }
+                Section {
+                    Stepper(value: $repeatCount, in: CustomRoutineRepeatGroup.supportedCounts) {
+                        Text("Run \(repeatCount) \(repeatCount == 1 ? "time" : "times")")
+                    }
+                    .accessibilityIdentifier("customRoutine.repeatCount")
+                } footer: {
+                    Text("The count includes the first run. Each run follows the selected steps in order.")
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Color.hangBackground)
+            .navigationTitle("Repeat steps")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        onSave(CustomRoutineRepeatGroup(id: group.id, stepIDs: selectedStepIDs, repeatCount: repeatCount))
+                        dismiss()
+                    }
+                    .disabled(selectedStepIDs.isEmpty)
+                    .accessibilityIdentifier("customRoutine.repeatSave")
+                }
+            }
+        }
+    }
+
+    private func stepLabel(at index: Int) -> String {
+        "\(index + 1). \(steps[index].title.isEmpty ? "New step" : steps[index].title)"
     }
 }
 

@@ -20,7 +20,7 @@ FREECAD_CMD = Path(
 )
 EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "metolius-foundry"
-SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / f"{PACKAGE}.FCStd"
 ASSET = REPOSITORY / "Hangboards" / PACKAGE / "assets" / "primary.usdz"
 
 requires_freecad = pytest.mark.skipif(

@@ -1,0 +1,6 @@
+# Decoding and synthesized equality are real uses, even without direct reads.
+retain_codable_properties: true
+retain_equatable_properties: true
+retain_swift_ui_previews: true
+report_include:
+  - HangTen/**

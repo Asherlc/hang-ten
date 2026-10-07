@@ -1,8 +1,0 @@
-{
-  "newInstrumentedBinary": true,
-  "onlyCensusGateAndRunIDEnvironmentDifference": true,
-  "sameNormalFrameEndpoints": true,
-  "sameResolvedWorkoutInputs": true,
-  "sameRootCameraTransformSets": true,
-  "sameConstructorAndMakeCounts": true
-}

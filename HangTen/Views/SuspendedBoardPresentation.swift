@@ -310,10 +310,8 @@ enum MeshInternalLoopSolver {
     }
 }
 
-
 // Compatibility names retained for presentation and test callers while the
 // model-layer solver owns the single-cord result data.
-typealias SuspendedCordSolution = SolvedCordBranch
 typealias SuspendedSolvedPresentation = SolvedSuspension
 struct SuspendedBranchSolution {
     let id: String
@@ -342,6 +340,28 @@ struct SuspendedPairedLeadSolvedPresentation {
     let requiredClearance: Float
 }
 
+/// Solver output shared by package validation and the RealityKit renderer.
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+
+    var boardTransform: simd_float4x4 {
+        switch self {
+        case .single(let solved): solved.boardTransform
+        case .pairedLead(let solved): solved.boardTransform
+        case .twoBranch(let solved): solved.boardTransform
+        }
+    }
+
+    var cameraFraming: SuspendedCameraFraming {
+        switch self {
+        case .single(let solved): solved.cameraFraming
+        case .pairedLead(let solved): solved.cameraFraming
+        case .twoBranch(let solved): solved.cameraFraming
+        }
+    }
+}
 
 enum SuspendedBoardPresentation {
     /// The caller supplies F -> B -> W. Anchors remain authored world points;
@@ -403,35 +423,6 @@ enum SuspendedBoardPresentation {
                   !route.isEmpty && route.allSatisfy { $0.count == 3 && $0.allSatisfy(\.isFinite) }
                       && zip(route, route.dropFirst()).allSatisfy { $0.0 != $0.1 }
               }) else { throw SuspendedPresentationError.invalidSuspension }
-    }
-
-    static func combinedCameraFraming(_ frames: [SuspendedCameraFraming]) throws -> SuspendedCameraFraming {
-        guard let first = frames.first else { throw SuspendedPresentationError.invalidCamera }
-        let points = frames.flatMap(\.includedPoints)
-        guard !points.isEmpty, points.allSatisfy(\.allFinite),
-              frames.allSatisfy({ $0.fitPadding.isFinite && $0.fitPadding >= 1 }) else {
-            throw SuspendedPresentationError.invalidCamera
-        }
-        let horizontal = points.map { simd_dot($0, first.right) }
-        let vertical = points.map { simd_dot($0, first.up) }
-        let depth = points.map { simd_dot($0, first.direction) }
-        let minX = horizontal.min()!, maxX = horizontal.max()!
-        let minY = vertical.min()!, maxY = vertical.max()!
-        let minZ = depth.min()!, maxZ = depth.max()!
-        let width = maxX - minX, height = maxY - minY, depthSpan = maxZ - minZ
-        let padding = frames.map(\.fitPadding).max()!
-        let target = first.right * ((minX + maxX) / 2)
-            + first.up * ((minY + maxY) / 2)
-            + first.direction * ((minZ + maxZ) / 2)
-        let distance = max(width, max(height, depthSpan)) * padding
-        guard target.allFinite, distance.isFinite, width > 0, height > 0, depthSpan > 0 else {
-            throw SuspendedPresentationError.invalidCamera
-        }
-        return SuspendedCameraFraming(
-            target: target, direction: first.direction, viewDirection: first.viewDirection,
-            right: first.right, up: first.up, distance: distance,
-            width: width, height: height, depth: depthSpan, fitPadding: padding,
-            includedPoints: points)
     }
 
     static let additionalClearance: Float = 0.001
@@ -1520,7 +1511,6 @@ enum SuspendedBoardPresentation {
         return SuspendedCameraFraming(
             target: target,
             direction: direction,
-            viewDirection: direction,
             right: right,
             up: up,
             distance: distance,

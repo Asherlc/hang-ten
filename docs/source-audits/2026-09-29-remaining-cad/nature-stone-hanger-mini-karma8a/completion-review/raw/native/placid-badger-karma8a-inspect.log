@@ -1,5 +1,0 @@
-[('BodyOutline', 'Sketcher::SketchObject'), ('BodyExtrusion', 'Part::Extrusion'), ('OuterRimRound', 'Part::Fillet'), ('RecessOutline', 'Sketcher::SketchObject'), ('RecessDepth15', 'Part::Extrusion'), ('WoodRecess', 'Part::Cut'), ('CavityMouthRound', 'Part::Fillet'), ('LeftFrontOpenGroove', 'Part::Cylinder'), ('LeftFrontGrooveCut', 'Part::Cut'), ('LeftBackOpenGroove', 'Part::Cylinder'), ('LeftBackGrooveCut', 'Part::Cut'), ('LeftTransverseOpenGroove', 'Part::Cylinder'), ('LeftCrossGrooveCut', 'Part::Cut'), ('RightFrontOpenGroove', 'Part::Cylinder'), ('RightFrontGrooveCut', 'Part::Cut'), ('RightBackOpenGroove', 'Part::Cylinder'), ('RightBackGrooveCut', 'Part::Cut'), ('RightTransverseOpenGroove', 'Part::Cylinder'), ('RightCrossGrooveCut', 'Part::Cut'), ('GraniteOutline', 'Sketcher::SketchObject'), ('GraniteInsert', 'Part::Extrusion'), ('FinalSolid', 'Part::Fuse'), ('nature_wood', 'PartDesign::SubShapeBinder'), ('nature_stone', 'PartDesign::SubShapeBinder'), ('nature_pinch', 'PartDesign::SubShapeBinder')]
-
-								
-								
-								

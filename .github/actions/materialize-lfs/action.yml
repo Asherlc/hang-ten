@@ -1,0 +1,75 @@
+name: Materialize cached LFS sources
+description: Restore platform-independent LFS objects, fetch missing current sources, and verify their hashes.
+inputs:
+  cache:
+    description: Restore and save the shared object cache; disable after restoring a run artifact.
+    default: 'true'
+outputs:
+  owner:
+    description: Workspace owner used for the source handoff artifact.
+    value: ${{ steps.keys.outputs.owner }}
+runs:
+  using: composite
+  steps:
+    - name: Identify current LFS object inventory
+      id: keys
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      run: |
+        set -euo pipefail
+        owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+        echo "owner=$owner" >> "$GITHUB_OUTPUT"
+        # Object IDs come from HEAD pointers, independent of hydration and code-only changes.
+        digest=$(git lfs ls-files --long HEAD | cut -c 1-64 | LC_ALL=C sort -u | shasum -a 256 | awk '{print $1}')
+        echo "key=$owner-lfs-objects-v1-$digest" >> "$GITHUB_OUTPUT"
+        echo "prefix=$owner-lfs-objects-v1-" >> "$GITHUB_OUTPUT"
+        case "${ACTIONS_CACHE_MODE:-write}" in
+          read|none) echo 'writable=false' >> "$GITHUB_OUTPUT" ;;
+          *) echo 'writable=true' >> "$GITHUB_OUTPUT" ;;
+        esac
+
+    - name: Restore LFS objects before fetching
+      id: cache
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        # Cache only content, never Git configuration or checkout credentials.
+        path: .git/lfs/objects
+        key: ${{ steps.keys.outputs.key }}
+        restore-keys: ${{ steps.keys.outputs.prefix }}
+        enableCrossOsArchive: true
+
+    - name: Fetch missing objects and verify exact sources
+      id: materialize
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        set -euo pipefail
+        # A pointer-only checkout may not have registered the local LFS filters.
+        git lfs install --local --skip-smudge
+        # Checkout removes credentials. Authenticate only this process, without
+        # writing a token to Git configuration or including it in command arguments.
+        if [[ -n "${GH_TOKEN:-}" ]]; then
+          authorization=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')
+          if [[ "${GITHUB_ACTIONS:-}" == 'true' ]]; then
+            echo "::add-mask::$authorization"
+          fi
+          config_count=${GIT_CONFIG_COUNT:-0}
+          export "GIT_CONFIG_KEY_$config_count=http.${GITHUB_SERVER_URL:-https://github.com}/.extraheader"
+          export "GIT_CONFIG_VALUE_$config_count=AUTHORIZATION: basic $authorization"
+          export GIT_CONFIG_COUNT=$((config_count + 1))
+        fi
+        # Git LFS skips locally present objects even for a partial or evicted cache.
+        git -c lfs.fetchrecentalways=false lfs fetch --include='' --exclude='' origin HEAD
+        git -c lfs.fetchexclude= lfs fsck --objects HEAD
+        git -c lfs.fetchinclude= -c lfs.fetchexclude= lfs checkout
+
+    - name: Save verified LFS objects immediately
+      if: inputs.cache == 'true' && steps.keys.outputs.writable == 'true' && steps.cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+      with:
+        path: .git/lfs/objects
+        key: ${{ steps.cache.outputs.cache-primary-key }}
+        enableCrossOsArchive: true

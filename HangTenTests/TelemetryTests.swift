@@ -159,7 +159,6 @@ final class TelemetryTests: XCTestCase {
             tracking: NoOpTelemetry(),
             diagnostics: NoOpTelemetry(),
             userReports: reports,
-            flags: NoOpTelemetry(),
             replay: NoOpTelemetry(),
             isNoOp: false
         )
@@ -184,7 +183,6 @@ final class TelemetryTests: XCTestCase {
             tracking: NoOpTelemetry(),
             diagnostics: NoOpTelemetry(),
             userReports: reports,
-            flags: NoOpTelemetry(),
             replay: NoOpTelemetry(),
             isNoOp: false
         )
@@ -242,7 +240,6 @@ final class TelemetryTests: XCTestCase {
         telemetry.submit(
             HangTenUserReport(source: .boardDetail, message: "noop", boardID: "board-1")
         )
-        XCTAssertFalse(telemetry.isEnabled("future-flag", default: false))
     }
 
     func testApprovedEventsExposeOnlyTheirContractProperties() {

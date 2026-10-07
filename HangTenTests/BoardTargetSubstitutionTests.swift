@@ -75,12 +75,102 @@ final class ContactResolverTests: XCTestCase {
         let board = try XCTUnwrap(
             BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii")
         )
-        let step = try XCTUnwrap(LegacyPlanSeedCatalog.repeaters.steps.first)
+        let step = try XCTUnwrap(CanonicalPlanSourceFixture.plan("research.seven-three-repeaters").steps.first)
 
         XCTAssertEqual(
             Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
             ["edge-29-left", "edge-29-right"]
         )
+    }
+
+    func testThreeFingerEdgeRequirementAcceptsUnspecifiedAndLargerCapacities() throws {
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 20, maximum: 20)),
+            fingerCapacity: 3,
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [nil, 3, 4] as [Int?] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity
+            )
+
+            XCTAssertEqual(
+                Set(try ContactResolver.resolve(requirement, step: step, board: board).map(\.id)),
+                ["edge-left", "edge-right"],
+                "An edge with capacity \(String(describing: capacity)) should allow three fingers."
+            )
+        }
+    }
+
+    func testThreeFingerEdgeRequirementRejectsExplicitlySmallerCapacities() {
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 20, maximum: 20)),
+            fingerCapacity: 3,
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [1, 2] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity
+            )
+
+            XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+                XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
+            }
+        }
+    }
+
+    func testNamedPocketCapacityStillRequiresItsSpecifiedSize() throws {
+        let requirement = ContactRequirement.kind(.pocket, fingerCapacity: 3, selection: .bilateralPair)
+        let step = fixtureStep(target: requirement)
+
+        for capacity in [nil, 2, 3, 4] as [Int?] {
+            let board = fixtureBoard(
+                rightFingerCapacity: capacity,
+                leftFingerCapacity: capacity,
+                contactKind: .pocket
+            )
+
+            if capacity == 3 {
+                XCTAssertEqual(
+                    Set(try ContactResolver.resolve(requirement, step: step, board: board).map(\.id)),
+                    ["edge-left", "edge-right"]
+                )
+            } else {
+                XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+                    XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
+                }
+            }
+        }
+    }
+
+    func testRepeatersRestPreviewsThreeFingerEdgesOnGrindstoneMk2() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
+        let rest = try XCTUnwrap(plan.steps.first {
+            $0.id == "repeaters-grip-set-1-series-4-rep-3.segment-2"
+        })
+        let cue = WorkoutTimeline(steps: plan.steps).boardCue(
+            currentStep: rest,
+            stepElapsed: 1,
+            countdown: 0,
+            isComplete: false
+        )
+        let preview = try XCTUnwrap(cue.step)
+        let contacts = WorkoutHighlightResolver.contacts(for: preview, on: board)
+
+        XCTAssertTrue(cue.isResting)
+        XCTAssertEqual(cue.mode, .preview)
+        XCTAssertEqual(preview.fingerConfiguration?.engagedFingers, [.index, .middle, .ring])
+        XCTAssertEqual(Set(contacts.map(\.id)).count, 2)
+        XCTAssertTrue(contacts.allSatisfy { $0.kind == .edge })
     }
 
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
@@ -282,22 +372,32 @@ final class ContactResolverTests: XCTestCase {
     func testMaxHangsHighlightsDualTwentyMillimeterEdge() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
         let step = try XCTUnwrap(
-            LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }
+            CanonicalPlanSourceFixture.plan("research.max-hangs").steps.first { $0.id == "max-hangs-1" }
         )
-        let sessionStep = try XCTUnwrap(
-            step.resolvingEitherHand(selectedHandSide: .left, boardIsOneHanded: board.isOneHanded)
-        )
+        let tasks = try XCTUnwrap(step.segments.first?.target?.planTasks)
+        XCTAssertEqual(tasks.count, 1)
+        let task = try XCTUnwrap(tasks.first)
+        let sourceTarget = PlanHandTarget(target: .init(
+            kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))
+        ))
+        XCTAssertEqual(task, [sourceTarget, sourceTarget])
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertTrue(board.isOneHanded)
         let resolved = try ContactResolver.resolve(
-            sessionStep.workRequirements,
-            step: sessionStep,
+            task,
+            step: step,
             board: board
         )
+        // The source prescribes two hands. This one-hand board requires two
+        // copies of the same selected physical edge, preserving both slots.
+        XCTAssertEqual(resolved.count, 2)
+        XCTAssertEqual(Set(resolved.map(\.id)).count, 1)
         XCTAssertEqual(Set(resolved.map(\.kind)), [.edge])
         XCTAssertTrue(resolved.allSatisfy {
             $0.depth == .range(.init(minimum: 20, maximum: 20))
         })
         XCTAssertEqual(
-            WorkoutHighlightResolver.contactIDs(for: sessionStep, on: board),
+            WorkoutHighlightResolver.contactIDs(for: step, on: board),
             resolved.map(\.id)
         )
     }
@@ -305,19 +405,36 @@ final class ContactResolverTests: XCTestCase {
     func testMetoliusEntryHighlightsJugAndMediumEdgeOnDual() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
         let jugStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusEntry.steps.first { $0.id == "entry.minute-1.task-1" }
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps.first { $0.id == "entry.minute-1.task-1" }
         )
         let mediumStep = try XCTUnwrap(
-            LegacyPlanSeedCatalog.metoliusEntry.steps.first { $0.id == "entry.minute-3.task-1" }
+            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps.first { $0.id == "entry.minute-3.task-1" }
         )
 
-        XCTAssertEqual(
-            WorkoutHighlightResolver.contactIDs(for: jugStep, on: board),
-            ["outer-jug"]
-        )
+        XCTAssertTrue(board.isOneHanded)
+        let jugTasks = try XCTUnwrap(jugStep.segments.first?.target?.planTasks)
+        XCTAssertEqual(jugTasks.count, 1)
+        let jugTask = try XCTUnwrap(jugTasks.first)
+        XCTAssertEqual(jugTask, [
+            PlanHandTarget(target: .init(kind: .jug)),
+            PlanHandTarget(target: .init(kind: .jug))
+        ])
+        let jugIDs = try ContactResolver.resolve(jugTask, step: jugStep, board: board).map(\.id)
+        XCTAssertEqual(jugIDs, ["outer-jug", "outer-jug"])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: jugStep, on: board), jugIDs)
+        let mediumTasks = try XCTUnwrap(mediumStep.segments.first?.target?.planTasks)
+        XCTAssertEqual(mediumTasks.count, 1)
+        let mediumTask = try XCTUnwrap(mediumTasks.first)
+        XCTAssertEqual(mediumTask, [
+            PlanHandTarget(target: .init(kind: .edge, depth: .category(.medium))),
+            PlanHandTarget(target: .init(kind: .edge, depth: .category(.medium)))
+        ])
+        let mediumContacts = try ContactResolver.resolve(mediumTask, step: mediumStep, board: board)
         let mediumIDs = WorkoutHighlightResolver.contactIDs(for: mediumStep, on: board)
-        XCTAssertEqual(mediumIDs.count, 1)
-        XCTAssertTrue(mediumIDs[0] == "curved-edge-20" || mediumIDs[0] == "straight-edge-20")
+        XCTAssertEqual(mediumIDs, mediumContacts.map(\.id))
+        XCTAssertEqual(mediumIDs.count, 2)
+        XCTAssertEqual(Set(mediumIDs).count, 1)
+        XCTAssertTrue(mediumIDs.allSatisfy { $0 == "curved-edge-20" || $0 == "straight-edge-20" })
     }
 
     func testEmptyContactGripTypesDoNotConstrainStepGrip() throws {
@@ -450,16 +567,33 @@ final class ContactResolverTests: XCTestCase {
 
     func testPentaLegacyPairRequiresAnExactAthleteSelectedDepth() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
-        let step = try XCTUnwrap(LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" })
+        let step = try XCTUnwrap(CanonicalPlanSourceFixture.plan("research.max-hangs").steps.first { $0.id == "max-hangs-1" })
+        let sourceTasks = try XCTUnwrap(step.segments.first?.target?.planTasks)
+        XCTAssertEqual(sourceTasks.count, 1)
+        let sourceTask = try XCTUnwrap(sourceTasks.first)
+        let sourceTarget = PlanHandTarget(target: .init(
+            kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))
+        ))
+        XCTAssertEqual(sourceTask, [sourceTarget, sourceTarget])
         // The broad source range matches three physical pairs. Do not invent
-        // an automatic size choice or combine different reusable-unit slots.
-        XCTAssertThrowsError(try ContactResolver.resolve(step.workRequirements, step: step, board: board)) {
+        // an automatic size choice in the legacy bilateral-pair API. Flattening
+        // canonical hand tasks would discard this explicit selection contract.
+        let broadPair = ContactRequirement.edge(depth: .range(.init(minimum: 9, maximum: 19)),
+                                                selection: .bilateralPair)
+        XCTAssertThrowsError(try ContactResolver.resolve(broadPair, step: step, board: board)) {
             XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 6))
         }
         let exact = ContactRequirement.edge(depth: .range(.init(minimum: 20, maximum: 20)),
                                             selection: .bilateralPair)
         XCTAssertEqual(Set(try ContactResolver.resolve(exact, step: step, board: board).map(\.id)),
                        ["edge-20-left", "edge-20-right"])
+        let selectedHand = PlanHandTarget(target: .init(
+            kind: .edge, depth: .measured(.init(minimum: 20, maximum: 20))
+        ))
+        let selectedTask = [selectedHand, selectedHand]
+        let selection = try ContactResolver.resolveSelection(selectedTask, step: step, board: board)
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-20-left", "edge-20-right"])
+        XCTAssertEqual(selection.positionID, "edge-20")
     }
 
     func testReusablePairRejectsDifferentSlotsEvenWhenUnitFramesStraddleMidpoint() throws {
@@ -537,13 +671,14 @@ final class ContactResolverTests: XCTestCase {
         rightHandCapacity: Int? = nil,
         leftHandCapacity: Int? = nil,
         positionContactIDs: [String]? = nil,
-        gripTypes: Set<GripType> = [.openHand]
+        gripTypes: Set<GripType> = [.openHand],
+        contactKind: HoldKind = .edge
     ) -> BoardRevision {
         let contacts = [
             PhysicalContact(
                 id: "edge-right",
                 name: "Right edge",
-                kind: .edge,
+                kind: contactKind,
                 fingerCapacity: rightFingerCapacity,
                 handCapacity: rightHandCapacity,
                 depth: .range(.init(minimum: rightDepth.lowerBound, maximum: rightDepth.upperBound)),
@@ -552,7 +687,7 @@ final class ContactResolverTests: XCTestCase {
             PhysicalContact(
                 id: "edge-left",
                 name: "Left edge",
-                kind: .edge,
+                kind: contactKind,
                 fingerCapacity: leftFingerCapacity,
                 handCapacity: leftHandCapacity,
                 depth: .range(.init(minimum: 20, maximum: 20)),
@@ -561,7 +696,7 @@ final class ContactResolverTests: XCTestCase {
             PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
-                kind: .edge,
+                kind: contactKind,
                 depth: .range(.init(minimum: 30, maximum: 30)),
                 gripTypes: gripTypes
             )

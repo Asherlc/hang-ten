@@ -245,6 +245,7 @@
 		F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000002 /* PlanFlowPresentation.swift */; };
 		F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */; };
 		F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000006 /* PlanFlowUITests.swift */; };
+		F8BC00000000000000000001 /* CustomRoutineRepeatUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -505,6 +506,7 @@
 		F8BB00000000000000000002 /* PlanFlowPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentation.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentationTests.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000006 /* PlanFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowUITests.swift; sourceTree = "<group>"; };
+		F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineRepeatUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -547,6 +549,7 @@
 				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 				6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */,
 				F8BB00000000000000000006 /* PlanFlowUITests.swift */,
+				F8BC00000000000000000002 /* CustomRoutineRepeatUITests.swift */,
 			);
 			path = HangTenUITests;
 			sourceTree = "<group>";
@@ -665,8 +668,6 @@
 				BB0000000000000000000077 /* ProgressorProtocol.swift */,
 				BB0000000000000000000079 /* PitchSixProtocol.swift */,
 				BB0000000000000000000081 /* WHC06Protocol.swift */,
-				BB0000000000000000000083 /* EntralpiProtocol.swift */,
-				BB0000000000000000000085 /* ClimbroProtocol.swift */,
 				BB0000000000000000000022 /* MotherboardModels.swift */,
 				BB0000000000000000000024 /* MotherboardProtocol.swift */,
 				BB0000000000000000000026 /* MotherboardWorkoutRecorder.swift */,
@@ -778,6 +779,8 @@
 				BB0000000000000000000080 /* WHC06ProtocolTests.swift */,
 				BB0000000000000000000082 /* EntralpiProtocolTests.swift */,
 				BB0000000000000000000084 /* ClimbroProtocolTests.swift */,
+				BB0000000000000000000083 /* EntralpiProtocol.swift */,
+				BB0000000000000000000085 /* ClimbroProtocol.swift */,
 				BB0000000000000000000023 /* MotherboardProtocolTests.swift */,
 				BB0000000000000000000025 /* MotherboardWorkoutRecorderTests.swift */,
 				BB0000000000000000000027 /* WorkoutSessionStoreTests.swift */,
@@ -1089,6 +1092,7 @@
 				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 				5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */,
 				F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */,
+				F8BC00000000000000000001 /* CustomRoutineRepeatUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1142,8 +1146,6 @@
 				AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */,
 				AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */,
 				AA0000000000000000000081 /* WHC06Protocol.swift in Sources */,
-				AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */,
-				AA0000000000000000000085 /* ClimbroProtocol.swift in Sources */,
 				AA0000000000000000000019 /* MotherboardModels.swift in Sources */,
 				AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */,
 				AA0000000000000000000023 /* MotherboardWorkoutRecorder.swift in Sources */,
@@ -1205,6 +1207,8 @@
 				AA0000000000000000000080 /* WHC06ProtocolTests.swift in Sources */,
 				AA0000000000000000000082 /* EntralpiProtocolTests.swift in Sources */,
 				AA0000000000000000000084 /* ClimbroProtocolTests.swift in Sources */,
+				AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */,
+				AA0000000000000000000085 /* ClimbroProtocol.swift in Sources */,
 				AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */,
 				AA0000000000000000000022 /* MotherboardWorkoutRecorderTests.swift in Sources */,
 				AA0000000000000000000024 /* WorkoutSessionStoreTests.swift in Sources */,

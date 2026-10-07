@@ -109,7 +109,7 @@ struct WorkoutView: View {
 
     var body: some View {
 		GeometryReader { geometry in
-			TimelineView(.periodic(from: .now, by: 0.25)) { context in
+			TimelineView(.periodic(from: .now, by: 0.25)) { _ in
 				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: monotonicTime)
 				let step = step(at: elapsed)
@@ -311,10 +311,17 @@ struct WorkoutView: View {
 				}
 			}
 		}
-        .navigationTitle("Session")
+        .navigationTitle(plan.title)
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
 		.toolbar(.hidden, for: .tabBar)
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("End") {
+                    showEndConfirmation = true
+                }
+                .accessibilityIdentifier("workout.end")
+            }
 			ToolbarItemGroup(placement: .topBarTrailing) {
 				Button {
 					audioCuesEnabled.toggle()
@@ -325,20 +332,19 @@ struct WorkoutView: View {
 					Image(systemName: audioCuesEnabled ? "speaker.wave.2.fill" : "speaker.slash.fill")
 				}
 				.accessibilityLabel(audioCuesEnabled ? "Turn off spoken cues" : "Turn on spoken cues")
+                .accessibilityValue(audioCuesEnabled ? "On" : "Off")
+                .accessibilityIdentifier("workout.spokenCues")
 
-				Button {
-					showsReportProblem = true
+				Menu {
+                    Button("Report a problem", systemImage: "exclamationmark.bubble") {
+                        showsReportProblem = true
+                    }
+                    .accessibilityIdentifier("workout.reportProblem")
 				} label: {
-					Image(systemName: "exclamationmark.bubble")
+					Image(systemName: "ellipsis.circle")
 				}
-				.accessibilityLabel("Report a problem")
-				.accessibilityIdentifier("workout.reportProblem")
-
-				Button("End") {
-					showEndConfirmation = true
-				}
-				.font(.system(.footnote, design: .rounded, weight: .bold))
-				.foregroundStyle(Color.hangGreenDark)
+				.accessibilityLabel("Workout options")
+				.accessibilityIdentifier("workout.options")
 			}
         }
         .sheet(isPresented: $showsReportProblem) {
@@ -500,20 +506,22 @@ struct WorkoutView: View {
 					isComplete: isComplete
 				)
 				controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
-				if showsHoldPreview {
-					SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-				}
-				BoardMapView(
-					board: board,
-					highlightedHoldIDs: highlightedHoldIDs,
-					highlightMode: highlightMode,
-					selectedPresentationID: WorkoutHighlightResolver.presentationID(
+                if !isComplete {
+                    if showsHoldPreview {
+                        SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+                    }
+                    BoardMapView(
+                        board: board,
+                        highlightedHoldIDs: highlightedHoldIDs,
+                        highlightMode: highlightMode,
+                        selectedPresentationID: WorkoutHighlightResolver.presentationID(
                             for: cueStep, on: board, taskIndex: highlightedTaskIndex,
                             selectedHandSide: highlightedSelectedHandSide),
                         activeHoldID: holdCue?.hold?.id
-				)
-					.padding(.horizontal, 2)
-				taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
+                    )
+                    .padding(.horizontal, 2)
+                    taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
+                }
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
 					holdCue: holdCue,
 					countdown: mountedCueCountdown(countdown),
@@ -621,7 +629,6 @@ struct WorkoutView: View {
         isInitialCountdown ? 0 : countdown
     }
 
-
 	@ViewBuilder
 	private func portraitHandCueCards(
 		holdCue: WorkoutHoldCue,
@@ -652,152 +659,136 @@ struct WorkoutView: View {
 		}
 	}
 
-	private func landscapeSession(
-		step: WorkoutStep,
-		stepElapsed: TimeInterval,
-		elapsed: TimeInterval,
-		monotonicTime: TimeInterval,
-		countdown: Int,
-		canNavigate: Bool,
-		isResting: Bool,
-		isComplete: Bool,
-		highlightedHoldIDs: Set<String>,
-		highlightMode: BoardHighlightMode,
-		showsHoldPreview: Bool,
-		holdCue: WorkoutHoldCue?,
-		cueStep: WorkoutStep?,
-		highlightedTaskIndex: Int,
-		highlightedSelectedHandSide: WorkoutSide?,
-		isSkipCountdown: Bool
-	) -> some View {
-		let showsPairedHandCue: Bool = {
-			guard let holdCue else { return false }
-			return WorkoutLandscapeHandCuePolicy.showsHandCue(
-				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: mountedCueCountdown(countdown),
-				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
-				taskIndex: highlightedTaskIndex,
-				selectedHandSide: highlightedSelectedHandSide
-			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
-				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: mountedCueCountdown(countdown),
-				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
-				taskIndex: highlightedTaskIndex,
-				selectedHandSide: highlightedSelectedHandSide
-			)
-		}()
-		return ScrollView(showsIndicators: false) {
-			VStack(spacing: 9) {
-				landscapeHeader(
-					step: step,
-					stepElapsed: stepElapsed,
-					countdown: countdown,
-					canNavigate: canNavigate,
-					isResting: isResting,
-					isComplete: isComplete
-				)
+    private func landscapeSession(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        elapsed: TimeInterval,
+        monotonicTime: TimeInterval,
+        countdown: Int,
+        canNavigate: Bool,
+        isResting: Bool,
+        isComplete: Bool,
+        highlightedHoldIDs: Set<String>,
+        highlightMode: BoardHighlightMode,
+        showsHoldPreview: Bool,
+        holdCue: WorkoutHoldCue?,
+        cueStep: WorkoutStep?,
+        highlightedTaskIndex: Int,
+        highlightedSelectedHandSide: WorkoutSide?,
+        isSkipCountdown: Bool
+    ) -> some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 9) {
+                landscapeHeader(
+                    step: step,
+                    stepElapsed: stepElapsed,
+                    countdown: countdown,
+                    canNavigate: canNavigate,
+                    isResting: isResting,
+                    isComplete: isComplete
+                )
 
-				ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
-					.tint(Color.hangGreenDark)
+                if !isComplete {
+                    ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+                        .tint(Color.hangGreenDark)
 
-				VStack(spacing: 2) {
-					if showsPairedHandCue, let holdCue {
-						GripHandPairModelView(posture: holdCue.gripType,
-											 fingerConfiguration: holdCue.fingerConfiguration)
-							.frame(height: 68)
-                            .opacity(isInitialCountdown && countdown > 0 ? 0 : 1)
-                            .allowsHitTesting(!(isInitialCountdown && countdown > 0))
-                    .accessibilityHidden(isInitialCountdown && countdown > 0)
-							.accessibilityHidden(true)
-					}
-					HStack(spacing: 12) {
-					landscapeHandCueSlot(
-						holdCue: holdCue,
-						cueStep: cueStep,
-						countdown: countdown,
-						isComplete: isComplete,
-						isSkipCountdown: isSkipCountdown,
-						taskIndex: highlightedTaskIndex,
-						selectedHandSide: highlightedSelectedHandSide,
-						side: .left,
-						usesSharedPairPreview: showsPairedHandCue
-					)
+                    HStack(spacing: 12) {
+                        landscapeHandCueSlot(
+                            holdCue: holdCue,
+                            cueStep: cueStep,
+                            countdown: countdown,
+                            isComplete: isComplete,
+                            isSkipCountdown: isSkipCountdown,
+                            taskIndex: highlightedTaskIndex,
+                            selectedHandSide: highlightedSelectedHandSide,
+                            side: .left
+                        )
 
-					VStack(alignment: .leading, spacing: 4) {
-						SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
-							.frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
-							.opacity(showsHoldPreview ? 1 : 0)
-							.accessibilityHidden(!showsHoldPreview)
-						BoardMapView(
-							board: board,
-							highlightedHoldIDs: highlightedHoldIDs,
-							highlightMode: highlightMode,
-							selectedPresentationID: WorkoutHighlightResolver.presentationID(
-                            for: cueStep, on: board, taskIndex: highlightedTaskIndex,
-                            selectedHandSide: highlightedSelectedHandSide),
-                        activeHoldID: holdCue?.hold?.id
-						)
-							.frame(maxWidth: .infinity)
-							.frame(maxHeight: LandscapeLayout.boardMaxHeight)
-						taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
-					}
-					.frame(maxWidth: .infinity)
+                        VStack(alignment: .leading, spacing: 4) {
+                            SectionLabel(title: "Next hold preview", tint: WorkoutPhase.rest.textTint)
+                                .frame(maxWidth: .infinity, minHeight: LandscapeLayout.previewLabelHeight, alignment: .center)
+                                .opacity(showsHoldPreview ? 1 : 0)
+                                .accessibilityHidden(!showsHoldPreview)
+                            BoardMapView(
+                                board: board,
+                                highlightedHoldIDs: highlightedHoldIDs,
+                                highlightMode: highlightMode,
+                                selectedPresentationID: WorkoutHighlightResolver.presentationID(
+                                    for: cueStep, on: board, taskIndex: highlightedTaskIndex,
+                                    selectedHandSide: highlightedSelectedHandSide),
+                                activeHoldID: holdCue?.hold?.id,
+                                maximumMapHeight: LandscapeLayout.boardMaxHeight
+                            )
+                            .frame(maxWidth: .infinity)
+                            taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
+                        }
+                        .frame(maxWidth: .infinity)
 
-					landscapeHandCueSlot(
-						holdCue: holdCue,
-						cueStep: cueStep,
-						countdown: countdown,
-						isComplete: isComplete,
-						isSkipCountdown: isSkipCountdown,
-						taskIndex: highlightedTaskIndex,
-						selectedHandSide: highlightedSelectedHandSide,
-						side: .right,
-						usesSharedPairPreview: showsPairedHandCue
-					)
-					}
-				}
-				.frame(maxHeight: LandscapeLayout.normalCueRowHeight
-                    + (board.presentations.count > 1 ? LandscapeLayout.presentationSelectorHeight : 0))
+                        landscapeHandCueSlot(
+                            holdCue: holdCue,
+                            cueStep: cueStep,
+                            countdown: countdown,
+                            isComplete: isComplete,
+                            isSkipCountdown: isSkipCountdown,
+                            taskIndex: highlightedTaskIndex,
+                            selectedHandSide: highlightedSelectedHandSide,
+                            side: .right
+                        )
+                    }
+                    .frame(maxHeight: LandscapeLayout.normalCueRowHeight
+                        + (board.presentations.count > 1 ? LandscapeLayout.presentationSelectorHeight : 0))
+                }
 
-				if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
-					isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
-					countdown: countdown,
-					isComplete: isComplete
-				) {
-					landscapePreStartControls(
-						step: step,
-						isResting: isResting,
-						isComplete: isComplete,
-						countdown: countdown,
-						monotonicTime: monotonicTime,
-						canNavigate: canNavigate,
-						currentStopwatchKey: currentStopwatchKey(for: step)
-					)
-				} else {
-					HStack(alignment: .center, spacing: 12) {
-						if let cueCardRows = WorkoutPresentationContent.cueCardRows(
-							step: step,
-							countdown: countdown,
-							isComplete: isComplete
-						) {
-							cueCard(
-								rows: cueCardRows,
-								step: step,
-								countdown: countdown,
-								isResting: isResting,
-								compact: true
-							)
-						}
-						controlGroup(step: step, isResting: isResting, isComplete: isComplete, countdown: countdown, monotonicTime: monotonicTime, canNavigate: canNavigate)
-							.frame(width: 224)
-					}
-				}
-				if isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
-					meter(step: step)
-				}
-			}
-			.padding(.horizontal, 16)
-			.padding(.vertical, 10)
+                if isComplete {
+                    controlButton(isComplete: true, countdown: 0)
+                } else if WorkoutLandscapeControlLayoutPolicy.usesCompactControls(
+                    isFirstStart: WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+                    countdown: countdown,
+                    isComplete: isComplete
+                ) {
+                    landscapePreStartControls(
+                        step: step,
+                        isResting: isResting,
+                        isComplete: isComplete,
+                        countdown: countdown,
+                        monotonicTime: monotonicTime,
+                        canNavigate: canNavigate,
+                        currentStopwatchKey: currentStopwatchKey(for: step)
+                    )
+                } else {
+                    HStack(alignment: .center, spacing: 12) {
+                        if let cueCardRows = WorkoutPresentationContent.cueCardRows(
+                            step: step,
+                            countdown: countdown,
+                            isComplete: isComplete
+                        ) {
+                            cueCard(
+                                rows: cueCardRows,
+                                step: step,
+                                countdown: countdown,
+                                isResting: isResting,
+                                compact: true
+                            )
+                        }
+                        controlGroup(
+                            step: step,
+                            isResting: isResting,
+                            isComplete: isComplete,
+                            countdown: countdown,
+                            monotonicTime: monotonicTime,
+                            canNavigate: canNavigate
+                        )
+                        .frame(width: 224)
+                    }
+                }
+                if !isComplete, isScaleTrackingReady, motherboardBluetoothService.state.showsWorkoutMeter {
+                    meter(step: step)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
         }
-	}
+    }
 
 	private func landscapeHandCueSlot(
 		holdCue: WorkoutHoldCue?,
@@ -838,56 +829,33 @@ struct WorkoutView: View {
 		.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 	}
 
-	private func landscapeHeader(
-		step: WorkoutStep,
-		stepElapsed: TimeInterval,
-		countdown: Int,
-		canNavigate: Bool,
-		isResting: Bool,
-		isComplete: Bool
-	) -> some View {
-		HStack(alignment: .center, spacing: 16) {
-			VStack(alignment: .leading, spacing: 3) {
-				SectionLabel(
-					title: isComplete
-						? "Session complete"
-						: countdown > 0
-							? "Get ready"
-							: "Step \(step.number) of \(activeSteps.count)"
-				)
-				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
-					.font(.system(.title2, design: .rounded, weight: .bold))
-					.foregroundStyle(Color.hangInk)
-					.lineLimit(1)
-			}
-
-			Spacer(minLength: 12)
-
-			Pill(
-				title: rendererStartGate.isPending ? "Preparing" : isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
-				tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
-				fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.18)
-			)
-
-            WorkoutTimerView(
-                remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete),
-                compact: true
-            )
-
-			Button("Routine") {
-				showsStepPicker = true
-			}
-			.font(.system(.footnote, design: .rounded, weight: .bold))
-			.foregroundStyle(Color.hangGreenDark)
-			.disabled(!canNavigate)
-			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
-			.accessibilityIdentifier("workout.routinePicker")
-
-			if planNeedsHandChoice {
-				handPreferenceMenu()
-			}
-		}
-	}
+    private func landscapeHeader(
+        step: WorkoutStep,
+        stepElapsed: TimeInterval,
+        countdown: Int,
+        canNavigate: Bool,
+        isResting: Bool,
+        isComplete: Bool
+    ) -> some View {
+        HStack(alignment: .center, spacing: 16) {
+            if isComplete {
+                Text("Session complete")
+                    .font(.system(.title2, design: .rounded, weight: .bold))
+                    .foregroundStyle(Color.hangInk)
+            } else {
+                routinePicker(step: step, canNavigate: canNavigate, includesTitle: true)
+                Spacer(minLength: 12)
+                phaseIndicator(step: step, countdown: countdown, isResting: isResting)
+                WorkoutTimerView(
+                    remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: false),
+                    compact: true
+                )
+                if planNeedsHandChoice {
+                    handPreferenceMenu()
+                }
+            }
+        }
+    }
 
 	private func landscapePreStartControls(
 		step: WorkoutStep,
@@ -939,6 +907,50 @@ struct WorkoutView: View {
 		}
 	}
 
+    private func routinePicker(step: WorkoutStep, canNavigate: Bool, includesTitle: Bool = false) -> some View {
+        Button {
+            showsStepPicker = true
+        } label: {
+            HStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Step \(step.number) of \(activeSteps.count)")
+                        .font(.system(.footnote, design: .rounded, weight: .bold))
+                        .foregroundStyle(Color.hangGreenDark)
+                    if includesTitle {
+                        Text(step.title)
+                            .font(.system(.title2, design: .rounded, weight: .bold))
+                            .foregroundStyle(Color.hangInk)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                Image(systemName: "chevron.down")
+                    .font(.system(.caption, weight: .bold))
+                    .foregroundStyle(Color.hangGreenDark)
+            }
+            .frame(minHeight: 44, alignment: .leading)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .disabled(!canNavigate)
+        .accessibilityLabel(includesTitle
+            ? "Step \(step.number) of \(activeSteps.count), \(step.title)"
+            : "Step \(step.number) of \(activeSteps.count)")
+        .accessibilityHint("Shows all steps")
+        .accessibilityIdentifier("workout.routinePicker")
+    }
+
+    @ViewBuilder
+    private func phaseIndicator(step: WorkoutStep, countdown: Int, isResting: Bool) -> some View {
+        let title = rendererStartGate.isPending ? "Preparing" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step)
+        if rendererStartGate.isPending || countdown > 0 || step.title.caseInsensitiveCompare(title) != .orderedSame {
+            Pill(
+                title: title,
+                tint: countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
+                fill: (countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
+            )
+        }
+    }
+
     private func sessionHeader(
         step: WorkoutStep,
         stepElapsed: TimeInterval,
@@ -949,58 +961,45 @@ struct WorkoutView: View {
         isComplete: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: 13) {
-            HStack {
-                SectionLabel(
-                    title: isComplete
-                        ? "Session complete"
-                        : countdown > 0
-                            ? "Get ready"
-                            : "Step \(step.number) of \(activeSteps.count)"
-                )
-                Spacer()
-                Pill(
-                    title: isComplete ? "Done" : countdown > 0 ? "Ready" : isResting ? "Rest" : intervalLabel(for: step),
-                    tint: isComplete ? Color.hangGreenDark : countdown > 0 ? Color.hangInk : isResting ? WorkoutPhase.rest.textTint : step.phase.textTint,
-                    fill: (isComplete ? Color.hangGreen : countdown > 0 ? Color.warmUp : isResting ? Color.restBlue : step.phase.tint).opacity(0.19)
-                )
+            if !isComplete {
+                HStack {
+                    routinePicker(step: step, canNavigate: canNavigate)
+                    Spacer()
+                    phaseIndicator(step: step, countdown: countdown, isResting: isResting)
+                }
+
+                if planNeedsHandChoice {
+                    handPreferenceMenu()
+                }
             }
 
-            Button("Routine") {
-                showsStepPicker = true
+            Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
+                .font(.system(.largeTitle, design: .rounded, weight: .bold))
+                .foregroundStyle(Color.hangInk)
+
+            if !isComplete {
+                if rendererStartGate.isPending {
+                    Text("Preparing 3D views…")
+                        .font(.subheadline)
+                        .accessibilityIdentifier("workout.preparingRenderers")
+                }
+                if !step.isRestStep {
+                    let labels = WorkoutStepFormatting.labels(
+                        for: step,
+                        taskIndex: taskCursor.index(for: step),
+                        selectedHandSide: taskCursor.selectedSide(for: step)
+                    ).filter { $0.caseInsensitiveCompare(intervalLabel(for: step)) != .orderedSame }
+                    if !labels.isEmpty {
+                        Text(labels.joined(separator: " • "))
+                            .font(.system(.footnote, design: .rounded, weight: .bold))
+                            .foregroundStyle(step.phase.textTint)
+                    }
+                }
+
+                portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: false)
+                ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
+                    .tint(Color.hangGreenDark)
             }
-            .font(.system(.footnote, design: .rounded, weight: .bold))
-            .foregroundStyle(Color.hangGreenDark)
-            .disabled(!canNavigate)
-            .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
-            .accessibilityIdentifier("workout.routinePicker")
-
-            if planNeedsHandChoice {
-                handPreferenceMenu()
-            }
-
-			Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
-				.font(.system(.largeTitle, design: .rounded, weight: .bold))
-				.foregroundStyle(Color.hangInk)
-
-			if !step.isRestStep {
-				Text(WorkoutStepFormatting.labels(
-					for: step,
-					taskIndex: taskCursor.index(for: step),
-					selectedHandSide: taskCursor.selectedSide(for: step)
-				).joined(separator: " • "))
-					.font(.system(.footnote, design: .rounded, weight: .bold))
-					.foregroundStyle(step.phase.textTint)
-			}
-
-            if rendererStartGate.isPending {
-                Text("Preparing 3D views…")
-                    .font(.subheadline)
-                    .accessibilityIdentifier("workout.preparingRenderers")
-            }
-            portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
-
-            ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
-                .tint(Color.hangGreenDark)
         }
     }
 
@@ -1027,7 +1026,6 @@ struct WorkoutView: View {
         WorkoutCueCard(
             rows: rows,
             title: countdown > 0 ? "Next" : isResting ? "Recovery" : "Instructions",
-            intervalTitle: countdown == 0 ? intervalLabel(for: step) : nil,
             tint: isResting && !compact ? WorkoutPhase.rest.textTint : step.phase.textTint,
             compact: compact
         )
@@ -1052,7 +1050,9 @@ struct WorkoutView: View {
                 stopwatchControl(for: key, at: monotonicTime)
             }
 
-			skipStepButton(step: step, canNavigate: canNavigate)
+            if !isComplete {
+                skipStepButton(step: step, canNavigate: canNavigate)
+            }
 		}
 	}
 
@@ -1851,7 +1851,6 @@ struct WorkoutView: View {
 	}
 }
 
-
 /// Current mounted hosts, not cached resources or proof of a displayed frame.
 struct WorkoutRendererReadiness: Equatable {
     enum Kind: Equatable { case board, hand }
@@ -1888,7 +1887,6 @@ struct WorkoutRendererReadiness: Equatable {
     }
 }
 
-
 struct WorkoutRendererReadinessKey: PreferenceKey {
     static var defaultValue: WorkoutRendererReadiness { .init() }
     static func reduce(value: inout WorkoutRendererReadiness,
@@ -1909,7 +1907,6 @@ extension EnvironmentValues {
         set { self[WorkoutRendererPreparationIDKey.self] = newValue }
     }
 }
-
 
 /// First-start intent is consumed once. Late host changes cannot restart a
 /// cancelled preparation, and resume/Skip never enter this policy.

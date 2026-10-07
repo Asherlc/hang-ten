@@ -31,7 +31,7 @@ EDGE_DEPTHS = {"edge-18": 18, "edge-14": 14, "edge-12": 12, "edge-10": 10,
 
 
 def board_for(slug: str) -> dict:
-    source = REPOSITORY / "Hangboards" / slug / f"{slug}.FCStd"
+    source = REPOSITORY / "Hangboards" / f"{slug}.FCStd"
     assert source.is_file(), f"missing native source: {source}"
     return json.loads(generate_board_json(source))
 
@@ -74,7 +74,7 @@ def test_every_continuous_contact_loads_with_its_real_model_binding(slug):
 @pytest.mark.parametrize("slug", PACKAGES)
 def test_native_edits_keep_all_contacts_on_the_body(slug):
     tools = REPOSITORY / "Tools/HangboardCAD"
-    source = REPOSITORY / "Hangboards" / slug / f"{slug}.FCStd"
+    source = REPOSITORY / "Hangboards" / f"{slug}.FCStd"
     result = subprocess.run(
         [sys.executable, str(tools / "run_freecad.py"), "--freecad",
          os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd"),

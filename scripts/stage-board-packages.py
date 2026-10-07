@@ -330,23 +330,15 @@ def stage_board_packages(
         _validate_regular_tree(package_source)
 
     model_asset_paths_by_slug: dict[str, frozenset[Path]] = {}
-    # CAD and suspension authoring sources are merged into generated board.json;
-    # neither belongs in the runtime bundle or ODR.
-    authoring_source_paths_by_slug: dict[str, frozenset[Path]] = {}
+    # Native authoring lives beside the package directories. The generated
+    # suspension artifact is merged into board.json and is not a runtime file.
+    generated_suspension_artifact = frozenset({Path("assets/suspension.json")})
     for package in inventory.packages:
-        package_root = package.root
         model_asset_paths_by_slug[package.root.name] = frozenset(
             Path(presentation.media.asset_path)
             for presentation in package.board.presentations
             if isinstance(presentation.media, package_module.PresentationMediaModel)
         )
-        cad_sources = frozenset(
-            path.relative_to(package_root)
-            for path in package_root.rglob("*.FCStd")
-        )
-        sidecar = frozenset({Path("suspension.json")}) if (package_root / "suspension.json").is_file() else frozenset()
-        physics_authoring = frozenset({Path("rope-physics.json")}) if (package_root / "rope-physics.json").is_file() else frozenset()
-        authoring_source_paths_by_slug[package.root.name] = cad_sources | sidecar | physics_authoring
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
@@ -379,7 +371,7 @@ def stage_board_packages(
                 package_source,
                 package_destination,
                 excluded_paths=model_asset_paths
-                | authoring_source_paths_by_slug[package.root.name],
+                | generated_suspension_artifact,
             )
             if package.generated_board_json is not None:
                 _write_generated_board_json(package_destination, package.generated_board_json)

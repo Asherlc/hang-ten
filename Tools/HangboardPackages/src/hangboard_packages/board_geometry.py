@@ -184,60 +184,6 @@ def union_normalized_frames(frames: Iterable[NormalizedFrame]) -> NormalizedFram
     )
 
 
-def flattened_shape_bounds(commands: list[Any]) -> tuple[float, float, float, float]:
-    """Return (min_x, max_x, min_y, max_y) of the rendered curve in a path
-    shape's own normalized [0, 1] local coordinate space.
-
-    Mirrors the Swift app's flattening exactly (32 samples per curve
-    segment) so a piece's declared frame can be checked against what
-    actually renders, not against its control points.
-    """
-    xs: list[float] = []
-    ys: list[float] = []
-    current: tuple[float, float] | None = None
-    for raw in commands:
-        name = raw.get("command") if isinstance(raw, Mapping) else None
-        if name == "move":
-            current = (raw["to"][0], raw["to"][1])
-            xs.append(current[0])
-            ys.append(current[1])
-        elif name == "line":
-            current = (raw["to"][0], raw["to"][1])
-            xs.append(current[0])
-            ys.append(current[1])
-        elif name == "quad":
-            control = (raw["control"][0], raw["control"][1])
-            end = (raw["to"][0], raw["to"][1])
-            for step in range(1, 33):
-                t = step / 32
-                inverse = 1 - t
-                xs.append(inverse * inverse * current[0] + 2 * inverse * t * control[0] + t * t * end[0])
-                ys.append(inverse * inverse * current[1] + 2 * inverse * t * control[1] + t * t * end[1])
-            current = end
-        elif name == "curve":
-            control1 = (raw["control1"][0], raw["control1"][1])
-            control2 = (raw["control2"][0], raw["control2"][1])
-            end = (raw["to"][0], raw["to"][1])
-            for step in range(1, 33):
-                t = step / 32
-                inverse = 1 - t
-                xs.append(
-                    inverse ** 3 * current[0]
-                    + 3 * inverse * inverse * t * control1[0]
-                    + 3 * inverse * t * t * control2[0]
-                    + t ** 3 * end[0]
-                )
-                ys.append(
-                    inverse ** 3 * current[1]
-                    + 3 * inverse * inverse * t * control1[1]
-                    + 3 * inverse * t * t * control2[1]
-                    + t ** 3 * end[1]
-                )
-            current = end
-        # "close" contributes no point beyond the start already recorded.
-    return min(xs), max(xs), min(ys), max(ys)
-
-
 def display_path_for_shape(
     frame: Mapping[str, Any], shape: Mapping[str, Any], width: int, height: int, *, label: str
 ) -> ClosedPath:

@@ -1,5 +1,29 @@
 import Foundation
 
+/// A routine's training goal is authored from retained source evidence, not
+/// inferred from its title or the presence of a particular exercise.
+enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
+    case fingerStrength, fingerEndurance, pullingStrength, mixed
+
+    var id: String { rawValue }
+    var title: String {
+        switch self {
+        case .fingerStrength: "Finger strength"
+        case .fingerEndurance: "Finger endurance"
+        case .pullingStrength: "Pulling strength"
+        case .mixed: "Mixed workouts"
+        }
+    }
+    var subtitle: String {
+        switch self {
+        case .fingerStrength: "Workouts focused on finger strength"
+        case .fingerEndurance: "Workouts focused on finger endurance"
+        case .pullingStrength: "Workouts focused on pulling strength"
+        case .mixed: "Workouts that combine different exercises"
+        }
+    }
+}
+
 private struct PlanLibraryCodingKey: CodingKey {
     let stringValue: String
     let intValue: Int?
@@ -12,18 +36,6 @@ private struct PlanLibraryCodingKey: CodingKey {
     init?(intValue: Int) {
         stringValue = String(intValue)
         self.intValue = intValue
-    }
-}
-
-private extension Decoder {
-    /// Silently ignores deprecated plan-library keys so that old JSON files
-    /// (which included `schemaVersion`, `version`, or `boardMappings`) can
-    /// still be loaded.  Individual plan/block definitions will still reject
-    /// structurally incompatible data via their own strict decoders.
-    func ignoreFormerPlanLibraryKeys(_ keys: Set<String>) throws {
-        // Intentionally a no-op.  The keys are present but unused, so
-        // `container(keyedBy:)` simply skips them.
-        _ = try self.container(keyedBy: PlanLibraryCodingKey.self)
     }
 }
 
@@ -57,7 +69,6 @@ struct PlanLibraryMetadata: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.ignoreFormerPlanLibraryKeys(["version"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
@@ -81,6 +92,8 @@ struct PlanMetadata: Codable, Hashable {
     /// Curated athlete-facing labels. Unlike `tags`, these never expose
     /// library provenance or runtime requirements in the Plans filter.
     let workoutLabels: [String]
+    /// Source-audited training goal; absent for unclassified and legacy routines.
+    let focus: WorkoutFocus?
     let tags: [String]
     let notes: [String]
     /// Deprecated fields preserved for round-trip fidelity with old plan
@@ -98,6 +111,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance: RoutineProvenance,
         category: String = "general",
         workoutLabels: [String] = [],
+        focus: WorkoutFocus? = nil,
         tags: [String] = [],
         notes: [String] = [],
         equipment: [String]? = nil,
@@ -111,6 +125,7 @@ struct PlanMetadata: Codable, Hashable {
         self.provenance = provenance
         self.category = category
         self.workoutLabels = workoutLabels
+        self.focus = focus
         self.tags = tags
         self.notes = notes
         self.equipment = equipment
@@ -133,6 +148,7 @@ struct PlanMetadata: Codable, Hashable {
         case provenance
         case category
         case workoutLabels
+        case focus
         case tags
         case notes
         case equipment
@@ -149,6 +165,7 @@ struct PlanMetadata: Codable, Hashable {
         provenance = try container.decode(RoutineProvenance.self, forKey: .provenance)
         category = try container.decodeIfPresent(String.self, forKey: .category) ?? "general"
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
+        focus = try container.decodeIfPresent(WorkoutFocus.self, forKey: .focus)
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
         equipment = try container.decodeIfPresent([String].self, forKey: .equipment)
@@ -167,6 +184,7 @@ struct PlanMetadata: Codable, Hashable {
         if !workoutLabels.isEmpty {
             try container.encode(workoutLabels, forKey: .workoutLabels)
         }
+        try container.encodeIfPresent(focus, forKey: .focus)
         try container.encode(tags, forKey: .tags)
         try container.encode(notes, forKey: .notes)
         try container.encodeIfPresent(equipment, forKey: .equipment)
@@ -792,11 +810,12 @@ extension WorkoutStepDefinition {
     /// including explicit segment timing and one-segment rest rows.
     static func from(
         _ step: WorkoutStep,
-        id: String? = nil
+        id: String? = nil,
+        title: String? = nil
     ) -> WorkoutStepDefinition {
         WorkoutStepDefinition(
             id: id ?? step.id,
-            title: step.title,
+            title: title ?? step.title,
             instruction: step.instruction,
             accessory: step.accessory,
             duration: step.duration,
@@ -897,20 +916,24 @@ struct WorkoutBlockDefinition: Codable, Hashable {
 struct WorkoutBlockReference: Codable, Hashable {
     let blockID: String
     /// Optional IDs let a shared block preserve a routine's historic IDs.
-    /// The count must match the referenced block's step count when supplied.
+    /// One pattern supplies stems; a complete expanded list supplies exact IDs.
     let stepIDs: [String]
     let repeatCount: Int
+    /// Original occurrence labels can vary without duplicating the prescription.
+    let stepTitles: [String]
 
-    init(blockID: String, stepIDs: [String] = [], repeatCount: Int = 1) {
+    init(blockID: String, stepIDs: [String] = [], repeatCount: Int = 1, stepTitles: [String] = []) {
         self.blockID = blockID
         self.stepIDs = stepIDs
         self.repeatCount = repeatCount
+        self.stepTitles = stepTitles
     }
 
     private enum CodingKeys: String, CodingKey {
         case blockID
         case stepIDs
         case repeatCount
+        case stepTitles
     }
 
     init(from decoder: Decoder) throws {
@@ -918,6 +941,7 @@ struct WorkoutBlockReference: Codable, Hashable {
         blockID = try container.decode(String.self, forKey: .blockID)
         stepIDs = try container.decodeIfPresent([String].self, forKey: .stepIDs) ?? []
         repeatCount = try container.decodeIfPresent(Int.self, forKey: .repeatCount) ?? 1
+        stepTitles = try container.decodeIfPresent([String].self, forKey: .stepTitles) ?? []
     }
 
     func encode(to encoder: Encoder) throws {
@@ -929,6 +953,22 @@ struct WorkoutBlockReference: Codable, Hashable {
         if repeatCount != 1 {
             try container.encode(repeatCount, forKey: .repeatCount)
         }
+        if !stepTitles.isEmpty {
+            try container.encode(stepTitles, forKey: .stepTitles)
+        }
+    }
+
+    func resolvedStepID(for step: WorkoutStepDefinition, index: Int, repetition: Int, patternCount: Int) -> String {
+        if repeatCount > 1, stepIDs.count == patternCount * repeatCount {
+            return stepIDs[repetition * patternCount + index]
+        }
+        let stem = stepIDs.indices.contains(index) ? stepIDs[index] : step.id
+        return repeatCount > 1 ? "\(stem)-\(repetition + 1)" : stem
+    }
+
+    func resolvedStepTitle(for step: WorkoutStepDefinition, index: Int, repetition: Int, patternCount: Int) -> String {
+        let offset = stepTitles.count == patternCount ? index : repetition * patternCount + index
+        return stepTitles.indices.contains(offset) ? stepTitles[offset] : step.title
     }
 }
 
@@ -973,10 +1013,6 @@ struct PlanLibraryDefinition: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.ignoreFormerPlanLibraryKeys([
-            "schemaVersion",
-            "board" + "Mappings"
-        ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         metadata = try container.decode(PlanLibraryMetadata.self, forKey: .metadata)
         blocks = try container.decode([WorkoutBlockDefinition].self, forKey: .blocks)
@@ -997,12 +1033,6 @@ struct PlanValidationIssue: Codable, Hashable, CustomStringConvertible {
     var description: String {
         "\(path): \(message)"
     }
-}
-
-struct PlanValidationReport: Hashable {
-    let issues: [PlanValidationIssue]
-
-    var isValid: Bool { issues.isEmpty }
 }
 
 enum PlanLibraryStoreError: LocalizedError {
@@ -1068,7 +1098,6 @@ enum PlanLibraryValidator {
                 path: path,
                 blockByID: blockByID,
                 boardByID: boardByID,
-                availableBoards: availableBoards,
                 issues: &issues
             )
         }
@@ -1323,7 +1352,6 @@ enum PlanLibraryValidator {
         path: String,
         blockByID: [String: WorkoutBlockDefinition],
         boardByID: [String: [BoardRevision]],
-        availableBoards: [BoardRevision],
         issues: inout [PlanValidationIssue]
     ) {
         let metadataPath = "\(path).metadata"
@@ -1366,8 +1394,12 @@ enum PlanLibraryValidator {
             if reference.repeatCount < 1 {
                 issues.append(PlanValidationIssue(path: "\(referencePath).repeatCount", message: "Repeat count must be at least one."))
             }
-            if !reference.stepIDs.isEmpty && reference.stepIDs.count != block.steps.count {
-                issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must match the referenced block's step count."))
+            let expandedCount = block.steps.count * max(0, reference.repeatCount)
+            if !reference.stepIDs.isEmpty && reference.stepIDs.count != block.steps.count && reference.stepIDs.count != expandedCount {
+                issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must match one pattern or the complete expanded block."))
+            }
+            if !reference.stepTitles.isEmpty && reference.stepTitles.count != block.steps.count && reference.stepTitles.count != expandedCount {
+                issues.append(PlanValidationIssue(path: "\(referencePath).stepTitles", message: "Step title overrides must match one pattern or the complete expanded block."))
             }
             if Set(reference.stepIDs).count != reference.stepIDs.count {
                 issues.append(PlanValidationIssue(path: "\(referencePath).stepIDs", message: "Step ID overrides must be unique."))
@@ -1376,9 +1408,9 @@ enum PlanLibraryValidator {
             let repetitions = max(0, reference.repeatCount)
             for repetition in 0..<repetitions {
                 for (stepIndex, step) in block.steps.enumerated() {
-                    let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : step.id
-                    let suffix = repetitions > 1 ? "-\(repetition + 1)" : ""
-                    let resolvedID = sourceID + suffix
+                    let resolvedID = reference.resolvedStepID(
+                        for: step, index: stepIndex, repetition: repetition, patternCount: block.steps.count
+                    )
                     for expandedID in expandedIDsEmittedByNormalizer(
                         for: step,
                         resolvedID: resolvedID
@@ -1406,7 +1438,6 @@ enum PlanLibraryValidator {
                             planBoardID: plan.boardID,
                             stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
                             boardByID: boardByID,
-                            availableBoards: availableBoards,
                             handUse: step.handUse,
                             side: step.side,
                             gripType: step.gripType,
@@ -1424,7 +1455,13 @@ enum PlanLibraryValidator {
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep),
-               !allowsSourceRequiredTerminalRest(in: plan, terminalStep: terminalStep) {
+               !allowsSourceRequiredTerminalRest(
+                    in: plan, terminalStep: terminalStep,
+                    resolvedID: reference.resolvedStepID(
+                        for: terminalStep, index: block.steps.count - 1,
+                        repetition: reference.repeatCount - 1, patternCount: block.steps.count
+                    )
+               ) {
                 issues.append(
                     PlanValidationIssue(
                         path: "\(path).blocks[\(index)].steps[\(block.steps.count - 1)]",
@@ -1441,7 +1478,15 @@ enum PlanLibraryValidator {
     private static let plansAllowingExplicitSelfSelectedWork: Set<String> = [
         "rptc.seven-three-repeaters",
         "coach.bechtel-three-six-nine",
-        "research.eva-int-hangs"
+        "research.eva-int-hangs",
+        "beastmaker-max-hangs",
+        "beastmaker-repeaters",
+        "rei-hangboard-training-101",
+        "rock-prodigy.original-beginner",
+        "rock-prodigy.original-advanced",
+        "rock-prodigy.rptc-intermediate",
+        "rock-prodigy.pivot-introductory",
+        "rock-prodigy.pivot-intermediate"
     ]
 
     /// Whether catalog validation may accept `.selfSelected` work (or compact
@@ -1476,12 +1521,29 @@ enum PlanLibraryValidator {
     /// the usual end-on-work-step convention.
     private static func allowsSourceRequiredTerminalRest(
         in plan: PlanDefinition,
-        terminalStep: WorkoutStepDefinition
+        terminalStep: WorkoutStepDefinition,
+        resolvedID: String
     ) -> Bool {
+        // These source tables explicitly retain recovery on their final cycle.
+        // Limit the exception to the audited terminal identity and duration.
+        let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
+            "beastmaker-repeaters": ("beastmaker-repeaters.grip-rest", 180),
+            "tension-6-and-10": ("tension-6-and-10.set-4.rest-5", 10),
+            "rock-prodigy.pivot-introductory": ("rp-pivot-intro-6-3", 10),
+            "rock-prodigy.pivot-intermediate": ("rp-pivot-intermediate-10-5", 5)
+        ]
+        if let expected = publishedTerminalRests[plan.id],
+           plan.metadata.provenance == .adapted,
+           resolvedID == expected.id,
+           let rest = terminalStep.segments.last,
+           rest.kind == .rest, rest.timing == .fixed,
+           rest.duration == expected.duration {
+            return true
+        }
         if plan.id == "research.abrahangs",
            plan.metadata.provenance == .adapted,
            plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE"),
-           terminalStep.id == "abrahangs-grip-6-rep-1",
+           resolvedID == "abrahangs-grip-6-rep-1",
            terminalStep.duration == 60,
            terminalStep.activeDuration == 10,
            terminalStep.segments.count == 2,
@@ -1496,7 +1558,7 @@ enum PlanLibraryValidator {
         guard plan.id == "research.megos-one-arm-7-3",
               plan.metadata.provenance == .adapted,
               plan.metadata.sourceURL == URL(string: "https://www.youtube.com/watch?v=urTeUObQlsg"),
-              terminalStep.id == "megos-7-3-set-6-right-rep-4",
+              resolvedID == "megos-7-3-set-6-right-rep-4",
               terminalStep.duration == 10,
               terminalStep.activeDuration == 7,
               terminalStep.segments.count == 2,
@@ -1543,7 +1605,6 @@ enum PlanLibraryValidator {
         planBoardID: String?,
         stepPath: String,
         boardByID: [String: [BoardRevision]],
-        availableBoards: [BoardRevision],
         handUse: WorkoutHandUse,
         side: WorkoutSide,
         gripType: GripType?,
@@ -1621,7 +1682,6 @@ enum PlanLibraryValidator {
 
 struct PlanDefinitionResolver {
     let library: PlanLibraryDefinition
-    let availableBoards: [BoardRevision]
 
     init(
         library: PlanLibraryDefinition,
@@ -1632,7 +1692,6 @@ struct PlanDefinitionResolver {
             throw PlanLibraryStoreError.validationFailed(issues)
         }
         self.library = library
-        self.availableBoards = availableBoards
     }
 
     func resolveAll() throws -> [TrainingPlan] {
@@ -1646,6 +1705,7 @@ struct PlanDefinitionResolver {
 
         let blocks = Dictionary(uniqueKeysWithValues: library.blocks.map { ($0.id, $0) })
         var steps: [WorkoutStep] = []
+        var stepRepeats: [WorkoutStepRepeat] = []
         steps.reserveCapacity(definition.blocks.reduce(0) { count, reference in
             count + (blocks[reference.blockID]?.steps.count ?? 0) * max(0, reference.repeatCount)
         })
@@ -1654,41 +1714,33 @@ struct PlanDefinitionResolver {
             guard let block = blocks[reference.blockID] else {
                 throw PlanLibraryStoreError.missingBlock(reference.blockID)
             }
+            let start = steps.count
+            var patternTitles: [String] = []
             for repetition in 0..<reference.repeatCount {
                 for (stepIndex, stepDefinition) in block.steps.enumerated() {
-                    let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
-                    let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
-                    let segments = stepDefinition.segments.map {
-                        WorkoutSegment(
-                            kind: $0.kind,
-                            target: $0.target,
-                            timing: $0.timing,
-                            duration: $0.duration
-                        )
-                    }
-                    let resolvedStep = WorkoutStep(
-                        id: resolvedID,
-                        number: steps.count + 1,
-                        title: stepDefinition.title,
-                        instruction: stepDefinition.instruction,
-                        accessory: stepDefinition.accessory,
-                        duration: stepDefinition.duration,
-                        phase: stepDefinition.phase,
-                        segments: segments,
-                        gripType: stepDefinition.gripType,
-                        fingerConfiguration: stepDefinition.fingerConfiguration,
-                        handUse: stepDefinition.handUse,
-                        side: stepDefinition.side,
-                        action: stepDefinition.action,
-                        repetitions: stepDefinition.repetitions,
-                        externalLoadKGF: stepDefinition.externalLoadKGF,
-                        timedWorkDuration: stepDefinition.activeDuration
+                    let resolvedID = reference.resolvedStepID(
+                        for: stepDefinition, index: stepIndex, repetition: repetition, patternCount: block.steps.count
                     )
+                    let title = reference.resolvedStepTitle(
+                        for: stepDefinition, index: stepIndex, repetition: repetition, patternCount: block.steps.count
+                    )
+                    let resolvedStep = stepDefinition.resolvedStep(id: resolvedID, number: steps.count + 1, title: title)
                     let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)
                     for normalizedStep in try WorkoutStepNormalizer.expand(canonicalStep) {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
                     }
+                    if repetition == 0 && reference.repeatCount > 1 {
+                        // Preview labels come from the authored template. stepTitles
+                        // preserves numbered occurrence labels for playback/history.
+                        let template = WorkoutStepNormalizer.materializingImplicitSegments(stepDefinition.resolvedStep())
+                        patternTitles += try WorkoutStepNormalizer.expand(template).map(\.title)
+                    }
                 }
+            }
+            if reference.repeatCount > 1 {
+                stepRepeats.append(WorkoutStepRepeat(
+                    stepRange: start..<steps.count, repeatCount: reference.repeatCount, patternTitles: patternTitles
+                ))
             }
         }
 
@@ -1701,16 +1753,41 @@ struct PlanDefinitionResolver {
             sourceURL: definition.metadata.sourceURL,
             provenance: definition.metadata.provenance,
             boardID: definition.boardID,
-            steps: steps
+            steps: steps,
+            stepRepeats: stepRepeats
         )
     }
 
 }
 
+extension WorkoutStepDefinition {
+    func resolvedStep(id: String? = nil, number: Int = 0, title: String? = nil) -> WorkoutStep {
+        WorkoutStep(
+            id: id ?? self.id,
+            number: number,
+            title: title ?? self.title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            segments: segments.map {
+                WorkoutSegment(kind: $0.kind, target: $0.target, timing: $0.timing, duration: $0.duration)
+            },
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF,
+            timedWorkDuration: activeDuration
+        )
+    }
+}
+
 struct PlanLibraryStore {
     let definition: PlanLibraryDefinition
     let plans: [TrainingPlan]
-    let validationReport: PlanValidationReport
 
     init(
         definition: PlanLibraryDefinition,
@@ -1723,7 +1800,6 @@ struct PlanLibraryStore {
         let resolver = try PlanDefinitionResolver(library: definition, availableBoards: availableBoards)
         self.definition = definition
         self.plans = try resolver.resolveAll()
-        self.validationReport = PlanValidationReport(issues: issues)
     }
 
     init(
@@ -1751,35 +1827,10 @@ struct PlanLibraryStore {
         } catch {
             throw PlanLibraryStoreError.decoding(error)
         }
-        try self.init(builtInDefinition: definition, packageStore: packageStore)
-    }
-
-    init(
-        builtInDefinition definition: PlanLibraryDefinition,
-        packageStore: BoardPackageStore = BoardCatalog.packageStore
-    ) throws {
         try self.init(
             definition: definition,
             availableBoards: packageStore.boards
         )
-    }
-
-    init(
-        contentsOf url: URL,
-        decoder: JSONDecoder = JSONDecoder(),
-        availableBoards: [BoardRevision] = BoardCatalog.all
-    ) throws {
-        do {
-            try self.init(
-                data: Data(contentsOf: url),
-                decoder: decoder,
-                availableBoards: availableBoards
-            )
-        } catch let error as PlanLibraryStoreError {
-            throw error
-        } catch {
-            throw PlanLibraryStoreError.decoding(error)
-        }
     }
 
     func encodedData(prettyPrinted: Bool = false) throws -> Data {
@@ -1788,14 +1839,6 @@ struct PlanLibraryStore {
             encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
         }
         return try encoder.encode(definition)
-    }
-
-    func write(
-        to url: URL,
-        prettyPrinted: Bool = true,
-        options: Data.WritingOptions = []
-    ) throws {
-        try encodedData(prettyPrinted: prettyPrinted).write(to: url, options: options)
     }
 
     func plan(id: String) -> TrainingPlan? {
@@ -1814,504 +1857,25 @@ struct PlanLibraryStore {
 
     private static func loadBuiltIn() -> PlanLibraryStore {
         let bundles = [Bundle.main, Bundle(for: PlanLibraryBundleToken.self)]
-        if let url = bundles.compactMap({ $0.url(forResource: "PlanLibrary", withExtension: "json") }).first {
-            do {
-                return try PlanLibraryStore(builtInData: Data(contentsOf: url))
-            } catch {
-                fatalError("Bundled plan library failed validation: \(error.localizedDescription)")
-            }
+        guard let url = bundles.compactMap({ $0.url(forResource: "PlanLibrary", withExtension: "json") }).first else {
+            fatalError("Bundled PlanLibrary.json is missing")
         }
-
-        // Command-line tools and some unit-test runners do not carry the app's
-        // resources. The migration document keeps those environments useful
-        // without weakening validation of the actual bundled file.
         do {
-            return try PlanLibraryStore(
-                builtInDefinition: BuiltInPlanLibraryDefinition.document
-            )
+            return try PlanLibraryStore(builtInData: Data(contentsOf: url))
         } catch {
-            fatalError("Built-in plan library failed validation: \(error.localizedDescription)")
+            fatalError("Bundled plan library failed validation: \(error.localizedDescription)")
         }
     }
 }
-
-typealias PlanStore = PlanLibraryStore
 
 private final class PlanLibraryBundleToken {}
 
-// MARK: - Built-in plan library definition
-
-/// Source-audited workout labels for the built-in library. These are assigned
-/// from documented routine steps, never inferred from a plan title.
-private enum PlanWorkoutLabelAudit {
-    static func labels(for planID: String) -> [String] {
-        labelsByPlanID[planID] ?? []
-    }
-
-    private static let labelsByPlanID: [String: [String]] = [
-        "metolius.generic-ten-minute.entry": ["max-effort", "pull-ups", "core"],
-        "metolius.generic-ten-minute.intermediate": ["max-effort", "pull-ups", "core"],
-        "metolius.generic-ten-minute.advanced": ["max-effort", "pull-ups"],
-        "metolius.contact.entry": ["max-effort", "pull-ups", "core"],
-        "metolius.contact.intermediate": ["max-effort", "pull-ups", "core"],
-        "metolius.contact.advanced": ["max-effort", "pull-ups", "core"],
-        "metolius.simulator-3d.entry": ["max-effort", "pull-ups", "core"],
-        "metolius.simulator-3d.intermediate": ["max-effort", "pull-ups", "core"],
-        "metolius.simulator-3d.advanced": ["max-effort", "pull-ups", "core"],
-        "research.max-hangs": ["max-effort"],
-        "research.force-feedback-f100": ["max-effort"],
-        "research.seven-three-repeaters": ["repeaters"],
-        "coach.horst-seven-fifty-three": ["max-effort"],
-        "coach.bechtel-three-six-nine": ["max-effort"],
-        "device.zlagboard-sixty-sixty": ["endurance"],
-        "hoopers-beta.introductory-home-hangboard": ["warm-up", "pull-ups", "core"],
-        "method.intermediate-hangboarding.repeaters": ["repeaters"],
-        "method.intermediate-hangboarding.emom": ["max-effort", "pull-ups", "core"],
-        "rei.hangboard-sample-workout": ["warm-up", "pull-ups"],
-        "metolius.rock-rings.ten-minute": ["pull-ups", "core"]
-    ]
-}
-
-/// Converts the seed routines into the bundled plan library without changing
-/// their resolved timing or order.
-enum BuiltInPlanLibraryDefinition {
-    static let document: PlanLibraryDefinition = makeDocument()
-
-    private static func makeDocument() -> PlanLibraryDefinition {
-        let legacyPlans = LegacyPlanSeedCatalog.all
-        var blocks: [WorkoutBlockDefinition] = []
-        var blockIDs = Set<String>()
-        var definitions: [PlanDefinition] = []
-
-        let sharedWarmUp: WorkoutBlockDefinition? = LegacyPlanSeedCatalog.maxHangs.steps.first.flatMap { step in
-            guard step.phase == .warmUp,
-                  step.duration == LegacyPlanSeedCatalog.sharedWarmUpDuration else {
-                return nil
-            }
-
-            return WorkoutBlockDefinition(
-                id: "shared.progressive-warm-up",
-                title: "Progressive warm-up",
-                steps: [WorkoutStepDefinition.from(step, id: "warm-up")]
-            )
-        }
-        let sharedCoolDown = legacyPlans.first {
-            $0.steps.last?.phase == .coolDown
-                && $0.steps.last?.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration
-        }?.steps.last.map {
-            WorkoutBlockDefinition(
-                id: "shared.cool-down",
-                title: "Cool down",
-                steps: [WorkoutStepDefinition.from($0, id: "cool-down")]
-            )
-        }
-
-        if let sharedWarmUp {
-            blocks.append(sharedWarmUp)
-            blockIDs.insert(sharedWarmUp.id)
-        }
-        if let sharedCoolDown {
-            blocks.append(sharedCoolDown)
-            blockIDs.insert(sharedCoolDown.id)
-        }
-
-        for plan in legacyPlans {
-            let (definition, planBlocks) = makeDefinition(
-                from: plan,
-                sharedWarmUp: sharedWarmUp,
-                sharedCoolDown: sharedCoolDown,
-                existingBlockIDs: blockIDs
-            )
-            definitions.append(definition)
-            for block in planBlocks where blockIDs.insert(block.id).inserted {
-                blocks.append(block)
-            }
-        }
-
-        return PlanLibraryDefinition(
-            metadata: PlanLibraryMetadata(
-                id: "hang-ten.built-in",
-                title: "Hang Ten training plans",
-                generatedAt: "2026-08-01",
-                defaultPlanID: LegacyPlanSeedCatalog.metoliusTenMinute.id,
-                notes: [
-                    "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
-                    "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
-                    "All research and coach routines are explicitly marked as adapted.",
-                    "Board-specific and board-agnostic catalog work uses source-backed contact requirements; .selfSelected is limited to custom plans and an explicit allowlist of athlete-chosen-hold sources."
-                ]
-            ),
-            blocks: blocks,
-            plans: definitions
-        )
-    }
-
-    private static func makeDefinition(
-        from plan: TrainingPlan,
-        sharedWarmUp: WorkoutBlockDefinition?,
-        sharedCoolDown: WorkoutBlockDefinition?,
-        existingBlockIDs: Set<String>
-    ) -> (PlanDefinition, [WorkoutBlockDefinition]) {
-        let category: String
-        if plan.id.hasPrefix("research.") {
-            category = "research"
-        } else if plan.id.hasPrefix("coach.") {
-            category = "coach"
-        } else if plan.id.hasPrefix("device.") {
-            category = "device"
-        } else if [
-            LegacyPlanSeedCatalog.hoopersBetaIntroductory.id,
-            LegacyPlanSeedCatalog.methodRepeaters.id,
-            LegacyPlanSeedCatalog.methodEMOM.id
-        ].contains(plan.id) {
-            category = "coach"
-        } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
-            category = "retailer"
-        } else {
-            category = "manufacturer"
-        }
-
-        let notes: [String]
-        if plan.id.hasPrefix("metolius.generic-ten-minute.") {
-            notes = [
-                "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
-                "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
-            ]
-        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") || plan.id.hasPrefix("metolius.rock-rings.") {
-            notes = [
-                "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.maxHangs.id {
-            notes = [
-                "Adapted from Eva López's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
-                "Choose an 8–20 mm edge before starting. Five sets is a fixed session within the source's 3–5-set range; this is not the full 2012 study's periodized program.",
-                "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080/19346182.2012.716061)."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.abrahangs.id {
-            notes = [
-                "The original video description prescribes 3 four-finger crimps, 3 three-finger drags, then one each of middle-two pocket, front-two pocket, middle-two crimp, and front-two crimp.",
-                "All ten efforts retain 10 seconds of loading and 50 seconds of rest, including the final rest. Effort is relative to lifting off: 70–80%, 50–60%, then 30–40% by grip group.",
-                "Crimp angle is not specified in the description, so the app does not add a half-crimp or full-crimp cue. Deep-pocket depth remains unspecified."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.ladders.id {
-            notes = [
-                "Bechtel's own interview at 49:21–52:11 prescribes 3, 6, and 9-second hangs on the same hold and load, with rests as long as the athlete needs. The starting load permits a 15-second hang.",
-                "Three ladders is an app session adaptation; the author progresses volume rather than prescribing three rounds in this interview.",
-                "Each ladder is a manual task with a 60-second app preview, not a prescribed work or rest duration. Pause the session clock to complete the task at your own pace."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.densityHangs.id {
-            notes = [
-                "Workout 2, Table 2 beginner column: two two-arm grip positions, one set and two repetitions per position; easy open-hand sloper and the chart's 25–25 mm half-crimp edge.",
-                "Slow static hangs continue to muscular failure, approximately 20–40 seconds. Each work step uses a stopwatch; its 60-second app preview is not a prescribed hang duration.",
-                "The app defaults the source's 3–5-minute recovery between efforts to 3 minutes. This session is adapted from the beginner density portion, not the author's full multi-workout training cycle."
-            ]
-        } else if plan.id.hasPrefix("coach.nelson-") {
-            notes = [
-                "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
-                "Adapted timer defaults select values within source ranges: recruitment 4s/90s, velocity 2s/15s, density stopwatch/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
-                "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
-                "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.megoOneArmSevenThree.id {
-            notes = [
-                "Source: Alexander Megos's own video, How to get Steel Fingers Part 2.",
-                "The app retains six rounds of four 7s/3s efforts per arm and 2-minute recovery between rounds."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.hoopersBetaIntroductory.id {
-            notes = [
-                "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
-                "The app uses manual 60-second conditioning rows where Hooper's Beta gives a rep range or coach-guided movement rather than a standalone timer."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.methodRepeaters.id || plan.id == LegacyPlanSeedCatalog.methodEMOM.id {
-            notes = [
-                "Both Method Climbing workouts are included; source ranges and exact EMOM order are retained.",
-                "The app defaults repeater ranges to 7s/7s and 105s recovery, and uses 5 seconds per pull-up or 1 second per knee raise where the source gives no movement duration."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.reiHangboardSample.id {
-            notes = [
-                "Source warm-up alternatives, five grip groups, 7–10s/5s interval guidance, six repeats, recovery, and pain warning are retained.",
-                "The app defaults the source ranges to 7 seconds and uses a manual 25-minute warm-up preview."
-            ]
-        } else if plan.id == LegacyPlanSeedCatalog.rptcRepeaters.id {
-            notes = [
-                "Official Rock Prodigy set template: seven 7s/3s two-handed dead-hang repetitions, the table's 2m 53s recovery to 4:00, then a separate 3-minute between-set rest.",
-                "The source leaves the 5–10 grips and 1–3 sets per grip to the athlete, so the app intentionally supplies no target, grip order, or fixed workout duration."
-            ]
-        } else {
-            notes = ["Preserved from the original Hang Ten routine catalog."]
-        }
-
-        var tags = ["built-in", category]
-        if plan.id == LegacyPlanSeedCatalog.forceF80.id || plan.id == LegacyPlanSeedCatalog.forceF100.id {
-            tags.append("requires-instrumented-12mm-force-feedback")
-        }
-
-        let metadata = PlanMetadata(
-            title: plan.title,
-            subtitle: plan.subtitle,
-            level: plan.level,
-            sourceLabel: plan.sourceLabel,
-            sourceURL: plan.sourceURL,
-            provenance: plan.provenance,
-            category: category,
-            workoutLabels: PlanWorkoutLabelAudit.labels(for: plan.id),
-            tags: tags,
-            notes: notes
-        )
-
-        var references: [WorkoutBlockReference] = []
-        var blocks: [WorkoutBlockDefinition] = []
-        var firstIndex = 0
-        var lastIndex = plan.steps.count
-
-        if let first = plan.steps.first,
-           let sharedWarmUp,
-           first.phase == .warmUp,
-           first.duration == LegacyPlanSeedCatalog.sharedWarmUpDuration,
-           first.title == sharedWarmUp.title,
-           first.instruction == sharedWarmUp.steps[0].instruction {
-            references.append(WorkoutBlockReference(blockID: sharedWarmUp.id, stepIDs: [first.id]))
-            firstIndex = 1
-        } else if let first = plan.steps.first {
-            let block = WorkoutBlockDefinition(
-                id: "\(plan.id).warm-up",
-                title: first.title,
-                steps: [WorkoutStepDefinition.from(first)]
-            )
-            blocks.append(block)
-            references.append(WorkoutBlockReference(blockID: block.id))
-            firstIndex = 1
-        }
-
-        if let last = plan.steps.last,
-           let sharedCoolDown,
-           last.phase == .coolDown,
-           last.duration == LegacyPlanSeedCatalog.sharedCoolDownDuration,
-           last.title == sharedCoolDown.title,
-           last.instruction == sharedCoolDown.steps[0].instruction {
-            lastIndex -= 1
-        }
-
-        if firstIndex < lastIndex {
-            let middleBlock = WorkoutBlockDefinition(
-                id: "\(plan.id).main",
-                title: plan.title,
-                steps: plan.steps[firstIndex..<lastIndex].map {
-                    WorkoutStepDefinition.from($0)
-                }
-            )
-            blocks.append(middleBlock)
-            references.append(WorkoutBlockReference(blockID: middleBlock.id))
-        }
-
-        if lastIndex < plan.steps.count, let sharedCoolDown {
-            references.append(WorkoutBlockReference(blockID: sharedCoolDown.id, stepIDs: [plan.steps[lastIndex].id]))
-        }
-
-        // This guard makes the generated block IDs stable even if a future
-        // routine is supplied with an ID that collides with a shared block.
-        if !existingBlockIDs.isDisjoint(with: Set(blocks.map(\.id))) {
-            blocks = blocks.map { block in
-                guard existingBlockIDs.contains(block.id) else { return block }
-                let renamedID = "\(block.id).routine"
-                return WorkoutBlockDefinition(id: renamedID, title: block.title, steps: block.steps)
-            }
-            references = references.map { reference in
-                guard existingBlockIDs.contains(reference.blockID) else { return reference }
-                return WorkoutBlockReference(blockID: "\(reference.blockID).routine", stepIDs: reference.stepIDs, repeatCount: reference.repeatCount)
-            }
-        }
-
-        return (
-            PlanDefinition(id: plan.id, metadata: metadata, boardID: plan.boardID, blocks: references),
-            blocks
-        )
-    }
-
-}
-
-// MARK: - Source-audited task migration
-
-/// The seed catalog retains the manufacturer's wording and old semantic hold
-/// list. This mapping records which listed holds occur at the same time. All
-/// unlisted work defaults to two hands, as prescribed for the catalog.
-enum PlanTaskMigration {
-    private static let offsetSteps: Set<String> = [
-        "intermediate.minute-6.task-1", "intermediate.minute-6.task-2",
-        "advanced.minute-6.task-1", "advanced.minute-6.task-2",
-        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
-        "metolius.contact.entry.minute-9",
-        "metolius.contact.intermediate.minute-3", "metolius.contact.intermediate.minute-5",
-        "metolius.contact.intermediate.minute-6",
-        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
-        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
-        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
-        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
-        "metolius.simulator-3d.advanced.minute-9",
-        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8",
-        "method-emom-minute-7"
-    ]
-
-    private static let reversedOffsetSteps: Set<String> = [
-        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
-        "metolius.contact.entry.minute-9", "metolius.contact.intermediate.minute-3",
-        "metolius.contact.intermediate.minute-5", "metolius.contact.intermediate.minute-6",
-        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
-        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
-        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
-        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
-        "metolius.simulator-3d.advanced.minute-9",
-        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8"
-    ]
-
-    private static let alternatingOneArmSteps: Set<String> = [
-        "metolius.contact.intermediate.minute-9", "metolius.contact.advanced.minute-6",
-        "metolius.simulator-3d.intermediate.minute-9", "metolius.simulator-3d.advanced.minute-6"
-    ]
-
-    static func migrate(_ plan: TrainingPlan) -> TrainingPlan {
-        TrainingPlan(
-            id: plan.id, title: plan.title, subtitle: plan.subtitle,
-            level: plan.level, sourceLabel: plan.sourceLabel,
-            sourceURL: plan.sourceURL, provenance: plan.provenance,
-            boardID: plan.boardID, steps: plan.steps.map(migrate)
-        )
-    }
-
-    private static func migrate(_ step: WorkoutStep) -> WorkoutStep {
-        let segments = step.segments.map { segment -> WorkoutSegment in
-            guard segment.kind == .work, let target = segment.target else { return segment }
-            if case .selfSelected = target {
-                return WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[PlanHandTarget(), PlanHandTarget()]]),
-                    timing: segment.timing, duration: segment.duration
-                )
-            }
-            guard case .requirements(let requirements) = target else { return segment }
-            let hands = requirements.map(hand)
-            let tasks: [[PlanHandTarget]]
-            if offsetSteps.contains(step.id), hands.count >= 2 {
-                let pair = Array(hands.prefix(2))
-                tasks = [pair]
-                    + (reversedOffsetSteps.contains(step.id) ? [Array(pair.reversed())] : [])
-                    + hands.dropFirst(2).map { [$0, $0] }
-            } else if alternatingOneArmSteps.contains(step.id), let first = hands.first {
-                tasks = [[first], [first]] + hands.dropFirst().map { [$0, $0] }
-            } else if step.handUse == .single, let first = hands.first {
-                tasks = [[PlanHandTarget(target: first.target, side: step.side)]]
-            } else if step.id == "advanced.minute-5.task-1"
-                        || step.id == "advanced.minute-5.task-2" {
-                tasks = hands.map { [$0] }
-            } else {
-                tasks = hands.map { [$0, $0] }
-            }
-            return WorkoutSegment(
-                kind: segment.kind, target: .tasks(tasks),
-                timing: segment.timing, duration: segment.duration
-            )
-        }
-        let allTasks = segments.flatMap { $0.target?.planTasks ?? [] }
-        let handUse: WorkoutHandUse
-        let side: WorkoutSide
-        if !allTasks.isEmpty, allTasks.allSatisfy({ $0.count == 1 }) {
-            let sides = allTasks.compactMap { $0.first?.side }
-            if sides.count == allTasks.count, Set(sides) == [.left] {
-                handUse = .single
-                side = .left
-            } else if sides.count == allTasks.count, Set(sides) == [.right] {
-                handUse = .single
-                side = .right
-            } else {
-                handUse = .either
-                side = .both
-            }
-        } else if !allTasks.isEmpty {
-            handUse = .double
-            side = .both
-        } else {
-            handUse = step.handUse
-            side = step.side
-        }
-        return WorkoutStep(
-            id: step.id, number: step.number, title: step.title,
-            instruction: step.instruction, accessory: step.accessory,
-            duration: step.duration, phase: step.phase, segments: segments,
-            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
-            handUse: handUse, side: side, action: step.action,
-            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
-        )
-    }
-
-    private static func hand(_ requirement: ContactRequirement) -> PlanHandTarget {
-        let depth: PlanDepth?
-        switch requirement.depth {
-        case .category(let size): depth = .category(size)
-        case .range(let range): depth = .measured(range)
-        case nil: depth = nil
-        }
-        guard requirement.kind != nil || requirement.shape != nil
-                || depth != nil || requirement.fingerCapacity != nil else {
-            return PlanHandTarget(target: nil)
-        }
-        return PlanHandTarget(target: PlanContactPredicate(
-            kind: requirement.kind, shape: requirement.shape,
-            depth: depth, fingerCapacity: requirement.fingerCapacity
-        ))
-    }
-}
-
-// MARK: - Compatibility facade
-
-#if DEBUG
-/// Builds the DEBUG drift-guard baseline at the same literal-step boundary
-/// used by the runtime resolver.
-private func literalizedLegacyPlanCatalog() -> [TrainingPlan] {
-    LegacyPlanSeedCatalog.all.map { seedPlan in
-        let literalSteps: [WorkoutStep]
-        do {
-            literalSteps = try seedPlan.steps
-                .map(WorkoutStepNormalizer.materializingImplicitSegments)
-                .flatMap(WorkoutStepNormalizer.expand)
-                .enumerated()
-                .map { index, step in
-                    step.withNumber(index + 1)
-                }
-        } catch {
-            preconditionFailure(
-                "Legacy plan \(seedPlan.id) could not be literalized: \(error)"
-            )
-        }
-
-        return TrainingPlan(
-            id: seedPlan.id,
-            title: seedPlan.title,
-            subtitle: seedPlan.subtitle,
-            level: seedPlan.level,
-            sourceLabel: seedPlan.sourceLabel,
-            sourceURL: seedPlan.sourceURL,
-            provenance: seedPlan.provenance,
-            boardID: seedPlan.boardID,
-            steps: literalSteps
-        )
-    }
-}
-#endif
+// MARK: - Plan catalog
 
 /// Runtime callers keep the small `PlanCatalog` API they already use, while
-/// the data behind it now comes from one validated, versioned store.
+/// the data comes from the checked-in canonical JSON and one validated store.
 enum PlanCatalog {
-    private static let store: PlanLibraryStore = {
-        let result = PlanLibraryStore.builtIn
-        #if DEBUG
-        assert(
-            result.plans == literalizedLegacyPlanCatalog(),
-            "Bundled plan definitions drifted from the source-audited seed catalog"
-        )
-        #endif
-        return result
-    }()
+    private static let store = PlanLibraryStore.builtIn
 
     private static let metadataByID = PlanLibraryStore.metadataByPlanID(store.definition.plans)
 
@@ -2322,20 +1886,7 @@ enum PlanCatalog {
     static let metoliusAdvanced = required("metolius.generic-ten-minute.advanced")
     static let metoliusTenMinute = metoliusEntry
     static let maxHangs = required("research.max-hangs")
-    static let forceF80 = required("research.force-feedback-f80")
-    static let forceF100 = required("research.force-feedback-f100")
-    static let evaIntHangs = required("research.eva-int-hangs")
-    static let repeaters = required("research.seven-three-repeaters")
     static let abrahangs = required("research.abrahangs")
-    static let horst753 = required("coach.horst-seven-fifty-three")
-    static let ladders = required("coach.bechtel-three-six-nine")
-    static let densityHangs = required("coach.density-hangs")
-    static let zlagboardEndurance = required("device.zlagboard-sixty-sixty")
-    static let hoopersBetaIntroductory = required("hoopers-beta.introductory-home-hangboard")
-    static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
-    static let methodEMOM = required("method.intermediate-hangboarding.emom")
-    static let reiHangboardSample = required("rei.hangboard-sample-workout")
-    static let metoliusRockRing = required("metolius.rock-rings.ten-minute")
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)
@@ -2343,10 +1894,6 @@ enum PlanCatalog {
 
     static func metadata(for id: String) -> PlanMetadata? {
         metadataByID[id]
-    }
-
-    static var definition: PlanLibraryDefinition {
-        store.definition
     }
 
     private static func required(_ id: String) -> TrainingPlan {

@@ -5,10 +5,10 @@ A CAD-backed board's logical metadata lives in its FCStd as the document-level
 the supported way to change it:
 
     # 1. start from the current metadata
-    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/m.json
-    # 2. edit /tmp/m.json (board.json fields minus "id"); cite sources per AGENTS.md
+    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > .context/<workspace>-manifest.json
+    # 2. edit that JSON (board.json fields minus "id"); cite sources per AGENTS.md
     # 3. write it into the FCStd
-    python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/m.json
+    python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> .context/<workspace>-manifest.json
     # 4. validate the package (board.json is generated from the FCStd in memory)
     scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
@@ -34,7 +34,6 @@ the FreeCAD GUI is equally valid (it just re-saves the whole document).
 from __future__ import annotations
 
 import argparse
-import json
 import os
 import re
 import stat

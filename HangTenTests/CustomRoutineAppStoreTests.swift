@@ -6,7 +6,10 @@ final class CustomRoutineAppStoreTests: XCTestCase {
     deinit {}
 
     private func makeDefaults() -> (suiteName: String, defaults: UserDefaults) {
-        let suiteName = "CustomRoutineAppStoreTests.\(UUID().uuidString)"
+        let worktreePath = ProcessInfo.processInfo.environment["PASEO_WORKTREE_PATH"]
+            ?? URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().path
+        let owner = URL(fileURLWithPath: worktreePath).lastPathComponent
+        let suiteName = "CustomRoutineAppStoreTests.\(owner).\(UUID().uuidString)"
         return (suiteName, UserDefaults(suiteName: suiteName)!)
     }
 
@@ -120,6 +123,24 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
+    func testDuplicatingCustomRoutineKeepsEditableRepeatInsteadOfExpandedCopies() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        var draft = CustomRoutineDraft(duplicate: makeRoutine())
+        let stepID = try XCTUnwrap(draft.steps.first?.id)
+        draft.updateRepeatGroup(.init(id: "repeat", stepIDs: [stepID], repeatCount: 6))
+        try store.saveCustomRoutine(draft.definition())
+        let plan = try XCTUnwrap(store.plans.first { $0.id == draft.definition().id })
+        XCTAssertEqual(plan.steps.count, 6)
+
+        let duplicate = try store.duplicateRoutine(plan)
+        XCTAssertNotEqual(duplicate.id, plan.id)
+        XCTAssertEqual(duplicate.steps.count, 1)
+        XCTAssertEqual(duplicate.repeatGroups, draft.repeatGroups)
+        XCTAssertNil(store.customDefinition(for: duplicate.id))
+    }
+
     func testSelfSelectedAllowlistedPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -163,6 +184,33 @@ final class CustomRoutineAppStoreTests: XCTestCase {
             duplicate.steps[0].workRequirements,
             source.steps[0].workRequirements
         )
+    }
+
+    func testCatalogDuplicateKeepsDeclaredRepeatsEditableAndPlaybackUnchanged() throws {
+        let (suiteName, defaults) = makeDefaults()
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let source = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
+
+        let duplicate = try store.duplicateRoutine(source)
+
+        XCTAssertEqual(duplicate.steps.count, 3)
+        XCTAssertEqual(duplicate.repeatGroups.map(\.repeatCount), [4])
+        XCTAssertEqual(duplicate.repeatGroups.first?.stepIDs, Array(duplicate.steps.prefix(2)).map(\.id))
+        XCTAssertEqual(Array(duplicate.steps.prefix(2)).map(\.title), source.stepRepeats.first?.patternTitles)
+        XCTAssertNil(store.customDefinition(for: duplicate.id))
+
+        try store.saveCustomRoutine(duplicate)
+        let copiedPlan = try XCTUnwrap(store.plans.first { $0.id == duplicate.id })
+        XCTAssertEqual(copiedPlan.stepRepeats.map(\.repeatCount), [4])
+        XCTAssertEqual(copiedPlan.steps.count, source.steps.count)
+        XCTAssertEqual(copiedPlan.duration, source.duration)
+        XCTAssertEqual(copiedPlan.steps.map(\.phase), source.steps.map(\.phase))
+        XCTAssertEqual(copiedPlan.steps.map(\.duration), source.steps.map(\.duration))
+        XCTAssertEqual(copiedPlan.steps.map(\.segments), source.steps.map(\.segments))
+        XCTAssertEqual(copiedPlan.steps.map(\.instruction), source.steps.map(\.instruction))
+        XCTAssertEqual(copiedPlan.steps.map(\.accessory), source.steps.map(\.accessory))
+        XCTAssertEqual(PlanFlowPresentation.groups(for: copiedPlan).count, 2)
     }
 
     func testPlanDetailDuplicatesSelectedMaxHangsEdge() throws {

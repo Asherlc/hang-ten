@@ -24,8 +24,6 @@ final class AppStore: ObservableObject {
     private let defaults: UserDefaults
     private let healthKitService: any WorkoutHealthStore
     private let workoutHistoryService: WorkoutHistoryService
-    private let motherboardBluetoothService: MotherboardBluetoothService
-    private let motherboardSettingsStore: MotherboardSettingsStore
     private let workoutSessionStore: WorkoutSessionStoring
     private let customRoutineStore: CustomRoutineStoring
     private let workoutAccessStore: WorkoutAccessStore
@@ -37,8 +35,6 @@ final class AppStore: ObservableObject {
 
     init(
         healthKitService: any WorkoutHealthStore = HealthKitService(),
-        motherboardBluetoothService: MotherboardBluetoothService? = nil,
-        motherboardSettingsStore: MotherboardSettingsStore? = nil,
         workoutSessionStore: WorkoutSessionStoring? = nil,
         workoutHistoryStore: (any WorkoutHistoryPersistence)? = nil,
         customRoutineStore: CustomRoutineStoring? = nil,
@@ -48,10 +44,7 @@ final class AppStore: ObservableObject {
         telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
-        CustomRoutineStore.removeLegacyPersistence(
-            from: defaults,
-            newKey: CustomRoutineStore.defaultKey
-        )
+        CustomRoutineStore.removeLegacyPersistence(from: defaults)
         self.workoutAccessStore = workoutAccessStore ?? WorkoutAccessStore(defaults: defaults)
         self.purchaseManager = purchaseManager ?? PurchaseManager()
         let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)
@@ -64,12 +57,6 @@ final class AppStore: ObservableObject {
         }
         #endif
         self.healthKitService = healthKitService
-        self.motherboardBluetoothService = motherboardBluetoothService ?? MotherboardBluetoothService(
-            transport: CoreBluetoothMotherboardTransport()
-        )
-        self.motherboardSettingsStore = motherboardSettingsStore ?? MotherboardSettingsStore(
-            defaults: defaults
-        )
         self.telemetry = telemetry
 
         let resolvedCustomRoutineStore = customRoutineStore ?? CustomRoutineStore(defaults: defaults)
@@ -147,28 +134,6 @@ final class AppStore: ObservableObject {
             healthKitService: HealthWorkoutStoreAdapter(healthKitService),
             workoutHistoryStore: workoutHistoryStore,
             defaults: defaults
-        )
-    }
-
-    convenience init(
-        healthKitService: any HealthWorkoutSaving,
-        userDefaults: UserDefaults
-    ) {
-        self.init(
-            healthKitService: HealthWorkoutStoreAdapter(healthKitService),
-            defaults: userDefaults
-        )
-    }
-
-    convenience init(
-        healthKitService: any HealthWorkoutSaving,
-        workoutSessionStore: any WorkoutSessionStoring,
-        userDefaults: UserDefaults
-    ) {
-        self.init(
-            healthKitService: HealthWorkoutStoreAdapter(healthKitService),
-            workoutSessionStore: workoutSessionStore,
-            defaults: userDefaults
         )
     }
 
@@ -262,6 +227,10 @@ final class AppStore: ObservableObject {
     }
 
     func duplicateRoutine(_ plan: TrainingPlan) throws -> CustomRoutineDefinition {
+        if let definition = customDefinition(for: plan.id) {
+            _ = try customRoutineStore.plan(for: definition)
+            return CustomRoutineDraft(duplicate: definition).definition()
+        }
         let metadata = metadata(for: plan)
         let normalizedSteps = try plan.steps.flatMap(WorkoutStepNormalizer.expand)
         let normalizedPlan = TrainingPlan(
@@ -273,7 +242,8 @@ final class AppStore: ObservableObject {
             sourceURL: plan.sourceURL,
             provenance: plan.provenance,
             boardID: plan.boardID,
-            steps: normalizedSteps
+            steps: normalizedSteps,
+            stepRepeats: plan.stepRepeats
         )
         return try CustomRoutineStore.definition(
             from: normalizedPlan,

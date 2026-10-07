@@ -382,16 +382,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            // CAD authoring sidecars are distinct from the declared runtime assets.
-            let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
-                extraEntries.isEmpty || extraEntries == [authoringSource]
-                    || extraEntries == [authoringSource, "suspension.json"]
-                    || extraEntries == [authoringSource, "suspension.json", "rope-physics.json"],
+                extraEntries.isEmpty,
                 "unexpected package entries: \(extraEntries.sorted())"
             )
-            if packageEntries.contains(authoringSource) {
+            let authoringSourceURL = hangboardsURL.appendingPathComponent("\(packagePath).FCStd")
+            if FileManager.default.fileExists(atPath: authoringSourceURL.path) {
                 XCTAssertFalse(
                     packageEntries.contains("board.json"),
                     "CAD-backed package \(packagePath) must not commit board.json"
@@ -416,7 +413,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 }
                 return paths
             })
-            XCTAssertEqual(assetPaths, declaredAssets)
+            // The build cache is verified by the host generator and merged
+            // into board.json; it is not a separate app resource.
+            let generatedCachePaths: Set<String> = ["assets/suspension.json"]
+            XCTAssertEqual(assetPaths.subtracting(generatedCachePaths), declaredAssets)
             XCTAssertEqual(boardDocument["id"] as? String, board.id)
             XCTAssertFalse(holds.isEmpty)
             XCTAssertTrue(holds.allSatisfy { $0["cueStyle"] == nil })
@@ -487,13 +487,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
                             for: board, presentationID: presentation.id))
                     }
                 }
-                if packageEntries.contains("rope-physics.json") {
+                if assetPaths.contains("assets/primary.physics.json") {
                     XCTAssertTrue(board.presentations.contains { presentation in
                         guard case .model(let model) = presentation.media else { return false }
                         return model.physicsDescriptorPath != nil
                     })
                 }
-                XCTAssertEqual(assetPaths, modelAssets)
+                XCTAssertEqual(assetPaths.subtracting(generatedCachePaths), modelAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {
@@ -544,14 +544,19 @@ final class BoardSourceBoundaryTests: XCTestCase {
             .appendingPathComponent("HangTen/Views/BoardMapView.swift")
         let source = try String(contentsOf: sourceURL, encoding: .utf8)
 
-        XCTAssertTrue(source.contains("BoardPresentationImage"))
-        XCTAssertTrue(source.contains("BoardContactPathShape(pieces: pieces)"))
-        XCTAssertTrue(source.contains(".contentShape(.interaction, shape)"))
-        XCTAssertTrue(source.contains(".contentShape(.accessibility, shape)"))
-        XCTAssertTrue(source.contains(".accessibilityElement(children: .combine)"))
-        XCTAssertFalse(source.contains("contentShape(Rectangle())"))
-        XCTAssertFalse(source.contains("Canvas("))
-        XCTAssertFalse(source.contains("BoardDesign"))
+        // The textual hold legend has rectangular row targets. Only the board
+        // renderer and its physical hold visuals must use canonical paths.
+        let rendererStart = try XCTUnwrap(source.range(of: "struct BoardMapView: View {"))
+        let rendererSource = source[rendererStart.lowerBound...]
+
+        XCTAssertTrue(rendererSource.contains("BoardPresentationImage"))
+        XCTAssertTrue(rendererSource.contains("BoardContactPathShape(pieces: pieces)"))
+        XCTAssertTrue(rendererSource.contains(".contentShape(.interaction, shape)"))
+        XCTAssertTrue(rendererSource.contains(".contentShape(.accessibility, shape)"))
+        XCTAssertTrue(rendererSource.contains(".accessibilityElement(children: .combine)"))
+        XCTAssertFalse(rendererSource.contains("contentShape(Rectangle())"))
+        XCTAssertFalse(rendererSource.contains("Canvas("))
+        XCTAssertFalse(rendererSource.contains("BoardDesign"))
     }
 
     func testBoardMapGivesImageAndAllHoldPathsTheSameExplicitBounds() throws {
@@ -1004,6 +1009,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 .isRegularFileKey,
                 .isSymbolicLinkKey
             ])
+            if values.isRegularFile == true, values.isSymbolicLink != true,
+               child.pathExtension == "FCStd" {
+                continue
+            }
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }
@@ -1049,9 +1058,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
         if relativePath == "HangTenTests" || relativePath.hasPrefix("HangTenTests/") {
             return "test fixtures"
         }
-        // The plan export is generated and runtime-replaces its legacy mappings.
+        // Canonical plan content is checked-in data, not handwritten app code.
         if relativePath == "HangTen/Resources/PlanLibrary.json" {
-            return "generated canonical plan resource"
+            return "canonical plan source resource"
         }
         // Workspace products and indexes are not checked-in handwritten app inputs.
         for prefix in [".context/", ".codegraph/", "build/", "DerivedData/"]

@@ -6,12 +6,13 @@ from pathlib import Path
 import pytest
 
 from hangboard_packages.board_catalog import _load_model_suspension, load_board_package
+from hangboard_packages.cad_source import ManifestError, merge_suspension_artifact, load_board, package_source_path
 
 PACKAGE = Path(__file__).resolve().parents[3] / 'Hangboards' / 'metolius-rock-rings-3d'
 
 
 def left_ring_setup():
-    return json.loads((PACKAGE / 'suspension.json').read_text())['instanceSuspensions']['left-ring']
+    return json.loads((PACKAGE / 'assets/suspension.json').read_text())['instanceSuspensions']['left-ring']
 
 
 def test_two_separate_instances_share_one_ring_asset_and_each_have_one_loop():
@@ -64,28 +65,24 @@ def test_malformed_connected_loop_is_rejected(mutation, reason):
     [None], [{'equipmentObjectID': []}],
     [{'equipmentObjectID': 'left-ring'}, {'equipmentObjectID': 'left-ring'}],
 ])
-def test_instance_sidecar_rejects_invalid_or_duplicate_native_ids(instances):
-    from hangboard_packages.cad_source import ManifestError, merge_suspension_sidecar, load_board
-    board = load_board(PACKAGE / 'metolius-rock-rings-3d.FCStd')
+def test_instance_artifact_rejects_invalid_or_duplicate_native_ids(instances):
+    source = package_source_path(PACKAGE)
+    board = load_board(source)
     board['presentations'][0]['media']['instances'] = instances
     with pytest.raises(ManifestError, match='instanceSuspensions'):
-        merge_suspension_sidecar(board, PACKAGE)
+        merge_suspension_artifact(board, PACKAGE, source)
 
 
 @pytest.mark.parametrize('count', [0, 1])
-def test_instance_sidecar_rejects_undersized_inventory_even_with_matching_keys(tmp_path, count):
-    from hangboard_packages.cad_source import ManifestError, merge_suspension_sidecar, load_board
-    board = load_board(PACKAGE / 'metolius-rock-rings-3d.FCStd')
+def test_instance_artifact_rejects_undersized_inventory(tmp_path, count):
+    source = package_source_path(PACKAGE)
+    board = load_board(source)
     media = board['presentations'][0]['media']
     media['instances'] = media['instances'][:count]
-    sidecar = json.loads((PACKAGE / 'suspension.json').read_text())
-    sidecar['instanceSuspensions'] = {
-        instance['equipmentObjectID']: sidecar['instanceSuspensions'][instance['equipmentObjectID']]
-        for instance in media['instances']
-    }
-    (tmp_path / 'suspension.json').write_text(json.dumps(sidecar))
+    artifact = json.loads((PACKAGE / 'assets/suspension.json').read_text())
     descriptor = tmp_path / media['descriptorPath']
     descriptor.parent.mkdir(parents=True)
     descriptor.write_bytes((PACKAGE / media['descriptorPath']).read_bytes())
+    (tmp_path / 'assets/suspension.json').write_text(json.dumps(artifact))
     with pytest.raises(ManifestError, match='exactly two reusable instances'):
-        merge_suspension_sidecar(board, tmp_path)
+        merge_suspension_artifact(board, tmp_path, source)

@@ -1,0 +1,178 @@
+name: Compile runtime catalog
+
+on:
+  workflow_call:
+    inputs:
+      source-ref:
+        description: Exact source revision to compile and bind to the catalog.
+        required: true
+        type: string
+    outputs:
+      artifact-name:
+        description: Complete validated runtime catalog for app builds.
+        value: ${{ jobs.assemble.outputs.artifact-name }}
+
+permissions:
+  contents: read
+
+jobs:
+  lfs-sources:
+    name: Prepare cached CAD sources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact-name: ${{ steps.sources.outputs.owner }}-lfs-objects-${{ github.run_id }}
+    steps:
+      - name: Check out exact source pointers
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source-ref }}
+          lfs: false
+          persist-credentials: false
+
+      # Save before releasing parallel shards, including on a completely cold cache.
+      - name: Materialize cached CAD sources
+        id: sources
+        uses: ./.github/actions/materialize-lfs
+
+      # Artifacts share the fetch even when a manual caller caps cache access at read.
+      - name: Share verified source objects with all compiler jobs
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.sources.outputs.owner }}-lfs-objects-${{ github.run_id }}
+          overwrite: true
+          path: .git/lfs/objects
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  boards:
+    name: Compile board shard ${{ matrix.shard }}
+    needs: lfs-sources
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      # Keep two native workers per Linux runner, freeing macOS for iOS tests.
+      max-parallel: 8
+      matrix:
+        # Offer the heaviest measured groups first; membership remains stable.
+        shard: [5, 6, 4, 0, 3, 1, 2, 7]
+    steps:
+      - name: Check out exact CAD sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source-ref }}
+          lfs: false
+          persist-credentials: false
+
+      - name: Restore this run's verified source objects
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.lfs-sources.outputs.artifact-name }}
+          path: .git/lfs/objects
+
+      - name: Materialize this run's CAD sources
+        uses: ./.github/actions/materialize-lfs
+        with:
+          cache: 'false'
+
+      - name: Compile current board shard
+        id: compile
+        uses: ./.github/actions/compile-board-assets
+        with:
+          shard-index: ${{ matrix.shard }}
+          shard-count: '8'
+
+      - name: Upload complete board shard
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          # A failed-job retry can combine retained successful shards with rerun shards.
+          name: ${{ steps.compile.outputs.owner }}-board-shard-${{ matrix.shard }}-${{ github.run_id }}
+          overwrite: true
+          path: |
+            Hangboards/*/assets/*.usdz
+            Hangboards/*/assets/*.model.json
+            Hangboards/*/assets/*.physics.json
+            Hangboards/*/assets/suspension.json
+            ${{ steps.compile.outputs.report-path }}
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  assemble:
+    name: Assemble runtime catalog
+    needs: [lfs-sources, boards]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      artifact-name: ${{ steps.catalog.outputs.artifact-name }}
+    steps:
+      - name: Check out exact catalog sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ inputs.source-ref }}
+          lfs: false
+          persist-credentials: false
+
+      - name: Restore this run's verified source objects
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.lfs-sources.outputs.artifact-name }}
+          path: .git/lfs/objects
+
+      - name: Materialize this run's CAD sources
+        uses: ./.github/actions/materialize-lfs
+        with:
+          cache: 'false'
+
+      - name: Set up compiler host Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+
+      - name: Identify catalog owner
+        id: owner
+        run: echo "owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")" >> "$GITHUB_OUTPUT"
+
+      - name: Restore compiled board shards
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: ${{ steps.owner.outputs.owner }}-board-shard-*-${{ github.run_id }}
+          merge-multiple: true
+          path: .
+
+      - name: Install headless Blender runtime libraries
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libegl1 libgl1 libxi6 libxfixes3 libxrender1 libsm6 libxxf86vm1 libxkbcommon0 xz-utils
+
+      - name: Export authored hand once
+        run: |
+          scripts/export-grip-hand.sh
+
+      - name: Verify exact shard coverage and catalog hashes
+        id: catalog
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          manifest_path=".context/$owner-runtime-assets/catalog.json"
+          python3 Tools/HangboardCAD/runtime_asset_catalog.py --manifest "$manifest_path" \
+            --reports ".context/$owner-board-reports" --shard-count 8
+          echo "manifest-path=$manifest_path" >> "$GITHUB_OUTPUT"
+          echo "artifact-name=$owner-board-assets-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload complete compiled catalog
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.catalog.outputs.artifact-name }}
+          path: |
+            Hangboards/*/assets/*.usdz
+            Hangboards/*/assets/*.model.json
+            Hangboards/*/assets/*.physics.json
+            Hangboards/*/assets/suspension.json
+            HangTen/Resources/GripHand/hand-mesh.json
+            ${{ steps.catalog.outputs.manifest-path }}
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

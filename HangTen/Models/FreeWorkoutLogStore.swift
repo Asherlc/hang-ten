@@ -86,9 +86,6 @@ enum FreeWorkoutHistoryStore {
         load(defaults: defaults).first
     }
 
-    static func clear(defaults: UserDefaults = .standard) {
-        defaults.removeObject(forKey: key)
-    }
 }
 
 // MARK: - Templates
@@ -145,7 +142,4 @@ enum FreeWorkoutTemplateStore {
         load(defaults: defaults).first { $0.id == id }
     }
 
-    static func clear(defaults: UserDefaults = .standard) {
-        defaults.removeObject(forKey: key)
-    }
 }

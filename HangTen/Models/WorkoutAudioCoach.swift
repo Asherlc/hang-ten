@@ -116,6 +116,7 @@ struct WorkoutSpeechOwnership {
 
 @MainActor
 protocol WorkoutAudioSessionManaging: AnyObject {
+    func configureForCountdownPreparation() throws
     func configureForSpokenCues() throws
     func activate() throws
     func deactivateAndNotifyOthers() throws
@@ -126,10 +127,16 @@ struct WorkoutAudioSessionConfiguration {
     let mode: AVAudioSession.Mode
     let options: AVAudioSession.CategoryOptions
 
+    static let countdownPreparation = WorkoutAudioSessionConfiguration(
+        category: .playback,
+        mode: .default,
+        options: [.mixWithOthers]
+    )
+
     static let countdownCues = WorkoutAudioSessionConfiguration(
         category: .playback,
         mode: .default,
-        options: [.duckOthers]
+        options: [.mixWithOthers, .duckOthers]
     )
 }
 
@@ -141,8 +148,15 @@ private final class SystemWorkoutAudioSession: WorkoutAudioSessionManaging {
         self.session = session
     }
 
+    func configureForCountdownPreparation() throws {
+        try configure(.countdownPreparation)
+    }
+
     func configureForSpokenCues() throws {
-        let configuration = WorkoutAudioSessionConfiguration.countdownCues
+        try configure(.countdownCues)
+    }
+
+    private func configure(_ configuration: WorkoutAudioSessionConfiguration) throws {
         try session.setCategory(
             configuration.category,
             mode: configuration.mode,
@@ -449,6 +463,18 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     }
 
     private func beginCountdownPrewarm() {
+        // Creating or preparing an audio backend can activate the shared session.
+        // Apply mixing before either happens; reserve ducking for actual cues.
+        if !configuredAudioSession {
+            do {
+                try audioSession.configureForCountdownPreparation()
+            } catch {
+                logger.error("Unable to configure countdown preparation audio session: \(error.localizedDescription, privacy: .public)")
+                countdownPreparationState = .failed
+                recordPendingCountdownRequestResultIfPrepared(succeeded: false)
+                return
+            }
+        }
         countdownPreparationState = .preparing
         countdownPreparationGeneration += 1
         let preparationGeneration = countdownPreparationGeneration

@@ -10,7 +10,7 @@ from conftest import load_board_catalog_module
 
 def single_loop():
     root = Path(__file__).resolve().parents[3]
-    setup = json.loads((root / "Hangboards/lattice-mini-bar/suspension.json").read_text())["suspension"]
+    setup = json.loads((root / "Hangboards/lattice-mini-bar/assets/suspension.json").read_text())["suspension"]
     setup["passages"]["right"] = []
     setup["branches"] = setup["branches"][:1]
     ids = {p["id"] for p in setup["passages"]["left"]}
@@ -25,20 +25,38 @@ def single_loop():
     return setup
 
 
-def test_one_cached_connected_loop_preserves_two_visible_legs():
+@pytest.mark.parametrize("mouth_role", ["body", "attachment", "contact", None])
+def test_one_cached_connected_loop_preserves_two_visible_legs(mouth_role):
     module = load_board_catalog_module()
-    profile = module._load_model_suspension(single_loop(), "suspension")
+    setup = single_loop()
+    profile = module._load_model_suspension(setup, "suspension")
     assert len(profile.branches) == 1
     assert len(profile.passages.left) == 2
     assert profile.passages.right == ()
+    assert [passage.node_id for passage in profile.passages.left] == [
+        mouth["nodeID"] for mouth in setup["passages"]["left"]
+    ]
     root = Path(__file__).resolve().parents[3]
     bounds = json.loads((root / "Hangboards/lattice-mini-bar/assets/primary.model.json").read_text())["modelBounds"]
-    module._validate_model_suspension(
-        profile,
-        model_bounds=(bounds["min"], bounds["max"]),
-        nodes={p.node_id: "body" for p in profile.passages.left},
-        position_ids=set(profile.canonical_poses),
-    )
+    nodes = {passage.node_id: "body" for passage in profile.passages.left}
+    mouth_node_id = profile.passages.left[0].node_id
+    if mouth_role is None:
+        del nodes[mouth_node_id]
+    else:
+        nodes[mouth_node_id] = mouth_role
+    def validate_binding():
+        module._validate_model_suspension(
+            profile,
+            model_bounds=(bounds["min"], bounds["max"]),
+            nodes=nodes,
+            position_ids=set(profile.canonical_poses),
+        )
+    if mouth_role in {"body", "attachment"}:
+        validate_binding()
+        assert nodes[mouth_node_id] == mouth_role
+    else:
+        with pytest.raises(ValueError, match="passage node must be a body or attachment"):
+            validate_binding()
 
 
 @pytest.mark.parametrize("mutation", ["no-loop", "uncached", "partial-pair", "extra-branch"])

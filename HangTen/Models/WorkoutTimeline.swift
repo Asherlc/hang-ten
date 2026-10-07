@@ -11,20 +11,6 @@ enum WorkoutLiveStepResolver {
         step.resolvingEitherHand(selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded) ?? step
     }
 
-    /// Preference-aware materialization for a single step. Alternate expansion is
-    /// handled by `WorkoutSessionHandResolver.sessionSteps`; after that, steps are
-    /// already concrete singles and this is an identity for them.
-    static func materialized(
-        _ step: WorkoutStep,
-        preference: WorkoutSessionHandPreference,
-        boardIsOneHanded: Bool = false
-    ) -> WorkoutStep {
-        WorkoutSessionHandResolver.materialized(
-            step,
-            preference: preference,
-            boardIsOneHanded: boardIsOneHanded
-        )
-    }
 }
 
 /// Central start-of-session hand preference: gating, left/right/both materialization,
@@ -232,62 +218,9 @@ extension WorkoutSessionHandResolver {
     }
 }
 
-struct WorkoutClock {
+enum WorkoutClock {
     static var monotonicTime: TimeInterval {
         ProcessInfo.processInfo.systemUptime
-    }
-
-    private let now: () -> TimeInterval
-    private var pausedElapsed: TimeInterval = 0
-    private var activeStart: TimeInterval?
-
-    init(now: @escaping () -> TimeInterval = { WorkoutClock.monotonicTime }) {
-        self.now = now
-    }
-
-    var isRunning: Bool {
-        activeStart != nil
-    }
-
-    var elapsed: TimeInterval {
-        let activeElapsed = activeStart.map { max(0, now() - $0) } ?? 0
-        return pausedElapsed + activeElapsed
-    }
-
-    var countdownRemaining: Int {
-        guard let activeStart else {
-            return 0
-        }
-
-        let remaining = activeStart - now()
-        guard remaining > 0 else {
-            return 0
-        }
-        return max(1, Int(ceil(remaining)))
-    }
-
-    mutating func start(initialCountdown: TimeInterval) {
-        guard activeStart == nil else {
-            return
-        }
-        activeStart = now() + max(0, initialCountdown)
-    }
-
-    mutating func pause() {
-        pausedElapsed = elapsed
-        activeStart = nil
-    }
-
-    mutating func reset() {
-        pausedElapsed = 0
-        activeStart = nil
-    }
-
-    mutating func seek(to elapsed: TimeInterval) {
-        pausedElapsed = max(0, elapsed)
-        if activeStart != nil {
-            activeStart = now()
-        }
     }
 }
 
@@ -450,25 +383,6 @@ enum WorkoutHoldCuePolicy {
     }
 }
 
-struct FreeWorkoutStepUpdates: Equatable {
-    var duration: TimeInterval?
-    var timedWorkDuration: TimeInterval?
-    var externalLoadKGF: Double?
-    var repetitions: Int?
-
-    init(
-        duration: TimeInterval? = nil,
-        timedWorkDuration: TimeInterval? = nil,
-        externalLoadKGF: Double? = nil,
-        repetitions: Int? = nil
-    ) {
-        self.duration = duration
-        self.timedWorkDuration = timedWorkDuration
-        self.externalLoadKGF = externalLoadKGF
-        self.repetitions = repetitions
-    }
-}
-
 struct WorkoutTimeline {
     private var steps: [WorkoutStep]
     private var startOffsets: [TimeInterval]
@@ -488,79 +402,6 @@ struct WorkoutTimeline {
 
     var currentSteps: [WorkoutStep] {
         steps
-    }
-
-    /// Applies Strong-style live edits to the current or a future step.
-    /// Past steps must never be edited by callers. Returns false when no
-    /// step matches `id`, leaving the timeline untouched.
-    @discardableResult
-    mutating func updateStep(id: String, _ updates: FreeWorkoutStepUpdates) -> Bool {
-        guard let index = steps.firstIndex(where: { $0.id == id }) else {
-            return false
-        }
-        let old = steps[index]
-        let newDuration = max(1, updates.duration ?? old.duration)
-        let requestedTimedWork = updates.timedWorkDuration ?? old.timedWorkDuration
-        let newTimedWork = requestedTimedWork.map { min(max($0, 0), newDuration) }
-        steps[index] = WorkoutStep(
-            id: old.id,
-            number: old.number,
-            title: old.title,
-            instruction: old.instruction,
-            accessory: old.accessory,
-            duration: newDuration,
-            phase: old.phase,
-            segments: Self.remappedSegments(
-                old,
-                workDuration: newTimedWork ?? newDuration,
-                totalDuration: newDuration
-            ),
-            gripType: old.gripType,
-            fingerConfiguration: old.fingerConfiguration,
-            handUse: old.handUse,
-            side: old.side,
-            action: old.action,
-            repetitions: updates.repetitions ?? old.repetitions,
-            externalLoadKGF: updates.externalLoadKGF.map { $0 <= 0 ? nil : $0 } ?? old.externalLoadKGF,
-            timedWorkDuration: newTimedWork
-        )
-        var cursor: TimeInterval = 0
-        startOffsets = steps.map { step in
-            defer { cursor += step.duration }
-            return cursor
-        }
-        duration = cursor
-        return true
-    }
-
-    /// Keeps fixed work/rest segment durations summing to the step's edited
-    /// duration. Non-fixed segments (undefined / stopwatch) carry no duration
-    /// and pass through unchanged.
-    private static func remappedSegments(
-        _ step: WorkoutStep,
-        workDuration: TimeInterval,
-        totalDuration: TimeInterval
-    ) -> [WorkoutSegment] {
-        let restDuration = max(0, totalDuration - workDuration)
-        return step.segments.map { segment in
-            guard segment.timing == .fixed else { return segment }
-            switch segment.kind {
-            case .work:
-                return WorkoutSegment(
-                    kind: .work,
-                    target: segment.target,
-                    timing: .fixed,
-                    duration: workDuration
-                )
-            case .rest:
-                return WorkoutSegment(
-                    kind: .rest,
-                    target: segment.target,
-                    timing: .fixed,
-                    duration: restDuration
-                )
-            }
-        }
     }
 
     static func labels(

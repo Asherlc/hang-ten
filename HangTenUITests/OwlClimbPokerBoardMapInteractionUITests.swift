@@ -61,9 +61,16 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         waitForExpectations(timeout: 15)
         addScreenshot(named: "Beastmaker manual orbit after selection")
         let pocket = app.buttons["boardDetail.holdLegend.pocket-middle-center"]
+        // Lazy grid rows may not exist until scrolled into the viewport.
+        // Start on the legend so the 3D orbit gesture cannot win.
+        for _ in 0..<3 {
+            if pocket.exists && pocket.isHittable { break }
+            try scrollHoldLegend(in: app, upward: true)
+        }
         XCTAssertTrue(pocket.waitForExistence(timeout: 10))
         XCTAssertTrue(pocket.isHittable)
         pocket.tap()
+        try scrollHoldLegend(in: app, upward: false)
         let front = NSPredicate { _, _ in
             guard let value = diagnostic.value as? String,
                   value.contains("cameraSettled=true"),
@@ -76,6 +83,31 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         expectation(for: front, evaluatedWith: diagnostic)
         waitForExpectations(timeout: 10)
         addScreenshot(named: "Beastmaker pocket returns to front")
+    }
+
+    private func scrollHoldLegend(in app: XCUIApplication, upward: Bool) throws {
+        var viewport = app.scrollViews["boardDetail.screen"].frame.intersection(app.frame)
+        // A partially visible row can be hittable even when its center is
+        // behind the floating tab bar, where a drag switches tabs instead.
+        let tabBar = app.tabBars.firstMatch
+        if tabBar.exists {
+            viewport.size.height = min(viewport.height, max(0, tabBar.frame.minY - viewport.minY))
+        }
+        let rows = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "boardDetail.holdLegend."
+        )).allElementsBoundByIndex.filter {
+            $0.isHittable && viewport.contains($0.frame)
+        }
+        let ordered = rows.sorted { $0.frame.midY < $1.frame.midY }
+        let anchor = try XCTUnwrap(upward ? ordered.last : ordered.first,
+                                  "Scrolling needs a visible legend row outside the 3D preview")
+        let destinationY = upward
+            ? max(viewport.minY + 40, anchor.frame.midY - 300)
+            : min(viewport.maxY - 40, anchor.frame.midY + 300)
+        let distance = destinationY - anchor.frame.midY
+        XCTAssertGreaterThan(abs(distance), 44)
+        let start = anchor.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        start.press(forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)))
     }
 
     func testPivotRotationPresetsPersistWhenSelectingHolds() throws {
@@ -240,6 +272,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 
     func testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector() throws {
         let app = XCUIApplication()
+        // Layout and natural step transitions must not wait for the simulator's
+        // speech/audio service while the ten-second work interval runs.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        defer { app.terminate() }
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "plateau.lifting-edge",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
@@ -268,7 +304,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Plateau landscape workout board below configuration selector")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
         expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
         waitForExpectations(timeout: 20)
         pause.tap()
@@ -282,6 +318,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 
     func testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        defer { app.terminate() }
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
@@ -304,7 +342,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Mini portrait paused Hang board and finger cues")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label CONTAINS %@", "current step 18: Rest")
+        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
         expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
         waitForExpectations(timeout: 20)
         pause.tap()

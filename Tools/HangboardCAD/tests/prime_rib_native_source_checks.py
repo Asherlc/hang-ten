@@ -4,7 +4,7 @@ Run under FreeCAD's own interpreter:
 
     python3 Tools/HangboardCAD/run_freecad.py \
       Tools/HangboardCAD/tests/prime_rib_native_source_checks.py \
-      Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd
+      Hangboards/metolius-prime-rib.FCStd
 
 The profile is authored from vector primitives (lines, tangent arcs and two
 cubic Bezier spans) with named driving dimensions, so the edits below are made

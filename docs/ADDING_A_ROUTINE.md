@@ -1,9 +1,8 @@
 # Adding a training routine
 
-This guide defines how Hang Ten imports manufacturer training plans without
-quietly rewriting them. Routine fidelity and board mapping are separate audits:
-the task prescription must remain exact, while named hold types are resolved
-through factual board metadata.
+This guide defines how Hang Ten adds source-backed training plans. Audit the
+prescription separately from board compatibility: preserve every sourced task,
+and label adaptations and inferred mappings explicitly.
 
 ## 1. Start from a primary manufacturer source
 
@@ -19,24 +18,35 @@ and do not guess which is authoritative.
 ## 2. Classify the routine before importing it
 
 A board-flexible routine names semantic holds such as “Jug,” “Round Sloper,” or
-“Large Edge.” It can use `boardID: nil` if every required feature resolves on
-the selected board. `AppStore` hides a plan when even one of its targets does
-not resolve; DEBUG catalog assertions require semantic targets and at least one
-fully compatible registered board.
+“Large Edge.” Use `boardID: nil` when the source is board-agnostic, and retain
+every prescribed semantic hand target. `AppStore` lists these plans on every
+board; compatibility is assessed separately, and unresolved targets mark the
+plan “Not on this board.”
+
+Catalog resolution checks apply to plans with a declared `boardID`, not every
+board-agnostic routine. Non-custom, source-linked board-agnostic work may record
+as self-selected when its prescribed requirements or hand tasks cannot resolve.
+Test each board mapping claimed to support the full source prescription.
 
 A board-specific routine refers to numbered holds, a board diagram, or unique
-features whose meaning depends on one product. Set its `boardID` and do not show
-it on other boards. Implement the physical board and its exact hold IDs first.
+features whose meaning depends on one product. Set its `boardID`; the app filters
+it out on other boards. Implement and audit that physical board first, then map
+the source's numbered holds to factual requirements supported by its inventory.
 
-Metolius currently demonstrates both cases (sources checked August 1, 2026):
+Metolius demonstrates both cases:
 
 - The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
   contains Entry, Intermediate, and Advanced routines named by semantic hold
-  type. These are the three routines currently in Hang Ten.
+  type. Hang Ten retains these three routines as adapted guided expansions.
 - The [Contact guide](https://www.metoliusclimbing.com/pages/contact-training-guide)
   uses Contact-board hold numbers.
 - The [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
   uses Simulator hold numbers.
+
+The catalog also includes the three Contact routines, three Simulator 3D
+routines, and the [Rock Ring sequence](https://www.metoliusclimbing.com/pages/rock-ring-training-guide)
+as board-specific source cycles. Use their audited requirement mappings rather
+than copying numbered holds onto another board.
 
 Contact is a separate wide training-board model, not a generic exercise name.
 Its routines must not be translated onto the Compact II and called identical.
@@ -70,25 +80,39 @@ manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
-The app reads runtime plans from the schema-versioned
-`HangTen/Resources/PlanLibrary.json`. Add the audited plan to
-`LegacyPlanSeedCatalog` in `TrainingModels.swift`, where it acts as the export
-fixture, then run:
+Both apps read the checked-in canonical `HangTen/Resources/PlanLibrary.json`.
+Add the audited plan directly to its reusable block definitions and plan
+references, retaining source metadata and provenance. Build board resources
+before validating factual board compatibility, and validate the work targets:
 
 ```sh
-scripts/export-plan-library.sh
-scripts/export-plan-library.sh --check
+rtk proxy bash scripts/build-board-assets.sh
+rtk scripts/validate-plan-work-targets.sh
 ```
 
-`PlanStorage.swift` turns the fixture into reusable block definitions,
-semantic targets, source metadata, and provenance, then validates the bundled
-JSON before the UI can use it. DEBUG builds compare every resolved JSON plan
-against the fixture.
+`PlanStorage.swift` decodes and validates the bundled JSON, then resolves its
+blocks into runtime steps. Source-prescription tests inspect the canonical
+definitions before segment expansion and verify the resulting runtime plans.
 
-For an unchanged official import, preserve the source's ten-minute task-cycle
-structure exactly and leave `timedWorkDuration` `nil` unless the source
-explicitly defines a continuous timed work segment. For a faithful adapted
-Metolius expansion:
+Commit the canonical JSON and source mappings for every changed field. There
+is no separate Swift authoring catalog or plan export step.
+Use reusable blocks and `repeatCount` for identical prescribed steps or cycles.
+The count includes the first run. Keep different final efforts, recoveries,
+targets or instructions separate. Reference `stepIDs` and `stepTitles` may
+preserve the complete expanded sequence of historic identities and numbered
+labels without copying the prescription. Do not flatten repeated blocks into
+copied source rows to make the preview look repetitive: previews now render
+only authored repetition. See the [canonical library mapping](source-audits/2026-10-05-canonical-plan-library.md)
+for the override format and lossless authoring checks.
+
+For a complete fresh-checkout app build run `scripts/build-runtime-assets.sh`
+before Xcode. See [generated artifacts](GENERATED_ARTIFACTS.md).
+
+For an unchanged task-cycle import, preserve the source's cycle structure and
+leave `timedWorkDuration` `nil` unless the source explicitly defines a continuous
+timed work segment. The official Metolius board-specific plans keep each
+manufacturer minute as one source-governed cycle with remaining-time rest. The
+adapted generic Metolius expansions:
 
 - retain ten source cycles of 60 seconds each and preserve task order;
 - give each listed task its own guided step and add an explicit rest step for
@@ -105,7 +129,7 @@ Do not set `timedWorkDuration` to the first hang duration. A minute can contain
 multiple hangs, pull-ups, a hand switch, or a “stay on” transition, and the
 manufacturer—not the app—defines when the task is complete.
 
-## 5. Resolve holds semantically
+## 5. Model source-backed hold targets
 
 Choose the narrowest truthful `PlanContactPredicate` for each hand. Bundled
 routines use ordered `tasks`; each task contains one or two simultaneous hand
@@ -118,27 +142,34 @@ targets. Routines never contain board contact IDs or visual-frame references:
   `depth: {"minMM":20,"maxMM":35}` for a stated measurement or an explicitly
   documented inferred band in an adapted plan. Never present an inferred band
   as a manufacturer prescription; use equal bounds for one exact measurement;
-- `fingerCapacity` when the source specifies it, and `handCapacity` only when
-  source evidence supports multiple hands sharing one contact;
+- `fingerCapacity` when the source specifies it. For edges this is the minimum
+  room needed for the grip: larger authored capacities qualify, and omitted edge
+  capacity adds no restriction. An explicitly smaller edge is rejected. For
+  pockets and other kinds, capacity identifies the named hold size and remains
+  an exact match; omitted capacity cannot establish that size;
 - `target: "any"` when the source explicitly lets the athlete choose a hold.
 
-Default to two hand entries unless the source prescribes one arm. Put different
-holds used together in the same task, and put successive holds in successive
-tasks. Use `side: "left"` or `"right"` only when the source names a side. The
-number of entries in a task is the hand count; do not add a separate `hands`
-field. See [`PlanWorkTarget.schema.json`](schemas/PlanWorkTarget.schema.json).
+Catalog packages require an authored capacity on every contact; see
+[board authoring](ADDING_A_BOARD.md). The resolver's unknown-capacity handling
+supports synthetic contacts and older activity snapshots. Reviewed board
+capacity estimates do not establish a plan's finger or grip prescription.
 
-The resolver matches those predicates against factual board metadata. Do not
-hard-code a contact ID or visual frame into a routine. If the source names a
-surface that the board inventory cannot represent, retain the source wording in
-the instruction and omit that target; document the unresolved fact rather than
-substituting another hold.
+Each task has one or two hand entries according to the sourced hand use. Put
+holds used together in the same task and successive holds in successive tasks.
+Use `side: "left"` or `"right"` only when the source names a side. The entry
+count is the hand count; `hands` and `handCapacity` are not plan-predicate fields.
+Factual board capacity governs whether two hands can share one contact. See
+[`PlanWorkTarget.schema.json`](schemas/PlanWorkTarget.schema.json).
 
-For a board-flexible source, semantic resolution may select the closest factual
-size available—for example both “Medium Edge” and “Small Edge” can resolve to a
-board whose only smaller edges are 19 mm. Keep the source term in the task,
-make the board metadata truthful, and disclose the equivalence in review. Never
-rename a pocket as a sloper or omit a required target silently.
+The resolver filters factual contacts by the predicate and the step's grip
+metadata, then chooses contacts within that matching set. It does not broaden a
+failed predicate to the closest size or substitute another hold type. Keep the
+source wording and document unresolved compatibility rather than inventing a
+target. The legacy `.selfSelected` work form is restricted to the validator's
+explicit source allowlist and custom plans. Modern `tasks` may contain
+`target: "any"` without that allowlist; this structural permission does not
+establish a source prescription. Justify every athlete-choice target from the
+plan's evidence. Custom athlete-authored routines may also use exact contact IDs.
 
 ### Metolius edge-name cross-reference (checked September 29, 2026)
 
@@ -189,13 +220,12 @@ step, verify:
 5. switch-hand, stay-on, maximum, failure, or no-rest qualifiers;
 6. resolved hold IDs on every compatible board.
 
-The current Metolius catalog should remain three plans with ten 60-second source
-cycles per plan and 600 seconds total per plan. Guided expansion generates 20
-steps for Entry, 26 for Intermediate, and 27 for Advanced; these generated
-counts differ from the ten source cycles. The source explicitly says to
+The three generic Metolius plans each retain ten 60-second source cycles and
+600 seconds total. Their guided step counts differ from the ten source cycles.
+The source explicitly says to
 complete the task or tasks within each minute and use the remaining time to
 rest.
-DEBUG builds validate the current adapted Metolius audit with assertions for
+Catalog tests validate the current adapted Metolius audit with assertions for
 step order, target mapping, timing, generated numbering, and the 60-second
 cycle structure.
 
@@ -205,7 +235,8 @@ II hold mapping. Do not use those plans as precedent for assigning `official`
 provenance to a modified manufacturer routine.
 
 Preview representative steps with the DEBUG routes documented in
-`docs/IOS_SIMULATOR_VALIDATION.md`. Inspect both the text and active holds.
+[the simulator guide](IOS_SIMULATOR_VALIDATION.md). Inspect both the text and
+active holds.
 
 ## Completion checklist
 
@@ -215,9 +246,9 @@ Preview representative steps with the DEBUG routes documented in
 - Step order, repetitions, times, and qualifiers match line by line.
 - No unrequested timed work/rest, warm-up, cooldown, or exercise added.
 - `official` or `adapted` provenance is honest.
-- Every simultaneous task resolves to factual hold contacts on each compatible board.
+- Every target maps to source evidence and resolves on the boards claimed compatible.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
-- `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
+- Canonical `PlanLibrary.json` changes and their source mappings are committed.
 - `scripts/validate-plan-work-targets.sh` validates every bundled work target.
 - Representative timer, audio, text, and highlight states reviewed.

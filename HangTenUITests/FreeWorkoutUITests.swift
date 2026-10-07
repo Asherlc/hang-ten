@@ -25,7 +25,8 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.finish"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.addExercise.button"].waitForExistence(timeout: 10))
-        XCTAssertTrue(anyElement(app, "freeWorkout.boardMap").waitForExistence(timeout: 10))
+        XCTAssertFalse(anyElement(app, "freeWorkout.boardMap").exists,
+                       "An empty log should keep Add exercise close to the elapsed time.")
         XCTAssertFalse(app.otherElements["freeWorkout.builder"].exists)
         XCTAssertFalse(app.otherElements["freeWorkout.session"].exists)
     }
@@ -37,14 +38,43 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(app.buttons["freeWorkout.finish"].waitForExistence(timeout: 10))
     }
 
+    func testPullUpCompletionCanBeUndoneAfterSkippingRest() {
+        let app = launchResetFreeWorkout(audioCuesEnabled: false)
+        openEmptyLog(in: app)
+        app.buttons["freeWorkout.addExercise.button"].tap()
+        let pullUps = anyElement(app, "freeWorkout.addExercise.pullUp")
+        XCTAssertTrue(pullUps.waitForExistence(timeout: 10))
+        pullUps.tap()
+        app.buttons["freeWorkout.addExercise.confirm"].tap()
+
+        let completion = app.buttons["freeWorkout.set.complete"]
+        XCTAssertTrue(completion.waitForExistence(timeout: 10))
+        tapVisibleControl(completion, in: app)
+        let skipRest = app.buttons["freeWorkout.rest.skip"]
+        XCTAssertTrue(skipRest.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["freeWorkout.rest.dismiss"].exists)
+        tapVisibleControl(skipRest, in: app)
+
+        let completed = app.buttons.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@", "freeWorkout.set.complete.")
+        ).firstMatch
+        XCTAssertTrue(completed.waitForExistence(timeout: 10))
+        XCTAssertEqual(completed.value as? String, "Completed")
+        XCTAssertTrue(completed.label.contains("Pull-ups, set 1"))
+        tapVisibleControl(completed, in: app)
+        XCTAssertTrue(completion.waitForExistence(timeout: 10))
+        XCTAssertEqual(completion.value as? String, "Not completed")
+        XCTAssertTrue(app.buttons["freeWorkout.logSet"].exists)
+        XCTAssertFalse(anyElement(app, "freeWorkout.restBar").exists)
+    }
+
     /// Empty → add hang → complete set → rest bar → Finish (≥1 set) → template Skip → Last unlocked.
     func testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout() {
         let app = launchResetFreeWorkout()
         openEmptyLog(in: app)
         addHangExercise(in: app)
-        // Hang focused actions are Start Set / Log Set; manual complete uses the set checkbox
-        // (pull-up owns freeWorkout.markDone). Prefer checkbox so this path is independent of guided hang.
-        completeFocusedHangViaMarkDone(in: app)
+        // Complete with the checkbox; starting and logging a timed set are distinct actions.
+        completeFocusedSet(in: app)
 
         XCTAssertTrue(
             anyElement(app, "freeWorkout.restBar").waitForExistence(timeout: 15),
@@ -197,7 +227,7 @@ final class FreeWorkoutUITests: XCTestCase {
         addHangExercise(in: app)
         // This test verifies discard and Last history. Complete the set through
         // its checkbox; the guided Start Set path has a dedicated UI test.
-        completeFocusedHangViaMarkDone(in: app)
+        completeFocusedSet(in: app)
         XCTAssertTrue(anyElement(app, "freeWorkout.restBar").waitForExistence(timeout: 10))
         finishWorkoutSkippingTemplate(in: app)
 
@@ -260,22 +290,11 @@ final class FreeWorkoutUITests: XCTestCase {
         // Wait until focused hang actions are available (sheet dismissed and row visible).
         XCTAssertTrue(
             focusedSetActionAvailable(in: app, timeout: 5),
-            "Added hang should expose Start Set, Mark done, or Mark set complete"
+            "Added hang should expose Start set or Mark set complete"
         )
     }
 
-    /// Hang has no `freeWorkout.markDone` (pull-up only); complete via focused checkbox.
-    private func completeFocusedHangViaMarkDone(in app: XCUIApplication) {
-        let markDone = firstMatching(
-            in: app,
-            identifiers: ["freeWorkout.markDone"],
-            labels: ["Mark done"]
-        )
-        if markDone.waitForExistence(timeout: 3), markDone.isHittable {
-            markDone.tap()
-            return
-        }
-
+    private func completeFocusedSet(in app: XCUIApplication) {
         let checkbox = firstMatching(
             in: app,
             identifiers: ["freeWorkout.set.complete"],
@@ -283,16 +302,14 @@ final class FreeWorkoutUITests: XCTestCase {
         )
         XCTAssertTrue(
             checkbox.waitForExistence(timeout: 15),
-            "Hang set needs Mark set complete (or Mark done) to finish without guided hang"
+            "The set checkbox should complete a set without starting a guided hang"
         )
         tapVisibleButton(checkbox, in: app, timeout: 15)
     }
 
     private func focusedSetActionAvailable(in app: XCUIApplication, timeout: TimeInterval) -> Bool {
-        firstMatching(in: app, identifiers: ["freeWorkout.startSet"], labels: ["Start Set"])
+        firstMatching(in: app, identifiers: ["freeWorkout.startSet"], labels: ["Start set"])
             .waitForExistence(timeout: timeout)
-            || firstMatching(in: app, identifiers: ["freeWorkout.markDone"], labels: ["Mark done"])
-            .waitForExistence(timeout: 2)
             || firstMatching(
                 in: app,
                 identifiers: ["freeWorkout.set.complete"],
@@ -320,8 +337,11 @@ final class FreeWorkoutUITests: XCTestCase {
     }
 
     private func finishWorkoutSkippingTemplate(in app: XCUIApplication) {
-        // Rest Skip shares the "Skip" label with the template alert — dismiss rest first.
-        let dismissRest = app.buttons["freeWorkout.rest.dismiss"]
+        let dismissRest = firstMatching(
+            in: app,
+            identifiers: ["freeWorkout.rest.skip", "freeWorkout.rest.dismiss"],
+            labels: ["Skip rest", "Dismiss"]
+        )
         if dismissRest.waitForExistence(timeout: 2), dismissRest.isHittable {
             dismissRest.tap()
         }
@@ -356,13 +376,12 @@ final class FreeWorkoutUITests: XCTestCase {
             return
         }
 
-        // Prefer Finish controls that are not the toolbar/header actions.
+        // Prefer the confirmation action over the persistent toolbar action.
         let dialogFinishes = app.buttons.matching(
             NSPredicate(
-                format: "label == %@ AND identifier != %@ AND identifier != %@",
+                format: "label == %@ AND identifier != %@",
                 "Finish",
-                "freeWorkout.finish",
-                "freeWorkout.finish.header"
+                "freeWorkout.finish"
             )
         )
         if dialogFinishes.element(boundBy: 0).waitForExistence(timeout: 3) {
@@ -380,7 +399,7 @@ final class FreeWorkoutUITests: XCTestCase {
     }
 
     private func skipTemplatePrompt(in app: XCUIApplication) {
-        let alert = app.alerts["Save as Template?"]
+        let alert = app.alerts["Save as template?"]
         if alert.waitForExistence(timeout: 10) {
             XCTAssertFalse(alert.textFields.firstMatch.exists, "Skipping a template must not open the keyboard")
             let skipInAlert = alert.buttons.matching(NSPredicate(format: "label == %@", "Skip"))
@@ -395,7 +414,7 @@ final class FreeWorkoutUITests: XCTestCase {
             return
         }
 
-        XCTFail("Expected Save as Template? alert with Skip after finishing a set")
+        XCTFail("Expected Save as template? alert with Skip after finishing a set")
     }
 
     private func tapVisibleButton(_ element: XCUIElement, in app: XCUIApplication, timeout: TimeInterval = 10) {

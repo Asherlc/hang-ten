@@ -261,7 +261,7 @@
       "modelSHA256": "3bf45b5660c7b330d0e8267ef49435b7f728785a137f88c6a1cf956c7fbb967a",
       "descriptorSHA256": "aaa5bae2efe46c8e87c52044945364bde6c0bfa8f160d6a59630bb136ad42851",
       "suspensionSHA256": "2324bf57483829f454e4ddc2c030e8f6332ffb9b5accb8188936e960f1e3854a",
-      "report": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger/granite-seat-review/runtime-validation.json",
+      "report": "Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/runtime-validation.json",
       "postIntegrationTests": {
         "pythonPassed": 260,
         "pythonSkipped": 0,

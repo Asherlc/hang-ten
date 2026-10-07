@@ -12,10 +12,6 @@ protocol UserReportSubmitting: AnyObject {
     func submit(_ report: HangTenUserReport)
 }
 
-protocol FeatureFlagProviding: AnyObject {
-    func isEnabled(_ key: String, default defaultValue: Bool) -> Bool
-}
-
 protocol SessionReplayControlling: AnyObject {
     func start()
     func stop()
@@ -225,16 +221,12 @@ struct HangTenUserReport: Equatable {
     }
 }
 
-final class NoOpTelemetry: TelemetryTracking, DiagnosticReporting, UserReportSubmitting, FeatureFlagProviding, SessionReplayControlling {
+final class NoOpTelemetry: TelemetryTracking, DiagnosticReporting, UserReportSubmitting, SessionReplayControlling {
     func track(_ event: HangTenTelemetryEvent) {}
 
     func record(_ diagnostic: HangTenDiagnostic) {}
 
     func submit(_ report: HangTenUserReport) {}
-
-    func isEnabled(_ key: String, default defaultValue: Bool) -> Bool {
-        defaultValue
-    }
 
     func start() {}
 

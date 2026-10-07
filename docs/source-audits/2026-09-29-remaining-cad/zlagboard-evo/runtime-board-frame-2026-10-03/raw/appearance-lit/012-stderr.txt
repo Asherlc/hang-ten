@@ -1,3 +1,0 @@
-Detected file type from extension: PNG
-Note: No display specified. Defaulting to display: 88539554-F30A-4041-ABC8-814666719D66 (screenID: 1, name: LCD)
-Wrote screenshot to: /Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/board-frame-fix-2026-10-03/appearance-lit/elapsed-007s.png

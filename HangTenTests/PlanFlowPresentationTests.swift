@@ -2,11 +2,19 @@ import XCTest
 @testable import HangTen
 
 final class PlanFlowPresentationTests: XCTestCase {
-    func testTenIdenticalStagesShowOnePrescriptionWithTenRepeats() throws {
-        let steps = (1...10).map { step(number: $0) }
-
+    func testIdenticalStepsWithoutDeclaredRepetitionStaySeparate() {
+        let steps = [step(number: 1), step(number: 2)]
         let groups = PlanFlowPresentation.groups(for: steps)
+        XCTAssertEqual(groups.count, 2)
+        XCTAssertTrue(groups.allSatisfy { $0.repeatCount == 1 })
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
+    }
 
+    func testTenDeclaredRunsShowOnePrescription() throws {
+        let steps = (1...10).map { step(number: $0) }
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<10, repeatCount: 10)
+        ])
         XCTAssertEqual(groups.count, 1)
         let group = try XCTUnwrap(groups.first)
         XCTAssertEqual(group.repeatCount, 10)
@@ -16,71 +24,62 @@ final class PlanFlowPresentationTests: XCTestCase {
         XCTAssertEqual(group.duration, 70)
     }
 
-    func testConsecutiveHangRestCyclesShowBothStagesInOneRepeatedSequence() throws {
+    func testDeclaredRangeDoesNotAbsorbAnIdenticalFollowingCycle() throws {
         let steps = (1...3).flatMap { repeatNumber in
             [step(number: repeatNumber * 2 - 1), step(number: repeatNumber * 2, phase: .rest)]
         }
-
-        let groups = PlanFlowPresentation.groups(for: steps)
-
-        XCTAssertEqual(groups.count, 1)
-        let group = try XCTUnwrap(groups.first)
-        XCTAssertEqual(group.repeatCount, 3)
-        XCTAssertEqual(group.children.map(\.title), ["Edge hang", "Rest"])
-        XCTAssertEqual(group.duration, 30)
-        XCTAssertEqual(group.sourceSteps, steps)
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<4, repeatCount: 2)
+        ])
+        XCTAssertEqual(groups.count, 3)
+        XCTAssertEqual(groups[0].repeatCount, 2)
+        XCTAssertEqual(groups[0].children.map(\.title), ["Edge hang", "Rest"])
+        XCTAssertEqual(groups[0].children.last?.nextInstruction, "Hang for 7 seconds.")
+        XCTAssertNil(groups.last?.nextInstruction)
+        XCTAssertEqual(groups.reduce(0) { $0 + $1.duration }, 30)
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
     }
 
-    func testNumberedTitlesGroupWithoutRemovingHoldSizesOrExerciseCounts() {
+    func testAuthoredTemplateLabelsPreserveOriginalOccurrenceLabels() {
         let titles = [
             "7/3 · set 1 · 20 mm edge · rep 1 of 3",
             "7/3 · set 1 · 20 mm edge · rep 2 of 3",
             "7/3 · set 1 · 20 mm edge · rep 3 of 3"
         ]
-        let groups = PlanFlowPresentation.groups(for: titles.enumerated().map {
-            step(number: $0.offset + 1, title: $0.element)
-        })
-
+        let steps = titles.enumerated().map { step(number: $0.offset + 1, title: $0.element) }
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<3, repeatCount: 3, patternTitles: ["7/3 · 20 mm edge"])
+        ])
         XCTAssertEqual(groups.count, 1)
-        XCTAssertEqual(groups.first?.repeatCount, 3)
         XCTAssertEqual(groups.first?.children.first?.title, "7/3 · 20 mm edge")
-
-        for titles in [["10 mm hang", "20 mm hang"], ["5 pull-ups", "10 pull-ups"],
-                       ["Ladder 10 mm hang", "Ladder 20 mm hang"],
-                       ["Minute 10 second hang", "Minute 20 second hang"],
-                       ["Hang · optional set 1", "Hang · optional set 2"]] {
-            let distinct = PlanFlowPresentation.groups(for: titles.enumerated().map {
-                step(number: $0.offset + 1, title: $0.element)
-            })
-            XCTAssertEqual(distinct.count, 2, "Meaningful title differences must stay visible: \(titles)")
-        }
+        XCTAssertEqual(groups.flatMap(\.sourceSteps).map(\.title), titles)
     }
 
-    func testCombinedRoundAndRepCountersCanGroupNestedSequences() throws {
-        var steps: [WorkoutStep] = []
-        for round in 1...3 {
-            for rep in 1...2 {
-                let number = (round - 1) * 3 + rep
-                let title = "Repeaters · round \(round), rep \(rep)"
-                steps.append(step(number: number, title: title))
-            }
-            steps.append(step(number: round * 3, phase: .rest))
+    func testUnmarkedNumberedTitlesAreNotRewrittenOrGrouped() {
+        let titles = ["Hang · rep 1", "Hang · rep 2", "10 mm hang", "20 mm hang", "5 pull-ups", "10 pull-ups"]
+        let steps = titles.enumerated().map { step(number: $0.offset + 1, title: $0.element) }
+        let groups = PlanFlowPresentation.groups(for: steps)
+        XCTAssertEqual(groups.count, titles.count)
+        XCTAssertEqual(groups.map(\.title), titles)
+    }
+
+    func testInnerMatchesAreNotInferredInsideAnAuthoredRepeat() throws {
+        let steps = (1...3).flatMap { round in
+            [step(number: round * 3 - 2), step(number: round * 3 - 1), step(number: round * 3, phase: .rest)]
         }
-
-        let group = try XCTUnwrap(PlanFlowPresentation.groups(for: steps).first)
-
-        XCTAssertEqual(group.repeatCount, 3)
-        XCTAssertEqual(group.sourceSteps.count, 9)
-        XCTAssertEqual(group.children.count, 2)
-        XCTAssertEqual(group.children.first?.repeatCount, 2)
-        XCTAssertEqual(group.children.first?.children.first?.title, "Repeaters")
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<6, repeatCount: 2)
+        ])
+        let group = try XCTUnwrap(groups.first)
+        XCTAssertEqual(group.repeatCount, 2)
+        XCTAssertEqual(group.children.count, 3)
+        XCTAssertTrue(group.children.allSatisfy { $0.repeatCount == 1 && $0.children.isEmpty })
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
     }
 
     func testMaxHangsKeepTheFinalHangWithoutAnInventedRecovery() throws {
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.max-hangs"))
-
-        let groups = PlanFlowPresentation.groups(for: plan.steps)
-
+        let groups = PlanFlowPresentation.groups(for: plan)
         XCTAssertEqual(groups.count, 2)
         XCTAssertEqual(groups.first?.repeatCount, 4)
         XCTAssertEqual(groups.first?.children.map { $0.sourceSteps[0].duration }, [10, 180])
@@ -89,11 +88,9 @@ final class PlanFlowPresentationTests: XCTestCase {
         XCTAssertEqual(groups.reduce(0) { $0 + $1.duration }, 770)
     }
 
-    func testRPTCFinalRecoveryAndBetweenSetRestRemainSeparate() throws {
+    func testRPTCDeclaredCyclesKeepExceptionalFinalRecoverySeparate() throws {
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "rptc.seven-three-repeaters"))
-
-        let groups = PlanFlowPresentation.groups(for: plan.steps)
-
+        let groups = PlanFlowPresentation.groups(for: plan)
         XCTAssertEqual(groups.count, 4)
         XCTAssertEqual(groups.first?.repeatCount, 6)
         XCTAssertEqual(groups.first?.children.map { $0.sourceSteps[0].duration }, [7, 3])
@@ -101,86 +98,73 @@ final class PlanFlowPresentationTests: XCTestCase {
         XCTAssertEqual(groups.flatMap(\.sourceSteps), plan.steps)
     }
 
-    func testDifferentPrescriptionsNeverCollapseIntoOneRepeatedStage() throws {
-        let original = step(number: 1)
-        let oneFinger = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index]))
-        let variants: [WorkoutStep] = [
-            step(number: 2, instruction: "Different instruction"),
-            step(number: 2, accessory: "Different accessory"),
-            step(number: 2, duration: 8),
-            step(number: 2, phase: .warmUp),
-            step(number: 2, target: .fromLegacyTargets([.kind(.jug)])),
-            step(number: 2, timing: .stopwatch),
-            step(number: 2, segmentDuration: 6),
-            step(number: 2, grip: .openHand),
-            step(number: 2, fingers: oneFinger),
-            step(number: 2, handUse: .either),
-            step(number: 2, handUse: .single, side: .left),
-            step(number: 2, handUse: .single, side: .right),
-            step(number: 2, action: .isometricPull),
-            step(number: 2, action: .loadedLift, repetitions: 3),
-            step(number: 2, load: 5),
-            step(number: 2, timedWorkDuration: 6)
-        ]
-
-        for variant in variants {
-            let groups = PlanFlowPresentation.groups(for: [original, variant])
-            XCTAssertEqual(groups.count, 2, "Different prescription: \(variant)")
-            XCTAssertTrue(groups.allSatisfy { $0.repeatCount == 1 })
-        }
-    }
-
-    func testSideAndLiftRepetitionDifferencesStayVisibleWithMatchingTitles() {
-        let pairs: [(WorkoutStep, WorkoutStep)] = [
-            (step(number: 1, handUse: .single, side: .left),
-             step(number: 2, handUse: .single, side: .right)),
-            (step(number: 1, action: .loadedLift, repetitions: 3),
-             step(number: 2, action: .loadedLift, repetitions: 4))
-        ]
-        for (first, second) in pairs {
-            XCTAssertEqual(PlanFlowPresentation.groups(for: [first, second]).count, 2)
-        }
-    }
-
-    func testNonAdjacentMatchesAndUniqueTitlesKeepTheirOriginalOrder() {
-        let steps = [step(number: 1), step(number: 2, phase: .rest), step(number: 3)]
-        let groups = PlanFlowPresentation.groups(for: steps)
-        XCTAssertEqual(groups.count, 3)
+    func testRestPreviewSkipsConsecutiveRestsAndRetainsTheirSourceContent() throws {
+        let steps = [step(number: 1, phase: .rest), step(number: 2, phase: .rest),
+                     step(number: 3, instruction: "Use the next grip.")]
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<2, repeatCount: 2)
+        ])
+        let rest = try XCTUnwrap(groups.first?.children.first)
+        XCTAssertEqual(rest.nextInstruction, "Use the next grip.")
+        XCTAssertEqual(rest.sourceSteps.first?.instruction, "")
+        XCTAssertEqual(rest.sourceSteps.first?.accessory, "3s rest")
         XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
-        XCTAssertEqual(groups.map(\.title), steps.map(\.title))
+    }
+
+    func testRestPreviewOmitsAnInstructionThatDoesNotApplyToEveryRun() {
+        let steps = [step(number: 1), step(number: 2, phase: .rest), step(number: 3),
+                     step(number: 4, phase: .rest), step(number: 5, instruction: "Use the next grip.")]
+        let groups = PlanFlowPresentation.groups(for: steps, repeats: [
+            WorkoutStepRepeat(stepRange: 0..<4, repeatCount: 2)
+        ])
+        XCTAssertNil(groups.first?.children.last?.nextInstruction)
+        XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
+    }
+
+    func testRestPreviewOmitsEmptyUpcomingInstructionsInsteadOfUsingLaterWork() {
+        let steps = [step(number: 1, phase: .rest), step(number: 2, instruction: " \n "),
+                     step(number: 3, instruction: "Use the later grip.")]
+        XCTAssertNil(PlanFlowPresentation.groups(for: steps).first?.nextInstruction)
+    }
+
+    func testInvalidRepeatMetadataPreservesIndividualIntervals() {
+        let steps = [step(number: 1), step(number: 2)]
+        for item in [WorkoutStepRepeat(stepRange: 0..<4, repeatCount: 2),
+                     WorkoutStepRepeat(stepRange: 0..<2, repeatCount: 0),
+                     WorkoutStepRepeat(stepRange: -1..<1, repeatCount: 2)] {
+            let groups = PlanFlowPresentation.groups(for: steps, repeats: [item])
+            XCTAssertEqual(groups.count, steps.count)
+            XCTAssertEqual(groups.flatMap(\.sourceSteps), steps)
+        }
         XCTAssertTrue(PlanFlowPresentation.groups(for: []).isEmpty)
     }
 
-    func testEveryCatalogPlanRetainsAllSourceStepsAndExactTotalDuration() {
+    func testEveryCatalogPlanRetainsEveryIntervalAndExactDuration() {
         for plan in PlanCatalog.all {
-            let groups = PlanFlowPresentation.groups(for: plan.steps)
+            let groups = PlanFlowPresentation.groups(for: plan)
             XCTAssertEqual(groups.flatMap(\.sourceSteps), plan.steps, plan.id)
             XCTAssertEqual(groups.reduce(0) { $0 + $1.duration }, plan.duration, plan.id)
-            checkRepeatedPrescriptions(in: groups, planID: plan.id)
-        }
-    }
-
-    private func checkRepeatedPrescriptions(in groups: [PlanFlowGroup], planID: String) {
-        for group in groups where group.repeatCount > 1 {
-            let pattern = group.children.flatMap(\.sourceSteps)
-            XCTAssertEqual(group.sourceSteps.count, pattern.count * group.repeatCount, planID)
-            for (index, actual) in group.sourceSteps.enumerated() {
-                let expected = pattern[index % pattern.count]
-                XCTAssertEqual(actual.instruction, expected.instruction, planID)
-                XCTAssertEqual(actual.accessory, expected.accessory, planID)
-                XCTAssertEqual(actual.duration, expected.duration, planID)
-                XCTAssertEqual(actual.segments, expected.segments, planID)
-                XCTAssertEqual(actual.gripType, expected.gripType, planID)
-                XCTAssertEqual(actual.fingerConfiguration, expected.fingerConfiguration, planID)
-                XCTAssertEqual(actual.side, expected.side, planID)
-                XCTAssertEqual(actual.handUse, expected.handUse, planID)
-                XCTAssertEqual(actual.phase, expected.phase, planID)
-                XCTAssertEqual(actual.action, expected.action, planID)
-                XCTAssertEqual(actual.repetitions, expected.repetitions, planID)
-                XCTAssertEqual(actual.externalLoadKGF, expected.externalLoadKGF, planID)
-                XCTAssertEqual(actual.timedWorkDuration, expected.timedWorkDuration, planID)
+            XCTAssertEqual(groups.filter { $0.repeatCount > 1 }.map(\.repeatCount), plan.stepRepeats.map(\.repeatCount), plan.id)
+            for group in groups where group.repeatCount > 1 {
+                let pattern = group.children.flatMap(\.sourceSteps)
+                XCTAssertEqual(group.sourceSteps.count, pattern.count * group.repeatCount, plan.id)
+                for (index, actual) in group.sourceSteps.enumerated() {
+                    let expected = pattern[index % pattern.count]
+                    XCTAssertEqual(actual.instruction, expected.instruction, plan.id)
+                    XCTAssertEqual(actual.accessory, expected.accessory, plan.id)
+                    XCTAssertEqual(actual.duration, expected.duration, plan.id)
+                    XCTAssertEqual(actual.segments, expected.segments, plan.id)
+                    XCTAssertEqual(actual.gripType, expected.gripType, plan.id)
+                    XCTAssertEqual(actual.fingerConfiguration, expected.fingerConfiguration, plan.id)
+                    XCTAssertEqual(actual.side, expected.side, plan.id)
+                    XCTAssertEqual(actual.handUse, expected.handUse, plan.id)
+                    XCTAssertEqual(actual.phase, expected.phase, plan.id)
+                    XCTAssertEqual(actual.action, expected.action, plan.id)
+                    XCTAssertEqual(actual.repetitions, expected.repetitions, plan.id)
+                    XCTAssertEqual(actual.externalLoadKGF, expected.externalLoadKGF, plan.id)
+                    XCTAssertEqual(actual.timedWorkDuration, expected.timedWorkDuration, plan.id)
+                }
             }
-            checkRepeatedPrescriptions(in: group.children, planID: planID)
         }
     }
 

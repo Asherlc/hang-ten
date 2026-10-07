@@ -1,12 +1,24 @@
 # Authoring cords on CAD hangboards
 
+Each board's flat `Hangboards/<slug>.FCStd` retains its geometry, embedded board
+manifest, and optional document-level `App::PropertyString` properties
+`HangTenSuspensionAuthoring` and `HangTenRopePhysics`. These are the source inputs.
+Run `rtk proxy bash scripts/build-board-assets.sh` to generate the ignored USDZ,
+model descriptor, solved `assets/suspension.json`, and any physics descriptor
+before package validation.
+For app builds use `scripts/build-runtime-assets.sh`. Staging generates bundled
+`board.json` from the native manifest and validated generated suspension; CI consumers
+download the producer's runtime artifact. See
+[generated artifacts](GENERATED_ARTIFACTS.md).
+
 ## The standard method
 
-Every corded CAD board generates its routes and hanging height against the
-native solid with `Tools/HangboardCAD/solve_threaded_rope.py`, preserving the
+Every newly authored or revised CAD cord setup generates its routes and hanging
+height against the native solid through `compile_suspension.py` and the retained
+`Tools/HangboardCAD/solve_threaded_rope.py`, preserving the
 connection graph established by the retained evidence. For connected internal
 mouth pairs, model the hidden passage as a void in the native FreeCAD solid
-and store the topology in `suspension.json` as a `twoBranchCord` (or the
+and store the topology in embedded `HangTenSuspensionAuthoring` as a `twoBranchCord` (or the
 single-loop `threadedLoopCord`) with `internalLoop`. Measure the channel length
 with `Tools/HangboardCAD/measure_channel_spines.py`, then solve the visible
 routes and hanging height against the exported CAD solid.
@@ -18,14 +30,20 @@ authoring `ropeSolver.method: "nativeRoutes"` described in
 The DUAL front-entry leads are one such case: visible front threading does not
 establish a hidden connection between its two holes. Do not invent that join
 to fit the connected-channel method. For either native method, generate every
-canonical pose with `--apply`, reproduce it with `--check`, and retain the
-native-solid clearance, length, tube and topology checks.
+canonical pose through the pinned board build, reproduce generated artifacts
+with the native solver's `--check`, and retain native-solid clearance, length,
+tube and topology checks. Change CAD authoring inputs and rebuild; never apply
+solved heights or routes into a source property.
 
 Do not hand-place cord contact points, anchors that stand in for a solve, or
 `pairedLeadCord` leads on a CAD board. The runtime's convex-section fallback and hand-authored
-`pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
-packages; migrate a board's cord to the native method matching its evidenced
-connection graph when the board moves to CAD.
+`pairedLeadCord` / `singleCord` metadata remain supported for legacy packages.
+Five catalog CAD sources retain manifest-embedded `pairedLeadCord` without
+`HangTenSuspensionAuthoring`: `captain-fingerfood-pocket`, `j-bryant-ftg-32`,
+`lattice-mxedge-lift-large`, `lattice-mxedge-lift-small`, and
+`metolius-light-rail-2`. Preserve those existing representations pending separate
+evidence-backed revisions. They do not authorize hand-authored routes on new or
+revised CAD cord setups; use the native method matching the evidenced graph.
 
 These boards use the connected-channel method:
 
@@ -40,15 +58,15 @@ One sling through one channel uses the same `twoBranchCord` wire type with
 one branch, its two mouths in `passages.left`, and an empty `passages.right`.
 This one-loop form is valid only with `internalLoop` and a complete generated
 route cache for every pose. It must not duplicate the physical sling to satisfy
-the older two-loop inventory. Existing exterior and uncached topologies still
-require two branches and four mouths.
+a two-loop inventory. Exterior and uncached two-branch topologies require
+two branches and four mouths.
 
 Rock Rings extend the topology to one branch with two mouths and retain the
 whole measured channel centerline in `internalLoop.channelPointsByBranchID`.
 The solver settles the board from total cord length and checks both free legs
 and the interior path against the native solid in FreeCAD Python. The spine is
 rendered as transient cord geometry, hidden by the body except at its openings.
-Schema-2 sidecars attach this setup to each independent instance of the same
+Schema-2 embedded authoring attaches this setup to each independent instance of the same
 model. See the [retained threading audit](source-audits/2026-09-30-rock-ring-threading.md)
 for the owner-confirmed hidden connection and estimated channel dimensions.
 
@@ -56,12 +74,10 @@ If a board's cord does not fit the solver's assumptions (below), extend the
 solver with evidence and tests rather than falling back to hand-authored
 routes.
 
-This contract was first learned from the Lattice Mini Bar migration. Read the [suspension and ODR guide](3D_SUSPENSION_AND_ODR.md) for
-package delivery and the approved Mini Bar cord passage metadata
-for the product-specific evidence. The approved [Lattice end view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
+Read the [suspension and ODR guide](3D_SUSPENSION_AND_ODR.md) for package
+delivery. The approved [Lattice end view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
 and [loaded view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg)
-were decisive: the lower curve belongs to the same loop as the two rising
-legs. The user confirmed that two mouths at each end connect inside the wood.
+show that the lower curve belongs to the same loop as the two rising legs. The user confirmed that two mouths at each end connect inside the wood.
 
 ## Establish the threading before choosing a solver
 
@@ -78,38 +94,41 @@ hidden connected U channel → second mouth → second exterior leg → overhead
 support. The channel is a void in the FreeCAD wood solid. Its centerline is
 not drawn as a visible cord. The material-free USDZ contains the board only.
 
-The preceding solid-bar and exterior-wrap interpretations were wrong because
-they lacked the observed mouths and the connected passage. A plausible
-silhouette is insufficient evidence for a cord route. Compare a loaded
-manufacturer side/end photo with the same CAD pose and approximate camera;
-inspect the mouths, both legs, lower bearing, and occlusion, then rotate the
-model through every supported grip. The Mini Bar matched-photo review is
-described in its source audit.
+Compare a loaded manufacturer side/end photo with the same CAD pose and
+approximate camera. Inspect the mouths, both legs, lower bearing and occlusion,
+then rotate the model through every supported grip. A plausible silhouette does
+not establish hidden threading.
 
 ## Settled physics for a bar-shaped board
 
-`suspension.json` stores two point mouths per loop, their body node, branch
+`HangTenSuspensionAuthoring` stores two point mouths per loop, their body node, branch
 pairing, one overhead anchor, estimated radius and rest length, canonical
-board poses, a positive clearance, `internalLoop.windingByPassageID`, and
+board pose rotations/cameras and optional `offsetXZ: [x, z]`, a positive
+clearance, `internalLoop.windingByPassageID`, and
 `internalLoop.channelLengthByBranchID` measured from the CAD pipe spines.
-The passage IDs and pair order are part of the topology. The sidecar is bound
-to the model descriptor's `modelSHA256` and checked by package validation;
-`board.json` is generated from the FCStd manifest plus this sidecar.
+The passage IDs and pair order are part of the topology. Authoring contains no
+model/source hashes, settled heights, or generated visible route points. The
+compiler binds generated `assets/suspension.json` to the current CAD source,
+authoring payload, and each model descriptor's `modelSHA256`; package validation
+checks those bindings. `board.json` is generated from the FCStd manifest plus
+this validated artifact.
 
 `Tools/HangboardCAD/export_rope_collision_solid.py` tessellates the final,
-watertight FreeCAD wood solid as an authoring intermediate. The reusable
+watertight FreeCAD wood solid as a build intermediate. The reusable
 `solve_threaded_rope.py` intersects that solid at each mouth, offsets the
 section by the cord radius plus declared clearance, and finds the shortest
 collision-free exterior path in the passage's winding direction. It includes
 the CAD-measured hidden channel length, then lowers the board beneath the
 fixed support until the longer of its two loops uses the declared length.
 The other loop may have at most 0.5 mm slack. Every visible segment is sampled
-at 0.5 mm against the native 3D solid before the solver updates the sidecar.
+at 0.5 mm against the native 3D solid before the producer publishes the artifact.
 
 The resulting translations and centerline contacts are a **generated cache**
-under each `canonicalPoses` entry in `suspension.json`. Authors specify mouths,
-threading, channel length, loop length, and overhead support, then rerun the
-tool; they do not draw pose contacts. `--check` regenerates the cache and
+under each `canonicalPoses` entry in ignored `assets/suspension.json`. Authors
+specify mouths, threading, channel length, loop length, overhead support,
+rotation/camera, and optional horizontal offsets in CAD, then rebuild; they do
+not draw pose contacts or copy the generated Y translation into CAD.
+`--check` regenerates the cache and
 rejects stale values. The app renders this cache as transient, unpickable
 RealityKit geometry. Cord remains absent from the CAD body and material-free
 USDZ. The prior convex-section runtime solver remains a fallback for older
@@ -124,86 +143,21 @@ and retain the same native-solid clearance and loop-length acceptance gates.
 The estimated 0.82 m Mini Bar loop is not a manufacturer measurement, so the
 predicted board height is a display estimate to compare with loaded photos.
 
-An earlier offline Bullet experiment tried
-to settle an earlier solid-bar surrogate and failed exact-mesh acceptance in
-all eight cases. That experiment did not contain the now-confirmed channel,
-so it cannot establish whether a correctly constrained physical simulation
-would work. See [the experiment and its measured limits](../Tools/HangboardRopePrototype/README.md).
+A dynamic rope implementation must retain a continuous, fixed-length loop,
+the board's vertical degree of freedom, real channel constraints, and signed
+collision against the watertight native solid. Sampled point clearance alone is
+insufficient: certify complete segments, tube intersections, settled length,
+topology, convergence and every supported pose. Mouth and support coordinates
+do not uniquely determine the route; winding remains an explicit threading
+input.
 
-Live simulation remains possible engineering work. RealityKit provides
-[rigid-body physics](https://developer.apple.com/documentation/realitykit/physics-simulations-and-motion),
-[joints](https://developer.apple.com/documentation/realitykit/physics-joints-and-pins),
-and [cloth simulation](https://developer.apple.com/documentation/realitykit/physics-cloth-simulation),
-but these APIs do not infer a threaded, continuous rope through hidden
-channels from mouth and anchor positions. A rope implementation would still
-need the route graph, attachment and bore constraints, a collision shape
-faithful at the mouths and grip recesses, a stable tension/length model, and
-repeatable settling across all poses. Test exact CAD-solid clearance and
-motion before replacing the convex-section renderer; the old surrogate's
-failure is evidence about that experiment, not a proof against simulation.
-
-### Follow-up whole-loop physics probe (2026-09-27)
-
-The corrected Mini Bar CAD solid was tessellated directly from the final
-FreeCAD `RightCordChannel` feature: 17,022 vertices and 34,048 triangles. The
-result is watertight, unlike the importer-visible USDZ surface, and can supply
-an inside/outside collision test. A temporary position-based chain prototype
-seeded one continuous loop through each CAD channel, with both ends at the
-fixed overhead point and 2 mm cord radius. It remains under the workspace's
-ignored `.context/frantic-kiwi/` directory; it is **not** product code.
-
-Two failures were reproducible. First, holding the board center at one height
-for every grip while declaring a fixed 0.82 m loop leaves roughly 0.29 m of
-unaccounted length in three of the four poses. A hanging board must be allowed
-to move vertically beneath the fixed support as its grip pose changes. The
-estimated downward displacement for a taut seed is about 154 mm for either
-edge, 48 mm for the jug, and 156 mm for the pinch. These values depend on the
-estimated loop length and are only initial conditions, not authored poses.
-Second, unsigned closest-face distance missed particles already inside the
-wood. Signed distance from the closed FreeCAD solid detected those crossings.
-After adding signed collision and constraining the hidden particles to the
-channel, an edge-20 trial had zero sampled points inside the wood but still
-measured 0.829 m of chain for a declared 0.820 m loop, with a link stretched
-28% at the bore rim. Finer 2 mm spacing did not resolve the constraint conflict;
-the trial measured 0.856 m and a 72% maximum local stretch. The prototype is
-therefore rejected for app integration. Point clearance alone is insufficient:
-acceptance also needs segment clearance, length and local strain, topology,
-convergence, and all eight pose/loop combinations against the exact CAD solid.
-
-A later Bullet soft-body chain trial used the same watertight CAD collider and
-the **measured** FreeCAD channel spine as its hidden seed. The spine exporter
-reproduced both mouth centers and the 87.214214 mm channel length. At 1 mm
-chain spacing, 1,000 position iterations, and an experimental 0.84 m loop,
-the edge-20 left loop still settled at 0.84166 m; the most stretched link was
-about 10% longer than rest. Sampled nodes stayed outside the wood, but
-segment midpoints came within 1.974 mm of it for a 2 mm rope. This is also a
-rejected probe: increasing iteration count and using the real hidden spine
-did not establish inextensible, nonpenetrating contact. The nominal 0.82 m
-length is a display estimate, not a manufacturer measurement. A solver cannot
-use that estimate as proof of a physically feasible rope configuration.
-
-The prior convex-section approximation passed a fixed-length test for all
-four grips, but native-solid inspection found up to 3.41 mm centerline
-distance near a mouth: 1.41 mm of visible space beyond the 2 mm rope radius.
-The new CAD-section solve removes that hull buffer where the rope bears on
-wood. Across four grips and four visible leads it measured at least 2.097 mm
-centerline distance from the solid, with 2 mm estimated rope radius and
-0.1 mm authored clearance. Direct legs may have more clearance because they
-do not bear on the wood. The four pose solutions use no more than 0.378 mm
-slack in either loop; their 0.82 m rest length remains an estimate.
-
-For a future unrestricted 3D simulator, include both the board's free vertical
-degree of freedom and a continuous, inextensible loop constrained inside the
-real channel. The board's [manufacturer-published 150 g mass](https://latticetraining.com/product/mini-bar-portable-hangboard/)
-can set the gravitational load. The current section solver meets the settled
-shape requirement for this approximately extruded bar; it is not a dynamic
-soft-body simulation.
-
-Mouth and anchor coordinates **do not uniquely determine a route**. Between
-one mouth and an external support, cord can travel around either side of the
-section. The winding choice records how the physical cord was threaded. It
-is a discrete topology input, not a manually placed contact point. The
-solver can calculate bearing only after that ambiguity is resolved.
+The Mini Bar's [published 150 g mass](https://latticetraining.com/product/mini-bar-portable-hangboard/)
+is a source fact, while cord dimensions and display length have separate
+provenance. RealityKit's [rigid-body physics](https://developer.apple.com/documentation/realitykit/physics-simulations-and-motion),
+[joints](https://developer.apple.com/documentation/realitykit/physics-joints-and-pins)
+and [cloth simulation](https://developer.apple.com/documentation/realitykit/physics-cloth-simulation)
+do not establish an unseen threaded connection or replace the native-solid
+acceptance checks.
 
 ## Solver assumptions and section planes
 
@@ -238,7 +192,7 @@ For a wide rectangular passage, explicitly select
 parallel depth rims across the slot instead of circular morphological closing.
 Tapered, overlapping, or multiple section pieces are rejected for that method.
 
-**Section planes.** The sidecar's optional, authoring-only
+**Section planes.** The embedded authoring property's optional
 `ropeSolver.sectionPlane` chooses each mouth's plane. It is never merged into
 `board.json`, and `--check` reads it so the cache stays reproducible.
 
@@ -268,13 +222,14 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    shape recomputes, the mouths open at the declared coordinates, and the
    exported USDZ has neither cord nor material bindings. Record estimated
    diameters and offsets as estimates.
-3. Put suspension in the adjacent `suspension.json` for a CAD package. Bind
+3. Put suspension inputs in the FCStd's `HangTenSuspensionAuthoring` with
+   `Tools/HangboardCAD/set_cad_authoring.py`. Bind
    all mouths to the body node, pair each loop, supply the overhead anchor,
    and choose each winding from the evidence. Measure the paired-mouth length
    from each channel's spine (pipe spine or bore axis) with
    `Tools/HangboardCAD/measure_channel_spines.py`; record it in
    `internalLoop.channelLengthByBranchID` and rerun the tool with
-   `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. For every canonical grip,
+   `HANGTEN_CHANNEL_VERIFY=1` to catch authoring drift. For every canonical grip,
    compare the CAD contact-region normal with the
    intended loaded face. A selected edge must not point down while the hand
    is meant to hang from its upper rail. The pose camera's stored
@@ -286,12 +241,16 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    `offsetFromBoardBounds` is only the solver's starting point: set it low
    enough that the loop is longer than the route at the base pose (the solver
    then lowers the board until the loop is taut), so the settled hang depends
-   on the loop length, not on that offset. Then export the final native
-   solid, run `solve_threaded_rope.py --apply`, then rerun with `--check`.
+   on the loop length, not on that offset. Store canonical rotation, camera,
+   and any horizontal displacement as `offsetXZ: [x, z]`; omit the offset when
+   it is zero. Run `rtk proxy bash scripts/build-board-assets.sh --package <slug>` to export
+   the final native solid and solve every pose, then reproduce the generated
+   artifact with `solve_threaded_rope.py --package <slug> --solid <owned-collision-solid.json> --check`
+   using the [pinned environment and collider export](../Tools/HangboardCAD/README.md#focused-cord-reproduction).
    When a winding is in doubt, compare each mouth's route length and turn for
    both directions; the physical one is normally the short route over the
    nearest edge.
-   Generated pose routes are a cache in the sidecar, not operator-drawn
+   Generated pose routes are a cache in `assets/suspension.json`, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;
    never commit that generated file.
 4. Validate the schema, model SHA, package inventory, and
@@ -304,13 +263,12 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    picking and accessibility, that selection and orbit still work, and that
    clearing/reselecting a pose removes/recreates the transient cord.
 
-The original Mini Bar routes used a 2 mm estimated radius. The owner has since
-confirmed a 7 mm cord diameter for both the Mini Bar and Clavellium. The current
-Mini Bar's generated routes have at least 3.586 mm sampled centerline-to-wood
-clearance with a 3.5 mm radius. Its 7.4 mm CAD bores remain display estimates;
-see [the cord and bore audit](source-audits/2026-09-29-cord-and-bore-scale.md).
+The owner-confirmed cord diameter is 7 mm for both the Mini Bar and
+Clavellium. The Mini Bar's 7.4 mm CAD bores remain display estimates; see
+[the cord and bore audit](source-audits/2026-09-29-cord-and-bore-scale.md).
 
-For live physics, `export_rope_physics.py` supports native circular
+For live physics, the FCStd's `HangTenRopePhysics` retains authored simulation
+inputs; `export_rope_physics.py` supports native circular
 `PartDesign::SubtractivePipe` channels as well as straight Box and native
 `Part::Cylinder` adapters. A Cylinder supplies the bore axis from its authored
 placement. Its complete circular cap boundary comes from the CAD wire, rather
@@ -418,7 +376,8 @@ For an evidenced open adjustment groove that guides a lead into a separate
 visible bore, the optional `ropeSolver.grooveGuides` contract selects existing
 native cylinder features, never route points. It is restricted to independent
 leads in anchor sections and cannot be combined with `tightening`. Its
-`sourceSHA256` must match the actual collider/CAD source. `byPoseID` must name
+source binding is generated by the compiler and must match the actual
+collider/CAD source; do not author a `sourceSHA256`. `byPoseID` must name
 every canonical pose and every strand; each selection contains only `feature`
 (the groove), `boreFeature`, and `exitSign` (`-1` or `1` along the native groove
 axis). Different native groove choices, pose pitches and anchor offsets require
@@ -503,27 +462,37 @@ and nonlocal tube intersections also fail; intentional endpoint joins remain
 valid. A radius that fills a mouth cannot also provide clearance: use an audited
 cord display estimate when warranted, and preserve the evidenced native solid.
 
-Run `solve_threaded_rope.py --apply`, then `--check --report <owned-path>`.
-The cache contains only body-space `wrappedRoutes`. For this cached
+Embed reviewed authoring changes in the CAD document, run
+`rtk proxy bash scripts/build-board-assets.sh --package <slug>`. For an
+independent reproduction, adapt the complete
+[pinned environment and native collider export example](../Tools/HangboardCAD/README.md#focused-cord-reproduction)
+to the selected package and its audited native collision feature. Run the
+export and `--check` inside that example's owned shell, using its
+`$rope_root/solid.json`. The example removes the collider and virtualenv on exit.
+For a guided route, include the authored groove and bore feature names in the
+exporter's `HANGTEN_ROPE_GROOVE_FEATURES` and `HANGTEN_ROPE_BORE_FEATURES` inputs.
+
+The generated cache contains only body-space `wrappedRoutes`. For this cached
 `cadRoutedCord` path, apps transform those points and add the fixed world
 support; they render transient non-pickable tubes without inferring missing
 topology or solving live physics. Separately authored live-physics packages
 use the physics-descriptor contract described above. The offline report
 retains native clearance and length ratios for every pose.
 
-For several model assets or reusable equipment instances, sidecar schema 2
+For several model assets or reusable equipment instances, authoring schema 2
 contains an `entries` array. Each entry names `presentationID`, optionally
-`equipmentObjectID`, its exact `modelSHA256`, `suspension`, and optional
+`equipmentObjectID`, `suspension`, and optional
 authoring `ropeSolver`. Each target occurs once. Generation validates every
-descriptor hash, preserves manifest number spelling, and stages only the
+descriptor hash in the generated artifact, preserves manifest number spelling, and stages only the
 merged `board.json`. Pass `--presentation` and/or `--equipment-object` to the
-solver to select the exact entry. Keep the sidecar hash-bound to every referenced descriptor.
+solver to select the exact entry. Model hashes are generated from every
+referenced descriptor, never retained in authored JSON.
 
 Schema 2 also retains the single-presentation `instanceSuspensions` form used by
-threaded-loop reusable pairs: `presentationID`, `modelSHA256`, and the exact
+threaded-loop reusable pairs: `presentationID` and the exact
 map of both equipment IDs to suspension setups, with optional shared
 `ropeSolver` settings. The `entries` and `instanceSuspensions` forms are
-mutually exclusive. Each form validates its model hash and native instance
+mutually exclusive. Each form validates generated model hashes and native instance
 identity; authoring solver settings are never staged into the runtime board.
 The offline solver handles both forms. `--equipment-object` may select one
 instance from a shared map; omitting it solves both. `--presentation` selects

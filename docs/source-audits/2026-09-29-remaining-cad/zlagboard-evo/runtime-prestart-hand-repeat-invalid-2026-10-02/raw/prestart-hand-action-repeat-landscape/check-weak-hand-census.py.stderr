@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger-cad-second-half/.context/placid-badger-cad-second-half/pr-readiness-repair-2026-10-02/evo/prestart-hand-action-repeat-helpers/check-weak-hand-census.py", line 66, in <module>
-    out=p/'weak-hand-census-validation.json';assert not out.exists();out.write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(dict(checks=checks,errors=errors,constructors=len(ctors),snapshots=len(snapshots)),indent=2));assert all(checks.values())
-                                                                                                                                                                                                                                            ^^^^^^^^^^^^^^^^^^^^
-AssertionError

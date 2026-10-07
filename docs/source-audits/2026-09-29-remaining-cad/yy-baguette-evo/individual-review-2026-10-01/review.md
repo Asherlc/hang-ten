@@ -1,7 +1,6 @@
 # #17 Baguette Evo: rounded native cavities and bearing-up poses
 
-Human review remains **pending**. The original migration and intermediate
-review evidence remain retained with their original statuses.
+The [human review record](../human-review.json) records acceptance of the shown rounded cavities, wood finish, native-solved cords, nineteen contacts and nine bearing-up poses. The rounding radii remain display estimates.
 
 ## Source and correction
 
@@ -69,15 +68,6 @@ Model: `c28fb4c06a512da920c2b61c6dcd219b5e0f20af5b3672103815c312518838cf`.
 - [Original display mesh versus corrected CAD, front/side/top](rounded-original-native-front-side-top.png).
 - [Native before/after views](rounded-ends/before-after-front-side-top.png).
 
-The first app build rejected unsorted orientation keys; the second passed
-bearing tests but exposed the model/world camera-coordinate error through
-the framing test. Both failures, raw summaries/logs and verified exact cleanup
-remain in [ios-before-ordering-fix](ios-before-ordering-fix/) and
-[ios-before-camera-fix](ios-before-camera-fix/). Intermediate source, route,
-rendering and authoring attempts are retained separately and do not stand in
-for the final app proof. The initial wood/pose-only narrative is preserved in
-[before-rounded-ends-review.md](before-rounded-ends-review.md).
-
 The final [source-bound cord check](rounded-export/cord-check.json) reproduces
 all nine routes/heights. Minimum conservative centerline clearance is
 1.992752 mm for a 2 mm display radius, within the existing 10 micrometre
@@ -88,23 +78,9 @@ The final sidecar hash is
 [Original/prior/corrected whole front-side-top comparison](original-prior-corrected-front-side-top.png)
 combines the separately retained whole rendered frames.
 
-## Final current-source iOS review
+## App views of the accepted revision
 
-A fresh build on isolated iPhone 17 Pro / iOS 26.5 Simulator
-`A485CF9E-D65D-47BD-A5AE-882791CCCE5F` passes all three targeted model tests,
-including the unchanged minimum framing-height assertion. The exact build
-command and output are retained in [build.log](ios/build.log); the new
-[aggregate runtime record](ios/final-runtime-validation.json) links the
-source/binary parity, all nineteen contact selections and nine canonical
-poses, physical selection/orbit reset, non-pickable cord and workout checks.
-
-The initial accessibility capture process crashed after seventeen contacts;
-its raw output remains retained and the missing contacts/poses were captured
-in a separate continuation. Interrupted early physical probes and initial
-workout link/load attempts remain evidence of those attempts, not passing
-substitutes. The settled existing bilateral 20 mm workout shows red active
-highlights and blue next-hold highlights at rest, with wood and cords visible.
-No training content was changed.
+The [runtime record](ios/final-runtime-validation.json) records the source-bound contact selections, canonical poses, picking and workout checks for these captures.
 
 - [Three whole app views](app-review.png).
 - [All nineteen contact selections](all-19-contacts.png).
@@ -118,8 +94,3 @@ the image is not reflected to change its handedness. Some aggressive orbit
 captures clip a tip and remain retained; the additional gentle oblique review
 frames show the whole board. This is a Simulator display review, not physical
 manufacturing or ergonomic validation.
-
-Exact Simulator, owned DerivedData and both result bundles were deleted and
-independently verified; [cleanup proof](ios/cleanup-verification.json) records
-the exact UUID. All 594 runtime artifacts were copied byte-for-byte and checked
-against the worker's retained hash manifest. The workspace remains available.

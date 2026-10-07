@@ -75,7 +75,7 @@ def test_v1_depths_are_keyed_directly_by_contact_id() -> None:
 
 
 def test_shipped_metolius_board_declares_its_slot_depths() -> None:
-    source = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "metolius-rock-rings-3d.FCStd"
+    source = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d.FCStd"
     if compile_board.cad_source._is_lfs_pointer(source):
         pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
     board = json.loads(compile_board.cad_source.generate_board_json(source))
@@ -150,3 +150,44 @@ def test_native_lip_floor_witness_must_be_a_complete_pair():
     region.HangTenGripDepthStart = SimpleNamespace(x=0, y=-1, z=24.98)
     with pytest.raises(compile_board.BuildError, match="witness"):
         compile_board._validate_published_depths([region], {"stepped-6": 6}, 1, .05)
+
+
+def test_reviewed_beastmaker_label_correction_preserves_display_geometry():
+    source = REPOSITORY / "Hangboards/beastmaker-1000.FCStd"
+    if compile_board.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    declared = {
+        "pocket-middle-center": 53.0,
+        "pocket-top-outer-left": 15.0,
+        "pocket-top-outer-right": 15.0,
+    }
+    audits = compile_board._audited_display_depths(compile_board._digest(source), "beastmaker-1000", declared)
+    assert audits == {
+        "pocket-middle-center": 50.0,
+        "pocket-top-outer-left": 10.0,
+        "pocket-top-outer-right": 10.0,
+    }
+    assert compile_board._validate_published_depths(
+        [_Region(key, depth) for key, depth in audits.items()], declared, 1, .05, 58,
+        audited_display_depths=audits,
+    ) == audits
+    assert declared == {
+        "pocket-middle-center": 53.0,
+        "pocket-top-outer-left": 15.0,
+        "pocket-top-outer-right": 15.0,
+    }
+    with pytest.raises(compile_board.BuildError, match="expected 50.000 mm"):
+        compile_board._validate_published_depths(
+            [_Region("pocket-middle-center", 45)], declared, 1, .05, 58,
+            audited_display_depths=audits,
+        )
+
+
+def test_display_depth_audit_rejects_changed_source_or_label():
+    source = REPOSITORY / "Hangboards/beastmaker-1000.FCStd"
+    if compile_board.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    with pytest.raises(compile_board.BuildError, match="re-audit"):
+        compile_board._audited_display_depths("0" * 64, "beastmaker-1000", {"pocket-middle-center": 53})
+    with pytest.raises(compile_board.BuildError, match="re-audit"):
+        compile_board._audited_display_depths(compile_board._digest(source), "beastmaker-1000", {"pocket-middle-center": 55})

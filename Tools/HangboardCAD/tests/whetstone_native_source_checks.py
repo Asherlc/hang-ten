@@ -52,7 +52,7 @@ def main():
         Path(sys.argv[1]).resolve()
         if len(sys.argv) > 1
         else Path(__file__).resolve().parents[3]
-        / "Hangboards/tension-whetstone/tension-whetstone.FCStd"
+        / "Hangboards/tension-whetstone.FCStd"
     )
     before_hash = hashlib.sha256(source.read_bytes()).hexdigest()
     document = App.openDocument(str(source))

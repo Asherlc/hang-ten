@@ -1870,8 +1870,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         sessionStore.append(newer)
 
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -1887,8 +1885,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         let record = workoutSessionRecord()
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -1913,8 +1909,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let existingRecord = workoutSessionRecord()
         sessionStore.append(existingRecord)
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -1936,8 +1930,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let defaults = makeDefaults()
         let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -1971,8 +1963,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let defaults = makeDefaults()
         let sessionStore = FailingWorkoutSessionStore()
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -1998,8 +1988,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let defaults = makeDefaults()
         let sessionStore = DeferredFlushWorkoutSessionStore()
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -2023,8 +2011,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let defaults = makeDefaults()
         let sessionStore = DeferredFlushWorkoutSessionStore()
         let store = AppStore(
-            motherboardBluetoothService: MotherboardBluetoothService(transport: PassiveMotherboardTransport()),
-            motherboardSettingsStore: MotherboardSettingsStore(defaults: defaults),
             workoutSessionStore: sessionStore,
             defaults: defaults
         )
@@ -2183,7 +2169,6 @@ private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting, 
             tracking: self,
             diagnostics: self,
             userReports: NoOpTelemetry(),
-            flags: NoOpTelemetry(),
             replay: self,
             isNoOp: false
         )
@@ -2398,16 +2383,4 @@ private final class RecordingBackgroundTaskApplication: RootViewBackgroundTaskAp
         endedIdentifiers.append(identifier)
         onEnd?()
     }
-}
-
-@MainActor
-private final class PassiveMotherboardTransport: MotherboardTransport {
-    var eventHandler: ((MotherboardTransportEvent) -> Void)?
-
-    func startScan() {}
-    func stopScan() {}
-    func connect(to device: MotherboardDiscoveredDevice) {}
-    func disconnect() {}
-    func setTXNotificationsEnabled(_ enabled: Bool) {}
-    func write(_ data: Data) {}
 }

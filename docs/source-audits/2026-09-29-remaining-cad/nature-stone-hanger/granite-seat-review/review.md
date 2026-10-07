@@ -8,4 +8,7 @@ All eight existing solver-generated cord poses (16 branches) were re-certified a
 
 The whole native and exported front/side/top comparisons use the exact prior committed source and assets from 8141b633. Historical review packets remain unchanged. Runtime wood/granite shaders supply the finishes; the USDZ contains no materials or textures. Dimensions other than documented grip depths and the precise pocket/round profile remain display estimates.
 
-Fresh iOS screenshots, installed parity, focused tests and resource cleanup are recorded in runtime-validation.json. Human acceptance of #9 remains pending.
+The native bearing measurements, contact-preservation proof, and model-bound
+validation data are retained as [package test fixtures](../../../../../Tools/HangboardPackages/tests/fixtures/nature-stone-hanger-bearing/README.md).
+They support the reverse 6 mm pose regression without making tests depend on
+an execution-report directory.

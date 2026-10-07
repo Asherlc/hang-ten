@@ -12,7 +12,7 @@ import FreeCAD as App
 import Part
 
 ROOT = Path(__file__).resolve().parents[3]
-SOURCE = ROOT / 'Hangboards/tension-grindstone-original/tension-grindstone-original.FCStd'
+SOURCE = ROOT / 'Hangboards/tension-grindstone-original.FCStd'
 
 
 def check_document(doc, edited=False):

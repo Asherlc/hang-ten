@@ -321,21 +321,6 @@ struct BoardPackageStore {
         return modelResourcesByBoardID[board.id]?[resolvedID]
     }
 
-    private static func decode<Value: Decodable>(
-        from url: URL,
-        resource: String
-    ) throws -> Value {
-        do {
-            let data = try Data(contentsOf: url)
-            return try JSONDecoder().decode(Value.self, from: data)
-        } catch {
-            throw BoardPackageStoreError.malformedJSON(
-                resource: resource,
-                detail: error.localizedDescription
-            )
-        }
-    }
-
     private static func validateHangboardsRoot(_ url: URL) throws {
         let values = try url.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
         guard values.isDirectory == true, values.isSymbolicLink != true else {
@@ -671,8 +656,7 @@ struct BoardPackageStore {
                     reason: "contact \(contact.id) references unknown equipment object \(contact.equipmentObjectID)"
                 )
             }
-            if let capacity = contact.fingerCapacity,
-               !PhysicalContact.validFingerCapacityRange.contains(capacity) {
+            if !PhysicalContact.validFingerCapacityRange.contains(contact.fingerCapacity) {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "contact \(contact.id) has an invalid finger capacity"
@@ -3637,7 +3621,7 @@ private struct BoardPackageContactDocument: Decodable {
     let name: String
     let kind: HoldKind
     let shape: HoldShape?
-    let fingerCapacity: Int?
+    let fingerCapacity: Int
     let handCapacity: Int?
     let depth: HoldDepth?
     let gripTypes: [GripType]
@@ -3664,9 +3648,7 @@ private struct BoardPackageContactDocument: Decodable {
         shape = container.contains(.shape)
             ? try container.decode(HoldShape.self, forKey: .shape)
             : nil
-        fingerCapacity = container.contains(.fingerCapacity)
-            ? try container.decode(Int.self, forKey: .fingerCapacity)
-            : nil
+        fingerCapacity = try container.decode(Int.self, forKey: .fingerCapacity)
         handCapacity = container.contains(.handCapacity)
             ? try container.decode(Int.self, forKey: .handCapacity)
             : nil
@@ -3927,10 +3909,6 @@ private struct BoardPackageGeometryDocument: Decodable {
         }
     }
 
-    func boardContactPiece(id: String, contactID: String) throws -> BoardContactPiece {
-        try contactPieceDocument.boardContactPiece(id: id, contactID: contactID)
-    }
-
     var contactPieceDocument: BoardContactPieceDocument {
         BoardContactPieceDocument(
             frame: frame,
@@ -3970,7 +3948,6 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
 
 }
 
-
 struct BoardPackageFrameDocument: Codable, Hashable {
     let x: Double
     let y: Double
@@ -3982,13 +3959,6 @@ struct BoardPackageFrameDocument: Codable, Hashable {
         case y
         case width
         case height
-    }
-
-    init(x: Double, y: Double, width: Double, height: Double) {
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
     }
 
     init(from decoder: Decoder) throws {
@@ -4023,16 +3993,6 @@ struct BoardGeometryShapeDocument: Codable, Hashable {
         case type
         case commands
         case cornerRadiusFraction
-    }
-
-    init(
-        type: String,
-        commands: [BoardGeometryPathCommandDocument]?,
-        cornerRadiusFraction: Double?
-    ) {
-        self.type = type
-        self.commands = commands
-        self.cornerRadiusFraction = cornerRadiusFraction
     }
 
     init(from decoder: Decoder) throws {
@@ -4094,24 +4054,6 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         case smooth
     }
 
-    init(
-        command: String,
-        to: [Double]?,
-        control: [Double]?,
-        control1: [Double]?,
-        control2: [Double]?,
-        bendable: Bool? = nil,
-        smooth: Bool? = nil
-    ) {
-        self.command = command
-        self.to = to
-        self.control = control
-        self.control1 = control1
-        self.control2 = control2
-        self.bendable = bendable
-        self.smooth = smooth
-    }
-
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         command = try container.decode(String.self, forKey: .command)
@@ -4157,13 +4099,6 @@ struct BoardGeometryPathCommandDocument: Codable, Hashable {
         } else {
             smooth = nil
         }
-    }
-
-    private func container(
-        keyedBy keys: CodingKeys.Type,
-        decoder: Decoder
-    ) throws -> KeyedDecodingContainer<CodingKeys> {
-        try decoder.container(keyedBy: keys)
     }
 
     /// Runtime encoding drops authoring-only bendable and smooth metadata: the

@@ -14,9 +14,6 @@ _TOOLS = Path(__file__).resolve().parent
 if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
-from contact_model_descriptor import ModelDescriptorV1, compile_descriptor
-
-
 EXPECTED_CONTACT_IDS = (
     "jug-left", "jug-right", "edge-large-vder-left", "edge-shallow-vder-left",
     "edge-thin-crimp-left", "edge-thin-crimp-right", "pocket-three-finger-slot-left",
@@ -28,29 +25,6 @@ EXPECTED_CONTACT_IDS = (
     "edge-large-vder-right", "edge-shallow-vder-right", "pinch-medium-right",
     "pinch-wide-right", "sloper-left", "sloper-right",
 )
-
-EXPECTED_SOURCE_TO_CONTACT_IDS = {
-    "jug-left": "jug-left", "jug-right": "jug-right",
-    "upper-variable-rail-left": "edge-large-vder-left",
-    "lower-variable-rail-left": "edge-shallow-vder-left",
-    "thin-crimp-left": "edge-thin-crimp-left", "thin-crimp-right": "edge-thin-crimp-right",
-    "three-finger-slot-left": "pocket-three-finger-slot-left",
-    "three-finger-slot-right": "pocket-three-finger-slot-right",
-    "shallow-index-middle-pocket-left": "pocket-index-middle-deep-left",
-    "shallow-index-middle-pocket-right": "pocket-index-middle-deep-right",
-    "deep-middle-ring-pocket-left": "pocket-middle-ring-deep-left",
-    "deep-middle-ring-pocket-right": "pocket-middle-ring-deep-right",
-    "medium-index-middle-pocket-left": "pocket-index-middle-medium-shallow-left",
-    "medium-index-middle-pocket-right": "pocket-index-middle-medium-shallow-right",
-    "shallow-middle-ring-pocket-left": "pocket-middle-ring-shallow-left",
-    "shallow-middle-ring-pocket-right": "pocket-middle-ring-shallow-right",
-    "pinch-medium-left": "pinch-medium-left", "pinch-wide-left": "pinch-wide-left",
-    "upper-variable-rail-right": "edge-large-vder-right",
-    "lower-variable-rail-right": "edge-shallow-vder-right",
-    "pinch-medium-right": "pinch-medium-right", "pinch-wide-right": "pinch-wide-right",
-    "sloper-left": "sloper-left", "sloper-right": "sloper-right",
-}
-
 
 def _load_object(path: Path, label: str) -> Mapping[str, object]:
     try:
@@ -78,80 +52,11 @@ def require_disjoint_pinch_triangles(triangles_by_contact: Mapping[str, set[tupl
 
 
 def verify_shipped_package(package_root: Path) -> dict[str, object]:
-    """Hash-check, empty-scene reimport, and descriptor-rebuild the shipped USDZ."""
+    """Hash-check and rebuild the native CAD half's reusable descriptor."""
     descriptor_path = Path(package_root) / "assets/primary.model.json"
-    if _load_object(descriptor_path, "descriptor").get("schemaVersion") == 2:
-        return _verify_reusable_package(Path(package_root))
-    try:
-        import bpy
-        import contact_model_package as compiler
-    except ImportError as error:
-        raise RuntimeError("USDZ verification must run inside Blender") from error
-
-    package = Path(package_root).resolve()
-    files = {path.relative_to(package).as_posix() for path in package.rglob("*") if path.is_file()}
-    expected_files = {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
-    if files != expected_files:
-        raise ValueError(f"model-only package inventory mismatch: {sorted(files)}")
-    model_path = package / "assets/primary.usdz"
-    descriptor_path = package / "assets/primary.model.json"
-    model_bytes = model_path.read_bytes()
-    descriptor_value = _load_object(descriptor_path, "descriptor")
-    descriptor = ModelDescriptorV1.from_json(descriptor_value)
-    if hashlib.sha256(model_bytes).hexdigest() != descriptor.model_sha256:
-        raise ValueError("descriptor model hash does not match shipped USDZ")
-    if tuple(descriptor.contacts) != tuple(sorted(EXPECTED_CONTACT_IDS)):
-        raise ValueError("descriptor contacts do not match Training Center inventory")
-
-    bpy.ops.wm.read_factory_settings(use_empty=True)
-    if bpy.context.scene.objects or bpy.data.materials or bpy.data.images:
-        raise ValueError("scene is not empty before shipped USDZ import")
-    scene = compiler._import_usdz_into_empty_scene(model_path)
-    nodes = compiler.validate_tagged_scene(scene, frozenset(EXPECTED_CONTACT_IDS), imported=True)
-    contact_bindings = {node.node_id: node.contact_id for node in nodes if node.role == "contact"}
-    if set(contact_bindings.values()) != set(EXPECTED_CONTACT_IDS) or len(contact_bindings) != 24:
-        raise ValueError("shipped USDZ does not bind all 24 distinct contacts")
-    required_pinch_nodes = {
-        "pinch_medium_left_001": "pinch-medium-left",
-        "pinch_wide_left_001": "pinch-wide-left",
-        "pinch_medium_right_001": "pinch-medium-right",
-        "pinch_wide_right_001": "pinch-wide-right",
-    }
-    if {node_id: contact_bindings.get(node_id) for node_id in required_pinch_nodes} != required_pinch_nodes:
-        raise ValueError("shipped USDZ does not retain distinct bilateral pinch bindings")
-    snapshot = compiler._snapshot_scene(
-        scene, nodes, transform_to_board_frame=True,
-        require_imported_materials=True, require_triangles=True,
-    )
-    rebuilt = compile_descriptor(
-        model_bytes, snapshot.nodes, snapshot.vertices_by_node_id,
-        frozenset(EXPECTED_CONTACT_IDS),
-    )
-    if rebuilt.to_json() != descriptor_value:
-        raise ValueError("descriptor does not match actual shipped USDZ triangles")
-    pinch_triangles = {}
-    for node_id, contact_id in required_pinch_nodes.items():
-        obj = scene.objects[node_id]
-        pinch_triangles[contact_id] = {
-            tuple(sorted(
-                tuple(round(value, 9) for value in (obj.matrix_world @ obj.data.vertices[index].co))
-                for index in polygon.vertices
-            ))
-            for polygon in obj.data.polygons
-        }
-    disjoint_counts = require_disjoint_pinch_triangles(pinch_triangles)
-    return {
-        "status": "verified",
-        "cleanReimport": True,
-        "descriptorMatchesActualUSDZ": True,
-        "modelSHA256": descriptor.model_sha256,
-        "descriptorSHA256": hashlib.sha256(descriptor_path.read_bytes()).hexdigest(),
-        "nodeCount": len(nodes),
-        "bodyNodeCount": sum(node.role == "body" for node in nodes),
-        "contactCount": len(descriptor.contacts),
-        "distinctBilateralPinchBindings": required_pinch_nodes,
-        "disjointPinchTriangleCounts": disjoint_counts,
-    }
+    if _load_object(descriptor_path, "descriptor").get("schemaVersion") != 2:
+        raise ValueError("Training Center requires its native reusable descriptor")
+    return _verify_reusable_package(Path(package_root))
 
 
 def require_reusable_descriptor_matches_source(package, model_bytes, model, descriptor):
@@ -160,7 +65,7 @@ def require_reusable_descriptor_matches_source(package, model_bytes, model, desc
     import xml.etree.ElementTree as ET
     from contact_model_descriptor import SlotNodeBinding, compile_reusable_descriptor
 
-    with zipfile.ZipFile(package / f"{package.name}.FCStd") as archive:
+    with zipfile.ZipFile(package.parent / f"{package.name}.FCStd") as archive:
         document = ET.fromstring(archive.read("Document.xml"))
     nodes, outlines = [], {}
     for obj in document.findall("./ObjectData/Object"):
@@ -192,13 +97,13 @@ def _verify_reusable_package(package: Path) -> dict[str, object]:
     from pxr import Usd, UsdShade
     cad_tools = _TOOLS.parent / "HangboardCAD"
     sys.path.insert(0, str(cad_tools))
-    import board_manifest  # Installs the shared package module search path.
-    from hangboard_packages.cad_source import load_board
+    import use_hangboard_packages  # noqa: F401 -- Installs the shared package module search path.
+    from hangboard_packages.cad_source import load_board, package_source_path
     from usdz_writer import read_usdz
 
     model_path = package / "assets/primary.usdz"
     descriptor = _load_object(package / "assets/primary.model.json", "descriptor")
-    board = load_board(package / f"{package.name}.FCStd")
+    board = load_board(package_source_path(package))
     if tuple(c["id"] for c in board["contacts"]) != EXPECTED_CONTACT_IDS:
         raise ValueError("physical Training Center contact inventory changed")
     digest = hashlib.sha256(model_path.read_bytes()).hexdigest()

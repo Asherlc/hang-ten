@@ -1,222 +1,0 @@
-{
-  "savedCandidate": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/plateau-review13/material-partition-2026-10-02/candidate-package/plateau-lifting-edge.FCStd",
-  "createdBinders": [
-    {
-      "name": "Depth18MetalExterior",
-      "nodeID": "plateau_metal_exterior",
-      "role": "attachment",
-      "presentationID": "depth-18mm",
-      "sourceBody": "Depth18WoodAndBacking",
-      "faces": [
-        1,
-        2,
-        4,
-        5,
-        6,
-        7,
-        8,
-        13,
-        14,
-        15,
-        16,
-        17,
-        19,
-        20,
-        21,
-        22,
-        23
-      ],
-      "HangTenUseBodyTriangles": true,
-      "shape": {
-        "type": "PartDesign::SubShapeBinder",
-        "brepSHA256": "f9779e63b1aecdf6939b92b6a3701d464b52ac4eefad0fc02b6209ee1005ab14",
-        "faces": 17,
-        "edges": 76,
-        "vertices": 76,
-        "volumeMM3": 36597.61204797081,
-        "areaMM2": 21742.640974694343,
-        "boundsMM": [
-          -50.0,
-          -21.0,
-          -40.0,
-          50.0,
-          3.0,
-          40.0
-        ],
-        "valid": true
-      }
-    },
-    {
-      "name": "Depth15MetalExterior",
-      "nodeID": "plateau_metal_exterior",
-      "role": "attachment",
-      "presentationID": "depth-15mm",
-      "sourceBody": "Depth15BlockerAttached",
-      "faces": [
-        5,
-        10,
-        11,
-        12,
-        13,
-        15,
-        20,
-        21,
-        22,
-        23,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31
-      ],
-      "HangTenUseBodyTriangles": true,
-      "shape": {
-        "type": "PartDesign::SubShapeBinder",
-        "brepSHA256": "0de9fe8acac4c7401969fef351e5650317bdadd1572658f7961cd379176cd856",
-        "faces": 17,
-        "edges": 80,
-        "vertices": 80,
-        "volumeMM3": 40577.87520586555,
-        "areaMM2": 18742.640974694346,
-        "boundsMM": [
-          -50.0,
-          -21.0,
-          -40.0,
-          50.0,
-          3.0,
-          40.0
-        ],
-        "valid": true
-      }
-    },
-    {
-      "name": "Depth15BlockerExterior",
-      "nodeID": "plateau_blocker_exterior",
-      "role": "attachment",
-      "presentationID": "depth-15mm",
-      "sourceBody": "Depth15BlockerAttached",
-      "faces": [
-        1,
-        2,
-        3,
-        4,
-        6,
-        7,
-        8,
-        14
-      ],
-      "HangTenUseBodyTriangles": true,
-      "shape": {
-        "type": "PartDesign::SubShapeBinder",
-        "brepSHA256": "805f84be7170b7d98984d687b0f869df3bdbeca5c874c85fe0135b76a8bcc700",
-        "faces": 8,
-        "edges": 34,
-        "vertices": 34,
-        "volumeMM3": 10941.176470588232,
-        "areaMM2": 4630.0,
-        "boundsMM": [
-          -50.0,
-          -8.0,
-          -10.0,
-          50.0,
-          0.0,
-          20.0
-        ],
-        "valid": true
-      }
-    },
-    {
-      "name": "Depth10MetalExterior",
-      "nodeID": "plateau_metal_exterior",
-      "role": "attachment",
-      "presentationID": "depth-10mm",
-      "sourceBody": "Depth10BlockerAttached",
-      "faces": [
-        4,
-        10,
-        11,
-        12,
-        13,
-        15,
-        20,
-        21,
-        22,
-        23,
-        25,
-        26,
-        27,
-        28,
-        29,
-        30,
-        31
-      ],
-      "HangTenUseBodyTriangles": true,
-      "shape": {
-        "type": "PartDesign::SubShapeBinder",
-        "brepSHA256": "1cf71e0c7febf35c104a80df043e725c1db28291354dd15d7967891758d43233",
-        "faces": 17,
-        "edges": 80,
-        "vertices": 80,
-        "volumeMM3": 40577.87520586555,
-        "areaMM2": 18742.640974694346,
-        "boundsMM": [
-          -50.0,
-          -21.0,
-          -40.0,
-          50.0,
-          3.0,
-          40.0
-        ],
-        "valid": true
-      }
-    },
-    {
-      "name": "Depth10BlockerExterior",
-      "nodeID": "plateau_blocker_exterior",
-      "role": "attachment",
-      "presentationID": "depth-10mm",
-      "sourceBody": "Depth10BlockerAttached",
-      "faces": [
-        1,
-        2,
-        3,
-        5,
-        6,
-        7,
-        8,
-        14
-      ],
-      "HangTenUseBodyTriangles": true,
-      "shape": {
-        "type": "PartDesign::SubShapeBinder",
-        "brepSHA256": "828d65d6ba7e29e57de07233025025aadc1914ae2f7ffcc2989cf77de3949752",
-        "faces": 8,
-        "edges": 34,
-        "vertices": 34,
-        "volumeMM3": 8441.176470588236,
-        "areaMM2": 4130.0,
-        "boundsMM": [
-          -50.0,
-          -8.0,
-          -10.0,
-          50.0,
-          0.0,
-          20.0
-        ],
-        "valid": true
-      }
-    }
-  ],
-  "all47OriginalNativeFeatureBREPsExactlyUnchangedInMemory": true
-}
-FreeCAD 1.1.3, Libs: 1.1.3R20260725 (Git shallow)
-(C) 2001-2026 FreeCAD contributors
-FreeCAD is free and open-source software licensed under the terms of LGPL2+ license.
-
-Importing project files......
-						(1 %)							(2 %)							(4 %)							(5 %)							(6 %)							(8 %)							(9 %)							(10 %)							(12 %)							(13 %)							(14 %)							(16 %)							(17 %)							(18 %)							(20 %)							(21 %)							(22 %)							(24 %)							(25 %)							(26 %)							(28 %)							(29 %)							(30 %)							(32 %)							(33 %)							(34 %)							(36 %)							(37 %)							(38 %)							(40 %)							(41 %)							(42 %)							(44 %)							(45 %)							(46 %)							(48 %)							(49 %)							(50 %)							(52 %)							(53 %)							(54 %)							(56 %)							(57 %)							(58 %)							(60 %)							(61 %)							(62 %)							(64 %)							(65 %)							(66 %)							(68 %)							(69 %)							(70 %)							(72 %)							(73 %)							(74 %)							(76 %)							(77 %)							(78 %)							(80 %)							(81 %)							(82 %)							(84 %)							(85 %)							(86 %)							(88 %)							(89 %)							(90 %)							(92 %)							(93 %)							(94 %)							(96 %)							(97 %)							(98 %)							(100 %)									Postprocessing......
-						(100 %)									Recompute......
-						(2 %)							(4 %)							(6 %)							(8 %)							(10 %)							(12 %)							(14 %)							(17 %)							(19 %)							(21 %)							(23 %)							(25 %)							(27 %)							(29 %)							(31 %)							(34 %)							(36 %)							(38 %)							(40 %)							(42 %)							(44 %)							(46 %)							(48 %)							(51 %)							(53 %)							(55 %)							(57 %)							(59 %)							(61 %)							(63 %)							(65 %)							(68 %)							(70 %)							(72 %)							(74 %)							(76 %)							(78 %)							(80 %)							(82 %)							(85 %)							(87 %)							(89 %)							(91 %)							(93 %)							(95 %)							(97 %)							(100 %)									Recompute......
-						(1 %)							(3 %)							(5 %)							(7 %)							(9 %)							(11 %)							(13 %)							(15 %)							(17 %)							(19 %)							(21 %)							(23 %)							(25 %)							(26 %)							(28 %)							(30 %)							(32 %)							(34 %)							(36 %)							(38 %)							(40 %)							(42 %)							(44 %)							(46 %)							(48 %)							(50 %)							(51 %)							(53 %)							(55 %)							(57 %)							(59 %)							(61 %)							(63 %)							(65 %)							(67 %)							(69 %)							(71 %)							(73 %)							(75 %)							(76 %)							(78 %)							(80 %)							(82 %)							(84 %)							(86 %)							(88 %)							(90 %)							(92 %)							(94 %)							(96 %)							(98 %)							(100 %)									

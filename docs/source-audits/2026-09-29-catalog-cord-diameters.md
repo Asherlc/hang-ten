@@ -5,7 +5,8 @@ threefold thickness request: use documented real cord diameters where available
 and label unknown sizes as estimates. Clavellium and Mini Bar both remain at
 the operator-confirmed 7 mm diameter.
 
-This inventory covers 15 corded products / 17 represented setups. Diameters
+This source mapping covers the fifteen products listed below. It does not
+claim to enumerate every current corded catalog entry. Diameters
 are in millimetres. An estimate records an existing authored display value;
 it is not a manufacturer specification, pixel measurement, or a size inferred
 from a bore. No general threefold multiplier applies to these values.
@@ -32,8 +33,7 @@ from a bore. No general threefold multiplier applies to these values.
 
 Clavellium and Mini Bar use the operator's explicit 7 mm confirmation for
 both boards. Clavellium retains its documented round-cord adaptation of the
-photographed flat sling. Its historical static suspension used a
-4 mm display baseline; the shipped static suspension now has radius 3.5 mm
+photographed flat sling. Its authored round-cord suspension has radius 3.5 mm
 (7 mm diameter). The delivered live physics profile also selects 7 mm using
 baseline radius 2 mm and scale 1.75. This baseline is not a separate measured
 cord size. Mini Bar's static suspension and candidate physics both select
@@ -50,9 +50,11 @@ display estimates.
 ## Unknown sizes
 
 The selected estimate is twice the currently authored radius, converted from
-metres to millimetres. Native packages were read through `generate_board_json`
-from their FCStd manifest and suspension sidecar; legacy packages were read
-from their canonical `board.json`. Existing provenance already marks these
+metres to millimetres. The current input is the flat
+`Hangboards/<slug>.FCStd`: `HangTenSuspensionAuthoring` retains native solver
+inputs, while the five legacy manifest-only packages retain their display
+setup in `HangTenBoardManifest`. Generated `assets/suspension.json` contains
+computed routes and is not an authored diameter source. Existing provenance already marks these
 values as display estimates. Paired Rock Rings and Penta units share their
 product's diameter estimate.
 

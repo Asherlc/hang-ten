@@ -1,8 +1,0 @@
-{
-  "checks": {
-    "completeStream": true,
-    "prospectiveMutedCurrentHandCriteria": true
-  },
-  "errors": [],
-  "actualConstructors": 2
-}

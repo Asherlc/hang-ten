@@ -72,6 +72,48 @@ def test_complete_catalog_exposes_authoritative_iron_palm_name() -> None:
     assert boards["soill.iron-palm-2"]["name"] == "Iron Palm 2.0"
 
 
+def test_complete_catalog_authors_finger_capacity_on_every_contact() -> None:
+    boards = _boards_by_id()
+    missing = [
+        f"{board_id}/{contact['id']}"
+        for board_id, board in boards.items()
+        for contact in board["contacts"]
+        if type(contact.get("fingerCapacity")) is not int
+        or contact["fingerCapacity"] not in range(1, 5)
+    ]
+
+    assert not missing, f"Contacts without an authored capacity: {missing}"
+
+
+def test_catalog_finger_capacities_match_reviewed_source_mappings() -> None:
+    boards = _boards_by_id()
+    audit = json.loads(
+        (REPOSITORY_ROOT / "docs/source-audits/2026-10-06-finger-capacity.json").read_text()
+    )
+    assert audit["reviewedAt"]
+    assert audit["definition"]
+    mapped_contacts: set[tuple[str, str]] = set()
+
+    for mapping in audit["boards"]:
+        board = boards[mapping["boardID"]]
+        assert mapping["sourceURL"].startswith("https://")
+        assert mapping["nativeSource"] == f"Hangboards/{mapping['slug']}.FCStd"
+        assert (REPOSITORY_ROOT / mapping["nativeSource"]).is_file()
+        contacts = {contact["id"]: contact for contact in board["contacts"]}
+        for record in mapping["records"]:
+            assert record["basis"] in {"reviewedEstimate", "manufacturerDefinition"}
+            assert record["reason"]
+            assert record["contactIDs"]
+            for contact_id in record["contactIDs"]:
+                identity = (mapping["boardID"], contact_id)
+                assert identity not in mapped_contacts, f"Duplicate capacity mapping: {identity}"
+                mapped_contacts.add(identity)
+                assert contacts[contact_id]["fingerCapacity"] == record["fingerCapacity"], identity
+
+    # This dated audit covers the 626 counts introduced by the catalog backfill.
+    assert len(mapped_contacts) == 626
+
+
 def test_complete_catalog_omits_contradicted_optional_semantics() -> None:
     boards = _boards_by_id()
 
@@ -91,7 +133,7 @@ def test_complete_catalog_omits_contradicted_optional_semantics() -> None:
 
     whetstone_contacts = boards["tension.whetstone"]["contacts"]
     assert all("fourFingerPocket" not in contact["gripTypes"] for contact in whetstone_contacts)
-    assert all(contact.get("fingerCapacity") != 4 for contact in whetstone_contacts)
+    assert all(contact["fingerCapacity"] == 2 for contact in whetstone_contacts if contact["kind"] == "pocket")
 
     honestone_contacts = boards["tension.honestone"]["contacts"]
-    assert all(contact.get("fingerCapacity") != 4 for contact in honestone_contacts)
+    assert all(contact["fingerCapacity"] == 1 for contact in honestone_contacts if contact["kind"] == "pocket")

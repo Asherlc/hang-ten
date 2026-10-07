@@ -124,11 +124,11 @@ struct PlanDetailView: View {
             if let currentPlan {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 21) {
-                        if let firstStep = currentPlan.steps.first,
+                        titleBlock(for: currentPlan)
+                        if let firstStep = currentPlan.steps.first(where: { !$0.isRestStep }),
                            !firstStep.workRequirements.isEmpty {
                             boardPreview(for: currentPlan)
                         }
-                        titleBlock(for: currentPlan)
                         stepsCard(for: currentPlan)
                         sourceCard(for: currentPlan)
                     }
@@ -211,7 +211,7 @@ struct PlanDetailView: View {
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
 
-            Label(store.board(for: currentPlan).name, systemImage: "rectangle.portrait")
+            Text(store.board(for: currentPlan).name)
                 .font(.system(.footnote, design: .rounded, weight: .semibold))
                 .foregroundStyle(Color.hangMuted)
 
@@ -258,16 +258,20 @@ struct PlanDetailView: View {
                     plan: currentPlan,
                     initialWeight: initialWeightConfiguration
                 ) {
-                    startRoutineLabel(for: currentPlan)
+                    startRoutineLabel
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .tint(.hangGreenDark)
                 .accessibilityIdentifier("plan.startRoutine")
             case .unavailable(let requirement):
                 VStack(alignment: .leading, spacing: 8) {
                     Button(action: {}) {
-                        startRoutineLabel(for: currentPlan)
+                        startRoutineLabel
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .tint(.hangGreenDark)
                     .disabled(true)
                     Text(requirement)
                         .font(.system(.footnote, design: .rounded, weight: .semibold))
@@ -282,13 +286,7 @@ struct PlanDetailView: View {
 
     private var initialWeightSetupCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            VStack(alignment: .leading, spacing: 5) {
-                SectionLabel(title: "Weight tracking")
-                Text("Optional. Skip tracking, connect a supported scale, or enter a weight manually before you start.")
-                    .font(.system(.footnote, design: .rounded, weight: .medium))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
+            SectionLabel(title: "Weight tracking · Optional")
 
             Picker("Weight tracking", selection: $initialWeightSource) {
                 ForEach(WorkoutInitialWeightSource.allCases) { source in
@@ -301,10 +299,7 @@ struct PlanDetailView: View {
 
             switch initialWeightSource {
             case .untracked:
-                Text("No weight or scale data will be recorded. You can still run and save the routine.")
-                    .font(.system(.footnote, design: .rounded, weight: .medium))
-                    .foregroundStyle(Color.hangMuted)
-                    .fixedSize(horizontal: false, vertical: true)
+                EmptyView()
             case .sensor:
                 scaleSetup
             case .manual:
@@ -319,12 +314,15 @@ struct PlanDetailView: View {
     private var manualWeightSetup: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
+                Text("Weight")
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
                 TextField(
                     "Weight",
                     value: $manualWeight,
                     format: .number.precision(.fractionLength(1))
                 )
                 .keyboardType(.decimalPad)
+                .textFieldStyle(.roundedBorder)
                 .accessibilityIdentifier("workout.initialWeight.manualField")
                 .accessibilityLabel("Manual weight")
 
@@ -333,23 +331,13 @@ struct PlanDetailView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
-            HStack {
-                Button("Add bodyweight") {
-                    manualWeightIncludesBodyweight.toggle()
-                }
-                .buttonStyle(.plain)
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-                .accessibilityIdentifier("workout.initialWeight.addBodyweight.label")
-                Spacer(minLength: 12)
-                Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
-                    .labelsHidden()
-                    .fixedSize()
-                    .accessibilityIdentifier("workout.initialWeight.addBodyweight")
-                    .accessibilityLabel("Add bodyweight")
-            }
+            Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
+                .toggleStyle(FullRowSwitchToggleStyle())
+                .accessibilityIdentifier("workout.initialWeight.addBodyweight")
 
-            Text("Off records a standalone weight. On records this as added load on top of bodyweight.")
+            Text(manualWeightIncludesBodyweight
+                 ? "Recorded as added load on top of bodyweight."
+                 : "Recorded as a standalone weight.")
                 .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .fixedSize(horizontal: false, vertical: true)
@@ -453,24 +441,15 @@ struct PlanDetailView: View {
         }
     }
 
-    private func startRoutineLabel(for plan: TrainingPlan) -> some View {
-        HStack {
-            Image(systemName: "play.fill")
-            Text("Start routine")
-            Spacer()
-            Text(plan.durationLabel)
-                .font(.system(.caption, design: .rounded, weight: .bold))
-        }
+    private var startRoutineLabel: some View {
+        Label("Start routine", systemImage: "play.fill")
+            .frame(maxWidth: .infinity)
         .font(.system(.callout, design: .rounded, weight: .bold))
-        .foregroundStyle(Color.hangInk)
-        .padding(.horizontal, 17)
-        .padding(.vertical, 15)
-        .background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
-        let firstStep = currentPlan.steps.first
+        let firstStep = currentPlan.steps.first { !$0.isRestStep }
         let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
         // Prefer a pose-backed hold so Dual-style multi-pose boards face the lit contact.
         let firstStepHold = board.contacts.first { hold in
@@ -512,12 +491,17 @@ struct PlanDetailView: View {
                     fingerConfiguration: firstStepHoldCue.fingerConfiguration
                 )
             }
+            if let firstStep {
+                PlanStepInstructions(step: firstStep)
+            }
         }
         .hangCard()
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.firstHoldCue")
     }
 
     private func stepsCard(for currentPlan: TrainingPlan) -> some View {
-        let groups = PlanFlowPresentation.groups(for: currentPlan.steps)
+        let groups = PlanFlowPresentation.groups(for: currentPlan)
 
         return VStack(alignment: .leading, spacing: 0) {
             HStack {
@@ -663,6 +647,35 @@ struct PlanDetailView: View {
     }
 }
 
+/// Keep touch handling on the whole row while exposing one native switch to
+/// assistive technology. The visual switch never competes with the row's tap.
+private struct FullRowSwitchToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button {
+            configuration.isOn.toggle()
+        } label: {
+            HStack {
+                configuration.label
+                Spacer(minLength: 12)
+                Toggle("", isOn: configuration.$isOn)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+                    .allowsHitTesting(false)
+                    .accessibilityHidden(true)
+            }
+            .frame(minHeight: 44)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityRepresentation {
+            Toggle(isOn: configuration.$isOn) {
+                configuration.label
+            }
+            .toggleStyle(.switch)
+        }
+    }
+}
+
 private struct PlanFlowRows: View {
     let groups: [PlanFlowGroup]
     var depth = 0
@@ -705,7 +718,10 @@ private struct PlanFlowRows: View {
                     .accessibilityIdentifier("plan.flow.repeat.\(depth).\(group.id)")
                     .padding(.bottom, isLast ? 0 : 14)
                 } else if let step = group.sourceSteps.first {
-                    StepRow(step: step, title: group.title, isLast: isLast, showsNumber: !isNested)
+                    StepRow(
+                        step: step, title: group.title, nextInstruction: group.nextInstruction,
+                        isLast: isLast, showsNumber: !isNested
+                    )
                 }
             }
         }
@@ -715,6 +731,7 @@ private struct PlanFlowRows: View {
 private struct StepRow: View {
     let step: WorkoutStep
     let title: String
+    let nextInstruction: String?
     let isLast: Bool
     let showsNumber: Bool
 
@@ -753,29 +770,45 @@ private struct StepRow: View {
                         .font(.system(.caption, design: .rounded, weight: .bold))
                         .foregroundStyle(Color.hangMuted)
                 }
-                ForEach(
-                    Array(
-                        InstructionAccessoryCardContent.rows(
-                            instruction: step.instruction,
-                            accessory: step.accessory
-                        ).enumerated()
-                    ),
-                    id: \.offset
-                ) { _, row in
-                    switch row.kind {
-                    case .instruction:
-                        Text(row.text)
-                            .font(.system(.footnote, design: .rounded, weight: .medium))
-                            .foregroundStyle(Color.hangMuted)
-                            .fixedSize(horizontal: false, vertical: true)
-                    case .accessory:
-                        Text(row.text)
-                            .font(.system(.caption2, design: .rounded, weight: .bold))
-                            .foregroundStyle(step.phase.textTint)
-                    }
+                PlanStepInstructions(step: step)
+                if let nextInstruction {
+                    SectionLabel(title: "Up next")
+                        .padding(.top, 5)
+                    Text(nextInstruction)
+                        .font(.system(.footnote, design: .rounded, weight: .medium))
+                        .foregroundStyle(Color.hangMuted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
             }
             .padding(.bottom, isLast ? 0 : 12)
+        }
+        .accessibilityElement(children: .contain)
+        .accessibilityIdentifier("plan.flow.step.\(step.id)")
+    }
+}
+
+private struct PlanStepInstructions: View {
+    let step: WorkoutStep
+
+    var body: some View {
+        ForEach(
+            Array(InstructionAccessoryCardContent.rows(
+                instruction: step.instruction,
+                accessory: step.accessory
+            ).enumerated()),
+            id: \.offset
+        ) { _, row in
+            switch row.kind {
+            case .instruction:
+                Text(row.text)
+                    .font(.system(.footnote, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangMuted)
+                    .fixedSize(horizontal: false, vertical: true)
+            case .accessory:
+                Text(row.text)
+                    .font(.system(.caption2, design: .rounded, weight: .bold))
+                    .foregroundStyle(step.phase.textTint)
+            }
         }
     }
 }
