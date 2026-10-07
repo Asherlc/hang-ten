@@ -50,6 +50,19 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
+Custom routine creation and editing offer **Repeat steps** for one step or a
+consecutive range. The count is the total number of runs, including the first,
+and supports 1–100. The range selectors use
+[SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
+to show step choices inside the repeat sheet's navigation stack. Repeat ranges
+cannot overlap. Saving retains each authored step once with its repeat range and
+count; older saved routines without repeats continue to load. Workout resolution expands ranges in order with distinct
+step identities and includes every run in the session duration. Editing and
+duplicating a custom routine retain its repeats. Reordering a member moves its
+whole repeat range; deleting a member removes it from the range, and deleting
+every member removes the repeat. Removing a repeat keeps its steps for one run.
+The existing requirement to end custom routines with work still applies.
+
 ## Scale and manual tracking
 
 On plan detail, Weight tracking defaults to Skip. Manual retains the entered

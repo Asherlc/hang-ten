@@ -1684,32 +1684,7 @@ struct PlanDefinitionResolver {
                 for (stepIndex, stepDefinition) in block.steps.enumerated() {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
                     let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
-                    let segments = stepDefinition.segments.map {
-                        WorkoutSegment(
-                            kind: $0.kind,
-                            target: $0.target,
-                            timing: $0.timing,
-                            duration: $0.duration
-                        )
-                    }
-                    let resolvedStep = WorkoutStep(
-                        id: resolvedID,
-                        number: steps.count + 1,
-                        title: stepDefinition.title,
-                        instruction: stepDefinition.instruction,
-                        accessory: stepDefinition.accessory,
-                        duration: stepDefinition.duration,
-                        phase: stepDefinition.phase,
-                        segments: segments,
-                        gripType: stepDefinition.gripType,
-                        fingerConfiguration: stepDefinition.fingerConfiguration,
-                        handUse: stepDefinition.handUse,
-                        side: stepDefinition.side,
-                        action: stepDefinition.action,
-                        repetitions: stepDefinition.repetitions,
-                        externalLoadKGF: stepDefinition.externalLoadKGF,
-                        timedWorkDuration: stepDefinition.activeDuration
-                    )
+                    let resolvedStep = stepDefinition.resolvedStep(id: resolvedID, number: steps.count + 1)
                     let canonicalStep = WorkoutStepNormalizer.materializingImplicitSegments(resolvedStep)
                     for normalizedStep in try WorkoutStepNormalizer.expand(canonicalStep) {
                         steps.append(normalizedStep.withNumber(steps.count + 1))
@@ -1731,6 +1706,31 @@ struct PlanDefinitionResolver {
         )
     }
 
+}
+
+extension WorkoutStepDefinition {
+    func resolvedStep(id: String? = nil, number: Int = 0) -> WorkoutStep {
+        WorkoutStep(
+            id: id ?? self.id,
+            number: number,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            segments: segments.map {
+                WorkoutSegment(kind: $0.kind, target: $0.target, timing: $0.timing, duration: $0.duration)
+            },
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF,
+            timedWorkDuration: activeDuration
+        )
+    }
 }
 
 struct PlanLibraryStore {

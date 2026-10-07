@@ -227,6 +227,10 @@ final class AppStore: ObservableObject {
     }
 
     func duplicateRoutine(_ plan: TrainingPlan) throws -> CustomRoutineDefinition {
+        if let definition = customDefinition(for: plan.id) {
+            _ = try customRoutineStore.plan(for: definition)
+            return CustomRoutineDraft(duplicate: definition).definition()
+        }
         let metadata = metadata(for: plan)
         let normalizedSteps = try plan.steps.flatMap(WorkoutStepNormalizer.expand)
         let normalizedPlan = TrainingPlan(

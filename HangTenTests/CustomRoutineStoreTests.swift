@@ -2,6 +2,190 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testRepeatRangePersistsAndReopensWithoutExpandingEditableSteps() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let definition = repeatedDefinition(count: 6)
+        let store = CustomRoutineStore(defaults: defaults)
+
+        try store.save(definition)
+        let saved = try XCTUnwrap(store.routines.first)
+        XCTAssertEqual(saved.steps.map(\.id), ["hang", "rest", "finish"])
+        XCTAssertEqual(saved.repeatGroups, definition.repeatGroups)
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        XCTAssertEqual(reloaded.routines, [saved])
+        XCTAssertEqual(CustomRoutineDraft(editing: saved).definition(), saved)
+
+        let plan = try reloaded.plan(for: saved)
+        XCTAssertEqual(plan.steps.map(\.phase), Array(repeating: [WorkoutPhase.hang, .rest], count: 6).flatMap { $0 } + [.hang])
+        XCTAssertEqual(plan.steps.map(\.duration), Array(repeating: [10.0, 3.0], count: 6).flatMap { $0 } + [10])
+        XCTAssertEqual(plan.steps.map(\.number), Array(1...13))
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, 13)
+        XCTAssertEqual(plan.steps.map(\.duration).reduce(0, +), 88)
+        XCTAssertTrue(plan.steps.filter { $0.phase == .rest }.allSatisfy { $0.workRequirements.isEmpty })
+        XCTAssertTrue(plan.steps.filter { $0.phase != .rest }.allSatisfy { $0.workRequirements == [.kind(.jug)] })
+
+        var edited = CustomRoutineDraft(editing: saved)
+        var group = saved.repeatGroups[0]
+        group.repeatCount = 2
+        edited.updateRepeatGroup(group)
+        try reloaded.save(edited.definition())
+        XCTAssertEqual(try reloaded.plan(for: reloaded.routines[0]).steps.count, 5)
+    }
+
+    func testSingleStepRepeatRetainsStopwatchAndLiftRepetitionsIndependently() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let lift = WorkoutStepDefinition(
+            id: "lift", title: "Lift", instruction: "", accessory: "", duration: 30, phase: .hang,
+            segments: [.init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .stopwatch, duration: nil)],
+            handUse: .single, side: .right, action: .loadedLift, repetitions: 3, externalLoadKGF: 5
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.repeat-lift", title: "Lift", subtitle: "", difficulty: nil, category: nil,
+            tags: [], targetMode: .generic, steps: [lift],
+            repeatGroups: [.init(stepIDs: [lift.id], repeatCount: 4)]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+        let plan = try store.plan(for: store.routines[0])
+
+        XCTAssertEqual(plan.steps.count, 4)
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, 4)
+        for step in plan.steps {
+            XCTAssertEqual(step.segments.first?.timing, .stopwatch)
+            XCTAssertNil(step.segments.first?.duration)
+            XCTAssertEqual(step.handUse, .single)
+            XCTAssertEqual(step.side, .right)
+            XCTAssertEqual(step.action, .loadedLift)
+            XCTAssertEqual(step.repetitions, 3)
+            XCTAssertEqual(step.externalLoadKGF, 5)
+        }
+    }
+
+    func testSavedDefinitionWithoutRepeatFieldStillLoads() throws {
+        let original = repeatedDefinition(count: 1)
+        var document = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+        document.removeValue(forKey: "repeatGroups")
+        let decoded = try JSONDecoder().decode(CustomRoutineDefinition.self, from: JSONSerialization.data(withJSONObject: document))
+
+        XCTAssertEqual(decoded.steps, original.steps)
+        XCTAssertTrue(decoded.repeatGroups.isEmpty)
+    }
+
+    func testRepeatValidationRejectsInvalidCountsRangesAndOverlaps() {
+        let invalidGroups: [(CustomRoutineRepeatGroup, CustomRoutineValidationIssue)] = [
+            (.init(stepIDs: ["hang"], repeatCount: 0), .invalidRepeatCount(groupIndex: 0)),
+            (.init(stepIDs: ["hang"], repeatCount: 101), .invalidRepeatCount(groupIndex: 0)),
+            (.init(stepIDs: []), .invalidRepeatSteps(groupIndex: 0)),
+            (.init(stepIDs: ["unknown"]), .invalidRepeatSteps(groupIndex: 0)),
+            (.init(stepIDs: ["hang", "finish"]), .invalidRepeatSteps(groupIndex: 0)),
+            (.init(stepIDs: ["rest", "hang"]), .invalidRepeatSteps(groupIndex: 0)),
+            (.init(stepIDs: ["hang", "hang"]), .invalidRepeatSteps(groupIndex: 0))
+        ]
+        for (group, expected) in invalidGroups {
+            XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: repeatedDefinition(groups: [group])).contains(expected))
+        }
+        let overlapping = repeatedDefinition(groups: [
+            .init(id: "same", stepIDs: ["hang", "rest"]),
+            .init(id: "same", stepIDs: ["rest", "finish"])
+        ])
+        XCTAssertEqual(CustomRoutineValidator.repeatIssues(for: overlapping), [
+            .duplicateRepeatGroupID(groupIndex: 1), .overlappingRepeatSteps(groupIndex: 1)
+        ])
+    }
+
+    func testInvalidRepeatsCannotOverwriteASavedRoutine() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(repeatedDefinition(count: 2))
+        let savedBytes = defaults.data(forKey: CustomRoutineStore.defaultKey)
+
+        XCTAssertThrowsError(try store.save(repeatedDefinition(count: Int.max)))
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), savedBytes)
+        XCTAssertEqual(store.routines[0].repeatGroups[0].repeatCount, 2)
+    }
+
+    func testMixedRepeatGroupPreservesSimpleAndExpandedCompoundIDsAfterReload() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let simple = repeatedDefinition().steps[0]
+        let finish = repeatedDefinition().steps[2]
+        let compound = WorkoutStepDefinition(
+            id: "compound", title: "Hang", instruction: "", accessory: "", duration: 12, phase: .hang,
+            segments: [
+                .init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 8),
+                .init(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ]
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.mixed-repeat", title: "Mixed", subtitle: "", difficulty: nil, category: nil,
+            tags: [], targetMode: .generic, steps: [simple, compound, finish],
+            repeatGroups: [.init(id: "repeat", stepIDs: [simple.id, compound.id], repeatCount: 2)]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+        let reloaded = CustomRoutineStore(defaults: defaults)
+        let saved = try XCTUnwrap(reloaded.routines.first)
+
+        XCTAssertEqual(saved.steps.map(\.id), ["hang", "compound.segment-1", "compound.segment-2", "finish"])
+        XCTAssertEqual(saved.repeatGroups, [
+            .init(id: "repeat", stepIDs: ["hang", "compound.segment-1", "compound.segment-2"], repeatCount: 2)
+        ])
+        XCTAssertEqual(CustomRoutineDraft(editing: saved).definition(), saved)
+        let plan = try reloaded.plan(for: saved)
+        XCTAssertEqual(plan.steps.map(\.duration), [10, 8, 4, 10, 8, 4, 10])
+        XCTAssertEqual(plan.steps.map(\.phase), [.hang, .hang, .rest, .hang, .hang, .rest, .hang])
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, 7)
+    }
+
+    func testRepeatingCompoundStepKeepsCanonicalRangeEditable() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let compound = WorkoutStepDefinition(
+            id: "compound", title: "Hang", instruction: "", accessory: "", duration: 12, phase: .hang,
+            segments: [
+                .init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 8),
+                .init(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ]
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.compound-repeat", title: "Repeat", subtitle: "", difficulty: nil, category: nil,
+            tags: [], targetMode: .generic, steps: [compound, repeatedDefinition().steps[2]],
+            repeatGroups: [.init(id: "repeat", stepIDs: ["compound"], repeatCount: 3)]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+        let saved = store.routines[0]
+
+        XCTAssertEqual(saved.steps.map(\.id), ["compound.segment-1", "compound.segment-2", "finish"])
+        XCTAssertEqual(saved.repeatGroups, [.init(id: "repeat", stepIDs: ["compound.segment-1", "compound.segment-2"], repeatCount: 3)])
+        XCTAssertEqual(CustomRoutineDraft(editing: saved).definition(), saved)
+        XCTAssertEqual(try store.plan(for: saved).steps.map(\.duration), [8, 4, 8, 4, 8, 4, 10])
+    }
+
+    private func repeatedDefinition(count: Int = 2, groups: [CustomRoutineRepeatGroup]? = nil) -> CustomRoutineDefinition {
+        CustomRoutineDefinition(
+            id: "custom.repeated", title: "Repeated", subtitle: "", difficulty: nil, category: nil,
+            tags: [], targetMode: .generic,
+            steps: [
+                WorkoutStepDefinition(id: "hang", title: "Hang", instruction: "", accessory: "", duration: 10, phase: .hang,
+                    segments: [.init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 10)]),
+                WorkoutStepDefinition(id: "rest", title: "Rest", instruction: "", accessory: "", duration: 3, phase: .rest,
+                    segments: [.init(kind: .rest, target: nil, timing: .fixed, duration: 3)]),
+                WorkoutStepDefinition(id: "finish", title: "Finish", instruction: "", accessory: "", duration: 10, phase: .hang,
+                    segments: [.init(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .fixed, duration: 10)])
+            ],
+            repeatGroups: groups ?? [.init(id: "repeat", stepIDs: ["hang", "rest"], repeatCount: count)]
+        )
+    }
+
     func testStoreDeletesFormerStorageKeysWithoutDecoding() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
