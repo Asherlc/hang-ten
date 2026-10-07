@@ -501,7 +501,7 @@ struct PlanDetailView: View {
     }
 
     private func stepsCard(for currentPlan: TrainingPlan) -> some View {
-        let groups = PlanFlowPresentation.groups(for: currentPlan.steps)
+        let groups = PlanFlowPresentation.groups(for: currentPlan)
 
         return VStack(alignment: .leading, spacing: 0) {
             HStack {

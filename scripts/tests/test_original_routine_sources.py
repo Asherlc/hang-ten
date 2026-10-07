@@ -13,8 +13,28 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
         cls.blocks = {block["id"]: block for block in library["blocks"]}
 
     def steps(self, plan_id):
-        return [step for ref in self.plans[plan_id]["blocks"]
-                for step in self.blocks[ref["blockID"]]["steps"]]
+        steps = []
+        for ref in self.plans[plan_id]["blocks"]:
+            pattern = self.blocks[ref["blockID"]]["steps"]
+            count = ref.get("repeatCount", 1)
+            ids, titles = ref.get("stepIDs", []), ref.get("stepTitles", [])
+            for repetition in range(count):
+                for index, template in enumerate(pattern):
+                    step = dict(template)
+                    if count > 1 and len(ids) == len(pattern) * count:
+                        step["id"] = ids[repetition * len(pattern) + index]
+                    else:
+                        stem = ids[index] if ids else template["id"]
+                        step["id"] = f"{stem}-{repetition + 1}" if count > 1 else stem
+                    if titles:
+                        step["title"] = titles[index if len(titles) == len(pattern) else repetition * len(pattern) + index]
+                    steps.append(step)
+        return steps
+
+    def test_repeated_catalog_cycles_are_declared(self):
+        for plan_id, count in [("research.max-hangs", 4), ("beastmaker-repeaters", 6)]:
+            with self.subTest(plan_id=plan_id):
+                self.assertIn(count, [ref.get("repeatCount", 1) for ref in self.plans[plan_id]["blocks"]])
 
     def test_abrahamsson_original_ten_hang_sequence(self):
         plan_id = "research.abrahangs"

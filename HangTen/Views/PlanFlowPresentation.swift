@@ -23,112 +23,68 @@ struct PlanFlowGroup: Identifiable {
 }
 
 enum PlanFlowPresentation {
-    private struct Prescription: Equatable {
-        let step: WorkoutStep
-        let nextInstruction: String?
+    static func groups(for plan: TrainingPlan) -> [PlanFlowGroup] {
+        groups(for: plan.steps, repeats: plan.stepRepeats)
     }
 
-    static func groups(for steps: [WorkoutStep]) -> [PlanFlowGroup] {
-        var nextWorkInstruction: String?
-        let prescriptions = Array(steps.reversed().map { step in
-            let nextInstruction = step.isRestStep ? nextWorkInstruction : nil
-            if !step.isRestStep {
-                let instruction = step.instruction.trimmingCharacters(in: .whitespacesAndNewlines)
-                nextWorkInstruction = instruction.isEmpty ? nil : instruction
+    static func groups(for steps: [WorkoutStep], repeats: [WorkoutStepRepeat] = []) -> [PlanFlowGroup] {
+        var nextInstructions = [String?](repeating: nil, count: steps.count)
+        var upcomingInstruction: String?
+        for index in steps.indices.reversed() {
+            if steps[index].isRestStep {
+                nextInstructions[index] = upcomingInstruction
+            } else {
+                let instruction = steps[index].instruction.trimmingCharacters(in: .whitespacesAndNewlines)
+                upcomingInstruction = instruction.isEmpty ? nil : instruction
             }
-            return Prescription(step: prescription(for: step), nextInstruction: nextInstruction)
-        }.reversed())
-        return groups(in: steps.indices, steps: steps, prescriptions: prescriptions, isRepeated: false)
-    }
-
-    private static func groups(
-        in range: Range<Int>,
-        steps: [WorkoutStep],
-        prescriptions: [Prescription],
-        isRepeated: Bool
-    ) -> [PlanFlowGroup] {
-        var result: [PlanFlowGroup] = []
-        var start = range.lowerBound
-
-        while start < range.upperBound {
-            let remaining = range.upperBound - start
-            var patternLength = 1
-            var repeatCount = 1
-            var savedRows = 0
-
-            if remaining >= 2 {
-                // Prefer the sequence that removes the most duplicate rows.
-                // Ties retain the shortest pattern, keeping simple repeats clear.
-                for length in 1...(remaining / 2) {
-                    guard remaining - length > savedRows else { break }
-                    let pattern = prescriptions[start..<(start + length)]
-                    var count = 1
-                    while start + (count + 1) * length <= range.upperBound,
-                          pattern.elementsEqual(
-                            prescriptions[(start + count * length)..<(start + (count + 1) * length)]
-                          ) {
-                        count += 1
-                    }
-                    let savings = (count - 1) * length
-                    if savings > savedRows {
-                        patternLength = length
-                        repeatCount = count
-                        savedRows = savings
-                    }
-                }
-            }
-
-            let end = start + patternLength * repeatCount
-            let children = repeatCount > 1
-                ? groups(
-                    in: start..<(start + patternLength), steps: steps,
-                    prescriptions: prescriptions, isRepeated: true
-                )
-                : []
-            result.append(PlanFlowGroup(
-                sourceSteps: Array(steps[start..<end]),
-                repeatCount: repeatCount,
-                children: children,
-                title: isRepeated ? prescriptions[start].step.title : steps[start].title,
-                nextInstruction: prescriptions[start].nextInstruction
-            ))
-            start = end
         }
-        return result
-    }
 
-    /// Only explicit position counters are presentation-only. Numbers in hold
-    /// sizes, durations, exercise counts, and optional cues remain meaningful.
-    private static func titleWithoutPositionCounters(_ title: String) -> String {
-        let counter = #"^(?:set|rep|round|effort|interval) [1-9][0-9]*(?: of [1-9][0-9]*)?$"#
-        let components = title.components(separatedBy: " · ").compactMap { component -> String? in
-            let phrases = component.components(separatedBy: ", ").compactMap { phrase -> String? in
-                if phrase.range(of: counter, options: [.regularExpression, .caseInsensitive]) != nil {
-                    return nil
-                }
-                return phrase.replacingOccurrences(
-                    of: #"^(minute|ladder) [1-9][0-9]*( rest)?$"#,
-                    with: "$1$2", options: [.regularExpression, .caseInsensitive]
-                )
-            }
-            return phrases.isEmpty ? nil : phrases.joined(separator: ", ")
+        // Ranges come from authored block references. Invalid/stale metadata
+        // falls back to individual intervals, preserving every runtime step.
+        var repeatsByStart: [Int: WorkoutStepRepeat] = [:]
+        var previousEnd = 0
+        for item in repeats.sorted(by: { $0.stepRange.lowerBound < $1.stepRange.lowerBound }) {
+            guard item.repeatCount > 1,
+                  item.stepRange.lowerBound >= previousEnd,
+                  item.stepRange.upperBound <= steps.count,
+                  !item.stepRange.isEmpty,
+                  item.stepRange.count % item.repeatCount == 0,
+                  item.patternTitles.isEmpty || item.patternTitles.count == item.patternStepCount else { continue }
+            repeatsByStart[item.stepRange.lowerBound] = item
+            previousEnd = item.stepRange.upperBound
         }
-        return components.isEmpty
-            ? title.components(separatedBy: " ")[0]
-            : components.joined(separator: " · ")
-    }
 
-    /// Compare the complete prescription, excluding only its identity, position,
-    /// and explicit title counters. No instruction or accessory text is rewritten.
-    private static func prescription(for step: WorkoutStep) -> WorkoutStep {
-        WorkoutStep(
-            id: "", number: 0, title: titleWithoutPositionCounters(step.title),
-            instruction: step.instruction, accessory: step.accessory,
-            duration: step.duration, phase: step.phase, segments: step.segments,
-            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
-            handUse: step.handUse, side: step.side, action: step.action,
-            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
-        )
+        var groups: [PlanFlowGroup] = []
+        var index = 0
+        while index < steps.count {
+            if let item = repeatsByStart[index] {
+                let children = (0..<item.patternStepCount).map { offset in
+                    let childIndex = index + offset
+                    let nextInstruction = nextInstructions[childIndex]
+                    // A final recovery can lead to a different grip. Show an
+                    // upcoming instruction only when it applies to every run.
+                    let sameNextInstruction = (0..<item.repeatCount).allSatisfy {
+                        nextInstructions[childIndex + $0 * item.patternStepCount] == nextInstruction
+                    }
+                    return PlanFlowGroup(
+                        sourceSteps: [steps[childIndex]], repeatCount: 1, children: [],
+                        title: item.patternTitles.isEmpty ? steps[childIndex].title : item.patternTitles[offset],
+                        nextInstruction: sameNextInstruction ? nextInstruction : nil
+                    )
+                }
+                groups.append(PlanFlowGroup(
+                    sourceSteps: Array(steps[item.stepRange]), repeatCount: item.repeatCount, children: children,
+                    title: children[0].title, nextInstruction: nextInstructions[index]
+                ))
+                index = item.stepRange.upperBound
+            } else {
+                groups.append(PlanFlowGroup(
+                    sourceSteps: [steps[index]], repeatCount: 1, children: [],
+                    title: steps[index].title, nextInstruction: nextInstructions[index]
+                ))
+                index += 1
+            }
+        }
+        return groups
     }
 }

@@ -242,7 +242,8 @@ final class AppStore: ObservableObject {
             sourceURL: plan.sourceURL,
             provenance: plan.provenance,
             boardID: plan.boardID,
-            steps: normalizedSteps
+            steps: normalizedSteps,
+            stepRepeats: plan.stepRepeats
         )
         return try CustomRoutineStore.definition(
             from: normalizedPlan,

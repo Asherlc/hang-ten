@@ -39,9 +39,19 @@ On plan detail, the first-hold preview includes the first work step's sourced
 instruction and accessory text, skipping any leading rests. Session-flow rest
 entries retain their recovery instructions and timing and also show the next
 work instruction. Consecutive rests share that next-work cue; final rests and
-empty next-work instructions omit it. Repeated sequences stay separate when
-their next-work instructions differ, so one rest preview cannot describe a
-different upcoming prescription.
+empty next-work instructions omit it. In a declared repeat, a rest entry shows
+an upcoming instruction only when it applies to every run; differing final
+transitions omit that cue.
+
+Session flow renders the repetition declared by the plan's block references.
+The resolver retains each reference's repeat count, expanded interval range and
+template display titles on the resolved plan. It preserves the original per-run
+IDs and numbered labels for playback and history. The preview does not compare
+prescriptions, detect repeating patterns or rewrite position counters; equal
+unmarked steps remain separate. Max-hang edge selections preserve the declared
+repeat ranges. Duplicating a catalog routine converts its declared repeats into
+editable custom repeat ranges, retaining one template with its display labels
+and the original expanded interval timings and targets.
 
 At accessibility text sizes, board names and workout titles use the full row
 width, with the favorite action below the workout. The filter action uses a
@@ -50,9 +60,15 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-Custom routine creation and editing offer **Repeat steps** for one step or a
-consecutive range. The count is the total number of runs, including the first,
-and supports 1–100. The range selectors use
+Custom routine creation and editing expose a **Repeat** toggle in each step's
+form, including rest steps. Turning it on shows a count, initially two; turning
+it off keeps the step for one run. Single-step repeats reopen and are edited in
+that same form; there is no separate repeat-group creation button. A step
+in an existing repeated group shows its repeat toggle on but unavailable for individual
+changes, with **Edit group repeat** opening its group's editor. Single-step
+repeats appear in the step summaries; the **Repeat groups** section appears
+only for existing groups with multiple steps. The count is the total number of runs,
+including the first, and supports 1–100. The range selectors use
 [SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
 to show step choices inside the repeat sheet's navigation stack. Repeat ranges
 cannot overlap. Saving retains each authored step once with its repeat range and
