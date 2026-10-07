@@ -272,6 +272,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 
     func testLandscapePlateauWorkoutKeepsBoardVisibleBelowConfigurationSelector() throws {
         let app = XCUIApplication()
+        // Layout and natural step transitions must not wait for the simulator's
+        // speech/audio service while the ten-second work interval runs.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        defer { app.terminate() }
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "plateau.lifting-edge",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
@@ -314,6 +318,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 
     func testMiniPortraitWorkoutShowsBoardDuringHangAndNaturalRest() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        defer { app.terminate() }
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "nature.stone-hanger-mini",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
