@@ -172,9 +172,11 @@ struct CustomRoutineEditorView: View {
             ForEach(draft.steps) { step in
                 CustomRoutineStepEditor(
                     step: binding(for: step),
+                    repeatGroup: repeatBinding(for: step),
                     targetMode: draft.targetMode,
                     board: selectedBoard,
                     onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) },
+                    onEditRepeatGroup: { repeatEditorGroup = $0 },
                     repeatSummary: draft.repeatGroups.first(where: { $0.stepIDs.contains(step.id) }).map(repeatSummary)
                 )
                 .deleteDisabled(editMode.isEditing)
@@ -215,35 +217,32 @@ struct CustomRoutineEditorView: View {
         }
     }
 
+    @ViewBuilder
     private var repeatsSection: some View {
-        Section {
-            ForEach(draft.repeatGroups.sorted {
-                ($0.range(in: draft.steps.map(\.id))?.lowerBound ?? 0) <
-                ($1.range(in: draft.steps.map(\.id))?.lowerBound ?? 0)
-            }) { group in
-                Button {
-                    repeatEditorGroup = group
-                } label: {
-                    Label(repeatSummary(group), systemImage: "repeat")
-                }
-                .accessibilityIdentifier("customRoutine.repeat.\(group.id)")
-                .swipeActions {
-                    Button("Remove repeat", role: .destructive) {
-                        draft.removeRepeatGroup(id: group.id)
+        let groups = draft.repeatGroups.filter { $0.stepIDs.count > 1 }.sorted {
+            ($0.range(in: draft.steps.map(\.id))?.lowerBound ?? 0) <
+            ($1.range(in: draft.steps.map(\.id))?.lowerBound ?? 0)
+        }
+        if !groups.isEmpty {
+            Section {
+                ForEach(groups) { group in
+                    Button {
+                        repeatEditorGroup = group
+                    } label: {
+                        Label(repeatSummary(group), systemImage: "repeat")
+                    }
+                    .accessibilityIdentifier("customRoutine.repeat.\(group.id)")
+                    .swipeActions {
+                        Button("Remove repeat", role: .destructive) {
+                            draft.removeRepeatGroup(id: group.id)
+                        }
                     }
                 }
+            } header: {
+                Text("Repeat groups")
+            } footer: {
+                Text("Grouped steps move together when reordered.")
             }
-            Button {
-                repeatEditorGroup = draft.newRepeatGroup()
-            } label: {
-                Label("Repeat steps", systemImage: "repeat")
-            }
-            .disabled(draft.newRepeatGroup() == nil)
-            .accessibilityIdentifier("customRoutine.addRepeat")
-        } header: {
-            Text("Repeats")
-        } footer: {
-            Text("Repeat one step or a consecutive group. Repeated steps move together when reordered.")
         }
     }
 
@@ -268,6 +267,19 @@ struct CustomRoutineEditorView: View {
         Binding(
             get: { draft.steps.first(where: { $0.id == step.id }) ?? step },
             set: { draft.updateStep($0) }
+        )
+    }
+
+    private func repeatBinding(for step: CustomRoutineStepDraft) -> Binding<CustomRoutineRepeatGroup?> {
+        Binding(
+            get: { draft.repeatGroups.first(where: { $0.stepIDs.contains(step.id) }) },
+            set: { group in
+                if let group {
+                    draft.updateRepeatGroup(group)
+                } else if let existing = draft.repeatGroups.first(where: { $0.stepIDs == [step.id] }) {
+                    draft.removeRepeatGroup(id: existing.id)
+                }
+            }
         )
     }
 
@@ -359,9 +371,11 @@ private enum EditorTargetMode: String, CaseIterable, Identifiable {
 
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
+    @Binding var repeatGroup: CustomRoutineRepeatGroup?
     let targetMode: CustomRoutineTargetMode
     let board: BoardRevision
     let onAddPair: (CustomRoutineStepDraft) -> Void
+    let onEditRepeatGroup: (CustomRoutineRepeatGroup) -> Void
     let repeatSummary: String?
 
     @State private var activeHoldID: String?
@@ -410,6 +424,8 @@ private struct CustomRoutineStepEditor: View {
             TextField("Duration (seconds)", value: $step.duration, format: .number)
                 .keyboardType(.decimalPad)
                 .accessibilityIdentifier("customRoutine.stepDuration")
+
+            repeatControls
 
             if step.isRest {
                 LabeledContent("Timing") {
@@ -485,6 +501,63 @@ private struct CustomRoutineStepEditor: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+            }
+        }
+    }
+
+    private var isGroupedRepeat: Bool {
+        (repeatGroup?.stepIDs.count ?? 0) > 1
+    }
+
+    private var repeatEnabledBinding: Binding<Bool> {
+        Binding(
+            get: { repeatGroup != nil },
+            set: { enabled in
+                guard !isGroupedRepeat else { return }
+                if enabled {
+                    if repeatGroup == nil {
+                        repeatGroup = CustomRoutineRepeatGroup(stepIDs: [step.id])
+                    }
+                } else {
+                    repeatGroup = nil
+                }
+            }
+        )
+    }
+
+    private var repeatCountBinding: Binding<Int> {
+        Binding(
+            get: { repeatGroup?.repeatCount ?? 2 },
+            set: { count in
+                guard var group = repeatGroup, group.stepIDs == [step.id] else { return }
+                group.repeatCount = count
+                repeatGroup = group
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var repeatControls: some View {
+        Toggle("Repeat", isOn: repeatEnabledBinding)
+            .tint(.hangGreenDark)
+            .disabled(isGroupedRepeat)
+            .accessibilityIdentifier("customRoutine.stepRepeat")
+
+        if let repeatGroup {
+            if isGroupedRepeat {
+                Button("Edit group repeat") {
+                    onEditRepeatGroup(repeatGroup)
+                }
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("customRoutine.editStepRepeatGroup")
+            } else {
+                Stepper(value: repeatCountBinding, in: CustomRoutineRepeatGroup.supportedCounts) {
+                    Text("Run \(repeatGroup.repeatCount) \(repeatGroup.repeatCount == 1 ? "time" : "times")")
+                }
+                .accessibilityIdentifier("customRoutine.stepRepeatCount")
+                Text("The count includes the first run.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
         }
     }

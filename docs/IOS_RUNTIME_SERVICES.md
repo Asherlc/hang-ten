@@ -50,9 +50,15 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-Custom routine creation and editing offer **Repeat steps** for one step or a
-consecutive range. The count is the total number of runs, including the first,
-and supports 1–100. The range selectors use
+Custom routine creation and editing expose a **Repeat** toggle in each step's
+form, including rest steps. Turning it on shows a count, initially two; turning
+it off keeps the step for one run. Single-step repeats reopen and are edited in
+that same form; there is no separate repeat-group creation button. A step
+in an existing repeated group shows its repeat toggle on but unavailable for individual
+changes, with **Edit group repeat** opening its group's editor. Single-step
+repeats appear in the step summaries; the **Repeat groups** section appears
+only for existing groups with multiple steps. The count is the total number of runs,
+including the first, and supports 1–100. The range selectors use
 [SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
 to show step choices inside the repeat sheet's navigation stack. Repeat ranges
 cannot overlap. Saving retains each authored step once with its repeat range and
