@@ -139,12 +139,12 @@ def main():
     result = deduplicated(original)
     verify_equivalent(original, result)
     if args.against:
-        verify_equivalent(json.loads(args.against.read_text()), result)
+        verify_equivalent(json.loads(args.against.read_text(encoding="utf-8")), result)
     if args.check and result != original:
         raise SystemExit("Canonical library still contains unfactored prescriptions")
     encoded = json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if args.write:
-        args.library.write_text(encoded)
+        args.library.write_text(encoded, encoding="utf-8")
     print(json.dumps({
         "plans": len(result["plans"]),
         "stepsBefore": sum(len(b["steps"]) for b in original["blocks"]),
