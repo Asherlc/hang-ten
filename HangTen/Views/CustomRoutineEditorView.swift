@@ -97,9 +97,11 @@ struct CustomRoutineEditorView: View {
                                 validationScrollRequest += 1
                             }
                         } label: {
-                            Text("Save").foregroundStyle(.white)
+                            Text("Save")
+                                .fontWeight(.semibold)
+                                .foregroundStyle(Color.hangGreenDark)
                         }
-                        .buttonStyle(.borderedProminent)
+                        .buttonStyle(.plain)
                         .tint(.hangGreenDark)
                         .accessibilityIdentifier("customRoutine.save")
                     }

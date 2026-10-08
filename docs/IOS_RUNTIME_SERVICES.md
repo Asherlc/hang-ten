@@ -95,6 +95,8 @@ unspecified timing, saved durations, and instructions remain unchanged when open
 editing duration explicitly selects Timed.
 Hold compatibility failures identify the affected step and suggest changing the
 hold type, shape, or depth; the builder does not display internal validation enums.
+Save uses a plain toolbar button with semibold green text so its label stays
+readable after keyboard, scroll, and navigation updates.
 
 The builder follows persistent-label and progressive-disclosure guidance from
 [Apple’s data-entry guidelines](https://developer.apple.com/design/human-interface-guidelines/entering-data),
