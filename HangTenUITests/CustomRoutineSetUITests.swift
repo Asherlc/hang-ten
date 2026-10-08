@@ -279,15 +279,17 @@ final class CustomRoutineSetUITests: XCTestCase {
                app.navigationBars.buttons.matching(identifier: target.identifier).firstMatch.exists {
                 return
             }
-            let contentTop = app.navigationBars.allElementsBoundByIndex.map { $0.frame.maxY }.max() ?? app.frame.minY
+            // A presented editor leaves the Plans navigation bar in the
+            // hierarchy. Its large title must not obscure the sheet's controls.
+            let contentTop = app.navigationBars.allElementsBoundByIndex.last?.frame.maxY ?? app.frame.minY
             let tabBar = app.tabBars.firstMatch
             let contentBottom = tabBar.exists && tabBar.isHittable ? tabBar.frame.minY : app.frame.maxY - 34
             if target.exists {
                 let frame = target.frame
                 if target.isHittable && frame.minY >= contentTop && frame.maxY <= contentBottom { return }
-                scroll(in: app, towardTop: frame.minY < contentTop)
+                scroll(in: app, towardTop: frame.minY < contentTop, top: contentTop, bottom: contentBottom)
             } else {
-                scroll(in: app, towardTop: scrollTowardTop)
+                scroll(in: app, towardTop: scrollTowardTop, top: contentTop, bottom: contentBottom)
             }
         }
         capture(app, name: "Unavailable control")
@@ -298,20 +300,15 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertTrue(target.exists && target.isHittable, "Control is unavailable: \(target)")
     }
 
-    /// Avoids board gestures and the floating tab bar while scrolling plan content.
-    private func scroll(in app: XCUIApplication, towardTop: Bool) {
-        let scrollView = app.scrollViews.firstMatch
-        let flow = app.otherElements["plan.sessionFlow"]
-        if scrollView.exists && flow.exists {
-            let marginX = (flow.frame.minX - scrollView.frame.minX - 8) / scrollView.frame.width
-            let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: marginX, dy: towardTop ? 0.25 : 0.7))
-            let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: marginX, dy: towardTop ? 0.7 : 0.25))
-            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
-        } else if towardTop {
-            app.swipeDown()
-        } else {
-            app.swipeUp()
-        }
+    /// Uses a short drag in the page margin so scrolling cannot fling past a control.
+    private func scroll(in app: XCUIApplication, towardTop: Bool, top: CGFloat, bottom: CGFloat) {
+        let height = bottom - top
+        let startY = top + height * (towardTop ? 0.25 : 0.75)
+        let endY = startY + height * (towardTop ? 0.3 : -0.3)
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        let start = origin.withOffset(CGVector(dx: 8, dy: startY - app.frame.minY))
+        let end = origin.withOffset(CGVector(dx: 8, dy: endY - app.frame.minY))
+        start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
     }
 
     /// Keeps a named screenshot for review of each exercised planner or playback state.

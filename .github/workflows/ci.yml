@@ -687,7 +687,7 @@ jobs:
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-paywall:
-    name: "Test (iOS Simulator: HangTenUITests / purchase, settings and workouts)"
+    name: "Test (iOS Simulator: HangTenUITests / ${{ matrix.shard }})"
     needs:
       - changes
       - board-assets
@@ -704,12 +704,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Reuse one simulator and build for these suites. Keep selectors
+          # Keep the planner scenarios in their own run so purchase, settings
+          # and workout coverage also fits within the one-hour test budget.
+          # Reuse one simulator and build per shard. Keep selectors
           # complete: test_ci_xctest_contract.py audits every method exactly once.
-          - shard: purchase-settings-workouts
+          - shard: custom-planner
             only_testing: >-
               HangTenUITests/CustomRoutineEditorUITests
               HangTenUITests/CustomRoutineSetUITests
+          - shard: purchase-settings-workouts
+            only_testing: >-
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession
