@@ -9,7 +9,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var phase: WorkoutPhase
     var targets: [ContactRequirement]
     var timing: WorkoutSegmentTiming
-    let activeDuration: TimeInterval?
+    var activeDuration: TimeInterval?
     var handUse: WorkoutHandUse
     var side: WorkoutSide
     var action: WorkoutAction
@@ -61,6 +61,15 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var displayTitle: String {
         let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
         return name.isEmpty ? exercise.label : name
+    }
+
+    /// An explicitly entered duration defines a timed step; opening a saved step preserves its timing.
+    mutating func setDuration(_ value: TimeInterval?) {
+        duration = value ?? 0
+        if duration.isFinite && duration > 0 {
+            timing = .fixed
+            activeDuration = nil
+        }
     }
 
     /// A single choice keeps hand use, side and hold selection policy consistent.

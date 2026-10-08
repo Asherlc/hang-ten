@@ -67,7 +67,7 @@ disturbing later sets. Set repeat counts are edited inline and include the first
 run (1–100). Sets move together when reordered. Child steps expose **Remove step**;
 there is no separate set editor or ungroup action in the planner.
 
-Each step shows Exercise, Timing, and Hands & holds. Exercise
+Each step shows Exercise, Duration, and Hands & holds. Exercise
 combines the persisted phase/action classifications into Hang, Isometric pull,
 Loaded lift, or Rest. Rest clears work-only fields and uses fixed timing. Optional
 warm-up, conditioning, and cool-down classifications in saved routines are
@@ -75,7 +75,7 @@ preserved; the builder does not expose a separate phase control. Hands combines 
 use and side into Both hands, Left hand, Right hand, or Choose at start; the last
 choice remains unavailable for pull phases and isometric pulls. Loaded lift also
 exposes repetitions and optional external load. Shape and depth refinements live
-under **Hold details**. Optional naming and instructions live under **Step details**;
+under **Hold details**. Optional naming and instructions are edited directly;
 unnamed steps use their exercise name. There is no separate left/right pair shortcut.
 The legacy accessory text
 field is omitted from the builder; saved accessory text is retained for playback.
@@ -86,10 +86,13 @@ redundant summaries; collapsed steps summarize exercise, duration, hands and hol
 New step durations start blank and must be entered by the athlete. The Duration
 label and seconds unit remain visible when populated. Text and numeric placeholders
 show examples rather than repeat labels; examples are not prefilled values or
-training prescriptions. A keyboard **Done** action
+training prescriptions. Duration is the only timing control: explicitly entering a
+positive duration makes the step Timed and clears any previously stored active
+duration. There is no Timer picker or Step details disclosure. A keyboard **Done** action
 finishes text or numeric entry. For stopwatch or unspecified active timing,
-duration still defines the total enclosing step time. Existing
-saved durations and authored instructions remain unchanged when opened.
+duration still defines the total enclosing step time. Existing stopwatch and
+unspecified timing, saved durations, and instructions remain unchanged when opened;
+editing duration explicitly selects Timed.
 Hold compatibility failures identify the affected step and suggest changing the
 hold type, shape, or depth; the builder does not display internal validation enums.
 

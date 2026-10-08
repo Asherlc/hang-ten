@@ -35,7 +35,6 @@ final class CustomRoutineSetUITests: XCTestCase {
         changeCount(by: 1, in: app)
         expandStep(titled: "Rest", in: app)
         XCTAssertFalse(app.switches["customRoutine.stepRepeat"].exists)
-        tap("customRoutine.stepOptions", in: app)
         let title = app.textFields["customRoutine.stepTitle"]
         reveal(title, in: app)
         title.tap()
@@ -86,6 +85,8 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertEqual(duration.value as? String, "e.g. 15")
         XCTAssertTrue(app.staticTexts["Duration"].exists)
         XCTAssertFalse(app.buttons["customRoutine.editStepSet"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.stepTiming"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.stepOptions"].exists)
         XCTAssertFalse(app.buttons["customRoutine.ungroupSet.1"].exists)
         tap("customRoutine.stepExercise", in: app)
         app.buttons["Loaded lift"].tap()
@@ -102,7 +103,6 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.holdDetails", in: app)
         XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
         capture(app, name: "Exercise timing and hands in focused groups")
-        tap("customRoutine.stepOptions", in: app)
         XCTAssertTrue(app.staticTexts["Instructions"].exists)
         XCTAssertFalse(app.buttons["customRoutine.stepPhase"].exists)
         XCTAssertFalse(app.buttons["customRoutine.addLeftRightPair"].exists)
@@ -113,7 +113,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         instructionField.tap()
         instructionField.typeText("My own cue")
         tap("customRoutine.keyboardDone", in: app)
-        capture(app, name: "Optional instructions without redundant classifications")
+        capture(app, name: "Instructions edited directly")
         tap("customRoutine.save", in: app)
         openSavedRoutine(named: "Simple builder", in: app)
         tap("customRoutine.actions", in: app)
@@ -125,7 +125,6 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertEqual(app.textFields["customRoutine.stepDuration"].value as? String, "12")
         XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
         capture(app, name: "Consolidated selections restored after saving")
-        tap("customRoutine.stepOptions", in: app)
         reveal(instructionField, in: app)
         XCTAssertEqual(instructionField.value as? String, "My own cue")
     }
@@ -257,13 +256,11 @@ final class CustomRoutineSetUITests: XCTestCase {
         duration.tap()
         duration.typeText("10")
         tap("customRoutine.keyboardDone", in: app)
-        tap("customRoutine.stepOptions", in: app)
         let field = app.textFields["customRoutine.stepTitle"]
         reveal(field, in: app)
         field.tap()
         let oldValue = (field.value as? String).flatMap { $0.hasPrefix("e.g.") ? nil : $0 } ?? ""
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: oldValue.count) + title + "\n")
-        tap("customRoutine.stepOptions", in: app)
         if !rest {
             tap("customRoutine.stepTarget", in: app)
             app.buttons["Jugs"].tap()

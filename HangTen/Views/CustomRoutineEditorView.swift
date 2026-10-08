@@ -91,11 +91,13 @@ struct CustomRoutineEditorView: View {
                         }
                     }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("Save") {
+                        Button {
                             save()
                             if !validationIssues.isEmpty {
                                 validationScrollRequest += 1
                             }
+                        } label: {
+                            Text("Save").foregroundStyle(.white)
                         }
                         .buttonStyle(.borderedProminent)
                         .tint(.hangGreenDark)
@@ -447,7 +449,6 @@ private struct CustomRoutineStepEditor: View {
     let onRemove: (() -> Void)?
 
     @State private var isExpanded: Bool
-    @State private var areStepDetailsExpanded = false
     @State private var areHoldDetailsExpanded = false
     @State private var activeHoldID: String?
     @State private var genericDepthSelection: GenericDepthSelection = .none
@@ -491,33 +492,22 @@ private struct CustomRoutineStepEditor: View {
                 .frame(minHeight: 44)
                 .accessibilityIdentifier("customRoutine.stepExercise")
 
-                editorGroup("Timing") {
-                    if !step.isRest {
-                        Picker("Timer", selection: $step.timing) {
-                            ForEach(WorkoutSegmentTiming.allCases) { timing in
-                                Text(timing.label).tag(timing)
-                            }
-                        }
-                        .frame(minHeight: 44)
-                        .accessibilityIdentifier("customRoutine.stepTiming")
+                LabeledContent("Duration") {
+                    HStack(spacing: 6) {
+                        TextField("e.g. 15", value: durationBinding, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .accessibilityLabel("Duration in seconds")
+                            .frame(minHeight: 44)
+                            .accessibilityIdentifier("customRoutine.stepDuration")
+                            .focused(focusedField, equals: "\(step.id).stepDuration")
+                        Text("sec").foregroundStyle(.secondary)
                     }
-                    LabeledContent("Duration") {
-                        HStack(spacing: 6) {
-                            TextField("e.g. 15", value: durationBinding, format: .number)
-                                .keyboardType(.decimalPad)
-                                .multilineTextAlignment(.trailing)
-                                .accessibilityLabel("Duration in seconds")
-                                .frame(minHeight: 44)
-                                .accessibilityIdentifier("customRoutine.stepDuration")
-                                .focused(focusedField, equals: "\(step.id).stepDuration")
-                            Text("sec").foregroundStyle(.secondary)
-                        }
-                    }
-                    if step.timing != .fixed {
-                        Text("This is the step’s total time. Active time uses the selected timer.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
+                }
+                if step.timing != .fixed {
+                    Text("Active time: \(step.timing.label)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
 
                 if !step.isRest {
@@ -558,24 +548,19 @@ private struct CustomRoutineStepEditor: View {
                     }
                 }
 
-                DisclosureGroup(isExpanded: $areStepDetailsExpanded) {
-                    LabeledContent("Name") {
-                        TextField("e.g. First hang", text: $step.title)
-                            .multilineTextAlignment(.leading)
-                            .frame(minHeight: 44)
-                            .accessibilityIdentifier("customRoutine.stepTitle")
-                            .focused(focusedField, equals: "\(step.id).stepTitle")
-                    }
+                LabeledContent("Name") {
+                    TextField("e.g. First hang", text: $step.title)
+                        .multilineTextAlignment(.leading)
+                        .frame(minHeight: 44)
+                        .accessibilityIdentifier("customRoutine.stepTitle")
+                        .focused(focusedField, equals: "\(step.id).stepTitle")
+                }
+                VStack(alignment: .leading, spacing: 8) {
                     Text("Instructions").font(.subheadline.weight(.semibold))
                     TextField("e.g. Use my usual board setup", text: $step.instruction, axis: .vertical)
                         .frame(minHeight: 44)
                         .accessibilityIdentifier("customRoutine.stepInstruction")
                         .focused(focusedField, equals: "\(step.id).stepInstruction")
-                        .padding(.top, 8)
-                } label: {
-                    Text("Step details")
-                        .frame(minHeight: 44)
-                        .accessibilityIdentifier("customRoutine.stepOptions")
                 }
 
                 if let onRemove {
@@ -584,8 +569,8 @@ private struct CustomRoutineStepEditor: View {
                             .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
                             .contentShape(Rectangle())
                     }
-                        .buttonStyle(.borderless)
-                        .accessibilityIdentifier("customRoutine.removeSetStep")
+                    .buttonStyle(.borderless)
+                    .accessibilityIdentifier("customRoutine.removeSetStep")
                 }
             }
             // Automatic pickers in a List can capture the entire grouped row.
@@ -620,7 +605,7 @@ private struct CustomRoutineStepEditor: View {
     private var durationBinding: Binding<Double?> {
         Binding(
             get: { step.duration == 0 ? nil : step.duration },
-            set: { step.duration = $0 ?? 0 }
+            set: { step.setDuration($0) }
         )
     }
 

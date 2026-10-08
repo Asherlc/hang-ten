@@ -41,6 +41,87 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.definition().steps[0].title, "Rest")
     }
 
+    func testPositiveDurationInputPersistsOneTimedSegment() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Timed routine"
+        draft.steps = [makeStep(id: "timed", title: "Hang", duration: 0)]
+
+        draft.steps[0].setDuration(12)
+
+        let persisted = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        let step = try XCTUnwrap(persisted.steps.first)
+        XCTAssertEqual(step.duration, 12)
+        XCTAssertEqual(step.segments.count, 1)
+        XCTAssertEqual(step.segments.first?.kind, .work)
+        XCTAssertEqual(step.segments.first?.timing, .fixed)
+        XCTAssertEqual(step.segments.first?.duration, 12)
+        XCTAssertNil(step.activeDuration)
+        XCTAssertTrue(CustomRoutineValidator.issues(for: persisted, availableBoards: BoardCatalog.all).isEmpty)
+    }
+
+    func testEditingSavedOpenTimingDurationUsesTimedPlaybackWithoutOldActiveDuration() {
+        let timings: [WorkoutSegmentTiming] = [.stopwatch, .undefined]
+        for timing in timings {
+            var original = CustomRoutineDraft(createWith: .generic)
+            original.title = "Saved routine"
+            var step = makeStep(id: "saved", title: "Hang", duration: 60)
+            step.timing = timing
+            step.activeDuration = 40
+            original.steps = [step]
+            let source = original.definition()
+            var editing = CustomRoutineDraft(editing: source)
+            XCTAssertEqual(editing.definition(), source)
+
+            editing.steps[0].setDuration(12)
+
+            let definition = editing.definition()
+            XCTAssertEqual(definition.steps[0].duration, 12)
+            XCTAssertEqual(definition.steps[0].segments.first?.timing, .fixed)
+            XCTAssertEqual(definition.steps[0].segments.first?.duration, 12)
+            XCTAssertNil(definition.steps[0].activeDuration)
+            XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
+        }
+    }
+
+    func testShorteningTimedDurationBelowOldActiveDurationStillValidates() {
+        var original = CustomRoutineDraft(createWith: .generic)
+        original.title = "Saved timed routine"
+        var step = makeStep(id: "timed", title: "Hang", duration: 12)
+        step.activeDuration = 10
+        original.steps = [step]
+        var editing = CustomRoutineDraft(editing: original.definition())
+
+        editing.steps[0].setDuration(5)
+
+        let definition = editing.definition()
+        XCTAssertEqual(definition.steps[0].duration, 5)
+        XCTAssertEqual(definition.steps[0].segments.first?.duration, 5)
+        XCTAssertNil(definition.steps[0].activeDuration)
+        XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
+    }
+
+    func testClearingDurationPreservesStopwatchTimingAndRequiresDuration() {
+        var original = CustomRoutineDraft(createWith: .generic)
+        original.title = "Saved stopwatch routine"
+        var step = makeStep(id: "stopwatch", title: "Hang", duration: 60)
+        step.timing = .stopwatch
+        original.steps = [step]
+        var editing = CustomRoutineDraft(editing: original.definition())
+
+        editing.steps[0].setDuration(nil)
+
+        let definition = editing.definition()
+        XCTAssertEqual(editing.steps[0].duration, 0)
+        XCTAssertEqual(definition.steps[0].duration, 0)
+        XCTAssertEqual(definition.steps[0].segments.first?.timing, .stopwatch)
+        XCTAssertNil(definition.steps[0].segments.first?.duration)
+        XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: definition)
+            .contains("Step 1 needs a positive duration."))
+    }
+
     func testExerciseChoiceCanonicalizesRestAndLoadedLift() {
         var step = makeStep(id: "one", title: "My step")
         step.handChoice = .either
