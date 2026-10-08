@@ -73,11 +73,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             // by earlier cases; DEBUG simulator builds bundle this native model.
             "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
-        app.launch()
     }
 
     func testContactOffsetTaskCanAdvanceWithoutSkippingMinute() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
         app.launch()
@@ -100,7 +98,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testTwoHandTaskOnMiniBarExplainsTwoBoards() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "lattice.mini-bar"
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "2"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
@@ -117,7 +114,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testOneArmTaskLetsAthleteChooseSide() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
@@ -139,6 +135,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts() throws {
+        app.launch()
         openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
         XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
         XCTAssertFalse(app.buttons["Start"].exists)
@@ -164,7 +161,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testPublishedLongHangStopwatchRunsBeyondEstimateWithRoutinePaused() throws {
-        app.terminate()
         app.launchEnvironment = [
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_BOARD_ID": "metolius.wood-grips-compact-ii",
@@ -221,8 +217,11 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             ("rock-prodigy.rptc-intermediate", "trango.rock-prodigy-training-center", "1", "RPTC warm-up jug highlight"),
             ("rock-prodigy.pivot-intermediate", "trango.rock-prodigy-pivot", "1", "Pivot manual orientation instruction")
         ]
-        for (plan, board, step, name) in cases {
-            app.terminate()
+        for (index, reviewCase) in cases.enumerated() {
+            let (plan, board, step, name) = reviewCase
+            if index > 0 {
+                app.terminate()
+            }
             app.launchEnvironment = [
                 "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0", "HANGTEN_REVIEW_BOARD_ID": board,
                 "HANGTEN_REVIEW_LANDSCAPE": "1", "HANGTEN_REVIEW_STEP": step
@@ -273,7 +272,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
     func testWorkoutPauseSurvivesRotationAndResumes() {
         defer { XCUIDevice.shared.orientation = .portrait }
-        app.terminate()
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
         // This test covers the clock and navigation, independently of the
         // simulator's audio service and speech playback.
@@ -383,7 +381,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     private func openPlanDetail(withMotherboardFixture: Bool = false) {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         if withMotherboardFixture {

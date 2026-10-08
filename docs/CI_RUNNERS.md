@@ -27,11 +27,15 @@ matrix expansion and the two call sites for the reusable runtime workflow.
 | Release / release | macOS | Xcode archive/export, Apple keychain signing, codesign and Mach-O verification |
 
 The UI matrices separate custom planner scenarios, purchase/settings/workout
-flows, model/picker interaction, board layouts, and grip/weight flows. Each
-shard keeps one simulator and runs each selected test once. Keep these groups
-separate: the one-hour test phase runs inside a 70-minute Actions job that also
-includes asset restoration, simulator startup and compilation. Combining the
-planner and workout suites can exhaust that job limit before every test runs.
+flows, model/picker interaction, board layouts, grip diagnostics, and other
+grip/weight flows. Each shard keeps one simulator and runs each selected test
+once. Keep these groups separate: the one-hour test phase runs inside a
+70-minute Actions job that also includes asset restoration, simulator startup
+and compilation. Combining the planner and workout suites can exhaust that job
+limit before every test runs. Grip diagnostics have their own shard because
+their nine screenshot and workout tests dominated the former 18-test
+`grips-weight` run. The extra shard trades another simulator startup and build
+for shorter wall-clock time when `xcode-27` runners run concurrently.
 `test_ci_xctest_contract.py` verifies that every UI test method is selected
 exactly once across both required UI jobs; the required UI gate waits for all
 matrix shards.
