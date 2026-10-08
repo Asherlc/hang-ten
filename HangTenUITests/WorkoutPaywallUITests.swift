@@ -10,6 +10,7 @@ final class CustomRoutineEditorUITests: XCTestCase {
         let create = app.buttons["customRoutine.create"]
         XCTAssertTrue(create.waitForExistence(timeout: 30))
         create.tap()
+        waitForEditor(in: app)
         let mode = app.segmentedControls["customRoutine.targetMode"]
         XCTAssertTrue(mode.waitForExistence(timeout: 10))
         mode.buttons["Generic"].tap()
@@ -27,7 +28,7 @@ final class CustomRoutineEditorUITests: XCTestCase {
         beforeSave.lifetime = .keepAlways
         add(beforeSave)
 
-        app.buttons["customRoutine.save"].tap()
+        pressSave(in: app)
         let issues = app.staticTexts["customRoutine.validationErrors"]
         let visible = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "exists == true AND hittable == true"), object: issues
@@ -50,9 +51,9 @@ final class CustomRoutineEditorUITests: XCTestCase {
         let create = app.buttons["customRoutine.create"]
         XCTAssertTrue(create.waitForExistence(timeout: 30))
         create.tap()
+        waitForEditor(in: app)
         let save = app.buttons["customRoutine.save"]
-        XCTAssertTrue(save.waitForExistence(timeout: 10))
-        save.tap()
+        pressSave(in: app)
         if app.alerts.firstMatch.waitForExistence(timeout: 2) {
             app.alerts.firstMatch.buttons["OK"].tap()
         }
@@ -85,6 +86,28 @@ final class CustomRoutineEditorUITests: XCTestCase {
         corrected.name = "Routine validation updates after entering a name"
         corrected.lifetime = .keepAlways
         add(corrected)
+    }
+
+    private func waitForEditor(in app: XCUIApplication) {
+        XCTAssertTrue(app.navigationBars["Create routine"].waitForExistence(timeout: 10))
+        let name = app.textFields["customRoutine.name"]
+        let save = app.buttons["customRoutine.save"]
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                name.exists && save.exists && name.isHittable && save.isHittable
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 5), .completed,
+                       "The presented routine editor must be ready for input")
+    }
+
+    private func pressSave(in app: XCUIApplication) {
+        let save = app.buttons["customRoutine.save"]
+        XCTAssertTrue(save.isEnabled)
+        XCTAssertTrue(save.isHittable)
+        save.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.1)
     }
 }
 
