@@ -221,6 +221,7 @@ struct CustomRoutineEditorView: View {
     }
 
     @ViewBuilder
+    /// Renders one editable row, with a shared count and child forms when the row represents a set.
     private func editorItem(_ item: CustomRoutineEditorItem) -> some View {
         switch item {
         case let .step(step):
@@ -260,6 +261,7 @@ struct CustomRoutineEditorView: View {
         }
     }
 
+    /// Connects a child form to its authored step and set, including explicit removal inside grouped rows.
     private func stepEditor(_ step: CustomRoutineStepDraft, inSet: Bool = false) -> some View {
         CustomRoutineStepEditor(
             step: binding(for: step),
@@ -277,6 +279,7 @@ struct CustomRoutineEditorView: View {
         )
     }
 
+    /// Reads and updates the current set by identity rather than mutating a captured row snapshot.
     private func setCountBinding(for set: CustomRoutineSet) -> Binding<Int> {
         Binding(
             get: { draft.sets.first(where: { $0.id == set.id })?.repeatCount ?? set.repeatCount },
@@ -289,6 +292,7 @@ struct CustomRoutineEditorView: View {
         )
     }
 
+    /// Summarizes the authored step range and total run count for an inline repeat label.
     private func setSummary(_ set: CustomRoutineSet) -> String {
         guard let range = set.range(in: draft.steps.map(\.id)) else { return "Choose steps to repeat" }
         let steps = range.count == 1 ? "Step \(range.lowerBound + 1)" : "Steps \(range.lowerBound + 1)–\(range.upperBound)"
@@ -313,6 +317,7 @@ struct CustomRoutineEditorView: View {
         )
     }
 
+    /// Binds shared set metadata and permits disabling repeats only for a single-step set.
     private func setBinding(for step: CustomRoutineStepDraft) -> Binding<CustomRoutineSet?> {
         Binding(
             get: { draft.sets.first(where: { $0.stepIDs.contains(step.id) }) },
@@ -358,6 +363,7 @@ struct CustomRoutineEditorView: View {
         }
     }
 
+    /// Builds immediate editor feedback for missing fields, invalid step semantics, and malformed sets.
     static func localValidationIssues(for definition: CustomRoutineDefinition) -> [String] {
         var issues: [String] = []
         if definition.title.isEmpty {
@@ -816,6 +822,7 @@ private struct CustomRoutineSetEditor: View {
     @State private var lastStepID: String
     @State private var repeatCount: Int
 
+    /// Seeds the set sheet from the selected range and count, enforcing its required number of members.
     init(
         set: CustomRoutineSet,
         steps: [CustomRoutineStepDraft],

@@ -123,6 +123,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
+    /// Checks that duplication copies editable set metadata instead of persisting expanded playback rows.
     func testDuplicatingCustomRoutineKeepsEditableRepeatInsteadOfExpandedCopies() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -186,6 +187,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         )
     }
 
+    /// Checks that catalog duplication preserves repeat patterns and the resulting workout sequence.
     func testCatalogDuplicateKeepsDeclaredRepeatsEditableAndPlaybackUnchanged() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }

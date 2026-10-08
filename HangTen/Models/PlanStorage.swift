@@ -1347,6 +1347,7 @@ enum PlanLibraryValidator {
         }
     }
 
+    /// Checks plan metadata, board and block references, expanded identities, and the terminal rest policy.
     private static func validatePlan(
         _ plan: PlanDefinition,
         path: String,

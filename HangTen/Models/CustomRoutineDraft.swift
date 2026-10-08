@@ -217,6 +217,7 @@ struct CustomRoutineDraft: Equatable {
         )
     }
 
+    /// Initializes an empty unsaved draft with one identity retained across later conversions.
     private init(createWith targetMode: CustomRoutineTargetMode, generatedID: String) {
         id = nil
         self.generatedID = generatedID
@@ -246,6 +247,7 @@ struct CustomRoutineDraft: Equatable {
         )
     }
 
+    /// Loads authored rows and their set metadata while choosing persisted or duplicated identity.
     private init(
         definition: CustomRoutineDefinition,
         id: String?,
@@ -454,6 +456,8 @@ struct CustomRoutineDraft: Equatable {
         sets.removeAll { $0.id == id }
     }
 
+    /// Retargets only unsaved drafts, preserving their identity and sets while filtering incompatible
+    /// targets.
     func retargeted(
         to targetMode: CustomRoutineTargetMode,
         availableBoards: [BoardRevision] = BoardCatalog.all
@@ -485,6 +489,7 @@ struct CustomRoutineDraft: Equatable {
         return retargeted
     }
 
+    /// Produces normalized editable metadata and literal steps without expanding set repetitions.
     func definition() -> CustomRoutineDefinition {
         CustomRoutineDefinition(
             id: id ?? generatedID,

@@ -2,6 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    /// Checks that editing, duplication, and retargeting preserve the same authored set membership.
     func testSetSurvivesEditingDuplicatingAndRetargeting() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.title = "Repeat"
@@ -18,6 +19,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNil(draft.newSet(), "Every step already belongs to this repeat")
     }
 
+    /// Checks membership pruning after child deletion, including removal of an empty set.
     func testDeletingSetMembersShrinksRangeAndRemovesEmptySet() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
@@ -30,6 +32,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(draft.sets.isEmpty)
     }
 
+    /// Checks that selecting any child for movement carries the complete set in its original order.
     func testReorderingASetMemberMovesWholeSetAndKeepsOrder() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three", "four"].map { makeStep(id: $0, title: $0) }
@@ -44,6 +47,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
     }
 
+    /// Checks that insertion inside another set snaps to its boundary and preserves both sequences.
     func testMovingIntoAnotherSetKeepsItsMembersTogether() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
@@ -58,6 +62,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
     }
 
+    /// Checks that overlapping membership is rejected and ungrouping retains the original rows.
     func testOverlappingSetIsRejectedAndRemovingSetRetainsSteps() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
@@ -73,6 +78,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(draft.definition().sets.isEmpty)
     }
 
+    /// Checks that creation needs adjacent unused steps and cannot bridge an existing repeat.
     func testNewSetStartsWithConsecutiveUngroupedSteps() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
         XCTAssertNil(draft.newSet())
@@ -87,6 +93,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNil(draft.newSet(), "The remaining steps are not consecutive")
     }
 
+    /// Checks row-to-step offset translation for atomic movement and deletion of grouped sequences.
     func testSetEditorRowsMoveAndDeleteWholeSequences() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
@@ -107,6 +114,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.sets.map(\.id), ["single"])
     }
 
+    /// Checks that child edits and ordering survive removal of the surrounding set metadata.
     func testUngroupingKeepsChildEditsAndTheirOrder() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["hang", "rest"].map { makeStep(id: $0, title: $0) }

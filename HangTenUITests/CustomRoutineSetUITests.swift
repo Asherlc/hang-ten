@@ -1,15 +1,18 @@
 import XCTest
 
 final class CustomRoutineSetUITests: XCTestCase {
+    /// Stops at the first failed assertion so later UI actions cannot obscure the original failure.
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
 
+    /// Terminates the test app and restores portrait orientation after each scenario.
     override func tearDownWithError() throws {
         XCUIApplication().terminate()
         XCUIDevice.shared.orientation = .portrait
     }
 
+    /// Exercises persistence, count changes, child edits, and ungrouping through the visible editor.
     func testSetSavesReopensEditsChildAndUngroupsWithoutLosingSteps() {
         let app = launchEditor(name: "Set review")
         addStep(title: "Hang", rest: false, in: app)
@@ -49,6 +52,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         capture(app, name: "Ungrouping retains both authored steps")
     }
 
+    /// Exercises contiguous range selection while keeping an independent step repeat outside the set.
     func testSetRangeSelectionKeepsIndividualRepeatsSeparate() {
         let app = launchEditor(name: "Set range review")
         addStep(title: "Single", rest: false, repeatCount: 2, in: app)
@@ -78,6 +82,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         capture(app, name: "Set alongside an independent repeated step")
     }
 
+    /// Checks ordered interval expansion, selection of the final recovery, and session completion.
     func testSetPlaybackExpandsHangRestInOrderAndIncludesFinalRecovery() {
         let app = launchEditor(name: "Set playback review")
         addStep(title: "Hang", rest: false, in: app)
@@ -110,6 +115,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertEqual(primary.label, "Review session")
     }
 
+    /// Exercises an inline repeat across save and reopen, then disables it without deleting the step.
     func testInlineStepRepeatSavesReopensAndTurnsOffWithoutDeletingStep() {
         let app = launchEditor(name: "Single repeat review")
         addStep(title: "Hang", rest: false, repeatCount: 3, in: app)
@@ -139,6 +145,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         capture(app, name: "Original step retained after repeat removed")
     }
 
+    /// Checks that work and rest rows retain independent inline counts and cannot form an overlapping set.
     func testWorkAndRestStepsHaveIndependentInlineRepeatCounts() {
         let app = launchEditor(name: "Independent repeat review")
         addStep(title: "Rest", rest: true, repeatCount: 2, in: app)
@@ -159,6 +166,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         capture(app, name: "Independent work and rest repeats")
     }
 
+    /// Launches an isolated review store and opens a named generic routine draft on the Plans screen.
     private func launchEditor(name: String) -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
@@ -177,6 +185,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         return app
     }
 
+    /// Creates the fixture's hang/rest set, verifies its preview, and applies the requested total count.
     private func createSet(count: Int, in app: XCUIApplication) {
         tap("customRoutine.addSet", in: app)
         XCTAssertTrue(app.navigationBars["Create set"].waitForExistence(timeout: 5))
@@ -187,12 +196,14 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.setSave", in: app)
     }
 
+    /// Reveals and opens the grouped row so its shared controls and child forms can be tested.
     private func expandSet(in app: XCUIApplication) {
         let header = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Set")).firstMatch
         reveal(header, in: app, scrollTowardTop: true)
         header.tap()
     }
 
+    /// Authors a fixture row through the editor, optionally enabling its independent repeat count.
     private func addStep(title: String, rest: Bool, repeatCount: Int? = nil, in app: XCUIApplication) {
         tap("customRoutine.addStep", in: app)
         let row = app.buttons["New step"]
@@ -224,12 +235,14 @@ final class CustomRoutineSetUITests: XCTestCase {
         expandStep(titled: title, in: app)
     }
 
+    /// Reveals the named child disclosure before toggling its editor form.
     private func expandStep(titled title: String, in app: XCUIApplication) {
         let header = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", title)).firstMatch
         reveal(header, in: app, scrollTowardTop: true)
         header.tap()
     }
 
+    /// Opens a persisted custom routine from My routines and waits for its plan detail screen.
     private func openSavedRoutine(named name: String, in app: XCUIApplication) {
         XCTAssertTrue(app.navigationBars["Plans"].waitForExistence(timeout: 10))
         tap("workouts.myRoutines", in: app)
@@ -240,6 +253,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
     }
 
+    /// Changes a repeat count by the requested number of native stepper increments or decrements.
     private func changeCount(by delta: Int, identifier: String = "customRoutine.stepRepeatCount", in app: XCUIApplication) {
         let stepper = app.steppers[identifier]
         reveal(stepper, in: app)
@@ -248,6 +262,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         for _ in 0..<abs(delta) { button.tap() }
     }
 
+    /// Presses the native repeat switch once and waits for its expected accessibility value.
     private func setRepeatEnabled(_ enabled: Bool, in app: XCUIApplication) {
         let toggle = app.switches["customRoutine.stepRepeat"]
         // Stepper scrolling can move the repeat row. Reveal it again and use
@@ -270,12 +285,14 @@ final class CustomRoutineSetUITests: XCTestCase {
                        "Repeat must become \(enabled ? "enabled" : "disabled") after one tap")
     }
 
+    /// Reveals an identified control before tapping it, including controls in scrolling forms.
     private func tap(_ identifier: String, in app: XCUIApplication) {
         let target = app.buttons[identifier].firstMatch
         reveal(target, in: app)
         target.tap()
     }
 
+    /// Scrolls a control into the usable viewport, handling modal and navigation-bar accessibility frames.
     private func reveal(_ target: XCUIElement, in app: XCUIApplication, scrollTowardTop: Bool = false) {
         for _ in 0..<10 {
             // Modal form coordinates can include the underlying navigation
@@ -308,6 +325,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertTrue(target.exists && target.isHittable, "Control is unavailable: \(target)")
     }
 
+    /// Scrolls toward the requested edge while avoiding board gestures and the floating tab bar.
     private func scroll(in app: XCUIApplication, towardTop: Bool) {
         let scrollView = app.scrollViews.firstMatch
         let flow = app.otherElements["plan.sessionFlow"]
@@ -324,6 +342,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         }
     }
 
+    /// Retains a named screenshot attachment for later review of the exercised UI state.
     private func capture(_ app: XCUIApplication, name: String) {
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = name

@@ -117,6 +117,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         case legacySets = "repeatGroups"
     }
 
+    /// Retains literal steps and their set declarations without expanding repeated runs.
     init(
         id: String,
         title: String,
@@ -226,6 +227,7 @@ enum CustomRoutineValidationIssue: Error, Equatable {
 }
 
 enum CustomRoutineValidator {
+    /// Collects routine identity, step semantics, target compatibility, timing, and set validation failures.
     static func issues(
         for definition: CustomRoutineDefinition,
         availableBoards: [BoardRevision]
@@ -611,6 +613,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         persistenceError = nil
     }
 
+    /// Validates the routine and resolves each set through the shared repeated-block planner.
     func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan {
         let definition = Self.normalize(definition)
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: availableBoards)
@@ -666,6 +669,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         return try resolver.resolve(planDefinition)
     }
 
+    /// Reconstructs editable patterns and set counts from a resolved plan's declared repeats.
     static func definition(
         from plan: TrainingPlan,
         metadata: PlanMetadata,
@@ -755,6 +759,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         defaults.set(data, forKey: key)
     }
 
+    /// Canonicalizes compound steps and remaps set member IDs while retaining each repeat pattern once.
     private func flattenedDefinition(
         from definition: CustomRoutineDefinition
     ) throws -> CustomRoutineDefinition {
@@ -799,6 +804,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         return flattenedRoutineDefinition
     }
 
+    /// Normalizes metadata and portable or historic targets while retaining authored set membership.
     private static func normalize(_ definition: CustomRoutineDefinition) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
             id: definition.id,

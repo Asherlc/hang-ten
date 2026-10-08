@@ -2,6 +2,7 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    /// Checks complete work/rest playback, unique identities, timing, and persistence at repeat-count bounds.
     func testHangRestSetCanBeTheEntireRoutineAndRetainsEveryRecovery() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -39,6 +40,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         }
     }
 
+    /// Checks that grouping rest-only rows cannot bypass the final-work validation rule.
     func testRestOnlySetDoesNotBypassTerminalRestValidation() {
         var draft = CustomRoutineDraft(editing: repeatedDefinition())
         draft.removeSteps(at: IndexSet(integer: 2))
@@ -47,6 +49,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(CustomRoutineValidator.terminalRestIssue(for: draft.definition()), .terminalRestStep)
     }
 
+    /// Checks that saved patterns remain editable once while playback expands every declared repetition.
     func testRepeatRangePersistsAndReopensWithoutExpandingEditableSteps() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -79,6 +82,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(try reloaded.plan(for: reloaded.routines[0]).steps.count, 5)
     }
 
+    /// Checks that set counts remain independent of stopwatch timing and loaded-lift repetitions.
     func testSingleStepRepeatRetainsStopwatchAndLiftRepetitionsIndependently() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -110,6 +114,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         }
     }
 
+    /// Checks compatibility with older routine documents that have no set metadata.
     func testSavedDefinitionWithoutSetsStillLoads() throws {
         let original = repeatedDefinition(count: 1)
         var document = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
@@ -120,6 +125,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(decoded.sets.isEmpty)
     }
 
+    /// Checks legacy repeatGroups loading and a lossless save using only the current sets key.
     func testLegacySetsLoadAndResaveWithoutLosingRepetitions() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -144,6 +150,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(CustomRoutineStore(defaults: defaults).routines, [loaded])
     }
 
+    /// Checks invalid counts, nonconsecutive membership, duplicate set identities, and overlaps.
     func testSetValidationRejectsInvalidCountsRangesAndOverlaps() {
         let invalidSets: [(CustomRoutineSet, CustomRoutineValidationIssue)] = [
             (.init(stepIDs: ["hang"], repeatCount: 0), .invalidSetRepeatCount(setIndex: 0)),
@@ -166,6 +173,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         ])
     }
 
+    /// Checks that a rejected repeat count leaves the previously saved routine and bytes intact.
     func testInvalidRepeatsCannotOverwriteASavedRoutine() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -179,6 +187,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(store.routines[0].sets[0].repeatCount, 2)
     }
 
+    /// Checks that compound normalization remaps set members without losing adjacent simple-step identities.
     func testMixedSetPreservesSimpleAndExpandedCompoundIDsAfterReload() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -213,6 +222,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(Set(plan.steps.map(\.id)).count, 7)
     }
 
+    /// Checks that a repeated compound row becomes one editable canonical pattern on save.
     func testRepeatingCompoundStepKeepsCanonicalRangeEditable() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -239,6 +249,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(try store.plan(for: saved).steps.map(\.duration), [8, 4, 8, 4, 8, 4, 10])
     }
 
+    /// Creates a literal work/rest pattern and trailing work row for persistence and expansion tests.
     private func repeatedDefinition(count: Int = 2, sets: [CustomRoutineSet]? = nil) -> CustomRoutineDefinition {
         CustomRoutineDefinition(
             id: "custom.repeated", title: "Repeated", subtitle: "", difficulty: nil, category: nil,
