@@ -126,13 +126,21 @@ final class CustomRoutineRepeatUITests: XCTestCase {
 
     private func setRepeatEnabled(_ enabled: Bool, in app: XCUIApplication) {
         let toggle = app.switches["customRoutine.stepRepeat"]
-        // Stepper scrolling can move the repeat row. Tap the identified Toggle
-        // after revealing it, rather than an implementation-specific child switch.
+        // Stepper scrolling can move the repeat row. Reveal it again and use
+        // the native switch's physical center; the aggregate row includes its label.
         reveal(toggle, in: app)
-        toggle.tap()
+        let control = toggle.switches.firstMatch
+        XCTAssertTrue(control.isEnabled)
+        XCTAssertTrue(control.isHittable)
+        let diagnostic = XCTAttachment(string: toggle.debugDescription)
+        diagnostic.name = "Repeat switch before interaction"
+        diagnostic.lifetime = .keepAlways
+        add(diagnostic)
+        control.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.1)
         let changed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", enabled ? "1" : "0"),
-            object: toggle
+            predicate: NSPredicate { _, _ in (toggle.value as? String) == (enabled ? "1" : "0") },
+            object: nil
         )
         XCTAssertEqual(XCTWaiter.wait(for: [changed], timeout: 5), .completed,
                        "Repeat must become \(enabled ? "enabled" : "disabled") after one tap")
