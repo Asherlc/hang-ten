@@ -15,7 +15,7 @@ matrix expansion and the two call sites for the reusable runtime workflow.
 | CI / build-required | Ubuntu | Required-check aggregation |
 | CI / build-release-device | macOS | `xcodebuild` with the iPhoneOS SDK |
 | CI / test-unit | macOS | XCTest on iOS Simulator |
-| CI / test-ui-paywall | macOS | Purchase, settings and workout UI tests on iOS Simulator |
+| CI / test-ui-paywall | macOS | Two UI shards: custom planner; purchase, settings and workouts |
 | CI / test-ui-map | Apple runner (`xcode-27`) | Three UI shards with Xcode 27, Metal compiler and iOS Simulator |
 | CI / test-ui | Ubuntu | Required UI-check aggregation |
 | Dependabot / discover-pr | Ubuntu | GitHub API and jq |
@@ -26,13 +26,15 @@ matrix expansion and the two call sites for the reusable runtime workflow.
 | Release / board-assets | Ubuntu | Selects and validates the exact runtime catalog tested by CI |
 | Release / release | macOS | Xcode archive/export, Apple keychain signing, codesign and Mach-O verification |
 
-The board UI matrix separates model/picker interaction, board layouts, and
-grip/weight flows. Each shard keeps one simulator and runs each selected test
-once. Keep these groups separate: the one-hour XCTest budget includes simulator
-startup and compilation, and a combined run can exhaust it before the layout
-tests finish. `test_ci_xctest_contract.py` verifies that every UI test method is
-selected exactly once across both required UI jobs; the required UI gate waits
-for all matrix shards.
+The UI matrices separate custom planner scenarios, purchase/settings/workout
+flows, model/picker interaction, board layouts, and grip/weight flows. Each
+shard keeps one simulator and runs each selected test once. Keep these groups
+separate: the one-hour test phase runs inside a 70-minute Actions job that also
+includes asset restoration, simulator startup and compilation. Combining the
+planner and workout suites can exhaust that job limit before every test runs.
+`test_ci_xctest_contract.py` verifies that every UI test method is selected
+exactly once across both required UI jobs; the required UI gate waits for all
+matrix shards.
 
 The native CAD job previously used macOS solely to install a DMG. The shared
 `scripts/install-freecad.sh` now verifies the pinned official Linux x86_64

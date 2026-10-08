@@ -178,7 +178,7 @@ enum CustomRoutineBoardPreview {
     }
 }
 
-/// One reorderable editor row, containing a single step or an entire multi-step set.
+/// One reorderable editor row, containing an ungrouped step or an entire set.
 enum CustomRoutineEditorItem: Equatable, Identifiable {
     case step(CustomRoutineStepDraft)
     case set(CustomRoutineSet, steps: [CustomRoutineStepDraft])
@@ -265,22 +265,75 @@ struct CustomRoutineDraft: Equatable {
         sets = definition.sets
     }
 
-    mutating func addStep() {
-        steps.append(
-            CustomRoutineStepDraft(
-                id: UUID().uuidString,
-                title: "New step",
-                instruction: "",
-                accessory: "",
-                duration: 10,
-                phase: .hang,
-                targets: [],
-                timing: .fixed,
-                activeDuration: nil
-            )
+    /// Adds to the selected set, defaulting to the last visible set or a new once-only set.
+    mutating func addStep(to setID: String? = nil) {
+        let destination = setID ?? steps.last.flatMap { last in
+            sets.first(where: { $0.stepIDs.contains(last.id) })?.id
+        }
+        appendSteps([Self.newStep()], to: destination)
+    }
+
+    /// Starts a separate once-only set with its first editable step.
+    @discardableResult
+    mutating func addSet() -> CustomRoutineSet {
+        let step = Self.newStep()
+        let set = CustomRoutineSet(stepIDs: [step.id], repeatCount: 1)
+        steps.append(step)
+        sets.append(set)
+        return set
+    }
+
+    /// Adds one-run sets for unused consecutive ranges in a planner copy, retaining existing repeats.
+    func assigningDefaultSets() -> CustomRoutineDraft {
+        var grouped = self
+        let usedIDs = Set(sets.flatMap(\.stepIDs))
+        var index = 0
+        while index < steps.count {
+            if usedIDs.contains(steps[index].id) {
+                index += 1
+                continue
+            }
+            let start = index
+            while index < steps.count, !usedIDs.contains(steps[index].id) {
+                index += 1
+            }
+            grouped.sets.append(CustomRoutineSet(
+                stepIDs: steps[start..<index].map(\.id),
+                repeatCount: 1
+            ))
+        }
+        return grouped
+    }
+
+    /// Retains the existing blank-step defaults while giving each addition a fresh identity.
+    private static func newStep() -> CustomRoutineStepDraft {
+        CustomRoutineStepDraft(
+            id: UUID().uuidString,
+            title: "New step",
+            instruction: "",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [],
+            timing: .fixed,
+            activeDuration: nil
         )
     }
 
+    /// Inserts at a set's end so subsequent sets remain contiguous; a nil destination starts a new set.
+    private mutating func appendSteps(_ additions: [CustomRoutineStepDraft], to setID: String?) {
+        if let setID {
+            guard let index = sets.firstIndex(where: { $0.id == setID }),
+                  let range = sets[index].range(in: steps.map(\.id)) else { return }
+            steps.insert(contentsOf: additions, at: range.upperBound)
+            sets[index].stepIDs.append(contentsOf: additions.map(\.id))
+        } else {
+            steps.append(contentsOf: additions)
+            sets.append(CustomRoutineSet(stepIDs: additions.map(\.id), repeatCount: 1))
+        }
+    }
+
+    /// Appends left/right copies to the source set while retaining later sets and mirrored targets.
     mutating func addLeftAndRightPair(
         from step: CustomRoutineStepDraft,
         board: BoardRevision? = nil
@@ -297,7 +350,7 @@ struct CustomRoutineDraft: Equatable {
         right.side = .right
         right.targets = Self.targets(step.targets, mirroredOnto: .right, of: board)
 
-        steps.append(contentsOf: [left, right])
+        appendSteps([left, right], to: sets.first(where: { $0.stepIDs.contains(step.id) })?.id)
     }
 
     /// An exact contact belongs to one physical side of the board, so copying it
@@ -340,15 +393,14 @@ struct CustomRoutineDraft: Equatable {
         steps[index] = step
     }
 
-    /// A set occupies one editor row, while single-step repeats
-    /// keep their existing inline controls.
+    /// Every declared set occupies one editor row, including sets with a single step.
     var editorItems: [CustomRoutineEditorItem] {
         let stepIDs = steps.map(\.id)
         var items: [CustomRoutineEditorItem] = []
         var index = 0
         while index < steps.count {
             if let set = sets.first(where: {
-                $0.stepIDs.count > 1 && $0.range(in: stepIDs)?.lowerBound == index
+                $0.range(in: stepIDs)?.lowerBound == index
             }), let range = set.range(in: stepIDs) {
                 items.append(.set(set, steps: Array(steps[range])))
                 index = range.upperBound
