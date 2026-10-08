@@ -16,6 +16,73 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var repetitions: Int?
     var externalLoadKGF: Double?
 
+    /// One exercise control writes both underlying playback classifications.
+    var exercise: CustomRoutineExercise {
+        get {
+            if isRest { return .rest }
+            switch action {
+            case .hang: return .hang
+            case .isometricPull: return .isometricPull
+            case .loadedLift: return .loadedLift
+            }
+        }
+        set {
+            let wasRest = isRest
+            let usesExerciseName = title == exercise.label
+            switch newValue {
+            case .rest:
+                phase = .rest
+                targets = []
+                timing = .fixed
+                handUse = .double
+                side = .both
+                action = .hang
+                repetitions = nil
+                externalLoadKGF = nil
+            case .hang, .isometricPull, .loadedLift:
+                action = switch newValue {
+                case .hang, .rest: .hang
+                case .isometricPull: .isometricPull
+                case .loadedLift: .loadedLift
+                }
+                if wasRest || phase == .hang || phase == .pull {
+                    phase = newValue == .hang ? .hang : .pull
+                }
+                repetitions = newValue == .loadedLift ? max(repetitions ?? 1, 1) : nil
+                if (phase == .pull || action == .isometricPull) && handUse == .either {
+                    transitionHandUse(to: .double)
+                }
+            }
+            // Canonical names continue to follow the exercise after saving and reopening.
+            if usesExerciseName { title = newValue.label }
+        }
+    }
+
+    var displayTitle: String {
+        let name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        return name.isEmpty ? exercise.label : name
+    }
+
+    /// A single choice keeps hand use, side and hold selection policy consistent.
+    var handChoice: CustomRoutineHandChoice {
+        get {
+            switch handUse {
+            case .double: .both
+            case .either: .either
+            case .single: side == .right ? .right : .left
+            }
+        }
+        set {
+            let use: WorkoutHandUse = switch newValue {
+            case .both: .double
+            case .either: .either
+            case .left, .right: .single
+            }
+            if use != handUse { transitionHandUse(to: use) }
+            side = newValue == .left ? .left : newValue == .right ? .right : .both
+        }
+    }
+
     mutating func transitionHandUse(to handUse: WorkoutHandUse) {
         self.handUse = handUse
         side = handUse == .single ? .left : .both
@@ -131,7 +198,7 @@ enum CustomRoutineBoardPreview {
         let step = WorkoutStep(
             id: draft.id,
             number: 0,
-            title: draft.title,
+            title: draft.displayTitle,
             instruction: draft.instruction,
             accessory: draft.accessory,
             duration: draft.duration,
@@ -305,14 +372,14 @@ struct CustomRoutineDraft: Equatable {
         return grouped
     }
 
-    /// Retains the existing blank-step defaults while giving each addition a fresh identity.
+    /// Leaves duration unauthored until the athlete supplies it.
     private static func newStep() -> CustomRoutineStepDraft {
         CustomRoutineStepDraft(
             id: UUID().uuidString,
-            title: "New step",
+            title: "",
             instruction: "",
             accessory: "",
-            duration: 10,
+            duration: 0,
             phase: .hang,
             targets: [],
             timing: .fixed,
@@ -595,7 +662,7 @@ struct CustomRoutineDraft: Equatable {
         )
         return WorkoutStepDefinition(
             id: step.id,
-            title: step.title,
+            title: step.displayTitle,
             instruction: step.instruction,
             accessory: step.accessory,
             duration: step.duration,
@@ -678,6 +745,33 @@ struct CustomRoutineMetadataOptions: Equatable {
                 return lhs < rhs
             }
             return comparison == .orderedAscending
+        }
+    }
+}
+
+/// Editor choices; persistence continues to use the existing phase and action fields.
+enum CustomRoutineExercise: CaseIterable, Hashable {
+    case hang, isometricPull, loadedLift, rest
+
+    var label: String {
+        switch self {
+        case .hang: "Hang"
+        case .isometricPull: "Isometric pull"
+        case .loadedLift: "Loaded lift"
+        case .rest: "Rest"
+        }
+    }
+}
+
+enum CustomRoutineHandChoice: CaseIterable, Hashable {
+    case both, left, right, either
+
+    var label: String {
+        switch self {
+        case .both: "Both hands"
+        case .left: "Left hand"
+        case .right: "Right hand"
+        case .either: "Choose at start"
         }
     }
 }

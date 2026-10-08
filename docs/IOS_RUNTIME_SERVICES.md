@@ -60,23 +60,49 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-Custom routine creation and editing place steps in sets by default. The first
-**Add step** creates a set with one run; **Add step** within a set appends to that
-set, including an earlier set without disturbing later sets. **Add set** starts
-a separate one-run sequence with its first editable step. Single-step and
-multi-step sets use the same expanded editor row with numbered headers, child
-steps, inline count, **Edit set**, and **Ungroup set**. Child forms remain editable
-and include **Remove step**. The range editor can retain a single step and
-previews one complete repetition in order. Ungrouping keeps every child and its
-edits for one run; **Create set from steps** can regroup two or more consecutive
-ungrouped steps.
-The **Repeat** toggle in an explicitly ungrouped step's form, including a rest
-step, creates a single-step set with two runs. Its parent row then provides the
-count and **Ungroup set** controls. A set child's **Edit set** opens the shared
-set editor. The count is the total number of runs, including the first,
-and supports 1–100. The range selectors use
-[SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
-to show step choices inside the set sheet's navigation stack. Sets cannot overlap.
+Custom routine creation and editing place steps in sets by default. **Add set**
+starts a separate one-run sequence and opens its first step for immediate editing.
+**Add step** within a set appends to that set, including an earlier set without
+disturbing later sets. Set repeat counts are edited inline and include the first
+run (1–100). Sets move together when reordered. Child steps expose **Remove step**;
+there is no separate set editor or ungroup action in the planner.
+
+Each step shows Exercise, Timing, and Hands & holds. Exercise
+combines the persisted phase/action classifications into Hang, Isometric pull,
+Loaded lift, or Rest. Rest clears work-only fields and uses fixed timing. Optional
+warm-up, conditioning, and cool-down classifications in saved routines are
+preserved; the builder does not expose a separate phase control. Hands combines hand
+use and side into Both hands, Left hand, Right hand, or Choose at start; the last
+choice remains unavailable for pull phases and isometric pulls. Loaded lift also
+exposes repetitions and optional external load. Shape and depth refinements live
+under **Hold details**. Optional naming and instructions live under **Step details**;
+unnamed steps use their exercise name. There is no separate left/right pair shortcut.
+The legacy accessory text
+field is omitted from the builder; saved accessory text is retained for playback.
+Routine description,
+difficulty, category and tags live under **Routine details**. Expanded rows omit
+redundant summaries; collapsed steps summarize exercise, duration, hands and hold kind.
+
+New step durations start blank and must be entered by the athlete. The Duration
+label and seconds unit remain visible when populated. Text and numeric placeholders
+show examples rather than repeat labels; examples are not prefilled values or
+training prescriptions. A keyboard **Done** action
+finishes text or numeric entry. For stopwatch or unspecified active timing,
+duration still defines the total enclosing step time. Existing
+saved durations and authored instructions remain unchanged when opened.
+Hold compatibility failures identify the affected step and suggest changing the
+hold type, shape, or depth; the builder does not display internal validation enums.
+
+The builder follows persistent-label and progressive-disclosure guidance from
+[Apple’s data-entry guidelines](https://developer.apple.com/design/human-interface-guidelines/entering-data),
+[NN/g’s form-label research](https://www.nngroup.com/articles/form-design-placeholders/),
+and [NN/g’s progressive-disclosure guidance](https://www.nngroup.com/articles/progressive-disclosure/).
+[Hevy’s routine editor](https://www.hevyapp.com/features/track-workouts/) is a
+reference for grouping exercise-specific inputs and keeping optional actions
+secondary; [Seconds’ custom editor](https://www.intervaltimer.com/help/editors/custom-timer)
+is a reference for an ordered interval list with compact summaries. These are
+interaction precedents, not sources for training prescriptions.
+
 Saving retains each authored step once with its set and count. Opening an older
 routine in the planner wraps consecutive ungrouped steps in one-run sets while
 retaining authored values and existing repeat counts; it changes the editable
@@ -87,8 +113,7 @@ write `sets`. Workout resolution expands sets in order with distinct step
 identities and includes every repetition in the session duration. Editing and
 duplicating a custom routine retain its sets. Reordering a member moves its
 whole set; deleting a set row removes all its members. Deleting a member removes
-it from the set, and deleting every member removes the set. Ungrouping keeps its
-steps for one run.
+it from the set, and deleting every member removes the set.
 A custom routine may end in rest when that rest belongs to a declared set of
 multiple steps that includes work. Every repetition retains that rest, including
 the last. An ungrouped final rest or a rest-only final set remains invalid.

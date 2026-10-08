@@ -2,6 +2,101 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testIncompatibleHoldsProduceActionableSaveFeedback() {
+        let error = CustomRoutineStoreError.validationFailed([
+            .unresolvableSegmentTargets(stepIndex: 1, segmentIndex: 0), .noCompatibleBoard
+        ])
+        let message = CustomRoutineEditorView.saveErrorMessage(for: error)
+        XCTAssertTrue(message.contains("Step 2"))
+        XCTAssertTrue(message.contains("Try another hold type, shape, or depth."))
+        XCTAssertFalse(message.contains("unresolvableSegmentTargets"))
+    }
+
+    func testExerciseNamesFollowChangesAfterSaveAndReopen() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addSet()
+        var reopened = CustomRoutineDraft(editing: draft.definition())
+        reopened.steps[0].exercise = .loadedLift
+        XCTAssertEqual(reopened.steps[0].displayTitle, "Loaded lift")
+        XCTAssertEqual(reopened.definition().steps[0].title, "Loaded lift")
+        reopened.steps[0].title = "My exercise"
+        reopened.steps[0].exercise = .hang
+        XCTAssertEqual(reopened.steps[0].displayTitle, "My exercise")
+    }
+
+    func testNewStepRequiresAthleteAuthoredDuration() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "My routine"
+        draft.addSet()
+        XCTAssertEqual(draft.steps[0].duration, 0)
+        XCTAssertEqual(draft.steps[0].title, "")
+        XCTAssertEqual(draft.steps[0].displayTitle, "Hang")
+        XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: draft.definition())
+            .contains("Step 1 needs a positive duration."))
+        draft.steps[0].duration = 12
+        draft.steps[0].targets = [.kind(.jug)]
+        XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: draft.definition()).isEmpty)
+        XCTAssertEqual(draft.definition().steps[0].title, "Hang")
+        draft.steps[0].exercise = .rest
+        XCTAssertEqual(draft.definition().steps[0].title, "Rest")
+    }
+
+    func testExerciseChoiceCanonicalizesRestAndLoadedLift() {
+        var step = makeStep(id: "one", title: "My step")
+        step.handChoice = .either
+        step.exercise = .isometricPull
+        XCTAssertEqual(step.phase, .pull)
+        XCTAssertEqual(step.action, .isometricPull)
+        XCTAssertEqual(step.handUse, .double)
+        step.exercise = .loadedLift
+        XCTAssertEqual(step.action, .loadedLift)
+        XCTAssertEqual(step.repetitions, 1)
+        step.externalLoadKGF = 12
+        step.exercise = .rest
+        XCTAssertEqual(step.phase, .rest)
+        XCTAssertTrue(step.targets.isEmpty)
+        XCTAssertEqual(step.timing, .fixed)
+        XCTAssertNil(step.repetitions)
+        XCTAssertNil(step.externalLoadKGF)
+        XCTAssertEqual(step.handChoice, .both)
+        step.exercise = .hang
+        XCTAssertEqual(step.phase, .hang)
+        XCTAssertEqual(step.action, .hang)
+        XCTAssertEqual(step.title, "My step")
+        XCTAssertEqual(step.duration, 10)
+    }
+
+    func testExerciseChoicePreservesOptionalWorkoutSections() {
+        for phase in [WorkoutPhase.warmUp, .conditioning, .coolDown] {
+            var step = makeStep(id: "one", title: "My step")
+            step.phase = phase
+            step.exercise = .loadedLift
+            XCTAssertEqual(step.phase, phase)
+            XCTAssertEqual(step.exercise, .loadedLift)
+            step.exercise = .hang
+            XCTAssertEqual(step.phase, phase)
+        }
+    }
+
+    func testCombinedHandChoiceUpdatesSideAndTargetPolicy() {
+        var step = makeStep(id: "one", title: "My step")
+        step.handChoice = .right
+        XCTAssertEqual(step.handUse, .single)
+        XCTAssertEqual(step.side, .right)
+        XCTAssertEqual(step.targets[0].selection, .single)
+        step.handChoice = .left
+        XCTAssertEqual(step.handUse, .single)
+        XCTAssertEqual(step.side, .left)
+        step.handChoice = .both
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets[0].selection, .bilateralPair)
+        step.handChoice = .either
+        XCTAssertEqual(step.handUse, .either)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets[0].selection, .single)
+    }
+
     /// New steps share one set without adding an unintended extra workout repetition.
     func testAddedStepsJoinOneSetByDefault() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
@@ -41,7 +136,8 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         draft.addStep(to: "first")
 
-        XCTAssertEqual(draft.steps[1].title, "New step")
+        XCTAssertEqual(draft.steps[1].title, "")
+        XCTAssertEqual(draft.steps[1].displayTitle, "Hang")
         XCTAssertEqual(draft.steps.map(\.id).suffix(2), ["two", "three"])
         XCTAssertEqual(draft.sets[0].stepIDs, ["one", draft.steps[1].id])
         XCTAssertEqual(draft.sets[0].repeatCount, 5)

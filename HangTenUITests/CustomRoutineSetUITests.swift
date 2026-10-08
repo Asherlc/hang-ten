@@ -12,8 +12,8 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    /// Checks automatic membership, persistence, child editing and explicit ungrouping.
-    func testSetSavesReopensEditsChildAndUngroupsWithoutLosingSteps() {
+    /// Checks automatic membership, persistence and inline child editing without extra set actions.
+    func testSetSavesReopensAndEditsChildInline() {
         let app = launchEditor(name: "Set review")
         addStep(title: "Hang", rest: false, in: app)
         XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
@@ -22,8 +22,8 @@ final class CustomRoutineSetUITests: XCTestCase {
         addStep(title: "Rest", rest: true, in: app)
         XCTAssertFalse(app.buttons["customRoutine.setHeader.2"].exists)
         changeCount(by: 2, in: app)
-        XCTAssertTrue(app.buttons["Hang"].exists)
-        XCTAssertTrue(app.buttons["Rest"].exists)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Hang")).firstMatch.exists)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Rest")).firstMatch.exists)
         capture(app, name: "New steps automatically join the same set")
         tap("customRoutine.save", in: app)
         openSavedRoutine(named: "Set review", in: app)
@@ -35,6 +35,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         changeCount(by: 1, in: app)
         expandStep(titled: "Rest", in: app)
         XCTAssertFalse(app.switches["customRoutine.stepRepeat"].exists)
+        tap("customRoutine.stepOptions", in: app)
         let title = app.textFields["customRoutine.stepTitle"]
         reveal(title, in: app)
         title.tap()
@@ -47,32 +48,21 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.actions", in: app)
         app.buttons["Edit"].tap()
         expandSet(in: app)
-        tap("customRoutine.ungroupSet.1", in: app)
-        XCTAssertFalse(app.steppers["customRoutine.setRepeatCount.1"].exists)
-        XCTAssertTrue(app.buttons["Hang"].exists)
-        XCTAssertTrue(app.buttons["Recovery"].exists)
-        capture(app, name: "Explicit ungrouping retains authored steps")
+        XCTAssertFalse(app.buttons["customRoutine.ungroupSet.1"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.editSet.1"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.editStepSet"].exists)
+        capture(app, name: "Set edits stay inline")
     }
 
-    /// Keeps a separate set intact when the athlete edits a range and adds to an earlier set.
-    func testSetRangeSelectionKeepsIndividualRepeatsSeparate() {
+    /// Adding to an earlier set retains independent counts and all later steps.
+    func testAddingToEarlierSetKeepsIndependentRepeats() {
         let app = launchEditor(name: "Set range review")
         addStep(title: "Single", rest: false, in: app)
         changeCount(by: 1, in: app)
         addSet(title: "Hang", rest: false, in: app)
         addStep(title: "Rest", rest: true, setNumber: 2, in: app)
         addStep(title: "Finish", rest: false, setNumber: 2, in: app)
-        tap("customRoutine.editSet.2", in: app)
-        XCTAssertTrue(app.navigationBars["Edit set"].waitForExistence(timeout: 5))
-        tap("customRoutine.setStart", in: app)
-        XCTAssertFalse(app.buttons["1. Single"].exists)
-        app.buttons["4. Finish"].tap()
-        XCTAssertTrue(app.buttons["customRoutine.setSave"].isEnabled, "A set may have one step")
-        tap("customRoutine.setStart", in: app)
-        app.buttons["2. Hang"].tap()
-        changeCount(by: 2, identifier: "customRoutine.setCount", in: app)
-        capture(app, name: "Set range retains a separate single-step set")
-        tap("customRoutine.setSave", in: app)
+        changeCount(by: 2, identifier: "customRoutine.setRepeatCount.2", in: app)
         addStep(title: "Extra", rest: false, in: app)
         XCTAssertTrue(app.staticTexts["Repeat 2 times"].firstMatch.exists)
         reveal(app.steppers["customRoutine.setRepeatCount.2"], in: app)
@@ -85,6 +75,59 @@ final class CustomRoutineSetUITests: XCTestCase {
             reveal(step, in: app)
             XCTAssertTrue(step.exists)
         }
+    }
+
+    /// Exercises consolidated choices, labeled empty duration, optional instructions and persistence.
+    func testSimpleStepControlsSaveAndReopen() {
+        let app = launchEditor(name: "Simple builder")
+        tap("customRoutine.addSet", in: app)
+        let duration = app.textFields["customRoutine.stepDuration"]
+        reveal(duration, in: app)
+        XCTAssertEqual(duration.value as? String, "e.g. 15")
+        XCTAssertTrue(app.staticTexts["Duration"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.editStepSet"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.ungroupSet.1"].exists)
+        tap("customRoutine.stepExercise", in: app)
+        app.buttons["Loaded lift"].tap()
+        tap("customRoutine.stepHands", in: app)
+        app.buttons["Right hand"].tap()
+        duration.tap()
+        duration.typeText("12")
+        tap("customRoutine.keyboardDone", in: app)
+        tap("customRoutine.stepTarget", in: app)
+        app.buttons["Edges"].tap()
+        tap("customRoutine.holdDetails", in: app)
+        tap("customRoutine.stepDepth", in: app)
+        app.buttons["Medium"].tap()
+        tap("customRoutine.holdDetails", in: app)
+        XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
+        capture(app, name: "Exercise timing and hands in focused groups")
+        tap("customRoutine.stepOptions", in: app)
+        XCTAssertTrue(app.staticTexts["Instructions"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.stepPhase"].exists)
+        XCTAssertFalse(app.buttons["customRoutine.addLeftRightPair"].exists)
+        XCTAssertFalse(app.textFields["customRoutine.stepAccessory"].exists)
+        let instructionField = app.descendants(matching: .any)
+            .matching(identifier: "customRoutine.stepInstruction").firstMatch
+        reveal(instructionField, in: app)
+        instructionField.tap()
+        instructionField.typeText("My own cue")
+        tap("customRoutine.keyboardDone", in: app)
+        capture(app, name: "Optional instructions without redundant classifications")
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: "Simple builder", in: app)
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        expandSet(in: app)
+        expandStep(titled: "Loaded lift", in: app)
+        XCTAssertTrue(app.buttons["customRoutine.stepHands"].label.contains("Right hand"))
+        XCTAssertTrue(app.buttons["customRoutine.stepExercise"].label.contains("Loaded lift"))
+        XCTAssertEqual(app.textFields["customRoutine.stepDuration"].value as? String, "12")
+        XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
+        capture(app, name: "Consolidated selections restored after saving")
+        tap("customRoutine.stepOptions", in: app)
+        reveal(instructionField, in: app)
+        XCTAssertEqual(instructionField.value as? String, "My own cue")
     }
 
     /// Expands the default hang/rest set in order and retains its final recovery interval.
@@ -139,7 +182,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         changeCount(by: -4, in: app)
         XCTAssertTrue(app.staticTexts["Repeat 1 time"].firstMatch.exists)
         XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
-        XCTAssertTrue(app.buttons["Hang"].exists)
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "Hang")).firstMatch.exists)
         capture(app, name: "One run retains the single-step set")
         tap("customRoutine.save", in: app)
         XCTAssertFalse(app.staticTexts["Repeat 3 times"].exists)
@@ -185,11 +228,10 @@ final class CustomRoutineSetUITests: XCTestCase {
         return app
     }
 
-    /// Adds through the selected set's control; only an empty planner uses the initial Add step action.
+    /// Adds to the selected set, creating the first set when the planner is empty.
     private func addStep(title: String, rest: Bool, setNumber: Int = 1, in app: XCUIApplication) {
-        let initial = app.buttons["customRoutine.addStep"]
-        if initial.exists {
-            tap("customRoutine.addStep", in: app)
+        if !app.buttons["customRoutine.setHeader.1"].exists {
+            tap("customRoutine.addSet", in: app)
         } else {
             tap("customRoutine.addSetStep.\(setNumber)", in: app)
         }
@@ -206,18 +248,22 @@ final class CustomRoutineSetUITests: XCTestCase {
 
     /// Authors the newly added fixture step and closes its form before another step is added.
     private func configureNewStep(title: String, rest: Bool, in app: XCUIApplication) {
-        let row = app.buttons["New step"]
-        reveal(row, in: app)
-        row.tap()
         if rest {
-            tap("customRoutine.stepPhase", in: app)
+            tap("customRoutine.stepExercise", in: app)
             app.buttons["Rest"].tap()
         }
+        let duration = app.textFields["customRoutine.stepDuration"]
+        reveal(duration, in: app)
+        duration.tap()
+        duration.typeText("10")
+        tap("customRoutine.keyboardDone", in: app)
+        tap("customRoutine.stepOptions", in: app)
         let field = app.textFields["customRoutine.stepTitle"]
         reveal(field, in: app)
         field.tap()
-        let oldValue = field.value as? String ?? ""
+        let oldValue = (field.value as? String).flatMap { $0.hasPrefix("e.g.") ? nil : $0 } ?? ""
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: oldValue.count) + title + "\n")
+        tap("customRoutine.stepOptions", in: app)
         if !rest {
             tap("customRoutine.stepTarget", in: app)
             app.buttons["Jugs"].tap()
@@ -268,13 +314,9 @@ final class CustomRoutineSetUITests: XCTestCase {
         target.tap()
     }
 
-    /// Scrolls identified controls into the usable viewport, including modal forms.
+    /// Scrolls identified controls into the usable viewport of the routine sheet.
     private func reveal(_ target: XCUIElement, in app: XCUIApplication, scrollTowardTop: Bool = false) {
         for _ in 0..<10 {
-            if target.exists && target.isHittable,
-               app.navigationBars["Create set"].exists || app.navigationBars["Edit set"].exists {
-                return
-            }
             if target.exists && target.isHittable && !target.identifier.isEmpty,
                app.navigationBars.buttons.matching(identifier: target.identifier).firstMatch.exists {
                 return
