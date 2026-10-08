@@ -366,6 +366,7 @@ jobs:
 
   workflow-lint:
     name: Lint GitHub Actions workflows
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
