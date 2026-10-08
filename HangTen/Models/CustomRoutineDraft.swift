@@ -178,6 +178,7 @@ enum CustomRoutineBoardPreview {
     }
 }
 
+/// One reorderable editor row, containing a single step or an entire multi-step set.
 enum CustomRoutineEditorItem: Equatable, Identifiable {
     case step(CustomRoutineStepDraft)
     case set(CustomRoutineSet, steps: [CustomRoutineStepDraft])
@@ -357,12 +358,14 @@ struct CustomRoutineDraft: Equatable {
         return items
     }
 
+    /// Deletes every authored member of the selected editor rows and prunes their sets.
     mutating func removeEditorItems(at offsets: IndexSet) {
         let items = editorItems
         let removedIDs = Set(offsets.filter { items.indices.contains($0) }.flatMap { items[$0].stepIDs })
         removeSteps(at: IndexSet(steps.indices.filter { removedIDs.contains(steps[$0].id) }))
     }
 
+    /// Translates editor row offsets into authored step offsets, keeping sets together.
     mutating func moveEditorItems(from offsets: IndexSet, to destination: Int) {
         let items = editorItems
         let movedIDs = Set(offsets.filter { items.indices.contains($0) }.flatMap { items[$0].stepIDs })
@@ -372,6 +375,7 @@ struct CustomRoutineDraft: Equatable {
         moveSteps(from: stepOffsets, to: stepDestination)
     }
 
+    /// Removes steps from their sets and drops set metadata when no members remain.
     mutating func removeSteps(at offsets: IndexSet) {
         for index in offsets.sorted(by: >) where steps.indices.contains(index) {
             steps.remove(at: index)
@@ -384,6 +388,7 @@ struct CustomRoutineDraft: Equatable {
         }
     }
 
+    /// Moves a selected member's complete set and avoids splitting another set at insertion.
     mutating func moveSteps(from offsets: IndexSet, to destination: Int) {
         let stepIDs = steps.map(\.id)
         var movingOffsets = Set(offsets.filter { steps.indices.contains($0) })
@@ -418,6 +423,7 @@ struct CustomRoutineDraft: Equatable {
         steps.insert(contentsOf: movingSteps, at: insertionIndex)
     }
 
+    /// Proposes the first consecutive pair outside existing sets, without changing the draft.
     func newSet() -> CustomRoutineSet? {
         let usedIDs = Set(sets.flatMap(\.stepIDs))
         for index in steps.indices.dropLast() {
@@ -429,6 +435,7 @@ struct CustomRoutineDraft: Equatable {
         return nil
     }
 
+    /// Inserts or replaces a valid set; unsupported counts, gaps, and overlaps are ignored.
     mutating func updateSet(_ set: CustomRoutineSet) {
         guard CustomRoutineSet.supportedCounts.contains(set.repeatCount),
               set.range(in: steps.map(\.id)) != nil,
@@ -442,6 +449,7 @@ struct CustomRoutineDraft: Equatable {
         }
     }
 
+    /// Ungroups the set while retaining all authored steps and their edits.
     mutating func removeSet(id: String) {
         sets.removeAll { $0.id == id }
     }

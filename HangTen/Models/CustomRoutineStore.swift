@@ -66,6 +66,8 @@ enum CustomRoutineTargetMode: Hashable, Codable {
     }
 }
 
+/// A consecutive sequence of authored steps with a shared total run count.
+/// A single-step set supplies the editor's individual repeat controls.
 struct CustomRoutineSet: Codable, Hashable, Identifiable {
     static let supportedCounts = 1...100
 
@@ -73,12 +75,14 @@ struct CustomRoutineSet: Codable, Hashable, Identifiable {
     var stepIDs: [String]
     var repeatCount: Int
 
+    /// Retains authored step IDs once; the repeat count includes the first run.
     init(id: String = UUID().uuidString, stepIDs: [String], repeatCount: Int = 2) {
         self.id = id
         self.stepIDs = stepIDs
         self.repeatCount = repeatCount
     }
 
+    /// Returns the matching contiguous range, or nil for missing or reordered members.
     func range(in orderedStepIDs: [String]) -> Range<Int>? {
         guard let first = stepIDs.first,
               let start = orderedStepIDs.firstIndex(of: first),
@@ -88,6 +92,7 @@ struct CustomRoutineSet: Codable, Hashable, Identifiable {
     }
 }
 
+/// An editable routine whose steps remain unexpanded until workout resolution.
 struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
     let id: String
     let title: String
@@ -134,6 +139,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         self.sets = sets
     }
 
+    /// Prefers current set data and falls back to the legacy repeatGroups field.
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -149,6 +155,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
             ?? []
     }
 
+    /// Saves authored steps and set metadata using only the current sets field.
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
@@ -370,6 +377,7 @@ enum CustomRoutineValidator {
         return issues
     }
 
+    /// Reports duplicate IDs, unsupported counts, invalid ranges, and overlapping sets.
     static func setIssues(for definition: CustomRoutineDefinition) -> [CustomRoutineValidationIssue] {
         var issues: [CustomRoutineValidationIssue] = []
         var setIDs = Set<String>()
@@ -416,6 +424,7 @@ enum CustomRoutineValidator {
         }
     }
 
+    /// Permits final recovery only within a multi-step set that also contains work.
     static func terminalRestIssue(for definition: CustomRoutineDefinition) -> CustomRoutineValidationIssue? {
         guard definition.steps.last.map(stepEndsInRestAfterNormalization) == true else { return nil }
         // An athlete-authored work/rest set retains its complete final run,

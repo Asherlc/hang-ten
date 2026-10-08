@@ -304,9 +304,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Plateau landscape workout board below configuration selector")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
-        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
-        waitForExpectations(timeout: 20)
+        waitForNaturalRest(in: app)
         pause.tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         XCTAssertGreaterThan(board.frame.height, 30)
@@ -342,9 +340,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         addScreenshot(named: "Mini portrait paused Hang board and finger cues")
 
         app.buttons["Resume"].tap()
-        let rest = NSPredicate(format: "label BEGINSWITH %@", "Step 18 of ")
-        expectation(for: rest, evaluatedWith: app.buttons["workout.routinePicker"])
-        waitForExpectations(timeout: 20)
+        waitForNaturalRest(in: app)
         pause.tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         board.swipeUp()
@@ -352,6 +348,18 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
         XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         addScreenshot(named: "Mini portrait natural Rest board and finger cues")
+    }
+
+    private func waitForNaturalRest(in app: XCUIApplication) {
+        let picker = app.buttons["workout.routinePicker"]
+        // An evaluated XCUIElement makes XCTest capture its full debug hierarchy
+        // on every failed poll. A cold CI snapshot can consume the entire wait
+        // before the ten-second Hang advances; query only the current step label.
+        let rest = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            picker.label.hasPrefix("Step 18 of ")
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [rest], timeout: 20), .completed,
+                       "The running Hang must advance naturally to Rest before checking its board preview")
     }
 
     private func launchLandscapeBoardDetail(
