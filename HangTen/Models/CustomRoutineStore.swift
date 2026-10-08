@@ -66,7 +66,7 @@ enum CustomRoutineTargetMode: Hashable, Codable {
     }
 }
 
-struct CustomRoutineRepeatGroup: Codable, Hashable, Identifiable {
+struct CustomRoutineSet: Codable, Hashable, Identifiable {
     static let supportedCounts = 1...100
 
     let id: String
@@ -97,7 +97,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
     let tags: [String]
     let targetMode: CustomRoutineTargetMode
     let steps: [WorkoutStepDefinition]
-    let repeatGroups: [CustomRoutineRepeatGroup]
+    let sets: [CustomRoutineSet]
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -108,7 +108,8 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         case tags
         case targetMode
         case steps
-        case repeatGroups
+        case sets
+        case legacySets = "repeatGroups"
     }
 
     init(
@@ -120,7 +121,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         tags: [String],
         targetMode: CustomRoutineTargetMode,
         steps: [WorkoutStepDefinition],
-        repeatGroups: [CustomRoutineRepeatGroup] = []
+        sets: [CustomRoutineSet] = []
     ) {
         self.id = id
         self.title = title
@@ -130,7 +131,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         self.tags = tags
         self.targetMode = targetMode
         self.steps = steps
-        self.repeatGroups = repeatGroups
+        self.sets = sets
     }
 
     init(from decoder: Decoder) throws {
@@ -143,7 +144,22 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         tags = try container.decode([String].self, forKey: .tags)
         targetMode = try container.decode(CustomRoutineTargetMode.self, forKey: .targetMode)
         steps = try container.decode([WorkoutStepDefinition].self, forKey: .steps)
-        repeatGroups = try container.decodeIfPresent([CustomRoutineRepeatGroup].self, forKey: .repeatGroups) ?? []
+        sets = try container.decodeIfPresent([CustomRoutineSet].self, forKey: .sets)
+            ?? container.decodeIfPresent([CustomRoutineSet].self, forKey: .legacySets)
+            ?? []
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(title, forKey: .title)
+        try container.encode(subtitle, forKey: .subtitle)
+        try container.encodeIfPresent(difficulty, forKey: .difficulty)
+        try container.encodeIfPresent(category, forKey: .category)
+        try container.encode(tags, forKey: .tags)
+        try container.encode(targetMode, forKey: .targetMode)
+        try container.encode(steps, forKey: .steps)
+        try container.encode(sets, forKey: .sets)
     }
 }
 
@@ -175,10 +191,10 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case emptyTitle
     case missingSteps
     case duplicateStepID(stepIndex: Int)
-    case duplicateRepeatGroupID(groupIndex: Int)
-    case invalidRepeatCount(groupIndex: Int)
-    case invalidRepeatSteps(groupIndex: Int)
-    case overlappingRepeatSteps(groupIndex: Int)
+    case duplicateSetID(setIndex: Int)
+    case invalidSetRepeatCount(setIndex: Int)
+    case invalidSetSteps(setIndex: Int)
+    case overlappingSetSteps(setIndex: Int)
     case invalidDuration(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
     case invalidHandUseSide(stepIndex: Int)
@@ -216,7 +232,7 @@ enum CustomRoutineValidator {
         } else if let issue = terminalRestIssue(for: definition) {
             issues.append(issue)
         }
-        issues += repeatIssues(for: definition)
+        issues += setIssues(for: definition)
 
         let boards: [BoardRevision]
         switch definition.targetMode {
@@ -354,25 +370,25 @@ enum CustomRoutineValidator {
         return issues
     }
 
-    static func repeatIssues(for definition: CustomRoutineDefinition) -> [CustomRoutineValidationIssue] {
+    static func setIssues(for definition: CustomRoutineDefinition) -> [CustomRoutineValidationIssue] {
         var issues: [CustomRoutineValidationIssue] = []
-        var groupIDs = Set<String>()
-        var repeatedStepIDs = Set<String>()
+        var setIDs = Set<String>()
+        var usedStepIDs = Set<String>()
         let stepIDs = definition.steps.map(\.id)
-        for (index, group) in definition.repeatGroups.enumerated() {
-            if !groupIDs.insert(group.id).inserted {
-                issues.append(.duplicateRepeatGroupID(groupIndex: index))
+        for (index, set) in definition.sets.enumerated() {
+            if !setIDs.insert(set.id).inserted {
+                issues.append(.duplicateSetID(setIndex: index))
             }
-            if !CustomRoutineRepeatGroup.supportedCounts.contains(group.repeatCount) {
-                issues.append(.invalidRepeatCount(groupIndex: index))
+            if !CustomRoutineSet.supportedCounts.contains(set.repeatCount) {
+                issues.append(.invalidSetRepeatCount(setIndex: index))
             }
-            if group.range(in: stepIDs) == nil || Set(group.stepIDs).count != group.stepIDs.count {
-                issues.append(.invalidRepeatSteps(groupIndex: index))
+            if set.range(in: stepIDs) == nil || Set(set.stepIDs).count != set.stepIDs.count {
+                issues.append(.invalidSetSteps(setIndex: index))
             }
-            if !repeatedStepIDs.isDisjoint(with: group.stepIDs) {
-                issues.append(.overlappingRepeatSteps(groupIndex: index))
+            if !usedStepIDs.isDisjoint(with: set.stepIDs) {
+                issues.append(.overlappingSetSteps(setIndex: index))
             }
-            repeatedStepIDs.formUnion(group.stepIDs)
+            usedStepIDs.formUnion(set.stepIDs)
         }
         return issues
     }
@@ -401,7 +417,19 @@ enum CustomRoutineValidator {
     }
 
     static func terminalRestIssue(for definition: CustomRoutineDefinition) -> CustomRoutineValidationIssue? {
-        definition.steps.last.map(stepEndsInRestAfterNormalization) == true ? .terminalRestStep : nil
+        guard definition.steps.last.map(stepEndsInRestAfterNormalization) == true else { return nil }
+        // An athlete-authored work/rest set retains its complete final run,
+        // including the selected recovery. Standalone final rests still fail.
+        let stepIDs = definition.steps.map(\.id)
+        for set in definition.sets {
+            if CustomRoutineSet.supportedCounts.contains(set.repeatCount),
+               let range = set.range(in: stepIDs),
+               range.count > 1, range.upperBound == definition.steps.count,
+               definition.steps[range].contains(where: { $0.phase != .rest }) {
+                return nil
+            }
+        }
+        return .terminalRestStep
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -600,14 +628,14 @@ final class CustomRoutineStore: CustomRoutineStoring {
         let stepIDs = definition.steps.map(\.id)
         var index = 0
         while index < definition.steps.count {
-            let group = definition.repeatGroups.first { $0.range(in: stepIDs)?.lowerBound == index }
-            let end = group?.range(in: stepIDs)?.upperBound ?? index + 1
+            let set = definition.sets.first { $0.range(in: stepIDs)?.lowerBound == index }
+            let end = set?.range(in: stepIDs)?.upperBound ?? index + 1
             let block = WorkoutBlockDefinition(
                 id: "\(definition.id).custom-block-\(index)",
                 steps: Array(definition.steps[index..<end])
             )
             blocks.append(block)
-            references.append(WorkoutBlockReference(blockID: block.id, repeatCount: group?.repeatCount ?? 1))
+            references.append(WorkoutBlockReference(blockID: block.id, repeatCount: set?.repeatCount ?? 1))
             index = end
         }
         let planDefinition = PlanDefinition(
@@ -635,11 +663,11 @@ final class CustomRoutineStore: CustomRoutineStoring {
         id: String
     ) throws -> CustomRoutineDefinition {
         var steps: [WorkoutStepDefinition] = []
-        var repeatGroups: [CustomRoutineRepeatGroup] = []
+        var sets: [CustomRoutineSet] = []
         var index = 0
         for item in plan.stepRepeats.sorted(by: { $0.stepRange.lowerBound < $1.stepRange.lowerBound }) {
             guard item.repeatCount > 1,
-                  CustomRoutineRepeatGroup.supportedCounts.contains(item.repeatCount),
+                  CustomRoutineSet.supportedCounts.contains(item.repeatCount),
                   item.stepRange.lowerBound >= index,
                   item.stepRange.upperBound <= plan.steps.count,
                   !item.stepRange.isEmpty,
@@ -653,8 +681,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 )
             }
             steps += pattern
-            repeatGroups.append(CustomRoutineRepeatGroup(
-                id: "\(id).repeat-\(repeatGroups.count + 1)",
+            sets.append(CustomRoutineSet(
+                id: "\(id).set-\(sets.count + 1)",
                 stepIDs: pattern.map(\.id), repeatCount: item.repeatCount
             ))
             index = item.stepRange.upperBound
@@ -670,7 +698,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 tags: metadata.tags,
                 targetMode: plan.boardID.map { .boardSpecific(boardID: $0) } ?? .generic,
                 steps: steps,
-                repeatGroups: repeatGroups
+                sets: sets
             )
         )
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all)
@@ -742,11 +770,11 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 tags: definition.tags,
                 targetMode: definition.targetMode,
                 steps: literalSteps,
-                repeatGroups: normalized.repeatGroups.map { group in
-                    CustomRoutineRepeatGroup(
-                        id: group.id,
-                        stepIDs: group.stepIDs.flatMap { expandedIDsBySourceID[$0] ?? [] },
-                        repeatCount: group.repeatCount
+                sets: normalized.sets.map { set in
+                    CustomRoutineSet(
+                        id: set.id,
+                        stepIDs: set.stepIDs.flatMap { expandedIDsBySourceID[$0] ?? [] },
+                        repeatCount: set.repeatCount
                     )
                 }
             )
@@ -779,7 +807,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 }
                 return definition.targetMode.isBoardSpecific ? step : step.strippingExactContactIDs()
             },
-            repeatGroups: definition.repeatGroups
+            sets: definition.sets
         )
     }
 

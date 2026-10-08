@@ -1455,6 +1455,8 @@ enum PlanLibraryValidator {
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep),
+               !(plan.metadata.provenance == .custom && block.steps.count > 1 &&
+                 block.steps.contains(where: { $0.phase != .rest })),
                !allowsSourceRequiredTerminalRest(
                     in: plan, terminalStep: terminalStep,
                     resolvedID: reference.resolvedStepID(

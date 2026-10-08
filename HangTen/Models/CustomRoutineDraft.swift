@@ -178,6 +178,25 @@ enum CustomRoutineBoardPreview {
     }
 }
 
+enum CustomRoutineEditorItem: Equatable, Identifiable {
+    case step(CustomRoutineStepDraft)
+    case set(CustomRoutineSet, steps: [CustomRoutineStepDraft])
+
+    var id: String {
+        switch self {
+        case let .step(step): "step.\(step.id)"
+        case let .set(set, _): "set.\(set.id)"
+        }
+    }
+
+    var stepIDs: [String] {
+        switch self {
+        case let .step(step): [step.id]
+        case let .set(_, steps): steps.map(\.id)
+        }
+    }
+}
+
 struct CustomRoutineDraft: Equatable {
     let id: String?
     private let generatedID: String
@@ -188,7 +207,7 @@ struct CustomRoutineDraft: Equatable {
     var category: String?
     var tagsText: String
     var steps: [CustomRoutineStepDraft]
-    var repeatGroups: [CustomRoutineRepeatGroup]
+    var sets: [CustomRoutineSet]
 
     init(createWith targetMode: CustomRoutineTargetMode) {
         self.init(
@@ -207,7 +226,7 @@ struct CustomRoutineDraft: Equatable {
         category = nil
         tagsText = ""
         steps = []
-        repeatGroups = []
+        sets = []
     }
 
     init(duplicate definition: CustomRoutineDefinition) {
@@ -240,7 +259,7 @@ struct CustomRoutineDraft: Equatable {
         category = definition.category
         tagsText = definition.tags.joined(separator: ", ")
         steps = definition.steps.map(Self.stepDraft(from:))
-        repeatGroups = definition.repeatGroups
+        sets = definition.sets
     }
 
     mutating func addStep() {
@@ -318,24 +337,59 @@ struct CustomRoutineDraft: Equatable {
         steps[index] = step
     }
 
+    /// A set occupies one editor row, while single-step repeats
+    /// keep their existing inline controls.
+    var editorItems: [CustomRoutineEditorItem] {
+        let stepIDs = steps.map(\.id)
+        var items: [CustomRoutineEditorItem] = []
+        var index = 0
+        while index < steps.count {
+            if let set = sets.first(where: {
+                $0.stepIDs.count > 1 && $0.range(in: stepIDs)?.lowerBound == index
+            }), let range = set.range(in: stepIDs) {
+                items.append(.set(set, steps: Array(steps[range])))
+                index = range.upperBound
+            } else {
+                items.append(.step(steps[index]))
+                index += 1
+            }
+        }
+        return items
+    }
+
+    mutating func removeEditorItems(at offsets: IndexSet) {
+        let items = editorItems
+        let removedIDs = Set(offsets.filter { items.indices.contains($0) }.flatMap { items[$0].stepIDs })
+        removeSteps(at: IndexSet(steps.indices.filter { removedIDs.contains(steps[$0].id) }))
+    }
+
+    mutating func moveEditorItems(from offsets: IndexSet, to destination: Int) {
+        let items = editorItems
+        let movedIDs = Set(offsets.filter { items.indices.contains($0) }.flatMap { items[$0].stepIDs })
+        let stepOffsets = IndexSet(steps.indices.filter { movedIDs.contains(steps[$0].id) })
+        let boundedDestination = min(max(destination, 0), items.count)
+        let stepDestination = items.prefix(boundedDestination).reduce(0) { $0 + $1.stepIDs.count }
+        moveSteps(from: stepOffsets, to: stepDestination)
+    }
+
     mutating func removeSteps(at offsets: IndexSet) {
         for index in offsets.sorted(by: >) where steps.indices.contains(index) {
             steps.remove(at: index)
         }
         let remainingIDs = Set(steps.map(\.id))
-        repeatGroups = repeatGroups.compactMap { group in
-            var group = group
-            group.stepIDs.removeAll { !remainingIDs.contains($0) }
-            return group.stepIDs.isEmpty ? nil : group
+        sets = sets.compactMap { set in
+            var set = set
+            set.stepIDs.removeAll { !remainingIDs.contains($0) }
+            return set.stepIDs.isEmpty ? nil : set
         }
     }
 
     mutating func moveSteps(from offsets: IndexSet, to destination: Int) {
         let stepIDs = steps.map(\.id)
         var movingOffsets = Set(offsets.filter { steps.indices.contains($0) })
-        // A repeat is one sequence: moving any member moves the whole range.
-        for group in repeatGroups {
-            if let range = group.range(in: stepIDs), !movingOffsets.isDisjoint(with: range) {
+        // A set is one sequence: moving any member moves the whole range.
+        for set in sets {
+            if let range = set.range(in: stepIDs), !movingOffsets.isDisjoint(with: range) {
                 movingOffsets.formUnion(range)
             }
         }
@@ -350,8 +404,8 @@ struct CustomRoutineDraft: Equatable {
         }
 
         var boundedDestination = min(max(destination, 0), stepIDs.count)
-        for group in repeatGroups {
-            if let range = group.range(in: stepIDs),
+        for set in sets {
+            if let range = set.range(in: stepIDs),
                boundedDestination > range.lowerBound, boundedDestination < range.upperBound {
                 boundedDestination = destination > sourceOffsets[0] ? range.upperBound : range.lowerBound
             }
@@ -364,27 +418,32 @@ struct CustomRoutineDraft: Equatable {
         steps.insert(contentsOf: movingSteps, at: insertionIndex)
     }
 
-    func newRepeatGroup() -> CustomRoutineRepeatGroup? {
-        let usedIDs = Set(repeatGroups.flatMap(\.stepIDs))
-        guard let step = steps.first(where: { !usedIDs.contains($0.id) }) else { return nil }
-        return CustomRoutineRepeatGroup(stepIDs: [step.id])
+    func newSet() -> CustomRoutineSet? {
+        let usedIDs = Set(sets.flatMap(\.stepIDs))
+        for index in steps.indices.dropLast() {
+            let pair = steps[index...index + 1].map(\.id)
+            if usedIDs.isDisjoint(with: pair) {
+                return CustomRoutineSet(stepIDs: pair)
+            }
+        }
+        return nil
     }
 
-    mutating func updateRepeatGroup(_ group: CustomRoutineRepeatGroup) {
-        guard CustomRoutineRepeatGroup.supportedCounts.contains(group.repeatCount),
-              group.range(in: steps.map(\.id)) != nil,
-              repeatGroups.filter({ $0.id != group.id }).allSatisfy({
-                  Set($0.stepIDs).isDisjoint(with: group.stepIDs)
+    mutating func updateSet(_ set: CustomRoutineSet) {
+        guard CustomRoutineSet.supportedCounts.contains(set.repeatCount),
+              set.range(in: steps.map(\.id)) != nil,
+              sets.filter({ $0.id != set.id }).allSatisfy({
+                  Set($0.stepIDs).isDisjoint(with: set.stepIDs)
               }) else { return }
-        if let index = repeatGroups.firstIndex(where: { $0.id == group.id }) {
-            repeatGroups[index] = group
+        if let index = sets.firstIndex(where: { $0.id == set.id }) {
+            sets[index] = set
         } else {
-            repeatGroups.append(group)
+            sets.append(set)
         }
     }
 
-    mutating func removeRepeatGroup(id: String) {
-        repeatGroups.removeAll { $0.id == id }
+    mutating func removeSet(id: String) {
+        sets.removeAll { $0.id == id }
     }
 
     func retargeted(
@@ -404,7 +463,7 @@ struct CustomRoutineDraft: Equatable {
         retargeted.difficulty = difficulty
         retargeted.category = category
         retargeted.tagsText = tagsText
-        retargeted.repeatGroups = repeatGroups
+        retargeted.sets = sets
         retargeted.steps = steps.map { step in
             var step = step
             step.targets = Self.compatibleTargets(
@@ -428,7 +487,7 @@ struct CustomRoutineDraft: Equatable {
             tags: CustomRoutineTagNormalizer.normalizedTags(from: tagsText),
             targetMode: targetMode,
             steps: steps.map(Self.stepDefinition(from:)),
-            repeatGroups: repeatGroups
+            sets: sets
         )
     }
 

@@ -129,7 +129,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let store = AppStore(defaults: defaults)
         var draft = CustomRoutineDraft(duplicate: makeRoutine())
         let stepID = try XCTUnwrap(draft.steps.first?.id)
-        draft.updateRepeatGroup(.init(id: "repeat", stepIDs: [stepID], repeatCount: 6))
+        draft.updateSet(.init(id: "repeat", stepIDs: [stepID], repeatCount: 6))
         try store.saveCustomRoutine(draft.definition())
         let plan = try XCTUnwrap(store.plans.first { $0.id == draft.definition().id })
         XCTAssertEqual(plan.steps.count, 6)
@@ -137,7 +137,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let duplicate = try store.duplicateRoutine(plan)
         XCTAssertNotEqual(duplicate.id, plan.id)
         XCTAssertEqual(duplicate.steps.count, 1)
-        XCTAssertEqual(duplicate.repeatGroups, draft.repeatGroups)
+        XCTAssertEqual(duplicate.sets, draft.sets)
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
@@ -195,8 +195,8 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let duplicate = try store.duplicateRoutine(source)
 
         XCTAssertEqual(duplicate.steps.count, 3)
-        XCTAssertEqual(duplicate.repeatGroups.map(\.repeatCount), [4])
-        XCTAssertEqual(duplicate.repeatGroups.first?.stepIDs, Array(duplicate.steps.prefix(2)).map(\.id))
+        XCTAssertEqual(duplicate.sets.map(\.repeatCount), [4])
+        XCTAssertEqual(duplicate.sets.first?.stepIDs, Array(duplicate.steps.prefix(2)).map(\.id))
         XCTAssertEqual(Array(duplicate.steps.prefix(2)).map(\.title), source.stepRepeats.first?.patternTitles)
         XCTAssertNil(store.customDefinition(for: duplicate.id))
 
