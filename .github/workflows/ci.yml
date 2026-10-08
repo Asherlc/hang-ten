@@ -852,9 +852,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Keep model, layout, grip diagnostics, and weight checks in separate
-          # runs so simulator startup and compilation leave enough of the
-          # one-hour test budget.
+          # Keep model, layout, and grip checks in separate runs so simulator
+          # startup and compilation leave enough of the one-hour test budget.
           # test_ci_xctest_contract.py audits every method exactly once.
           - shard: board-models-picker
             only_testing: >-
@@ -867,14 +866,12 @@ jobs:
               HangTenUITests/Batch05BoardModelInteractionUITests/testForge
               HangTenUITests/BeastmakerBoardPickerInteractionUITests
               HangTenUITests/BoardPickerUITests
-          - shard: grip-diagnostics
-            only_testing: >-
-              HangTenUITests/GripCueDiagnosticScreenshotUITests
           - shard: board-layout
             only_testing: >-
               HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
           - shard: grips-weight
             only_testing: >-
+              HangTenUITests/GripCueDiagnosticScreenshotUITests
               HangTenUITests/DefaultGripFingersUITests
               HangTenUITests/DualMaxHangsHighlightUITests
               HangTenUITests/InitialWeightSetupUITests
