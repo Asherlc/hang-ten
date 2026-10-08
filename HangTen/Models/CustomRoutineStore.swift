@@ -67,7 +67,7 @@ enum CustomRoutineTargetMode: Hashable, Codable {
 }
 
 /// A consecutive sequence of authored steps with a shared total run count.
-/// A single-step set supplies the editor's individual repeat controls.
+/// Single-step and multi-step sets share the planner's set-level controls.
 struct CustomRoutineSet: Codable, Hashable, Identifiable {
     static let supportedCounts = 1...100
 

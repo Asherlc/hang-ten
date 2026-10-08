@@ -2,6 +2,137 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    /// New steps share one set without adding an unintended extra workout repetition.
+    func testAddedStepsJoinOneSetByDefault() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addStep()
+        let firstStepID = try XCTUnwrap(draft.steps.first?.id)
+        let firstSet = try XCTUnwrap(draft.sets.first)
+        XCTAssertEqual(firstSet.stepIDs, [firstStepID])
+        XCTAssertEqual(firstSet.repeatCount, 1)
+
+        draft.addStep()
+        let secondStepID = draft.steps[1].id
+        XCTAssertEqual(draft.sets.count, 1)
+        XCTAssertEqual(draft.sets[0].id, firstSet.id)
+        XCTAssertEqual(draft.sets[0].stepIDs, [firstStepID, secondStepID])
+        XCTAssertEqual(draft.sets[0].repeatCount, 1)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+    }
+
+    /// A one-step set exposes the same set-level editing and movement as a longer sequence.
+    func testSingleStepSetUsesASetEditorRow() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let step = makeStep(id: "one", title: "One")
+        draft.steps = [step]
+        let set = CustomRoutineSet(id: "single", stepIDs: ["one"], repeatCount: 3)
+        draft.updateSet(set)
+
+        XCTAssertEqual(draft.editorItems, [.set(set, steps: [step])])
+    }
+
+    /// Adding to an earlier set inserts at its boundary without changing a later set's count or order.
+    func testAddingToEarlierSetPreservesFollowingSetAndCounts() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
+        draft.updateSet(.init(id: "first", stepIDs: ["one"], repeatCount: 5))
+        let following = CustomRoutineSet(id: "second", stepIDs: ["two", "three"], repeatCount: 2)
+        draft.updateSet(following)
+
+        draft.addStep(to: "first")
+
+        XCTAssertEqual(draft.steps[1].title, "New step")
+        XCTAssertEqual(draft.steps.map(\.id).suffix(2), ["two", "three"])
+        XCTAssertEqual(draft.sets[0].stepIDs, ["one", draft.steps[1].id])
+        XCTAssertEqual(draft.sets[0].repeatCount, 5)
+        XCTAssertEqual(draft.sets[1], following)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+    }
+
+    /// Explicitly adding a set starts a separate sequence with one run and its own subsequent steps.
+    func testAddSetStartsASeparateOnceSet() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addStep()
+        let first = try XCTUnwrap(draft.sets.first)
+
+        let second = draft.addSet()
+        draft.addStep()
+
+        XCTAssertEqual(draft.sets.count, 2)
+        XCTAssertEqual(draft.sets[0], first)
+        XCTAssertEqual(second.stepIDs, [draft.steps[1].id])
+        XCTAssertEqual(second.repeatCount, 1)
+        XCTAssertEqual(draft.sets[1].stepIDs, [draft.steps[1].id, draft.steps[2].id])
+        XCTAssertEqual(draft.sets[1].repeatCount, 1)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+    }
+
+    /// The default addition target follows visible order after reordering, rather than metadata order.
+    func testDefaultStepAdditionFollowsReorderedSets() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addStep()
+        let first = try XCTUnwrap(draft.sets.first)
+        let second = draft.addSet()
+        draft.moveEditorItems(from: IndexSet(integer: 0), to: 2)
+
+        draft.addStep()
+
+        XCTAssertEqual(draft.steps[0].id, second.stepIDs[0])
+        XCTAssertEqual(draft.sets[0].stepIDs, [first.stepIDs[0], draft.steps[2].id])
+        XCTAssertEqual(draft.sets[1], second)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+    }
+
+    /// A stale set control cannot silently add its step to another sequence.
+    func testAddingToMissingSetLeavesTheDraftUnchanged() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.addStep()
+        let before = draft
+
+        draft.addStep(to: "missing")
+
+        XCTAssertEqual(draft, before)
+    }
+
+    /// Planner grouping retains authored values and existing repeats, filling only unused consecutive ranges.
+    func testDefaultSetPresentationPreservesStepsAndExistingRepeats() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        let existing = CustomRoutineSet(id: "existing", stepIDs: ["two", "three"], repeatCount: 3)
+        draft.updateSet(existing)
+
+        let grouped = draft.assigningDefaultSets()
+
+        XCTAssertEqual(grouped.steps, draft.steps)
+        XCTAssertEqual(grouped.sets[0], existing)
+        XCTAssertEqual(grouped.sets.dropFirst().map(\.stepIDs), [["one"], ["four", "five"]])
+        XCTAssertEqual(grouped.sets.dropFirst().map(\.repeatCount), [1, 1])
+        XCTAssertEqual(grouped.editorItems.map(\.stepIDs), [["one"], ["two", "three"], ["four", "five"]])
+        XCTAssertEqual(grouped.assigningDefaultSets(), grouped)
+        XCTAssertEqual(draft.sets, [existing], "Opening a planner copy must not mutate its input")
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: grouped.definition()).isEmpty)
+    }
+
+    /// Adding a unilateral pair in an earlier set cannot append it to another set or split its range.
+    func testLeftAndRightPairJoinsItsSourceSetBeforeFollowingSets() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four"].map { makeStep(id: $0, title: $0) }
+        draft.updateSet(.init(id: "first", stepIDs: ["one", "two"], repeatCount: 4))
+        let followingSet = CustomRoutineSet(id: "second", stepIDs: ["three", "four"], repeatCount: 2)
+        draft.updateSet(followingSet)
+
+        draft.addLeftAndRightPair(from: draft.steps[0])
+
+        XCTAssertEqual(draft.steps.map(\.id).prefix(2), ["one", "two"])
+        XCTAssertEqual(draft.steps.map(\.id).suffix(2), ["three", "four"])
+        XCTAssertEqual(draft.steps[2].side, .left)
+        XCTAssertEqual(draft.steps[3].side, .right)
+        XCTAssertEqual(draft.sets[0].stepIDs, ["one", "two", draft.steps[2].id, draft.steps[3].id])
+        XCTAssertEqual(draft.sets[0].repeatCount, 4)
+        XCTAssertEqual(draft.sets[1], followingSet)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+    }
+
     /// Checks that editing, duplication, and retargeting preserve the same authored set membership.
     func testSetSurvivesEditingDuplicatingAndRetargeting() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
@@ -85,6 +216,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         draft.addStep()
         XCTAssertNil(draft.newSet())
         draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        draft.sets = []
         draft.updateSet(.init(stepIDs: ["two"]))
 
         let set = try XCTUnwrap(draft.newSet())

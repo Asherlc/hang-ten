@@ -13,13 +13,15 @@ struct CustomRoutineEditorView: View {
     @State private var validationScrollRequest = 0
     @State private var editMode = EditMode.inactive
     @State private var editingSet: CustomRoutineSet?
+    @State private var collapsedSetIDs = Set<String>()
 
+    /// Groups the editable copy by default while retaining persisted set identities and counts.
     init(
         draft: CustomRoutineDraft,
         onSave: @escaping (CustomRoutineDefinition) throws -> Void
     ) {
         self.onSave = onSave
-        _draft = State(initialValue: draft)
+        _draft = State(initialValue: draft.assigningDefaultSets())
 
         switch draft.targetMode {
         case let .boardSpecific(boardID):
@@ -59,7 +61,7 @@ struct CustomRoutineEditorView: View {
                         .id("customRoutine.validation")
                     }
                     routineSection
-                    stepsSection
+                    setsSection
                 }
                 .environment(\.editMode, $editMode)
                 .scrollContentBackground(.hidden)
@@ -105,7 +107,7 @@ struct CustomRoutineEditorView: View {
                         set: set,
                         steps: draft.steps,
                         otherSets: draft.sets.filter { $0.id != set.id },
-                        minimumStepCount: set.stepIDs.count > 1 ? 2 : 1,
+                        minimumStepCount: draft.sets.contains(where: { $0.id == set.id }) ? 1 : 2,
                         isNew: !draft.sets.contains(where: { $0.id == set.id }),
                         onSave: { draft.updateSet($0) }
                     )
@@ -168,7 +170,7 @@ struct CustomRoutineEditorView: View {
         }
     }
 
-    private var stepsSection: some View {
+    private var setsSection: some View {
         Section {
             ForEach(draft.editorItems) { item in
                 editorItem(item)
@@ -181,25 +183,38 @@ struct CustomRoutineEditorView: View {
                 draft.removeEditorItems(at: offsets)
             }
 
-            Button {
-                draft.addStep()
-            } label: {
-                Label("Add step", systemImage: "plus")
+            if draft.steps.isEmpty || draft.editorItems.contains(where: {
+                if case .step = $0 { return true }
+                return false
+            }) {
+                Button {
+                    draft.addStep()
+                } label: {
+                    Label("Add step", systemImage: "plus")
+                }
+                .accessibilityIdentifier("customRoutine.addStep")
             }
-            .accessibilityIdentifier("customRoutine.addStep")
 
             Button {
-                editingSet = draft.newSet()
+                draft.addSet()
             } label: {
-                Label("Create set", systemImage: "repeat")
+                Label("Add set", systemImage: "repeat")
             }
-            .disabled(draft.newSet() == nil)
             .accessibilityIdentifier("customRoutine.addSet")
+
+            if draft.newSet() != nil {
+                Button {
+                    editingSet = draft.newSet()
+                } label: {
+                    Label("Create set from steps", systemImage: "repeat")
+                }
+                .accessibilityIdentifier("customRoutine.groupSteps")
+            }
 
         } header: {
             HStack {
-                Text("Steps")
-                    .accessibilityIdentifier("customRoutine.steps")
+                Text("Sets")
+                    .accessibilityIdentifier("customRoutine.sets")
                 Spacer()
                 if draft.editorItems.count > 1 {
                     Button(editMode.isEditing ? "Done" : "Reorder") {
@@ -216,7 +231,7 @@ struct CustomRoutineEditorView: View {
             }
             .textCase(nil)
         } footer: {
-            Text("Combine consecutive steps into a set to repeat them together. Sets move together when reordered.")
+            Text("Steps join a set by default. Add steps within a set and choose how many times to run it. Sets move together when reordered.")
         }
     }
 
@@ -227,38 +242,72 @@ struct CustomRoutineEditorView: View {
         case let .step(step):
             stepEditor(step)
         case let .set(set, steps):
-            DisclosureGroup {
+            let number = setNumber(for: set)
+            DisclosureGroup(isExpanded: setExpansionBinding(for: set)) {
                 Stepper(value: setCountBinding(for: set), in: CustomRoutineSet.supportedCounts) {
                     Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
                 }
-                .accessibilityIdentifier("customRoutine.setRepeatCount")
+                .accessibilityIdentifier("customRoutine.setRepeatCount.\(number)")
 
                 Button("Edit set") {
                     editingSet = set
                 }
                 .buttonStyle(.borderless)
-                .accessibilityIdentifier("customRoutine.editSet")
+                .accessibilityIdentifier("customRoutine.editSet.\(number)")
 
                 ForEach(steps) { step in
                     stepEditor(step, inSet: true)
                 }
 
+                Button {
+                    draft.addStep(to: set.id)
+                } label: {
+                    Label("Add step", systemImage: "plus")
+                }
+                .buttonStyle(.borderless)
+                .accessibilityIdentifier("customRoutine.addSetStep.\(number)")
+
                 Button("Ungroup set") {
                     draft.removeSet(id: set.id)
                 }
                 .buttonStyle(.borderless)
-                .accessibilityIdentifier("customRoutine.ungroupSet")
+                .accessibilityIdentifier("customRoutine.ungroupSet.\(number)")
             } label: {
                 VStack(alignment: .leading, spacing: 4) {
-                    Label("Set", systemImage: "repeat")
+                    Label("Set \(number)", systemImage: "repeat")
                     Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
                         .font(.subheadline)
                     Text(steps.map { $0.title.isEmpty ? "New step" : $0.title }.joined(separator: " → "))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityIdentifier("customRoutine.setHeader.\(number)")
             }
         }
+    }
+
+    /// Numbers sets in visible order, independent of metadata order and explicitly ungrouped rows.
+    private func setNumber(for set: CustomRoutineSet) -> Int {
+        let ids: [String] = draft.editorItems.compactMap { item in
+            guard case let .set(candidate, _) = item else { return nil }
+            return candidate.id
+        }
+        return (ids.firstIndex(of: set.id) ?? 0) + 1
+    }
+
+    /// Newly created and reopened sets expose their controls and children until explicitly collapsed.
+    private func setExpansionBinding(for set: CustomRoutineSet) -> Binding<Bool> {
+        Binding(
+            get: { !collapsedSetIDs.contains(set.id) },
+            set: { expanded in
+                if expanded {
+                    collapsedSetIDs.remove(set.id)
+                } else {
+                    collapsedSetIDs.insert(set.id)
+                }
+            }
+        )
     }
 
     /// Connects a child form to its authored step and set, including explicit removal inside grouped rows.
@@ -266,6 +315,7 @@ struct CustomRoutineEditorView: View {
         CustomRoutineStepEditor(
             step: binding(for: step),
             routineSet: setBinding(for: step),
+            isSetChild: inSet,
             targetMode: draft.targetMode,
             board: selectedBoard,
             onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) },
@@ -421,6 +471,7 @@ private enum EditorTargetMode: String, CaseIterable, Identifiable {
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
     @Binding var routineSet: CustomRoutineSet?
+    let isSetChild: Bool
     let targetMode: CustomRoutineTargetMode
     let board: BoardRevision
     let onAddPair: (CustomRoutineStepDraft) -> Void
@@ -558,11 +609,13 @@ private struct CustomRoutineStepEditor: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("customRoutine.step.\(step.id)")
         }
     }
 
     private var isInSet: Bool {
-        (routineSet?.stepIDs.count ?? 0) > 1
+        isSetChild || (routineSet?.stepIDs.count ?? 0) > 1
     }
 
     private var repeatEnabledBinding: Binding<Bool> {
@@ -862,7 +915,7 @@ private struct CustomRoutineSetEditor: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(minimumStepCount > 1 ? "Steps in set" : "Steps to repeat") {
+                Section("Steps in set") {
                     Picker("From step", selection: $firstStepID) {
                         ForEach(availableIndices, id: \.self) { index in
                             Text(stepLabel(at: index)).tag(steps[index].id)
@@ -885,7 +938,7 @@ private struct CustomRoutineSetEditor: View {
                 }
                 Section {
                     Stepper(value: $repeatCount, in: CustomRoutineSet.supportedCounts) {
-                        Text("\(minimumStepCount > 1 ? "Repeat" : "Run") \(repeatCount) \(repeatCount == 1 ? "time" : "times")")
+                        Text("Repeat \(repeatCount) \(repeatCount == 1 ? "time" : "times")")
                     }
                     .accessibilityIdentifier("customRoutine.setCount")
                 } footer: {
@@ -906,7 +959,7 @@ private struct CustomRoutineSetEditor: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color.hangBackground)
-            .navigationTitle(minimumStepCount > 1 ? (isNew ? "Create set" : "Edit set") : "Repeat steps")
+            .navigationTitle(isNew ? "Create set" : "Edit set")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

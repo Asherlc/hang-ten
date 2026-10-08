@@ -60,21 +60,27 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-Custom routine creation and editing expose **Create set** beneath the step
-list. Add two or more consecutive steps, choose the first and last step in the
-set, and set its repeat count. The sheet previews one complete repetition in order.
-A set appears as one expandable editor row with its child steps, inline count,
-**Edit set**, and **Ungroup set**. Child forms remain editable and include
-**Remove step**. Ungrouping keeps every child and its edits for one run.
-The **Repeat** toggle in each ungrouped step's form, including rest steps,
-still supports individual repeats. Turning it on shows a count, initially two;
-turning it off keeps the step for one run. A set child's **Edit set** opens the
-shared set editor. The count is the total number of runs, including the first,
+Custom routine creation and editing place steps in sets by default. The first
+**Add step** creates a set with one run; **Add step** within a set appends to that
+set, including an earlier set without disturbing later sets. **Add set** starts
+a separate one-run sequence with its first editable step. Single-step and
+multi-step sets use the same expanded editor row with numbered headers, child
+steps, inline count, **Edit set**, and **Ungroup set**. Child forms remain editable
+and include **Remove step**. The range editor can retain a single step and
+previews one complete repetition in order. Ungrouping keeps every child and its
+edits for one run; **Create set from steps** can regroup two or more consecutive
+ungrouped steps.
+The **Repeat** toggle in an explicitly ungrouped step's form, including a rest
+step, creates a single-step set with two runs. Its parent row then provides the
+count and **Ungroup set** controls. A set child's **Edit set** opens the shared
+set editor. The count is the total number of runs, including the first,
 and supports 1–100. The range selectors use
 [SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
 to show step choices inside the set sheet's navigation stack. Sets cannot overlap.
-Saving retains each authored step once with its set and count; older saved
-routines without sets continue to load. `CustomRoutineSet` and the `sets` field
+Saving retains each authored step once with its set and count. Opening an older
+routine in the planner wraps consecutive ungrouped steps in one-run sets while
+retaining authored values and existing repeat counts; it changes the editable
+copy until the athlete saves. `CustomRoutineSet` and the `sets` field
 use the same terminology as the editor. The decoder also accepts the former
 `repeatGroups` JSON field, preserving previously saved repeats; subsequent saves
 write `sets`. Workout resolution expands sets in order with distinct step
