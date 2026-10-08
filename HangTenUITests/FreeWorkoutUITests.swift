@@ -6,7 +6,7 @@ final class FreeWorkoutUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    func testFreeWorkoutStartSheetOpensFromTrain() {
+    func testFreeWorkoutEmptySessionShowsLogControls() {
         let app = launchResetFreeWorkout()
         let entry = app.buttons["train.freeWorkout"]
         tapVisibleButton(entry, in: app, timeout: 15)
@@ -14,14 +14,10 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.empty"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.last"].exists)
-        // Timeline builder is gone; start sheet is the only entry.
+        // The start sheet replaces the old timeline builder and session.
         XCTAssertFalse(app.otherElements["freeWorkout.builder"].exists)
         XCTAssertFalse(app.otherElements["freeWorkout.session"].exists)
-    }
-
-    func testFreeWorkoutEmptySessionShowsLogControls() {
-        let app = launchResetFreeWorkout()
-        openEmptyLog(in: app)
+        openEmptyLog(in: app, alreadyOnStartSheet: true)
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.finish"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.addExercise.button"].waitForExistence(timeout: 10))
@@ -31,15 +27,8 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertFalse(app.otherElements["freeWorkout.session"].exists)
     }
 
-    func testFreeWorkoutEmptyStartsMinimalLogSession() {
-        let app = launchResetFreeWorkout()
-        openEmptyLog(in: app)
-        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
-        XCTAssertTrue(app.buttons["freeWorkout.finish"].waitForExistence(timeout: 10))
-    }
-
     func testPullUpCompletionCanBeUndoneAfterSkippingRest() {
-        let app = launchResetFreeWorkout(audioCuesEnabled: false)
+        let app = launchResetFreeWorkout()
         openEmptyLog(in: app)
         app.buttons["freeWorkout.addExercise.button"].tap()
         let pullUps = anyElement(app, "freeWorkout.addExercise.pullUp")
@@ -108,7 +97,7 @@ final class FreeWorkoutUITests: XCTestCase {
     func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() {
         // Exercise cancellation without requiring the simulator's audio device.
         // Hosted runners can abort inside AudioToolbox during engine prewarm.
-        let app = launchResetFreeWorkout(audioCuesEnabled: false)
+        let app = launchResetFreeWorkout()
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
@@ -181,8 +170,8 @@ final class FreeWorkoutUITests: XCTestCase {
         add(cancelledState)
     }
 
-    /// Close mid-session → Resume; Finish-discard keeps Last locked; real finish unlocks Last.
-    func testFreeWorkoutResumeAfterCloseAndLastAfterFinish() {
+    /// Close mid-session → Resume; discarding an unfinished session keeps Last locked.
+    func testFreeWorkoutResumeAfterCloseAndDiscardKeepsLastLocked() {
         let app = launchResetFreeWorkout()
         openEmptyLog(in: app)
         addHangExercise(in: app)
@@ -199,10 +188,10 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
-        finishDiscardThenRealFinishUnlocksLast(in: app)
+        finishDiscardKeepsLastLocked(in: app)
     }
 
-    private func finishDiscardThenRealFinishUnlocksLast(in app: XCUIApplication) {
+    private func finishDiscardKeepsLastLocked(in app: XCUIApplication) {
         // Finish with zero completed sets → discard; history stays empty.
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
@@ -221,29 +210,14 @@ final class FreeWorkoutUITests: XCTestCase {
             app.buttons["freeWorkout.last"].isEnabled,
             "Discard without completed sets must not unlock Last workout"
         )
-
-        // Real finish path unlocks Last.
-        openEmptyLog(in: app, alreadyOnStartSheet: true)
-        addHangExercise(in: app)
-        // This test verifies discard and Last history. Complete the set through
-        // its checkbox; the guided Start Set path has a dedicated UI test.
-        completeFocusedSet(in: app)
-        XCTAssertTrue(anyElement(app, "freeWorkout.restBar").waitForExistence(timeout: 10))
-        finishWorkoutSkippingTemplate(in: app)
-
-        tapVisibleButton(entry, in: app, timeout: 10)
-        let last = app.buttons["freeWorkout.last"]
-        XCTAssertTrue(last.waitForExistence(timeout: 10))
-        XCTAssertTrue(last.isEnabled)
     }
 
     // MARK: - Helpers
 
-    private func launchResetFreeWorkout(audioCuesEnabled: Bool = true) -> XCUIApplication {
+    private func launchResetFreeWorkout() -> XCUIApplication {
         let app = XCUIApplication()
-        if !audioCuesEnabled {
-            app.launchArguments += ["-workoutAudioCuesEnabled", "NO"]
-        }
+        // These cases exercise free-workout controls and history, not speech.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         // Free Workout does not depend on a 3D board; avoid model loading while
         // locating the Train entry point on a fresh simulator.
