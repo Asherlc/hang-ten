@@ -1347,6 +1347,7 @@ enum PlanLibraryValidator {
         }
     }
 
+    /// Checks plan metadata, board and block references, expanded identities, and the terminal rest policy.
     private static func validatePlan(
         _ plan: PlanDefinition,
         path: String,
@@ -1455,6 +1456,8 @@ enum PlanLibraryValidator {
                let block = blockByID[reference.blockID],
                let terminalStep = block.steps.last,
                stepEndsInRestAfterNormalization(terminalStep),
+               !(plan.metadata.provenance == .custom && block.steps.count > 1 &&
+                 block.steps.contains(where: { $0.phase != .rest })),
                !allowsSourceRequiredTerminalRest(
                     in: plan, terminalStep: terminalStep,
                     resolvedID: reference.resolvedStepID(

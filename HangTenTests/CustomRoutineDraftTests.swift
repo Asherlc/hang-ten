@@ -2,75 +2,133 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
-    func testRepeatGroupSurvivesEditingDuplicatingAndRetargeting() throws {
+    /// Checks that editing, duplication, and retargeting preserve the same authored set membership.
+    func testSetSurvivesEditingDuplicatingAndRetargeting() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.title = "Repeat"
         draft.steps = [makeStep(id: "one", title: "One"), makeStep(id: "two", title: "Two")]
-        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["one", "two"], repeatCount: 6)
-        draft.updateRepeatGroup(group)
+        let set = CustomRoutineSet(id: "repeat", stepIDs: ["one", "two"], repeatCount: 6)
+        draft.updateSet(set)
         let definition = draft.definition()
 
-        XCTAssertEqual(CustomRoutineDraft(editing: definition).repeatGroups, [group])
+        XCTAssertEqual(CustomRoutineDraft(editing: definition).sets, [set])
         let duplicate = CustomRoutineDraft(duplicate: definition).definition()
         XCTAssertNotEqual(duplicate.id, definition.id)
-        XCTAssertEqual(duplicate.repeatGroups, [group])
-        XCTAssertEqual(draft.retargeted(to: .boardSpecific(boardID: BoardCatalog.defaultBoard.id)).repeatGroups, [group])
-        XCTAssertNil(draft.newRepeatGroup(), "Every step already belongs to this repeat")
+        XCTAssertEqual(duplicate.sets, [set])
+        XCTAssertEqual(draft.retargeted(to: .boardSpecific(boardID: BoardCatalog.defaultBoard.id)).sets, [set])
+        XCTAssertNil(draft.newSet(), "Every step already belongs to this repeat")
     }
 
-    func testDeletingRepeatMembersShrinksRangeAndRemovesEmptyRepeat() {
+    /// Checks membership pruning after child deletion, including removal of an empty set.
+    func testDeletingSetMembersShrinksRangeAndRemovesEmptySet() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
-        draft.updateRepeatGroup(.init(id: "repeat", stepIDs: ["one", "two", "three"], repeatCount: 5))
+        draft.updateSet(.init(id: "repeat", stepIDs: ["one", "two", "three"], repeatCount: 5))
 
         draft.removeSteps(at: IndexSet(integer: 1))
-        XCTAssertEqual(draft.repeatGroups, [.init(id: "repeat", stepIDs: ["one", "three"], repeatCount: 5)])
-        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        XCTAssertEqual(draft.sets, [.init(id: "repeat", stepIDs: ["one", "three"], repeatCount: 5)])
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
         draft.removeSteps(at: IndexSet([0, 1]))
-        XCTAssertTrue(draft.repeatGroups.isEmpty)
+        XCTAssertTrue(draft.sets.isEmpty)
     }
 
-    func testReorderingARepeatMemberMovesWholeGroupAndKeepsOrder() {
+    /// Checks that selecting any child for movement carries the complete set in its original order.
+    func testReorderingASetMemberMovesWholeSetAndKeepsOrder() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three", "four"].map { makeStep(id: $0, title: $0) }
-        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["two", "three"], repeatCount: 6)
-        draft.updateRepeatGroup(group)
+        let set = CustomRoutineSet(id: "repeat", stepIDs: ["two", "three"], repeatCount: 6)
+        draft.updateSet(set)
 
         draft.moveSteps(from: IndexSet(integer: 2), to: 0)
         XCTAssertEqual(draft.steps.map(\.id), ["two", "three", "one", "four"])
-        XCTAssertEqual(draft.repeatGroups, [group])
+        XCTAssertEqual(draft.sets, [set])
         draft.moveSteps(from: IndexSet(integer: 0), to: 4)
         XCTAssertEqual(draft.steps.map(\.id), ["one", "four", "two", "three"])
-        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
     }
 
-    func testMovingIntoAnotherRepeatKeepsItsMembersTogether() {
+    /// Checks that insertion inside another set snaps to its boundary and preserves both sequences.
+    func testMovingIntoAnotherSetKeepsItsMembersTogether() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
-        draft.updateRepeatGroup(.init(id: "first", stepIDs: ["one", "two"]))
-        draft.updateRepeatGroup(.init(id: "second", stepIDs: ["three", "four"]))
+        draft.updateSet(.init(id: "first", stepIDs: ["one", "two"]))
+        draft.updateSet(.init(id: "second", stepIDs: ["three", "four"]))
 
         draft.moveSteps(from: IndexSet(integer: 0), to: 3)
         XCTAssertEqual(draft.steps.map(\.id), ["three", "four", "one", "two", "five"])
-        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
         draft.moveSteps(from: IndexSet(integer: 4), to: 1)
         XCTAssertEqual(draft.steps.map(\.id), ["five", "three", "four", "one", "two"])
-        XCTAssertTrue(CustomRoutineValidator.repeatIssues(for: draft.definition()).isEmpty)
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
     }
 
-    func testOverlappingRepeatIsRejectedAndRemovingRepeatRetainsSteps() {
+    /// Checks that overlapping membership is rejected and ungrouping retains the original rows.
+    func testOverlappingSetIsRejectedAndRemovingSetRetainsSteps() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = ["one", "two", "three"].map { makeStep(id: $0, title: $0) }
-        let group = CustomRoutineRepeatGroup(id: "repeat", stepIDs: ["one", "two"])
-        draft.updateRepeatGroup(group)
-        draft.updateRepeatGroup(.init(stepIDs: ["two", "three"]))
-        XCTAssertEqual(draft.repeatGroups, [group])
-        XCTAssertEqual(draft.newRepeatGroup()?.stepIDs, ["three"])
+        let set = CustomRoutineSet(id: "repeat", stepIDs: ["one", "two"])
+        draft.updateSet(set)
+        draft.updateSet(.init(stepIDs: ["two", "three"]))
+        XCTAssertEqual(draft.sets, [set])
+        XCTAssertNil(draft.newSet(), "A set needs at least two consecutive ungrouped steps")
 
         let steps = draft.steps
-        draft.removeRepeatGroup(id: group.id)
+        draft.removeSet(id: set.id)
         XCTAssertEqual(draft.steps, steps)
-        XCTAssertTrue(draft.definition().repeatGroups.isEmpty)
+        XCTAssertTrue(draft.definition().sets.isEmpty)
+    }
+
+    /// Checks that creation needs adjacent unused steps and cannot bridge an existing repeat.
+    func testNewSetStartsWithConsecutiveUngroupedSteps() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        XCTAssertNil(draft.newSet())
+        draft.addStep()
+        XCTAssertNil(draft.newSet())
+        draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        draft.updateSet(.init(stepIDs: ["two"]))
+
+        let set = try XCTUnwrap(draft.newSet())
+        XCTAssertEqual(set.stepIDs, ["three", "four"], "Do not set across an existing repeat")
+        draft.updateSet(set)
+        XCTAssertNil(draft.newSet(), "The remaining steps are not consecutive")
+    }
+
+    /// Checks row-to-step offset translation for atomic movement and deletion of grouped sequences.
+    func testSetEditorRowsMoveAndDeleteWholeSequences() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        let set = CustomRoutineSet(id: "set", stepIDs: ["two", "three"], repeatCount: 6)
+        draft.updateSet(set)
+        draft.updateSet(.init(id: "single", stepIDs: ["five"], repeatCount: 3))
+        XCTAssertEqual(draft.editorItems.map(\.stepIDs), [["one"], ["two", "three"], ["four"], ["five"]])
+        XCTAssertEqual(Set(draft.editorItems.map(\.id)).count, 4)
+
+        draft.moveEditorItems(from: IndexSet(integer: 1), to: 4)
+        XCTAssertEqual(draft.steps.map(\.id), ["one", "four", "five", "two", "three"])
+        draft.moveEditorItems(from: IndexSet(integer: 2), to: 4)
+        XCTAssertEqual(draft.steps.map(\.id), ["one", "four", "two", "three", "five"])
+        XCTAssertTrue(CustomRoutineValidator.setIssues(for: draft.definition()).isEmpty)
+
+        draft.removeEditorItems(at: IndexSet([0, 2]))
+        XCTAssertEqual(draft.steps.map(\.id), ["four", "five"])
+        XCTAssertEqual(draft.sets.map(\.id), ["single"])
+    }
+
+    /// Checks that child edits and ordering survive removal of the surrounding set metadata.
+    func testUngroupingKeepsChildEditsAndTheirOrder() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["hang", "rest"].map { makeStep(id: $0, title: $0) }
+        let set = CustomRoutineSet(id: "repeat", stepIDs: ["hang", "rest"], repeatCount: 3)
+        draft.updateSet(set)
+        var rest = draft.steps[1]
+        rest.phase = .rest
+        rest.duration = 4
+        draft.updateStep(rest)
+        XCTAssertEqual(draft.editorItems, [.set(set, steps: draft.steps)])
+
+        draft.removeSet(id: set.id)
+        XCTAssertEqual(draft.editorItems, draft.steps.map { .step($0) })
+        XCTAssertEqual(draft.steps[1], rest)
     }
 
     func testConfiguredDepthToggleUsesResolvedPositionWithinSharedPresentation() throws {
