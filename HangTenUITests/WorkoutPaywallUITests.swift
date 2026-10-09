@@ -11,14 +11,16 @@ final class CustomRoutineEditorUITests: XCTestCase {
         XCTAssertTrue(create.waitForExistence(timeout: 30))
         create.tap()
         waitForEditor(in: app)
-        let mode = app.segmentedControls["customRoutine.targetMode"]
-        XCTAssertTrue(mode.waitForExistence(timeout: 10))
-        mode.buttons["Generic"].tap()
-        app.buttons["Add step"].tap()
-        let step = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "New step")).firstMatch
-        XCTAssertTrue(step.waitForExistence(timeout: 5))
-        step.tap()
-        XCTAssertTrue(app.textFields["Step title"].waitForExistence(timeout: 5))
+        let board = app.buttons["customRoutine.board"]
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        board.tap()
+        app.buttons["No board"].tap()
+        let addSet = app.buttons["customRoutine.addSet"]
+        reveal(addSet, in: app)
+        addSet.tap()
+        let title = app.textFields["customRoutine.stepTitle"]
+        reveal(title, in: app)
+        XCTAssertTrue(title.isHittable, "Adding a set must open its first Hang for inline editing")
         let editor = app.collectionViews.firstMatch
         XCTAssertTrue(editor.waitForExistence(timeout: 5))
         for _ in 0..<3 { editor.swipeUp() }
@@ -108,6 +110,17 @@ final class CustomRoutineEditorUITests: XCTestCase {
         XCTAssertTrue(save.isHittable)
         save.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             .press(forDuration: 0.1)
+    }
+
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+        let editor = app.collectionViews.firstMatch
+        XCTAssertTrue(editor.waitForExistence(timeout: 5))
+        for _ in 0..<8 {
+            if element.exists && element.isHittable { return }
+            editor.swipeUp()
+        }
+        XCTAssertTrue(element.exists && element.isHittable,
+                      "The expanded routine editor must reveal \(element.identifier)")
     }
 }
 

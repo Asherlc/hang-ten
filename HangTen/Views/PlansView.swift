@@ -145,7 +145,7 @@ struct PlansView: View {
             }
             .sheet(isPresented: $isCreatingRoutine) {
                 CustomRoutineEditorView(
-                    draft: CustomRoutineDraft(createWith: .boardSpecific(boardID: store.selectedBoard.id)),
+                    draft: CustomRoutineDraft(createWith: .generic),
                     onSave: store.saveCustomRoutine
                 )
             }
@@ -243,7 +243,7 @@ private struct WorkoutBrowserResultsView: View {
         }
         .sheet(isPresented: $isCreatingRoutine) {
             CustomRoutineEditorView(
-                draft: CustomRoutineDraft(createWith: .boardSpecific(boardID: store.selectedBoard.id)),
+                draft: CustomRoutineDraft(createWith: .generic),
                 onSave: store.saveCustomRoutine
             )
         }

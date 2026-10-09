@@ -26,6 +26,32 @@ final class GripHandCueCardTests: XCTestCase {
         XCTAssertEqual(card.accessibilityLabel, "Left hand, Two-finger pocket, Exact fingers: middle and ring")
     }
 
+    @MainActor
+    func testCountOnlyCueDisplaysTheChosenCountWithoutNamingFingers() throws {
+        let fingers = try XCTUnwrap(FingerConfiguration(count: 3))
+        let card = GripHandCueCard(posture: .halfCrimp, fingerConfiguration: fingers, side: .left)
+        let hold = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
+        let diagram = GripDiagramView(hold: hold, gripType: .halfCrimp, fingerConfiguration: fingers)
+
+        XCTAssertEqual(card.fingerSummary, "3 fingers")
+        XCTAssertEqual(card.accessibilityLabel, "Left hand, Half crimp, 3 fingers, Finger identities not specified")
+        XCTAssertEqual(diagram.accessibilityCueLabel, "Half crimp, 3 fingers, Finger identities not specified")
+    }
+
+    func testCountOnlyCueDoesNotHighlightAnInventedFingerSubset() throws {
+        for count in 1...4 {
+            let fingers = try XCTUnwrap(FingerConfiguration(count: count))
+            for grip in GripType.allCases.map(Optional.some) + [nil] {
+                let pose = GripHandPose(posture: grip, fingerConfiguration: fingers)
+                XCTAssertTrue(pose.highlightedFingers.isEmpty)
+                XCTAssertFalse(pose.hasExplicitFingers)
+            }
+            for grip in [GripType.twoFingerPocket, .threeFingerPocket, .fourFingerPocket] {
+                XCTAssertEqual(GripHandPose(posture: grip, fingerConfiguration: fingers).action(), "Pocket0")
+            }
+        }
+    }
+
     func testHandCueArtworkFacesTheBoardCenter() {
         XCTAssertEqual(GripCueSide.left.handArtworkMirrorScale, -1)
         XCTAssertEqual(GripCueSide.right.handArtworkMirrorScale, 1)

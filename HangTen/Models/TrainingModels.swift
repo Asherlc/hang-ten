@@ -900,13 +900,23 @@ enum FingerSlot: String, CaseIterable, Codable, Hashable, Identifiable {
 
 struct FingerConfiguration: Codable, Hashable {
     let engagedFingers: Set<FingerSlot>
+    private let unspecifiedFingerCount: Int?
 
     init?(engagedFingers: Set<FingerSlot>) {
         guard !engagedFingers.isEmpty else { return nil }
         self.engagedFingers = engagedFingers
+        unspecifiedFingerCount = nil
     }
 
-    var count: Int { engagedFingers.count }
+    init?(count: Int) {
+        guard (1...4).contains(count) else { return nil }
+        engagedFingers = []
+        unspecifiedFingerCount = count
+    }
+
+    var count: Int { unspecifiedFingerCount ?? engagedFingers.count }
+
+    var hasExactFingers: Bool { !engagedFingers.isEmpty }
 
     var orderedFingers: [FingerSlot] {
         FingerSlot.allCases.filter(engagedFingers.contains)
@@ -914,10 +924,32 @@ struct FingerConfiguration: Codable, Hashable {
 
     private enum CodingKeys: String, CodingKey {
         case engagedFingers
+        case count
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        let hasFingerIdentities = container.contains(.engagedFingers)
+        let hasCount = container.contains(.count)
+        guard hasFingerIdentities != hasCount else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .count,
+                in: container,
+                debugDescription: "Finger configuration must define either exact fingers or a count."
+            )
+        }
+        if hasCount {
+            let count = try container.decode(Int.self, forKey: .count)
+            guard let configuration = Self(count: count) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .count,
+                    in: container,
+                    debugDescription: "Finger count must be from 1 to 4."
+                )
+            }
+            self = configuration
+            return
+        }
         let decodedFingers = try container.decode([FingerSlot].self, forKey: .engagedFingers)
         guard !decodedFingers.isEmpty else {
             throw DecodingError.dataCorruptedError(
@@ -944,6 +976,11 @@ struct FingerConfiguration: Codable, Hashable {
     }
 
     func encode(to encoder: Encoder) throws {
+        if let unspecifiedFingerCount {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(unspecifiedFingerCount, forKey: .count)
+            return
+        }
         guard !engagedFingers.isEmpty else {
             let container = encoder.container(keyedBy: CodingKeys.self)
             throw EncodingError.invalidValue(

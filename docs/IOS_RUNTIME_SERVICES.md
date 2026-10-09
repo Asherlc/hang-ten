@@ -60,23 +60,99 @@ offers routine creation; a search or filter with no matches retains refinement
 guidance. Difficulty choices follow Entry, Beginner, Intermediate, and Advanced,
 followed by other difficulty labels in alphabetical order.
 
-Custom routine creation and editing place steps in sets by default. The first
-**Add step** creates a set with one run; **Add step** within a set appends to that
-set, including an earlier set without disturbing later sets. **Add set** starts
-a separate one-run sequence with its first editable step. Single-step and
-multi-step sets use the same expanded editor row with numbered headers, child
-steps, inline count, **Edit set**, and **Ungroup set**. Child forms remain editable
-and include **Remove step**. The range editor can retain a single step and
-previews one complete repetition in order. Ungrouping keeps every child and its
-edits for one run; **Create set from steps** can regroup two or more consecutive
-ungrouped steps.
-The **Repeat** toggle in an explicitly ungrouped step's form, including a rest
-step, creates a single-step set with two runs. Its parent row then provides the
-count and **Ungroup set** controls. A set child's **Edit set** opens the shared
-set editor. The count is the total number of runs, including the first,
-and supports 1–100. The range selectors use
-[SwiftUI navigation link pickers](https://developer.apple.com/documentation/swiftui/navigationlinkpickerstyle)
-to show step choices inside the set sheet's navigation stack. Sets cannot overlap.
+Custom routine creation and editing place steps in sets by default. **Add set**
+starts a separate one-run sequence and opens its first step for immediate editing.
+**Add step** within a set appends to that set, including an earlier set without
+disturbing later sets. Set repeat counts are edited inline and include the first
+run (1–100). Sets move together when reordered. Child steps expose **Remove step**;
+there is no separate set editor or ungroup action in the planner.
+
+The routine has one Board picker and starts with **No board**, creating a
+board-agnostic routine. Choosing a board makes it board-specific. The board choice
+remains disabled when editing a saved routine because its target mode is immutable.
+Routine Name and Description are editable directly. Saved difficulty, category and
+tags are retained without adding those fields to the builder.
+
+Each step shows **Exercise** and **Time**, with a persistent seconds unit. Work
+steps also show **Hands**, **Fingers**, **Grip**, **Hold type**, and an optional **Depth** input in mm.
+Exercise combines the persisted phase/action classifications into Hang, Isometric
+pull, Loaded lift, or Rest. Rest clears work-only fields and uses fixed timing.
+Saved warm-up, conditioning, and cool-down classifications are preserved. Hands
+combines hand use and side into Both hands, Left hand, Right hand, or Choose at
+start; the last choice remains unavailable for pull phases and isometric pulls.
+Fingers allows an optional count from one to four without inventing which fingers
+are engaged. Grip offers Open hand, Half crimp and Full crimp; saved grip types
+remain available. Existing exact finger choices are preserved until the count is
+explicitly changed. The chosen count and grip survive saving and reach the workout
+cue, with a neutral finger illustration when identities are unspecified.
+Loaded lift additionally shows Repetitions and optional Added weight. Its inline
+**kg / lb** picker changes how weight is entered and displayed, remembering the
+choice through `HangTen.customRoutine.displayUnits`. Switching units preserves the
+physical quantity; stored load remains in kilograms-force. Depth stays in mm.
+
+The single Depth input accepts one positive value or a minimum–maximum range.
+An explicitly cleared input removes the depth restriction. Invalid or incomplete input
+blocks Save and retains the previous prescribed depth until a valid edit is made.
+A saved named depth category is shown in a caption with a Clear action rather
+than converted to an invented numeric value. Unrelated edits preserve saved depth categories and hold
+styles; explicitly changing Hold type clears the hidden style. These controls do
+not change board geometry or the meaning of stored hold predicates.
+
+Optional step Name and Instructions are edited directly; unnamed steps use their
+exercise name. Saved accessory text is retained for playback. Expanded rows omit
+redundant summaries; collapsed steps summarize exercise, time, hands, hold type, fingers and grip.
+Editable fields have a visible input surface and a persistent label.
+
+New step times start blank and must be entered by the athlete. Numeric fields have
+no placeholder values. Text placeholders use examples from the canonical plan
+library, not invented workouts or coaching cues. They remain examples in empty
+fields and are never filled in or saved as the athlete's prescription.
+
+| Field | Example after “e.g.” | Canonical source |
+| --- | --- | --- |
+| Routine Name | Metolius 10-minute · Entry | `metolius.generic-ten-minute.entry`, metadata title |
+| Description | Ten 60-second hangboard sequences. | Same plan, metadata subtitle |
+| Step Name (Hang) | Jug hang | `metolius.generic-ten-minute.entry.sequence-1`, step `entry.minute-1.task-1`, title |
+| Instructions (Hang) | Hang from the jugs for 15 seconds. | Same step, instruction |
+| Step Name (Rest) | Rest | `tension-6-and-10.sequence-1`, step `tension-6-and-10.set-1.rest-1`, title |
+| Instructions (Rest) | Rest before the next hang. | Same step, instruction |
+
+These strings come from `HangTen/Resources/PlanLibrary.json`. Loaded lift and
+Isometric pull omit text examples until an applicable audited example exists.
+The rest example belongs to the canonical guided adaptation of
+[Tension's 6 and 10 sequence](https://tensionclimbing.com/blogs/blog/hangboarding-a-way).
+The primary
+[Metolius 10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+was checked October 8, 2026: it specifies ten one-minute intervals and a
+15-second jug hang in Entry minute 1. The instruction example is the catalog's
+faithful prose adaptation of that row. The full generic app plan retains its
+`adapted` provenance because other task and rest timing is expanded for guidance;
+using these examples does not make a new custom routine an official Metolius plan.
+See [routine authoring](ADDING_A_ROUTINE.md) for the retained source mapping and
+adaptation rules.
+
+Time is the only timing control: explicitly entering a positive duration makes the
+step Timed and clears any previously stored active duration. A keyboard **Done**
+action finishes text or numeric entry. For stopwatch or unspecified active timing,
+duration still defines the total enclosing step time. Existing stopwatch and
+unspecified timing, saved durations, and instructions remain unchanged when opened;
+editing Time explicitly selects Timed. Hold compatibility failures identify the
+affected step and suggest changing the hold type or depth; the builder does not
+display internal validation enums. Save uses a plain toolbar button with semibold
+green text so its label stays readable after keyboard, scroll, and navigation
+updates.
+
+The builder follows persistent-label and input-affordance guidance from
+[Apple’s data-entry guidelines](https://developer.apple.com/design/human-interface-guidelines/entering-data)
+and [NN/g’s form-label research](https://www.nngroup.com/articles/form-design-placeholders/).
+[Hevy’s routine editor](https://www.hevyapp.com/features/track-workouts/) is a
+reference for grouping exercise-specific inputs; [Seconds’ custom editor](https://www.intervaltimer.com/help/editors/custom-timer)
+is a reference for an ordered interval list with compact summaries. These are
+interaction precedents, not sources for training prescriptions. The routine and
+step fields stay inline without a separate “details” group.
+The editable [Figma builder reference](https://www.figma.com/design/n3GKCE4qASfJsxIe3HrzfV?node-id=24-2)
+shows the reviewed field layout and audited example states.
+
 Saving retains each authored step once with its set and count. Opening an older
 routine in the planner wraps consecutive ungrouped steps in one-run sets while
 retaining authored values and existing repeat counts; it changes the editable
@@ -87,8 +163,7 @@ write `sets`. Workout resolution expands sets in order with distinct step
 identities and includes every repetition in the session duration. Editing and
 duplicating a custom routine retain its sets. Reordering a member moves its
 whole set; deleting a set row removes all its members. Deleting a member removes
-it from the set, and deleting every member removes the set. Ungrouping keeps its
-steps for one run.
+it from the set, and deleting every member removes the set.
 A custom routine may end in rest when that rest belongs to a declared set of
 multiple steps that includes work. Every repetition retains that rest, including
 the last. An ungrouped final rest or a rest-only final set remains invalid.

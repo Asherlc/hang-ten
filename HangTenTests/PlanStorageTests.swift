@@ -1012,6 +1012,55 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: emptyPayload))
     }
 
+    func testCountOnlyFingerConfigurationRoundTripsWithoutInventingFingerIdentities() throws {
+        for count in 1...4 {
+            let configuration = try XCTUnwrap(FingerConfiguration(count: count))
+            let data = try JSONEncoder().encode(configuration)
+            let decoded = try JSONDecoder().decode(FingerConfiguration.self, from: data)
+
+            XCTAssertEqual(decoded, configuration)
+            XCTAssertEqual(decoded.count, count)
+            XCTAssertTrue(decoded.engagedFingers.isEmpty)
+            XCTAssertTrue(decoded.orderedFingers.isEmpty)
+            XCTAssertFalse(decoded.hasExactFingers)
+            XCTAssertEqual(try JSONSerialization.jsonObject(with: data) as? [String: Int], ["count": count])
+        }
+    }
+
+    func testCountOnlyFingerConfigurationRejectsInvalidCountsAndAmbiguousPayloads() throws {
+        for count in [-1, 0, 5] {
+            XCTAssertNil(FingerConfiguration(count: count))
+            let data = try JSONSerialization.data(withJSONObject: ["count": count])
+            XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: data))
+        }
+        let ambiguousPayload = Data(#"{ "count": 2, "engagedFingers": ["index", "middle"] }"#.utf8)
+        XCTAssertThrowsError(try JSONDecoder().decode(FingerConfiguration.self, from: ambiguousPayload))
+    }
+
+    func testWorkoutStepDefinitionRetainsCountOnlyFingersAndCrimpPosture() throws {
+        let data = Data(#"""
+            {
+              "id": "count-only",
+              "title": "My hang",
+              "instruction": "",
+              "accessory": "",
+              "duration": 10,
+              "phase": "hang",
+              "targets": [],
+              "gripType": "halfCrimp",
+              "fingerConfiguration": { "count": 3 }
+            }
+            """#.utf8)
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: data)
+        let encoded = try JSONEncoder().encode(decoded)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+
+        XCTAssertEqual(decoded.gripType, .halfCrimp)
+        XCTAssertEqual(decoded.fingerConfiguration?.count, 3)
+        XCTAssertEqual(decoded.fingerConfiguration?.hasExactFingers, false)
+        XCTAssertEqual(object["fingerConfiguration"] as? [String: Int], ["count": 3])
+    }
+
     func testFingerConfigurationRejectsDuplicateEngagedFingersInDecodedPayload() throws {
         let duplicatePayload = Data(#"{ "engagedFingers": ["index", "index"] }"#.utf8)
 
@@ -1036,6 +1085,7 @@ final class PlanStorageTests: XCTestCase {
 
         XCTAssertEqual(decoded, configurations)
         XCTAssertEqual(decoded[0].count, 1)
+        XCTAssertTrue(decoded[0].hasExactFingers)
         XCTAssertEqual(decoded[0].orderedFingers, [.pinky])
         XCTAssertEqual(decoded[1].count, 2)
         XCTAssertEqual(decoded[1].orderedFingers, [.index, .ring])
