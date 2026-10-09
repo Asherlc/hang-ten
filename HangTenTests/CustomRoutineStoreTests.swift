@@ -2,6 +2,39 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testSavedGripAndFingerChoiceReachPlaybackAfterReload() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let exact = try XCTUnwrap(FingerConfiguration(engagedFingers: [.middle, .ring]))
+        let countOnly = try XCTUnwrap(FingerConfiguration(count: 3))
+        for fingers in [exact, countOnly] {
+            let definition = CustomRoutineDefinition(
+                id: "custom.grip-cue-review", title: "Grip cue review", subtitle: "",
+                difficulty: nil, category: nil, tags: [], targetMode: .generic,
+                steps: [WorkoutStepDefinition(
+                    id: "hang", title: "Hang", instruction: "", accessory: "", duration: 10,
+                    phase: .hang,
+                    segments: [.init(kind: .work, target: .requirements([.kind(.edge)]), timing: .fixed, duration: 10)],
+                    gripType: .halfCrimp, fingerConfiguration: fingers
+                )]
+            )
+            let store = CustomRoutineStore(defaults: defaults)
+            try store.save(definition)
+            let reloaded = CustomRoutineStore(defaults: defaults)
+            let saved = try XCTUnwrap(reloaded.routines.first)
+            XCTAssertEqual(saved.steps.first?.gripType, .halfCrimp)
+            XCTAssertEqual(saved.steps.first?.fingerConfiguration, fingers)
+            let plan = try reloaded.plan(for: saved)
+            let step = try XCTUnwrap(plan.steps.first)
+            XCTAssertEqual(step.gripType, .halfCrimp)
+            XCTAssertEqual(step.fingerConfiguration, fingers)
+            let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: nil, on: BoardCatalog.defaultBoard)
+            XCTAssertEqual(cue?.gripType, .halfCrimp)
+            XCTAssertEqual(cue?.fingerConfiguration, fingers)
+        }
+    }
+
     /// Checks complete work/rest playback, unique identities, timing, and persistence at repeat-count bounds.
     func testHangRestSetCanBeTheEntireRoutineAndRetainsEveryRecovery() throws {
         let suite = ownedRoutineSuiteName()
@@ -1392,7 +1425,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let persistedRoutines = try XCTUnwrap(persistedJSON["routines"] as? [[String: Any]])
         let persistedSteps = try XCTUnwrap(persistedRoutines.first?["steps"] as? [[String: Any]])
         XCTAssertEqual(persistedSteps.first?["activeDuration"] as? Double, 8)
-        XCTAssertNil(persistedSteps.first?["gripType"])
+        XCTAssertEqual(persistedSteps.first?["gripType"] as? String, "halfCrimp")
         XCTAssertNil(persistedSteps.first?["fingerConfiguration"])
         XCTAssertEqual(stored.steps[2].segments[0].timing, .undefined)
         XCTAssertEqual(stored.steps[3].segments[0].timing, .stopwatch)

@@ -67,43 +67,51 @@ disturbing later sets. Set repeat counts are edited inline and include the first
 run (1–100). Sets move together when reordered. Child steps expose **Remove step**;
 there is no separate set editor or ungroup action in the planner.
 
-The routine has one Board picker and starts with **No board**. That creates a board-agnostic routine;
-choosing a board makes it board-specific. There is no separate target-mode selector.
-The board choice remains disabled when editing a saved routine because its target
-mode is immutable. Name, Description, Difficulty, Category and Tags are visible
-inline. A routine-level **Metric / Imperial** control changes load and depth entry
-units between kg / lb and mm / in. Switching display units preserves the physical
-quantity; persisted load and depth values retain their canonical units.
+The routine has one Board picker and starts with **No board**, creating a
+board-agnostic routine. Choosing a board makes it board-specific. The board choice
+remains disabled when editing a saved routine because its target mode is immutable.
+Routine Name and Description are editable directly. Saved difficulty, category and
+tags are retained without adding those fields to the builder.
 
-Each step shows Exercise, Duration, and Hands & holds. Exercise combines the
-persisted phase/action classifications into Hang, Isometric pull, Loaded lift, or
-Rest. Rest clears work-only fields and uses fixed timing. Saved warm-up,
-conditioning, and cool-down classifications are preserved; the builder does not
-expose a separate phase control. Hands combines hand use and side into Both hands,
-Left hand, Right hand, or Choose at start; the last choice remains unavailable for
-pull phases and isometric pulls. Loaded lift also exposes repetitions and optional
-external load. Hold shape and depth are editable inline, without a disclosure or a
-second summary of their current values. The builder labels the existing `incut`
-shape **Angled inward** and numeric depth selection **Range**. These are display
-labels; stored shape identifiers, depth matching and board geometry are unchanged.
-Optional naming and instructions are edited directly; unnamed steps use their
-exercise name. There is no separate left/right pair shortcut. The legacy accessory
-text field is omitted from the builder; saved accessory text is retained for
-playback. Expanded rows omit redundant summaries; collapsed steps summarize
-exercise, duration, hands and hold kind. Editable text and numeric fields have a
-visible input surface as well as a persistent label.
+Each step shows **Exercise** and **Time**, with a persistent seconds unit. Work
+steps also show **Hands**, **Fingers**, **Grip**, **Hold type**, and an optional **Depth** input in mm.
+Exercise combines the persisted phase/action classifications into Hang, Isometric
+pull, Loaded lift, or Rest. Rest clears work-only fields and uses fixed timing.
+Saved warm-up, conditioning, and cool-down classifications are preserved. Hands
+combines hand use and side into Both hands, Left hand, Right hand, or Choose at
+start; the last choice remains unavailable for pull phases and isometric pulls.
+Fingers allows an optional count from one to four without inventing which fingers
+are engaged. Grip offers Open hand, Half crimp and Full crimp; saved grip types
+remain available. Existing exact finger choices are preserved until the count is
+explicitly changed. The chosen count and grip survive saving and reach the workout
+cue, with a neutral finger illustration when identities are unspecified.
+Loaded lift additionally shows Repetitions and optional Added weight. Its inline
+**kg / lb** picker changes how weight is entered and displayed, remembering the
+choice through `HangTen.customRoutine.displayUnits`. Switching units preserves the
+physical quantity; stored load remains in kilograms-force. Depth stays in mm.
 
-New step durations start blank and must be entered by the athlete. The Duration
-label and seconds unit remain visible when populated. Numeric fields have no
-placeholder values. Text placeholders use examples from the canonical plan library,
-not invented workouts or coaching cues. They remain examples in empty fields and
-are never filled in or saved as the athlete's prescription.
+The single Depth input accepts one positive value or a minimum–maximum range.
+An explicitly cleared input removes the depth restriction. Invalid or incomplete input
+blocks Save and retains the previous prescribed depth until a valid edit is made.
+A saved named depth category is shown in a caption with a Clear action rather
+than converted to an invented numeric value. Unrelated edits preserve saved depth categories and hold
+styles; explicitly changing Hold type clears the hidden style. These controls do
+not change board geometry or the meaning of stored hold predicates.
+
+Optional step Name and Instructions are edited directly; unnamed steps use their
+exercise name. Saved accessory text is retained for playback. Expanded rows omit
+redundant summaries; collapsed steps summarize exercise, time, hands, hold type, fingers and grip.
+Editable fields have a visible input surface and a persistent label.
+
+New step times start blank and must be entered by the athlete. Numeric fields have
+no placeholder values. Text placeholders use examples from the canonical plan
+library, not invented workouts or coaching cues. They remain examples in empty
+fields and are never filled in or saved as the athlete's prescription.
 
 | Field | Example after “e.g.” | Canonical source |
 | --- | --- | --- |
 | Routine Name | Metolius 10-minute · Entry | `metolius.generic-ten-minute.entry`, metadata title |
 | Description | Ten 60-second hangboard sequences. | Same plan, metadata subtitle |
-| Tags | manufacturer | Same plan, metadata tags |
 | Step Name (Hang) | Jug hang | `metolius.generic-ten-minute.entry.sequence-1`, step `entry.minute-1.task-1`, title |
 | Instructions (Hang) | Hang from the jugs for 15 seconds. | Same step, instruction |
 | Step Name (Rest) | Rest | `tension-6-and-10.sequence-1`, step `tension-6-and-10.set-1.rest-1`, title |
@@ -121,23 +129,18 @@ faithful prose adaptation of that row. The full generic app plan retains its
 `adapted` provenance because other task and rest timing is expanded for guidance;
 using these examples does not make a new custom routine an official Metolius plan.
 See [routine authoring](ADDING_A_ROUTINE.md) for the retained source mapping and
-adaptation rules. **Angled inward** is plain-language display wording for the
-manufacturer term “incut,” which describes a hold's positive angle;
-[Beastmaker's Mini Medge](https://www.beastmaker.co.uk/products/mini-medge) and
-[Atomik's incut crimp description](https://www.atomikclimbingholds.com/5-golfus-steep-wall-crimps-set-3-30-degree-incut)
-provide manufacturer examples of that angle. This label does not add a grip or
-training instruction.
+adaptation rules.
 
-Duration is the only timing control: explicitly entering a positive duration
-makes the step Timed and clears any previously stored active duration. There is
-no Timer picker or Step details disclosure. A keyboard **Done** action finishes
-text or numeric entry. For stopwatch or unspecified active timing, duration still
-defines the total enclosing step time. Existing stopwatch and unspecified timing,
-saved durations, and instructions remain unchanged when opened; editing duration
-explicitly selects Timed. Hold compatibility failures identify the affected step
-and suggest changing the hold type, shape, or depth; the builder does not display
-internal validation enums. Save uses a plain toolbar button with semibold green
-text so its label stays readable after keyboard, scroll, and navigation updates.
+Time is the only timing control: explicitly entering a positive duration makes the
+step Timed and clears any previously stored active duration. A keyboard **Done**
+action finishes text or numeric entry. For stopwatch or unspecified active timing,
+duration still defines the total enclosing step time. Existing stopwatch and
+unspecified timing, saved durations, and instructions remain unchanged when opened;
+editing Time explicitly selects Timed. Hold compatibility failures identify the
+affected step and suggest changing the hold type or depth; the builder does not
+display internal validation enums. Save uses a plain toolbar button with semibold
+green text so its label stays readable after keyboard, scroll, and navigation
+updates.
 
 The builder follows persistent-label and input-affordance guidance from
 [Apple’s data-entry guidelines](https://developer.apple.com/design/human-interface-guidelines/entering-data)
@@ -145,11 +148,10 @@ and [NN/g’s form-label research](https://www.nngroup.com/articles/form-design-
 [Hevy’s routine editor](https://www.hevyapp.com/features/track-workouts/) is a
 reference for grouping exercise-specific inputs; [Seconds’ custom editor](https://www.intervaltimer.com/help/editors/custom-timer)
 is a reference for an ordered interval list with compact summaries. These are
-interaction precedents, not sources for training prescriptions. Routine metadata,
-hold refinements and instructions stay inline in response to the reviewed builder
-feedback; none requires opening a separately named “details” group.
-The editable [Figma builder reference](https://www.figma.com/design/n3GKCE4qASfJsxIe3HrzfV?node-id=21-2)
-shows the current field layout and audited example states.
+interaction precedents, not sources for training prescriptions. The routine and
+step fields stay inline without a separate “details” group.
+The editable [Figma builder reference](https://www.figma.com/design/n3GKCE4qASfJsxIe3HrzfV?node-id=24-2)
+shows the reviewed field layout and audited example states.
 
 Saving retains each authored step once with its set and count. Opening an older
 routine in the planner wraps consecutive ungrouped steps in one-run sets while

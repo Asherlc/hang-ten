@@ -3,7 +3,8 @@ import Metal
 import SwiftUI
 
 /// Rendering parameters, not anatomical measurements or training prescriptions.
-/// Explicit finger selections take precedence; otherwise the display assumes four fingers.
+/// Exact selections highlight fingers; count-only selections leave identities neutral.
+/// An omitted configuration retains the four-finger display default.
 struct GripHandPose: Equatable {
     let posture: GripType?
     let highlightedFingers: Set<FingerSlot>
@@ -12,7 +13,7 @@ struct GripHandPose: Equatable {
     init(posture: GripType?, fingerConfiguration: FingerConfiguration?) {
         self.posture = posture
         highlightedFingers = fingerConfiguration?.engagedFingers ?? Set(FingerSlot.allCases)
-        hasExplicitFingers = fingerConfiguration != nil
+        hasExplicitFingers = fingerConfiguration?.hasExactFingers ?? false
     }
 
     func action() -> String {

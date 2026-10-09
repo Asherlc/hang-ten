@@ -2,28 +2,137 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
-    func testMetricMeasurementsUseCanonicalValues() {
-        let units = CustomRoutineDisplayUnit.metric
-        XCTAssertEqual(units.loadValue(fromKilogramsForce: 11.75), 11.75)
-        XCTAssertEqual(units.kilogramsForce(fromDisplayedLoad: -3.25), -3.25)
-        XCTAssertEqual(units.depthValue(fromMillimeters: 20.25), 20.25)
-        XCTAssertEqual(units.millimeters(fromDisplayedDepth: 20.25), 20.25)
+    func testDepthEntryParsesSingleValuesAndOrderedRangesInMillimeters() {
+        let locale = Locale(identifier: "en_US")
+        XCTAssertEqual(CustomRoutineDepthEntry.parse(" 18 ", locale: locale),
+                       .depth(.range(.init(minimum: 18, maximum: 18))))
+        for separator in ["-", "–", "—", "−"] {
+            XCTAssertEqual(CustomRoutineDepthEntry.parse("12.7 \(separator) 38.1", locale: locale),
+                           .depth(.range(.init(minimum: 12.7, maximum: 38.1))))
+        }
+        XCTAssertEqual(CustomRoutineDepthEntry.parse("1e-5–2e-5", locale: locale),
+                       .depth(.range(.init(minimum: 0.00001, maximum: 0.00002))))
     }
 
-    func testImperialLoadEntryConvertsPoundsToCanonicalKilogramsForce() {
-        let units = CustomRoutineDisplayUnit.imperial
+    func testDepthEntryAcceptsLocalizedDecimalSeparators() {
+        let locale = Locale(identifier: "fr_FR")
+        XCTAssertEqual(CustomRoutineDepthEntry.parse("12,7–38,1", locale: locale),
+                       .depth(.range(.init(minimum: 12.7, maximum: 38.1))))
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(
+            for: .range(.init(minimum: 12.7, maximum: 38.1)), locale: locale
+        ), "12,7–38,1")
+    }
+
+    func testDepthEntryRejectsIncompleteNonfiniteAndUnorderedValues() {
+        let locale = Locale(identifier: "en_US")
+        XCTAssertEqual(CustomRoutineDepthEntry.parse(" \n ", locale: locale), .empty)
+        for input in ["-", "18-", "-18", "22-18", "0", "0-18", "18-0", "1-2-3",
+                      "NaN", "infinity", "1e309", "deep", "18 mm", "18 22"] {
+            XCTAssertEqual(CustomRoutineDepthEntry.parse(input, locale: locale), .invalid, input)
+        }
+    }
+
+    func testDepthEntryDisplaysSingleValuesAndRangesWithoutLegacyCategories() {
+        let locale = Locale(identifier: "en_US")
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(for: nil, locale: locale), "")
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(for: .category(.medium), locale: locale), "")
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(
+            for: .range(.init(minimum: 18, maximum: 18)), locale: locale
+        ), "18")
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(
+            for: .range(.init(minimum: 18.1254, maximum: 18.1254)), locale: locale
+        ), "18.1254")
+        XCTAssertEqual(CustomRoutineDepthEntry.displayText(
+            for: .range(.init(minimum: 18, maximum: 22)), locale: locale
+        ), "18–22")
+        let tinyRange = HoldDepth.range(.init(minimum: Double.leastNonzeroMagnitude, maximum: 0.00001))
+        XCTAssertEqual(CustomRoutineDepthEntry.parse(
+            CustomRoutineDepthEntry.displayText(for: tinyRange, locale: locale), locale: locale
+        ), .depth(tinyRange))
+    }
+
+    func testEditingDepthPreservesExistingHoldAttributes() {
+        var step = makeStep(id: "depth", title: "My step")
+        let otherTarget = ContactRequirement.kind(.jug)
+        step.targets = [ContactRequirement(
+            contactID: "left", kind: .edge, shape: .flat,
+            depth: .range(.init(minimum: 18, maximum: 22)),
+            fingerCapacity: 2, handCapacity: 1, selection: .single
+        ), otherTarget]
+
+        step.depthText = "20-24"
+
+        XCTAssertEqual(step.targets, [ContactRequirement(
+            contactID: "left", kind: .edge, shape: .flat,
+            depth: .range(.init(minimum: 20, maximum: 24)),
+            fingerCapacity: 2, handCapacity: 1, selection: .single
+        ), otherTarget])
+        XCTAssertEqual(step.depthText, "20-24")
+        XCTAssertFalse(step.hasInvalidDepthInput)
+    }
+
+    func testInvalidDepthTextPreservesPrescriptionUntilCorrected() {
+        var step = makeStep(id: "depth", title: "My step")
+        step.targets = [.edge(depth: .range(.init(minimum: 18, maximum: 22)))]
+
+        step.depthText = "18-"
+
+        XCTAssertTrue(step.hasInvalidDepthInput, "An unfinished range must prevent saving")
+        XCTAssertEqual(step.depthText, "18-")
+        XCTAssertEqual(step.targets[0].depth, .range(.init(minimum: 18, maximum: 22)))
+        step.depthText = "20"
+        XCTAssertFalse(step.hasInvalidDepthInput)
+        XCTAssertEqual(step.targets[0].depth, .range(.init(minimum: 20, maximum: 20)))
+    }
+
+    func testLegacyDepthCategoryIsPreservedUntilExplicitlyCleared() throws {
+        var original = CustomRoutineDraft(createWith: .generic)
+        var step = makeStep(id: "legacy-depth", title: "My step")
+        step.targets = [.edge(depth: .category(.medium))]
+        original.steps = [step]
+        var reopened = CustomRoutineDraft(editing: original.definition())
+        XCTAssertEqual(reopened.steps[0].depthText, "")
+        XCTAssertFalse(reopened.steps[0].hasInvalidDepthInput)
+        XCTAssertNil(reopened.steps[0].enteredDepthText)
+        let saved = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(reopened.definition())
+        )
+        XCTAssertEqual(saved.steps[0].workRequirements[0].depth, .category(.medium))
+
+        reopened.steps[0].depthText = " \n "
+
+        XCTAssertNil(reopened.steps[0].targets[0].depth)
+        XCTAssertFalse(reopened.steps[0].hasInvalidDepthInput)
+    }
+
+    func testRestTransitionClearsInvalidDepthEntry() {
+        var step = makeStep(id: "rest-depth", title: "Hang")
+        step.depthText = "18-"
+        XCTAssertTrue(step.hasInvalidDepthInput)
+
+        step.exercise = .rest
+
+        XCTAssertNil(step.enteredDepthText)
+        XCTAssertFalse(step.hasInvalidDepthInput)
+        XCTAssertEqual(step.depthText, "")
+        XCTAssertTrue(step.targets.isEmpty)
+    }
+
+    func testKilogramLoadUsesCanonicalValues() {
+        let units = CustomRoutineLoadUnit.metric
+        XCTAssertEqual(units.loadValue(fromKilogramsForce: 11.75), 11.75)
+        XCTAssertEqual(units.kilogramsForce(fromDisplayedLoad: -3.25), -3.25)
+    }
+
+    func testPoundLoadEntryConvertsToCanonicalKilogramsForce() {
+        let units = CustomRoutineLoadUnit.imperial
         XCTAssertEqual(units.loadValue(fromKilogramsForce: 10), 22.0462262185, accuracy: 0.000_000_001)
         XCTAssertEqual(units.kilogramsForce(fromDisplayedLoad: -10), -4.5359237, accuracy: 0.000_000_001)
     }
 
-    func testImperialDepthEntryConvertsInchesToCanonicalMillimeters() {
-        let units = CustomRoutineDisplayUnit.imperial
-        XCTAssertEqual(units.depthValue(fromMillimeters: 25.4), 1, accuracy: 0.000_000_001)
-        XCTAssertEqual(units.millimeters(fromDisplayedDepth: 0.75), 19.05, accuracy: 0.000_000_001)
-    }
-
     func testNonfiniteLoadInputStillRequiresValidation() {
-        for units in CustomRoutineDisplayUnit.allCases {
+        for units in CustomRoutineLoadUnit.allCases {
             for value in [Double.nan, .infinity, -.infinity] {
                 var draft = CustomRoutineDraft(createWith: .generic)
                 draft.title = "Invalid load"
@@ -38,63 +147,24 @@ final class CustomRoutineDraftTests: XCTestCase {
         }
     }
 
-    func testMeasurementConversionRoundTripsFractionalAuthoredValues() {
-        for units in CustomRoutineDisplayUnit.allCases {
+    func testLoadConversionRoundTripsFractionalAuthoredValues() {
+        for units in CustomRoutineLoadUnit.allCases {
             XCTAssertEqual(
                 units.kilogramsForce(fromDisplayedLoad: units.loadValue(fromKilogramsForce: -4.25)),
                 -4.25,
                 accuracy: 0.000_000_001
             )
-            XCTAssertEqual(
-                units.millimeters(fromDisplayedDepth: units.depthValue(fromMillimeters: 20.35)),
-                20.35,
-                accuracy: 0.000_000_001
-            )
         }
     }
 
-    func testChangingDisplayUnitsPreservesAuthoredCanonicalMeasurements() throws {
-        var draft = CustomRoutineDraft(createWith: .generic)
-        var step = makeStep(id: "fractional", title: "My step")
-        step.externalLoadKGF = -4.25
-        step.targets = [ContactRequirement(
-            kind: .edge,
-            depth: .range(.init(minimum: 17.35, maximum: 22.8)),
-            selection: .single
-        )]
-        draft.steps = [step]
-        let original = draft.definition()
-        var units = CustomRoutineDisplayUnit.metric
-
-        for _ in 0..<10 {
-            units = units == .metric ? .imperial : .metric
-            _ = units.loadValue(fromKilogramsForce: draft.steps[0].externalLoadKGF!)
-            if case let .range(range)? = draft.steps[0].targets[0].depth {
-                _ = units.depthValue(fromMillimeters: range.minimum)
-                _ = units.depthValue(fromMillimeters: range.maximum)
-            }
-        }
-
-        let reopened = try JSONDecoder().decode(
-            CustomRoutineDefinition.self,
-            from: JSONEncoder().encode(draft.definition())
-        )
-        XCTAssertEqual(reopened, original)
-        XCTAssertEqual(reopened.steps[0].externalLoadKGF, -4.25)
-        XCTAssertEqual(reopened.steps[0].workRequirements[0].depth, .range(.init(minimum: 17.35, maximum: 22.8)))
-    }
-
-    func testImperialAuthoredMeasurementsPersistInCanonicalUnits() throws {
+    func testPoundLoadEntryPersistsKilogramsForceAndUnchangedMillimeterDepth() throws {
         var draft = CustomRoutineDraft(createWith: .generic)
         var step = makeStep(id: "imperial", title: "My step")
-        let units = CustomRoutineDisplayUnit.imperial
+        let units = CustomRoutineLoadUnit.imperial
         step.externalLoadKGF = units.kilogramsForce(fromDisplayedLoad: 22.0462262185)
         step.targets = [ContactRequirement(
             kind: .edge,
-            depth: .range(.init(
-                minimum: units.millimeters(fromDisplayedDepth: 0.5),
-                maximum: units.millimeters(fromDisplayedDepth: 0.75)
-            )),
+            depth: .range(.init(minimum: 12.7, maximum: 38.1)),
             selection: .single
         )]
         draft.steps = [step]
@@ -108,7 +178,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             return XCTFail("Expected a canonical millimeter range after reopening")
         }
         XCTAssertEqual(range.minimum, 12.7, accuracy: 0.000_000_001)
-        XCTAssertEqual(range.maximum, 19.05, accuracy: 0.000_000_001)
+        XCTAssertEqual(range.maximum, 38.1, accuracy: 0.000_000_001)
     }
 
     func testIncompatibleHoldsProduceActionableSaveFeedback() {
@@ -117,7 +187,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         ])
         let message = CustomRoutineEditorView.saveErrorMessage(for: error)
         XCTAssertTrue(message.contains("Step 2"))
-        XCTAssertTrue(message.contains("Try another hold type, shape, or depth."))
+        XCTAssertTrue(message.contains("Try another hold type or depth."))
         XCTAssertFalse(message.contains("unresolvableSegmentTargets"))
     }
 
@@ -131,6 +201,36 @@ final class CustomRoutineDraftTests: XCTestCase {
         reopened.steps[0].title = "My exercise"
         reopened.steps[0].exercise = .hang
         XCTAssertEqual(reopened.steps[0].displayTitle, "My exercise")
+    }
+
+    func testExerciseNameChangesMatchBeforeAndAfterSavingWithWhitespaceAndCustomTitles() throws {
+        let cases: [(title: String, expected: String)] = [
+            ("", "Loaded lift"),
+            (" \n ", "Loaded lift"),
+            ("Hang", "Loaded lift"),
+            (" Hang \n", "Loaded lift"),
+            ("My exercise", "My exercise"),
+            (" My exercise \n", "My exercise")
+        ]
+        for testCase in cases {
+            var unsaved = CustomRoutineDraft(createWith: .generic)
+            unsaved.steps = [makeStep(id: "named", title: testCase.title)]
+            let saved = try JSONDecoder().decode(
+                CustomRoutineDefinition.self,
+                from: JSONEncoder().encode(unsaved.definition())
+            )
+            var reopened = CustomRoutineDraft(editing: saved)
+
+            unsaved.steps[0].exercise = .loadedLift
+            reopened.steps[0].exercise = .loadedLift
+
+            XCTAssertEqual(unsaved.steps[0].displayTitle, testCase.expected,
+                           "Before saving title \(testCase.title.debugDescription)")
+            XCTAssertEqual(reopened.steps[0].displayTitle, testCase.expected,
+                           "After reopening title \(testCase.title.debugDescription)")
+            XCTAssertEqual(unsaved.definition().steps[0].title, testCase.expected)
+            XCTAssertEqual(reopened.definition().steps[0].title, testCase.expected)
+        }
     }
 
     func testNewStepRequiresAthleteAuthoredDuration() {
@@ -1137,7 +1237,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.definition().steps.map(\.workRequirements), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
     }
 
-    func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
+    func testEditingDraftPreservesAuthoredGripAndExactFingerConfiguration() throws {
         let source = CustomRoutineDefinition(
             id: "custom.legacy-cues",
             title: "Legacy cues",
@@ -1161,10 +1261,43 @@ final class CustomRoutineDraftTests: XCTestCase {
             )]
         )
 
-        let definition = CustomRoutineDraft(editing: source).definition()
+        let definition = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(CustomRoutineDraft(editing: source).definition())
+        )
 
-        XCTAssertNil(definition.steps[0].gripType)
-        XCTAssertNil(definition.steps[0].fingerConfiguration)
+        XCTAssertEqual(definition.steps[0].gripType, .openHand)
+        XCTAssertEqual(definition.steps[0].fingerConfiguration?.engagedFingers, [.index, .ring])
+    }
+
+    func testEditingFingerCountPreservesExactFingersUntilCountChanges() throws {
+        var step = makeStep(id: "fingers", title: "My step")
+        let exactFingers = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .ring]))
+        step.fingerConfiguration = exactFingers
+        step.fingerCount = 2
+        XCTAssertEqual(step.fingerConfiguration, exactFingers)
+
+        step.fingerCount = 3
+
+        XCTAssertEqual(step.fingerCount, 3)
+        XCTAssertEqual(step.fingerConfiguration?.engagedFingers, [])
+        var draft = CustomRoutineDraft(createWith: .generic)
+        step.gripType = .halfCrimp
+        draft.steps = [step]
+        let saved = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        let reopened = CustomRoutineDraft(editing: saved)
+        XCTAssertEqual(reopened.steps[0].fingerCount, 3)
+        XCTAssertEqual(reopened.steps[0].gripType, .halfCrimp)
+        XCTAssertEqual(reopened.steps[0].fingerConfiguration?.engagedFingers, [])
+
+        step.fingerCount = nil
+        XCTAssertNil(step.fingerConfiguration)
+        step.exercise = .rest
+        XCTAssertNil(step.fingerConfiguration)
+        XCTAssertNil(step.gripType)
     }
 
     func testEditingDraftRoundTripsNormalizedOneSegmentDefinition() {
@@ -1215,8 +1348,8 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].workRequirements, source.steps[0].workRequirements)
         XCTAssertEqual(definition.steps[0].segments, source.steps[0].segments)
         XCTAssertEqual(definition.steps[0].activeDuration, source.steps[0].activeDuration)
-        XCTAssertNil(definition.steps[0].gripType)
-        XCTAssertNil(definition.steps[0].fingerConfiguration)
+        XCTAssertEqual(definition.steps[0].gripType, source.steps[0].gripType)
+        XCTAssertEqual(definition.steps[0].fingerConfiguration, source.steps[0].fingerConfiguration)
     }
 
     func testDuplicateDraftCreatesOneStableFreshCustomDefinition() {
@@ -1273,6 +1406,8 @@ final class CustomRoutineDraftTests: XCTestCase {
                 timing: .fixed,
                 duration: 10
             )],
+            gripType: sourceStep.gripType,
+            fingerConfiguration: sourceStep.fingerConfiguration,
             activeDuration: 10
         )
         XCTAssertEqual(duplicate.definition().steps, [expectedStep])

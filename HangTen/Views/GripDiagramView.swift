@@ -135,7 +135,7 @@ struct GripDiagramView: View {
     var accessibilityCueLabel: String {
         [
             gripType?.label ?? "Grip not specified",
-            fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
+            fingerConfiguration?.accessibilityCueSummary ?? "4 fingers (assumed)"
         ]
             .compactMap { $0 }
             .joined(separator: ", ")
@@ -166,7 +166,7 @@ struct GripHandCueCard: View {
                     .foregroundStyle(Color.hangMuted)
                     .fixedSize(horizontal: false, vertical: true)
             }
-            if fingerConfiguration == nil {
+            if fingerConfiguration?.hasExactFingers != true {
                 Text(fingerSummary)
                     .font(.system(size: 10, weight: .semibold, design: .rounded))
                     .foregroundStyle(Color.hangMuted)
@@ -190,14 +190,14 @@ struct GripHandCueCard: View {
     }
 
     var fingerSummary: String {
-        fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
+        fingerConfiguration?.cueSummary ?? "4 fingers (assumed)"
     }
 
     var accessibilityLabel: String {
         [
             side == .left ? "Left hand" : "Right hand",
             posture?.label ?? "Grip not specified",
-            fingerSummary
+            fingerConfiguration?.accessibilityCueSummary ?? "4 fingers (assumed)"
         ].joined(separator: ", ")
     }
 }
@@ -220,20 +220,20 @@ struct GripHandPairCueCards: View {
                     .font(.system(.caption, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
             }
-            if fingerConfiguration == nil {
-                Text("4 fingers (assumed)")
+            if fingerConfiguration?.hasExactFingers != true {
+                Text(fingerSummary)
                     .font(.system(.caption, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.hangMuted)
             }
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Both hands, \(posture?.label ?? "Grip not specified"), \(fingerSummary)")
+        .accessibilityLabel("Both hands, \(posture?.label ?? "Grip not specified"), \(fingerConfiguration?.accessibilityCueSummary ?? "4 fingers (assumed)")")
         .accessibilityIdentifier(exposesAccessibility ? "workout.gripCue.both" : "")
         .accessibilityHidden(!exposesAccessibility)
     }
 
     private var fingerSummary: String {
-        fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "4 fingers (assumed)"
+        fingerConfiguration?.cueSummary ?? "4 fingers (assumed)"
     }
 }
 
@@ -247,6 +247,18 @@ extension GripCueSide {
         case .left: "left"
         case .right: "right"
         }
+    }
+}
+
+extension FingerConfiguration {
+    var cueSummary: String {
+        hasExactFingers
+            ? "Exact fingers: \(orderedFingers.namedList)"
+            : "\(count) \(count == 1 ? "finger" : "fingers")"
+    }
+
+    var accessibilityCueSummary: String {
+        hasExactFingers ? cueSummary : "\(cueSummary), Finger identities not specified"
     }
 }
 

@@ -772,7 +772,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
             let canonical = WorkoutStepNormalizer.materializingImplicitSegments(step.resolvedStep())
             let expanded = try WorkoutStepNormalizer.expand(canonical)
             expandedIDsBySourceID[step.id] = expanded.map(\.id)
-            return expanded.map { WorkoutStepDefinition.from($0).strippingUnsupportedCustomCueFields() }
+            return expanded.map { WorkoutStepDefinition.from($0) }
         }
         let flattenedRoutineDefinition = Self.normalize(
             CustomRoutineDefinition(
@@ -815,7 +815,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
             tags: normalizedTags(definition.tags),
             targetMode: definition.targetMode,
             steps: definition.steps.map {
-                let step = $0.strippingUnsupportedCustomCueFields()
+                let step = $0
                 if case let .boardSpecific(boardID) = definition.targetMode,
                    boardID == "plateau.lifting-edge" {
                     return migratingLegacyPlateauTargets(in: step)

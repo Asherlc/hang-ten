@@ -839,24 +839,6 @@ extension WorkoutStepDefinition {
         )
     }
 
-    func strippingUnsupportedCustomCueFields() -> WorkoutStepDefinition {
-        WorkoutStepDefinition(
-            id: id,
-            title: title,
-            instruction: instruction,
-            accessory: accessory,
-            duration: duration,
-            phase: phase,
-            segments: segments,
-            activeDuration: activeDuration,
-            handUse: handUse,
-            side: side,
-            action: action,
-            repetitions: repetitions,
-            externalLoadKGF: externalLoadKGF
-        )
-    }
-
     func strippingExactContactIDs() -> WorkoutStepDefinition {
         WorkoutStepDefinition(
             id: id,

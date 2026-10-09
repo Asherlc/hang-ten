@@ -1,30 +1,63 @@
 import Foundation
 
-/// Display units never alter the draft's canonical kilograms-force and millimeters.
-enum CustomRoutineDisplayUnit: String, CaseIterable, Identifiable {
+enum CustomRoutineDepthEntry: Equatable {
+    case empty
+    case depth(HoldDepth)
+    case invalid
+
+    static func parse(_ input: String, locale: Locale = .current) -> CustomRoutineDepthEntry {
+        let trimmed = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return .empty }
+        var normalized = trimmed
+        for separator in ["–", "—", "−"] {
+            normalized = normalized.replacingOccurrences(of: separator, with: "-")
+        }
+        normalized = normalized.replacingOccurrences(of: locale.decimalSeparator ?? ".", with: ".")
+        let separators = normalized.indices.filter { index in
+            guard normalized[index] == "-" else { return false }
+            return index == normalized.startIndex
+                || !"eE".contains(normalized[normalized.index(before: index)])
+        }
+        guard separators.count <= 1 else { return .invalid }
+        let bounds: [String]
+        if let separator = separators.first {
+            bounds = [String(normalized[..<separator]), String(normalized[normalized.index(after: separator)...])]
+        } else {
+            bounds = [normalized]
+        }
+        let values = bounds.compactMap { Double($0.trimmingCharacters(in: .whitespacesAndNewlines)) }
+        guard values.count == bounds.count,
+              values.allSatisfy({ $0.isFinite && $0 > 0 }),
+              let minimum = values.first,
+              let maximum = values.last,
+              minimum <= maximum else { return .invalid }
+        return .depth(.range(.init(minimum: minimum, maximum: maximum)))
+    }
+
+    static func displayText(for depth: HoldDepth?, locale: Locale = .current) -> String {
+        guard case let .range(range)? = depth else { return "" }
+        func numberText(_ value: Double) -> String {
+            var text = String(value)
+            if text.hasSuffix(".0") { text.removeLast(2) }
+            return text.replacingOccurrences(of: ".", with: locale.decimalSeparator ?? ".")
+        }
+        let minimum = numberText(range.minimum)
+        return range.minimum == range.maximum ? minimum : "\(minimum)–\(numberText(range.maximum))"
+    }
+}
+
+/// Added-weight display units leave canonical kilograms-force and hold depths unchanged.
+enum CustomRoutineLoadUnit: String, CaseIterable, Identifiable {
+    // Retain raw values for the existing stored display preference.
     case metric
     case imperial
 
     var id: String { rawValue }
 
-    var label: String {
-        switch self {
-        case .metric: "Metric"
-        case .imperial: "Imperial"
-        }
-    }
-
     var loadUnit: WorkoutLoadAdjustmentDisplayUnit {
         switch self {
         case .metric: .kilograms
         case .imperial: .pounds
-        }
-    }
-
-    var depthUnitLabel: String {
-        switch self {
-        case .metric: "mm"
-        case .imperial: "in"
         }
     }
 
@@ -34,14 +67,6 @@ enum CustomRoutineDisplayUnit: String, CaseIterable, Identifiable {
 
     func kilogramsForce(fromDisplayedLoad value: Double) -> Double {
         value.isFinite ? loadUnit.kilogramsForce(fromDisplayedForce: value) : value
-    }
-
-    func depthValue(fromMillimeters value: Double) -> Double {
-        self == .imperial ? value / 25.4 : value
-    }
-
-    func millimeters(fromDisplayedDepth value: Double) -> Double {
-        self == .imperial ? value * 25.4 : value
     }
 }
 
@@ -60,6 +85,44 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var action: WorkoutAction
     var repetitions: Int?
     var externalLoadKGF: Double?
+    var gripType: GripType? = nil
+    var fingerConfiguration: FingerConfiguration? = nil
+    var enteredDepthText: String? = nil
+
+    var fingerCount: Int? {
+        get { fingerConfiguration?.count }
+        set {
+            guard newValue != fingerConfiguration?.count else { return }
+            fingerConfiguration = newValue.flatMap { FingerConfiguration(count: $0) }
+        }
+    }
+
+    var depthText: String {
+        get { enteredDepthText ?? CustomRoutineDepthEntry.displayText(for: targets.first?.depth) }
+        set {
+            enteredDepthText = newValue
+            let depth: HoldDepth?
+            switch CustomRoutineDepthEntry.parse(newValue) {
+            case .empty: depth = nil
+            case let .depth(value): depth = value
+            case .invalid: return
+            }
+            guard let current = targets.first else { return }
+            targets[0] = ContactRequirement(
+                contactID: current.contactID,
+                kind: current.kind,
+                shape: current.shape,
+                depth: depth,
+                fingerCapacity: current.fingerCapacity,
+                handCapacity: current.handCapacity,
+                selection: current.selection
+            )
+        }
+    }
+
+    var hasInvalidDepthInput: Bool {
+        enteredDepthText.map { CustomRoutineDepthEntry.parse($0) == .invalid } ?? false
+    }
 
     /// One exercise control writes both underlying playback classifications.
     var exercise: CustomRoutineExercise {
@@ -73,17 +136,20 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         }
         set {
             let wasRest = isRest
-            let usesExerciseName = title == exercise.label
+            let usesExerciseName = displayTitle == exercise.label
             switch newValue {
             case .rest:
                 phase = .rest
                 targets = []
+                enteredDepthText = nil
                 timing = .fixed
                 handUse = .double
                 side = .both
                 action = .hang
                 repetitions = nil
                 externalLoadKGF = nil
+                gripType = nil
+                fingerConfiguration = nil
             case .hang, .isometricPull, .loadedLift:
                 action = switch newValue {
                 case .hang, .rest: .hang
@@ -164,6 +230,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         phase: WorkoutPhase,
         targets: [ContactRequirement],
         timing: WorkoutSegmentTiming,
+        gripType: GripType? = nil,
+        fingerConfiguration: FingerConfiguration? = nil,
         activeDuration: TimeInterval? = nil,
         handUse: WorkoutHandUse = .double,
         side: WorkoutSide = .both,
@@ -179,6 +247,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         self.phase = phase
         self.targets = targets
         self.timing = timing
+        self.gripType = gripType
+        self.fingerConfiguration = fingerConfiguration
         self.activeDuration = activeDuration
         self.handUse = handUse
         self.side = side
@@ -260,6 +330,8 @@ enum CustomRoutineBoardPreview {
             segments: draft.phase == .rest
                 ? [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: draft.duration)]
                 : [WorkoutSegment(kind: .work, target: workTarget, timing: draft.timing, duration: draft.timing == .fixed ? draft.duration : nil)],
+            gripType: draft.gripType,
+            fingerConfiguration: draft.fingerConfiguration,
             handUse: draft.handUse,
             side: draft.side,
             action: draft.action,
@@ -690,6 +762,8 @@ struct CustomRoutineDraft: Equatable {
             phase: definition.phase,
             targets: targets,
             timing: definition.segments.first?.timing ?? .fixed,
+            gripType: isRest ? nil : definition.gripType,
+            fingerConfiguration: isRest ? nil : definition.fingerConfiguration,
             activeDuration: definition.activeDuration,
             handUse: isRest ? .double : definition.handUse,
             side: isRest ? .both : definition.side,
@@ -722,6 +796,8 @@ struct CustomRoutineDraft: Equatable {
             duration: step.duration,
             phase: step.phase,
             segments: [segment],
+            gripType: step.isRest ? nil : step.gripType,
+            fingerConfiguration: step.isRest ? nil : step.fingerConfiguration,
             activeDuration: step.activeDuration,
             handUse: handUse,
             side: side,
