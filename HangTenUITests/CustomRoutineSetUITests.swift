@@ -522,15 +522,15 @@ final class CustomRoutineSetUITests: XCTestCase {
                target.frame.minY >= top, target.frame.maxY <= bottom {
                 return
             }
-            // The editor's x=8 margin is outside this inset sheet. Drag within
-            // its actual scroll view, and keep moving forward through lazy rows.
+            // Stay inside the sheet's scroll view, in its 20-point blank gutter.
+            // Starting over a row can activate that button and dismiss the picker.
             let origin = scrollView.coordinate(withNormalizedOffset: .zero)
             let start = origin.withOffset(CGVector(
-                dx: viewport.midX - scrollView.frame.minX,
+                dx: viewport.minX + 8 - scrollView.frame.minX,
                 dy: top + (bottom - top) * 0.8 - scrollView.frame.minY
             ))
             let end = origin.withOffset(CGVector(
-                dx: viewport.midX - scrollView.frame.minX,
+                dx: viewport.minX + 8 - scrollView.frame.minX,
                 dy: top + (bottom - top) * 0.3 - scrollView.frame.minY
             ))
             start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
