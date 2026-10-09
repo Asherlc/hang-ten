@@ -32,6 +32,24 @@ shard keeps one simulator and runs each selected test once. Keep these groups
 separate: the one-hour test phase runs inside a 70-minute Actions job that also
 includes asset restoration, simulator startup and compilation. Combining the
 planner and workout suites can exhaust that job limit before every test runs.
+The `xcode-27` runner pool can be scarce, so keep grip diagnostics in the
+existing grip/weight shard. Configure each workout fixture before opening its
+URL, terminate any app process left by an earlier test, and call
+`XCUIApplication.open(URL)` once. An unused launch in diagnostic setup cost
+about 20–27 seconds per test on the slow hosted run; launching Train before the
+URL repeated startup and orientation work. These cold routes start on Train, so
+they avoid the Settings navigation transition that previously dropped warm
+deep links. Disable spoken cues for visual, weight, and timer tests that do not
+assert speech: the workout can begin its countdown without waiting for audio
+preparation. Keep one speaker-toggle check in the published visual journey and
+combine assertions that share the same Manual weight setup journey.
+The purchase/workout shard also checks the third-workout paywall and its
+dismissal in one launch. Its free-workout entry and empty-log assertions share
+one launch, and the duplicate minimal-log case is gone. The discard/resume
+case ends once it verifies that an unfinished session cannot unlock Last;
+the separate completed-set case verifies that a real finish does unlock Last.
+Free-workout cases disable spoken cues because they assert controls, set
+state, and history rather than audio playback.
 `test_ci_xctest_contract.py` verifies that every UI test method is selected
 exactly once across both required UI jobs; the required UI gate waits for all
 matrix shards.

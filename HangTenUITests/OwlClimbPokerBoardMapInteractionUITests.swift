@@ -282,8 +282,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_LANDSCAPE": "1",
             "HANGTEN_REVIEW_STEP": "17",
         ]
-        app.launch()
-        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.terminate()
         app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 30))
@@ -324,8 +323,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_PORTRAIT": "1",
             "HANGTEN_REVIEW_STEP": "17",
         ]
-        app.launch()
-        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.terminate()
         app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 30))

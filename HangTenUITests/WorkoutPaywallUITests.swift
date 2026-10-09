@@ -112,12 +112,11 @@ final class CustomRoutineEditorUITests: XCTestCase {
 }
 
 final class WorkoutPaywallUITests: XCTestCase {
-    func testThirdWorkoutLaunchShowsPaywallInsteadOfSession() {
+    func testThirdWorkoutPaywallCanBeDismissedWithoutStarting() {
         let app = lockedPlanApp()
         app.launch()
 
         app.buttons["plan.startRoutine"].tap()
-
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
         XCTAssertFalse(app.buttons["workout.primaryControl"].exists)
         XCTAssertTrue(app.buttons["paywall.restore"].exists)
@@ -125,14 +124,6 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts[
             "You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase."
         ].exists)
-    }
-
-    func testDismissingPaywallDoesNotStartWorkout() {
-        let app = lockedPlanApp()
-        app.launch()
-
-        app.buttons["plan.startRoutine"].tap()
-        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
 
         app.buttons["paywall.close"].tap()
 

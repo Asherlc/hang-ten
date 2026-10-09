@@ -10,8 +10,7 @@ final class DefaultGripFingersUITests: XCTestCase {
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
         ]
         defer { app.terminate() }
-        app.launch()
-        XCTAssertTrue(app.otherElements["train.board"].waitForExistence(timeout: 30))
+        app.terminate()
         app.open(URL(string: "hangten://plan/research.max-hangs/workout")!)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 30))
@@ -65,6 +64,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        // These tests assert visual and timer behavior rather than speech.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment = [
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_STEP": "1",
@@ -73,16 +74,12 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             // by earlier cases; DEBUG simulator builds bundle this native model.
             "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
-        app.launch()
     }
 
     func testContactOffsetTaskCanAdvanceWithoutSkippingMinute() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
-        app.launch()
-        waitForTrainShellReady(timeout: 20)
-        app.open(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
+        openWorkout(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
         // This route auto-starts after renderer preparation and its countdown.
         // A transient Start button can disappear before XCTest delivers a tap.
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
@@ -100,13 +97,10 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testTwoHandTaskOnMiniBarExplainsTwoBoards() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "lattice.mini-bar"
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "2"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
-        app.launch()
-        waitForTrainShellReady(timeout: 20)
-        app.open(workoutDeepLink)
+        openWorkout(workoutDeepLink)
         XCTAssertTrue(
             app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
         )
@@ -117,13 +111,10 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testOneArmTaskLetsAthleteChooseSide() throws {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
-        app.launch()
-        waitForTrainShellReady(timeout: 20)
-        app.open(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
+        openWorkout(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
         // Hand/task controls are also mounted during renderer preparation, then
         // hidden for the initial countdown. Choose the side once work is running.
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
@@ -164,15 +155,12 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testPublishedLongHangStopwatchRunsBeyondEstimateWithRoutinePaused() throws {
-        app.terminate()
         app.launchEnvironment = [
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_BOARD_ID": "metolius.wood-grips-compact-ii",
             "HANGTEN_REVIEW_LANDSCAPE": "1"
         ]
-        app.launch()
-        waitForTrainShellReady(timeout: 20)
-        app.open(URL(string: "hangten://plan/tension-long-hangs/workout")!)
+        openWorkout(URL(string: "hangten://plan/tension-long-hangs/workout")!)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 20))
         pause.tap()
@@ -221,24 +209,33 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             ("rock-prodigy.rptc-intermediate", "trango.rock-prodigy-training-center", "1", "RPTC warm-up jug highlight"),
             ("rock-prodigy.pivot-intermediate", "trango.rock-prodigy-pivot", "1", "Pivot manual orientation instruction")
         ]
-        for (plan, board, step, name) in cases {
-            app.terminate()
+        for (index, reviewCase) in cases.enumerated() {
+            let (plan, board, step, name) = reviewCase
+            // One plan still exercises the speaker toggle; the remaining
+            // screenshots can skip audio preparation and repeated toggle taps.
+            app.launchArguments = index == 0 ? [] : ["-workoutAudioCuesEnabled", "NO"]
             app.launchEnvironment = [
                 "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0", "HANGTEN_REVIEW_BOARD_ID": board,
                 "HANGTEN_REVIEW_LANDSCAPE": "1", "HANGTEN_REVIEW_STEP": step
             ]
-            app.launch()
-            waitForTrainShellReady(timeout: 20)
-            app.open(URL(string: "hangten://plan/\(plan)/workout")!)
+            openWorkout(URL(string: "hangten://plan/\(plan)/workout")!)
             let pause = app.buttons["Pause"]
             XCTAssertTrue(pause.waitForExistence(timeout: 20), plan)
             pause.tap()
             XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10), plan)
-            let audioOff = app.buttons["Turn off spoken cues"]
-            if audioOff.exists {
-                audioOff.tap()
-                XCTAssertTrue(app.buttons["Turn on spoken cues"].waitForExistence(timeout: 5))
-                app.buttons["Turn on spoken cues"].tap()
+            if index == 0 {
+                let speaker = app.buttons["workout.spokenCues"]
+                XCTAssertTrue(speaker.waitForExistence(timeout: 5))
+                let initialLabel = speaker.label
+                guard initialLabel == "Turn off spoken cues"
+                        || initialLabel == "Turn on spoken cues" else {
+                    XCTFail("The spoken-cues control must expose its current action.")
+                    return
+                }
+                speaker.tap()
+                XCTAssertNotEqual(speaker.label, initialLabel)
+                speaker.tap()
+                XCTAssertEqual(speaker.label, initialLabel)
             }
             let image = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
             image.name = name
@@ -273,14 +270,10 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
     func testWorkoutPauseSurvivesRotationAndResumes() {
         defer { XCUIDevice.shared.orientation = .portrait }
-        app.terminate()
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
         // This test covers the clock and navigation, independently of the
-        // simulator's audio service and speech playback.
-        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
-        XCUIDevice.shared.orientation = .landscapeLeft
-        app.launch()
-        openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
+        // simulator's audio service and speech playback (disabled in setUp).
+        openWorkoutDeepLinkAndChooseLeftHandIfNeeded(orientation: .landscapeLeft)
         let landscapeLayout = XCTNSPredicateExpectation(
             predicate: NSPredicate { _, _ in
                 let frame = self.app.windows.firstMatch.frame
@@ -364,14 +357,24 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
     }
 
-    /// Opens the workout deep link only after Train is the top of the stack.
+    /// A cold URL launch starts on Train without a preceding navigation transition.
+    private func openWorkout(_ url: URL, orientation: UIDeviceOrientation? = nil) {
+        // Fixture launch arguments and environment must apply even if an earlier
+        // test left this app running on the shared shard simulator.
+        app.terminate()
+        if let orientation {
+            XCUIDevice.shared.orientation = orientation
+        }
+        app.open(url)
+    }
+
     private func openWorkoutDeepLinkAndChooseLeftHandIfNeeded(
-        timeout: TimeInterval = 20
+        timeout: TimeInterval = 20,
+        orientation: UIDeviceOrientation? = nil
     ) {
-        waitForTrainShellReady(timeout: 20)
         let handChoice = app.buttons["handSide.left"]
         let pause = app.buttons["Pause"]
-        app.open(workoutDeepLink)
+        openWorkout(workoutDeepLink, orientation: orientation)
         let destination = app.buttons.matching(
             NSPredicate(format: "identifier == %@ OR label == %@", "handSide.left", "Pause")
         ).firstMatch
@@ -383,7 +386,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     private func openPlanDetail(withMotherboardFixture: Bool = false) {
-        app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         if withMotherboardFixture {
@@ -395,31 +397,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertTrue(
             app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
             "The plan review route should take precedence over fixture-only review flags."
-        )
-    }
-
-    /// Train content (not merely the tab bar) must be visible — the tab bar stays
-    /// present while Settings is pushed, which previously let deep links race.
-    private func waitForTrainShellReady(timeout: TimeInterval) {
-        let settings = app.navigationBars["Settings"]
-        let trainBoard = app.otherElements["train.board"]
-        let trainSettings = app.buttons["train.settings"]
-        let deadline = Date().addingTimeInterval(timeout)
-
-        while Date() < deadline {
-            if !settings.exists && (trainBoard.exists || trainSettings.exists) {
-                return
-            }
-            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
-        }
-
-        XCTAssertFalse(
-            settings.exists,
-            "Settings must be dismissed before opening the workout deep link."
-        )
-        XCTAssertTrue(
-            trainBoard.exists || trainSettings.exists,
-            "Train shell (train.board / train.settings) should be ready before opening the workout deep link."
         )
     }
 
@@ -496,6 +473,8 @@ final class InitialWeightSetupUITests: XCTestCase {
 
     override func setUpWithError() throws {
         continueAfterFailure = false
+        // These cases exercise plan setup and sensor routing, not speech.
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment = [
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_PORTRAIT": "1",
@@ -517,7 +496,7 @@ final class InitialWeightSetupUITests: XCTestCase {
                       "The weight-flow fixture must resolve to the requested board.")
     }
 
-    func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
+    func testInlineChoicesKeepManualDraftAndExposeOneLabeledToggle() {
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.buttons["Skip"].isSelected)
         source.buttons["Manual"].tap()
@@ -525,6 +504,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
+        XCTAssertEqual(bodyweight.label, "Add bodyweight")
+        XCTAssertEqual(app.switches.matching(identifier: "workout.initialWeight.addBodyweight").count, 1)
+        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight"].exists,
+                       "The tappable row must expose only its switch accessibility representation.")
+        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight.label"].exists,
+                       "Bodyweight should have one labeled toggle, without a duplicate button.")
         bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
@@ -551,31 +536,10 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
-    }
-
-    func testManualWeightUsesOneLabeledToggle() {
-        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
-
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
-        XCTAssertEqual(bodyweight.value as? String, "0")
-        XCTAssertEqual(bodyweight.label, "Add bodyweight")
-        XCTAssertEqual(app.switches.matching(identifier: "workout.initialWeight.addBodyweight").count, 1)
-        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight"].exists,
-                       "The tappable row must expose only its switch accessibility representation.")
-
-        XCTAssertFalse(app.buttons["workout.initialWeight.addBodyweight.label"].exists,
-                       "Bodyweight should have one labeled toggle, without a duplicate button.")
-        bodyweight.tap()
-        let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "Final manual bodyweight setup"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        let manualAttachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        manualAttachment.name = "Final manual bodyweight setup"
+        manualAttachment.lifetime = .keepAlways
+        add(manualAttachment)
         bodyweight.tap()
         let bodyweightDisabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "0"),
@@ -638,6 +602,7 @@ final class InitialWeightSetupUITests: XCTestCase {
 final class DualMaxHangsHighlightUITests: XCTestCase {
     func testLopezEdgePickerChangesTheBeastmaker1000Preview() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "beastmaker-1000",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
@@ -773,6 +738,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
     override func setUpWithError() throws {
         /// Sets up the test environment for one-handed board hand choice tests.
         continueAfterFailure = false
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment = [
             // Use a real capacity-1 raster board with a 20 mm edge. This
             // hand-choice test does not need asynchronous 3D preview rendering.

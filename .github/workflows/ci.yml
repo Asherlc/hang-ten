@@ -715,8 +715,7 @@ jobs:
               HangTenUITests/CustomRoutineSetUITests
           - shard: purchase-settings-workouts
             only_testing: >-
-              HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
-              HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
+              HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutPaywallCanBeDismissedWithoutStarting
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession
               HangTenUITests/WorkoutPaywallUITests/testLandscapePaywallKeepsRestorePurchasesInsideViewport
               HangTenUITests/WorkoutPaywallUITests/testPendingPurchaseShowsApprovedStatusCopy
@@ -735,10 +734,8 @@ jobs:
               HangTenUITests/PlanFlowUITests
               HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
-              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
-              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndDiscardKeepsLastLocked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
-              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
               HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
     timeout-minutes: 70
