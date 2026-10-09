@@ -2,6 +2,189 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testCircuitRepeatersRetainEveryShortRestAndOnlyRestBetweenRounds() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = mirroredBoard(depth: .init(minimum: 25, maximum: 25))
+        for rounds in [1, 3, 6] {
+            let definition = circuitDefinition(rounds: rounds)
+            let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+            try store.save(definition)
+            let reloaded = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+            let saved = try XCTUnwrap(reloaded.routines.first)
+            XCTAssertEqual(saved.steps.map(\.id), ["hang", "rest"])
+            XCTAssertEqual(saved.sets, definition.sets)
+            XCTAssertEqual(saved.circuits, definition.circuits)
+            XCTAssertEqual(CustomRoutineDraft(editing: saved).definition(), saved)
+
+            let plan = try reloaded.plan(for: saved)
+            let expectedDurations = (0..<rounds).flatMap { round in
+                Array(repeating: [7.0, 3.0], count: 6).flatMap { $0 } + (round < rounds - 1 ? [180.0] : [])
+            }
+            XCTAssertEqual(plan.steps.map(\.duration), expectedDurations)
+            XCTAssertEqual(plan.steps.count, rounds * 12 + rounds - 1)
+            XCTAssertEqual(plan.steps.map(\.number), Array(1...plan.steps.count))
+            XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
+            XCTAssertEqual(plan.duration, Double(rounds * 60 + (rounds - 1) * 180))
+            XCTAssertEqual(plan.stepRepeats.map(\.repeatCount), Array(repeating: 6, count: rounds))
+            XCTAssertEqual(plan.steps.last?.duration, 3)
+            let work = plan.steps.filter { !$0.isRestStep }
+            XCTAssertEqual(work.count, rounds * 6)
+            XCTAssertTrue(work.allSatisfy {
+                $0.workRequirements == [.edge(depth: .range(.init(minimum: 25, maximum: 25)))] &&
+                    $0.gripType == .halfCrimp && $0.instruction == "Pain free"
+            })
+            XCTAssertTrue(plan.steps.filter(\.isRestStep).allSatisfy { $0.workRequirements.isEmpty })
+            let timeline = WorkoutTimeline(steps: plan.steps)
+            XCTAssertEqual(timeline.duration, plan.duration)
+            if rounds > 1 {
+                XCTAssertEqual(timeline.step(at: 60)?.title, "Rest between rounds")
+                XCTAssertEqual(timeline.step(at: 239)?.duration, 180)
+                XCTAssertEqual(timeline.step(at: 240)?.phase, .hang)
+            }
+        }
+    }
+
+    func testIndependentCircuitsKeepTheirSetCountsAndRecoverySeparate() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        var draft = CustomRoutineDraft(editing: repeatedDefinition(count: 2))
+        draft.updateSet(.init(id: "finish-set", stepIDs: ["finish"], repeatCount: 3))
+        draft.updateCircuit(.init(id: "first", setIDs: ["repeat"], repeatCount: 2, restBetweenRounds: 60))
+        draft.updateCircuit(.init(id: "second", setIDs: ["finish-set"], repeatCount: 3, restBetweenRounds: 30))
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(draft.definition())
+        let plan = try store.plan(for: store.routines[0])
+        XCTAssertEqual(plan.steps.map(\.duration), [10, 3, 10, 3, 60, 10, 3, 10, 3,
+                                                  10, 10, 10, 30, 10, 10, 10, 30, 10, 10, 10])
+        XCTAssertEqual(plan.stepRepeats.map(\.repeatCount), [2, 2, 3, 3, 3])
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, plan.steps.count)
+        XCTAssertEqual(store.routines[0].circuits, draft.circuits)
+    }
+
+    func testCircuitWithoutRecoveryAndSingleRoundPreserveAuthoredTiming() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = mirroredBoard(depth: .init(minimum: 25, maximum: 25))
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        var draft = CustomRoutineDraft(editing: circuitDefinition(rounds: 3))
+        draft.circuits[0].restBetweenRounds = 0
+        let repeated = try store.plan(for: draft.definition())
+        XCTAssertEqual(repeated.steps.count, 36)
+        XCTAssertEqual(repeated.duration, 180)
+        draft.circuits[0].repeatCount = 1
+        draft.circuits[0].restBetweenRounds = 180
+        let single = try store.plan(for: draft.definition())
+        draft.circuits = []
+        XCTAssertEqual(single, try store.plan(for: draft.definition()))
+    }
+
+    func testSavedDefinitionWithoutCircuitsStillLoads() throws {
+        let original = repeatedDefinition(count: 6)
+        var document = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(original)) as? [String: Any])
+        document.removeValue(forKey: "circuits")
+        let decoded = try JSONDecoder().decode(CustomRoutineDefinition.self, from: JSONSerialization.data(withJSONObject: document))
+        XCTAssertEqual(decoded, original)
+        XCTAssertTrue(decoded.circuits.isEmpty)
+    }
+
+    func testCircuitValidationRejectsBrokenMembershipCountsAndRecovery() {
+        var draft = CustomRoutineDraft(editing: repeatedDefinition())
+        draft.updateSet(.init(id: "finish-set", stepIDs: ["finish"], repeatCount: 1))
+        let invalidCircuits: [(CustomRoutineCircuit, CustomRoutineValidationIssue)] = [
+            (.init(setIDs: ["repeat"], repeatCount: 0), .invalidCircuitRepeatCount(circuitIndex: 0)),
+            (.init(setIDs: ["repeat"], repeatCount: 101), .invalidCircuitRepeatCount(circuitIndex: 0)),
+            (.init(setIDs: ["repeat"], restBetweenRounds: -1), .invalidCircuitRest(circuitIndex: 0)),
+            (.init(setIDs: ["repeat"], restBetweenRounds: .infinity), .invalidCircuitRest(circuitIndex: 0)),
+            (.init(setIDs: ["repeat"], restBetweenRounds: .nan), .invalidCircuitRest(circuitIndex: 0)),
+            (.init(setIDs: []), .invalidCircuitSets(circuitIndex: 0)),
+            (.init(setIDs: ["missing"]), .invalidCircuitSets(circuitIndex: 0)),
+            (.init(setIDs: ["repeat", "repeat"]), .invalidCircuitSets(circuitIndex: 0)),
+            (.init(setIDs: ["finish-set", "repeat"]), .invalidCircuitSets(circuitIndex: 0))
+        ]
+        for (circuit, expected) in invalidCircuits {
+            draft.circuits = [circuit]
+            XCTAssertTrue(CustomRoutineValidator.circuitIssues(for: draft.definition()).contains(expected))
+        }
+        draft.circuits = [
+            .init(id: "same", setIDs: ["repeat"]),
+            .init(id: "same", setIDs: ["repeat", "finish-set"])
+        ]
+        XCTAssertEqual(CustomRoutineValidator.circuitIssues(for: draft.definition()), [
+            .duplicateCircuitID(circuitIndex: 1), .overlappingCircuitSets(circuitIndex: 1)
+        ])
+        draft.circuits = [.init(setIDs: ["repeat", "finish-set"])]
+        draft.steps.insert(draft.steps[0], at: 2)
+        draft.steps[2].id = "ungrouped-gap"
+        XCTAssertEqual(CustomRoutineValidator.circuitIssues(for: draft.definition()), [.invalidCircuitSets(circuitIndex: 0)])
+    }
+
+    func testInvalidCircuitCannotOverwriteSavedRoutine() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let store = CustomRoutineStore(defaults: defaults)
+        var draft = CustomRoutineDraft(editing: repeatedDefinition())
+        draft.updateCircuit(.init(id: "circuit", setIDs: ["repeat"], repeatCount: 2, restBetweenRounds: 180))
+        try store.save(draft.definition())
+        let savedBytes = defaults.data(forKey: CustomRoutineStore.defaultKey)
+        draft.circuits[0].restBetweenRounds = -1
+        XCTAssertThrowsError(try store.save(draft.definition()))
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), savedBytes)
+        XCTAssertEqual(store.routines[0].circuits[0].restBetweenRounds, 180)
+    }
+
+    func testCircuitPersistsMembershipAfterCompoundStepNormalization() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let compound = WorkoutStepDefinition(
+            id: "compound", title: "Hang", instruction: "", accessory: "", duration: 12, phase: .hang,
+            segments: [
+                .init(kind: .work, target: .requirements([.kind(.jug)]), timing: .fixed, duration: 8),
+                .init(kind: .rest, target: nil, timing: .fixed, duration: 4)
+            ]
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.compound-circuit", title: "Compound circuit", subtitle: "", difficulty: nil,
+            category: nil, tags: [], targetMode: .generic,
+            steps: [compound, repeatedDefinition().steps[2]],
+            sets: [.init(id: "work", stepIDs: ["compound"], repeatCount: 3),
+                   .init(id: "finish", stepIDs: ["finish"], repeatCount: 1)],
+            circuits: [.init(id: "circuit", setIDs: ["work", "finish"], repeatCount: 2, restBetweenRounds: 30)]
+        )
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+        let saved = try XCTUnwrap(CustomRoutineStore(defaults: defaults).routines.first)
+        XCTAssertEqual(saved.steps.map(\.id), ["compound.segment-1", "compound.segment-2", "finish"])
+        XCTAssertEqual(saved.sets[0].stepIDs, ["compound.segment-1", "compound.segment-2"])
+        XCTAssertEqual(saved.circuits, definition.circuits)
+        let plan = try store.plan(for: saved)
+        XCTAssertEqual(plan.steps.map(\.duration), [8, 4, 8, 4, 8, 4, 10, 30, 8, 4, 8, 4, 8, 4, 10])
+        XCTAssertEqual(plan.duration, 122)
+        XCTAssertEqual(Set(plan.steps.map(\.id)).count, 15)
+    }
+
+    private func circuitDefinition(rounds: Int) -> CustomRoutineDefinition {
+        CustomRoutineDefinition(
+            id: "custom.circuit-repeaters", title: "My repeaters", subtitle: "", difficulty: nil,
+            category: nil, tags: [], targetMode: .generic,
+            steps: [
+                WorkoutStepDefinition(id: "hang", title: "Hang", instruction: "Pain free", accessory: "", duration: 7,
+                    phase: .hang, segments: [.init(kind: .work,
+                        target: .requirements([.edge(depth: .range(.init(minimum: 25, maximum: 25)))]),
+                        timing: .fixed, duration: 7)], gripType: .halfCrimp),
+                WorkoutStepDefinition(id: "rest", title: "Rest", instruction: "", accessory: "", duration: 3,
+                    phase: .rest, segments: [.init(kind: .rest, target: nil, timing: .fixed, duration: 3)])
+            ],
+            sets: [.init(id: "repeaters", stepIDs: ["hang", "rest"], repeatCount: 6)],
+            circuits: [.init(id: "circuit", setIDs: ["repeaters"], repeatCount: rounds, restBetweenRounds: 180)]
+        )
+    }
+
     func testSavedGripAndFingerChoiceReachPlaybackAfterReload() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -1796,18 +1979,18 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
     }
 
-    private func mirroredBoard() -> BoardRevision {
+    private func mirroredBoard(depth: MillimeterRange = .init(minimum: 18, maximum: 22)) -> BoardRevision {
         let contacts = [
             PhysicalContact(
                 id: "left", name: "Left edge", kind: .edge,
                 shape: .flat, fingerCapacity: 2, handCapacity: 1,
-                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .left,
+                depth: .range(depth), gripTypes: [.halfCrimp], side: .left,
                 pairedContactID: "right"
             ),
             PhysicalContact(
                 id: "right", name: "Right edge", kind: .edge,
                 shape: .flat, fingerCapacity: 2, handCapacity: 1,
-                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .right,
+                depth: .range(depth), gripTypes: [.halfCrimp], side: .right,
                 pairedContactID: "left"
             )
         ]

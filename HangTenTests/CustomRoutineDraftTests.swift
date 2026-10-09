@@ -387,6 +387,102 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(step.targets[0].selection, .single)
     }
 
+    func testCircuitAdditionAndEarlierInsertionKeepFollowingSetsOutsideCircuit() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let firstCircuit = draft.addCircuit()
+        let firstSet = try XCTUnwrap(draft.sets.first)
+        let outside = draft.addSet()
+        let inside = draft.addSet(to: firstCircuit.id)
+        XCTAssertEqual(draft.steps.map(\.id), firstSet.stepIDs + inside.stepIDs + outside.stepIDs)
+        XCTAssertEqual(draft.circuits[0].setIDs, [firstSet.id, inside.id])
+        XCTAssertEqual(draft.circuits[0].repeatCount, 1)
+        XCTAssertEqual(draft.circuits[0].restBetweenRounds, 0)
+        XCTAssertEqual(draft.editorItems.map(\.stepIDs), [firstSet.stepIDs + inside.stepIDs, outside.stepIDs])
+        guard case let .circuit(circuit, items) = draft.editorItems[0] else {
+            return XCTFail("Expected one grouped circuit row")
+        }
+        XCTAssertEqual(circuit, draft.circuits[0])
+        XCTAssertEqual(items.map(\.stepIDs), [firstSet.stepIDs, inside.stepIDs])
+        XCTAssertTrue(CustomRoutineValidator.circuitIssues(for: draft.definition()).isEmpty)
+        let before = draft
+        draft.addSet(to: "missing")
+        XCTAssertEqual(draft, before)
+    }
+
+    func testCircuitSurvivesEditingDuplicatingAndRetargeting() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        var circuit = draft.addCircuit()
+        circuit.repeatCount = 3
+        circuit.restBetweenRounds = 180
+        draft.updateCircuit(circuit)
+        let definition = draft.definition()
+        XCTAssertEqual(CustomRoutineDraft(editing: definition).circuits, [circuit])
+        let duplicate = CustomRoutineDraft(duplicate: definition).definition()
+        XCTAssertNotEqual(duplicate.id, definition.id)
+        XCTAssertEqual(duplicate.circuits, [circuit])
+        XCTAssertEqual(duplicate.sets, definition.sets)
+        let retargeted = draft.retargeted(to: .boardSpecific(boardID: BoardCatalog.defaultBoard.id))
+        XCTAssertEqual(retargeted.circuits, [circuit])
+        XCTAssertEqual(retargeted.sets, definition.sets)
+    }
+
+    func testMovingCircuitChildMovesWholeCircuitAndCannotSplitAnotherCircuit() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.steps = ["one", "two", "three", "four", "five"].map { makeStep(id: $0, title: $0) }
+        for id in draft.steps.map(\.id) { draft.updateSet(.init(id: "set.\(id)", stepIDs: [id], repeatCount: 1)) }
+        let first = CustomRoutineCircuit(id: "first", setIDs: ["set.one", "set.two"], repeatCount: 2, restBetweenRounds: 60)
+        let second = CustomRoutineCircuit(id: "second", setIDs: ["set.three", "set.four"], repeatCount: 3, restBetweenRounds: 30)
+        draft.updateCircuit(first)
+        draft.updateCircuit(second)
+        draft.moveSteps(from: IndexSet(integer: 1), to: 5)
+        XCTAssertEqual(draft.steps.map(\.id), ["three", "four", "five", "one", "two"])
+        XCTAssertEqual(draft.editorItems.map(\.stepIDs), [["three", "four"], ["five"], ["one", "two"]])
+        draft.moveEditorItems(from: IndexSet(integer: 1), to: 0)
+        XCTAssertEqual(draft.steps.map(\.id), ["five", "three", "four", "one", "two"])
+        draft.moveSteps(from: IndexSet(integer: 0), to: 2)
+        XCTAssertEqual(draft.steps.map(\.id), ["three", "four", "five", "one", "two"])
+        XCTAssertEqual(draft.circuits, [first, second])
+        XCTAssertTrue(CustomRoutineValidator.circuitIssues(for: draft.definition()).isEmpty)
+    }
+
+    func testRemovingCircuitMembersPrunesEmptySetsAndCircuit() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let circuit = draft.addCircuit()
+        let firstStepID = draft.steps[0].id
+        let secondSet = draft.addSet(to: circuit.id)
+        let outside = draft.addSet()
+        draft.removeSteps(at: IndexSet(integer: 0))
+        XCTAssertEqual(draft.circuits[0].setIDs, [secondSet.id])
+        XCTAssertFalse(draft.sets.flatMap(\.stepIDs).contains(firstStepID))
+        draft.removeEditorItems(at: IndexSet(integer: 0))
+        XCTAssertTrue(draft.circuits.isEmpty)
+        XCTAssertEqual(draft.steps.map(\.id), outside.stepIDs)
+        XCTAssertEqual(draft.sets, [outside])
+    }
+
+    func testDeletingWholeCircuitRowRemovesAllNestedStepsAndSets() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        let circuit = draft.addCircuit()
+        draft.addSet(to: circuit.id)
+        let outside = draft.addSet()
+        draft.removeEditorItems(at: IndexSet(integer: 0))
+        XCTAssertEqual(draft.sets, [outside])
+        XCTAssertEqual(draft.steps.map(\.id), outside.stepIDs)
+        XCTAssertTrue(draft.circuits.isEmpty)
+    }
+
+    func testCircuitUpdatesRejectOverlapsAndRetainInvalidRestForFeedback() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        var first = draft.addCircuit()
+        let secondSet = draft.addSet()
+        draft.updateCircuit(.init(setIDs: first.setIDs + [secondSet.id]))
+        XCTAssertEqual(draft.circuits, [first])
+        first.restBetweenRounds = -1
+        draft.updateCircuit(first)
+        XCTAssertEqual(draft.circuits[0].restBetweenRounds, -1)
+        XCTAssertEqual(CustomRoutineValidator.circuitIssues(for: draft.definition()), [.invalidCircuitRest(circuitIndex: 0)])
+    }
+
     /// New steps share one set without adding an unintended extra workout repetition.
     func testAddedStepsJoinOneSetByDefault() throws {
         var draft = CustomRoutineDraft(createWith: .generic)

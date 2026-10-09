@@ -67,6 +67,16 @@ disturbing later sets. Set repeat counts are edited inline and include the first
 run (1–100). Sets move together when reordered. Child steps expose **Remove step**;
 there is no separate set editor or ungroup action in the planner.
 
+**Add circuit** starts a circuit containing one set. **Add set** inside a circuit
+appends to that circuit, while the outer **Add set** action starts a standalone
+set. Each circuit has an independent repeat count (1–100, including the first
+round) and an optional **Rest between rounds** duration in seconds. An empty or
+zero value adds no rest. Positive recovery is inserted only between rounds,
+after any explicitly authored rest steps in the circuit's sets; it is omitted
+after the final round. Circuits move together when reordered. Removing all the
+steps in a member set removes that set, and removing all member sets removes the
+circuit.
+
 The routine has one Board picker and starts with **No board**, creating a
 board-agnostic routine. Choosing a board makes it board-specific. The board choice
 remains disabled when editing a saved routine because its target mode is immutable.
@@ -162,8 +172,14 @@ use the same terminology as the editor. The decoder also accepts the former
 write `sets`. Workout resolution expands sets in order with distinct step
 identities and includes every repetition in the session duration. Editing and
 duplicating a custom routine retain its sets. Reordering a member moves its
-whole set; deleting a set row removes all its members. Deleting a member removes
-it from the set, and deleting every member removes the set.
+whole circuit when grouped, or its whole set otherwise; deleting a set row
+removes all its members. Deleting a member removes it from the set, and deleting
+every member removes the set.
+Circuit declarations retain member set identities, counts and between-round
+rest without copying authored steps. Older saved routines decode with no
+circuits. Resolution expands each circuit's sets in order for every round,
+giving all work and generated recovery intervals distinct identities. Editing,
+duplicating and retargeting unsaved drafts preserve circuit declarations.
 A custom routine may end in rest when that rest belongs to a declared set of
 multiple steps that includes work. Every repetition retains that rest, including
 the last. An ungrouped final rest or a rest-only final set remains invalid.

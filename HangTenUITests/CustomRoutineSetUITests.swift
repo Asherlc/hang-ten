@@ -221,6 +221,106 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertEqual(primary.label, "Review session")
     }
 
+    /// Persists nested repeats and adds circuit recovery only between completed rounds.
+    func testCircuitSavesRepeaterAndPlaysRecoveryBetweenRounds() {
+        let app = launchEditor(name: "Circuit repeater review")
+        tap("customRoutine.addCircuit", in: app)
+        XCTAssertTrue(app.buttons["customRoutine.circuitHeader.1"].exists)
+        XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
+        enter("7", identifier: "customRoutine.stepDuration", in: app)
+        tap("customRoutine.stepGrip", in: app)
+        app.buttons["Half crimp"].tap()
+        tap("customRoutine.stepTarget", in: app)
+        app.buttons["Edges"].tap()
+        enter("25", identifier: "customRoutine.stepDepthValue", in: app)
+        let instruction = app.descendants(matching: .any)
+            .matching(identifier: "customRoutine.stepInstruction").firstMatch
+        reveal(instruction, in: app)
+        instruction.tap()
+        instruction.typeText("Pain free")
+        tap("customRoutine.keyboardDone", in: app)
+        expandStep(titled: "Hang", in: app)
+        addStep(title: "Rest", rest: true, duration: 3, in: app)
+        changeCount(by: 5, in: app)
+        let circuitRest = app.textFields["customRoutine.circuitRest.1"]
+        reveal(circuitRest, in: app, scrollTowardTop: true)
+        XCTAssertEqual(circuitRest.value as? String, "")
+        enter("180", identifier: "customRoutine.circuitRest.1", in: app)
+        changeCount(by: 2, identifier: "customRoutine.circuitRepeatCount.1", in: app)
+        capture(app, name: "Circuit repeats the six hang and rest pairs three times")
+
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: "Circuit repeater review", in: app)
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        expandCircuit(in: app)
+        reveal(circuitRest, in: app)
+        XCTAssertEqual(circuitRest.value as? String, "180")
+        XCTAssertTrue(app.staticTexts["Repeat 3 times"].firstMatch.exists)
+        expandSet(in: app)
+        XCTAssertTrue(app.staticTexts["Repeat 6 times"].firstMatch.exists)
+        expandStep(titled: "Hang", in: app)
+        XCTAssertEqual(app.textFields["customRoutine.stepDuration"].value as? String, "7")
+        XCTAssertTrue(app.buttons["customRoutine.stepGrip"].label.contains("Half crimp"))
+        let depth = app.textFields["customRoutine.stepDepthValue"]
+        reveal(depth, in: app)
+        XCTAssertEqual(depth.value as? String, "25")
+        reveal(instruction, in: app)
+        XCTAssertEqual(instruction.value as? String, "Pain free")
+        capture(app, name: "Circuit and inner repeater settings survive reopening")
+        tap("customRoutine.save", in: app)
+
+        tap("plan.startRoutine", in: app)
+        let primary = app.buttons["workout.primaryControl"]
+        XCTAssertTrue(primary.waitForExistence(timeout: 20))
+        let running = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Pause"), object: primary)
+        XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 20), .completed)
+        primary.tap()
+        let picker = app.buttons["workout.routinePicker"]
+        XCTAssertEqual(picker.label, "Step 1 of 38")
+        tap("workout.routinePicker", in: app)
+        XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+
+        // Three rounds contain 12 authored intervals each, plus two circuit rests.
+        // The authored final three-second rest remains in every round.
+        let boundaries: [(number: Int, title: String, duration: String)] = [
+            (1, "Hang", "7s"),
+            (12, "Rest", "3s"),
+            (13, "Rest between rounds", "3m"),
+            (14, "Hang", "7s"),
+            (25, "Rest", "3s"),
+            (26, "Rest between rounds", "3m"),
+            (27, "Hang", "7s"),
+            (38, "Rest", "3s")
+        ]
+        for boundary in boundaries {
+            let row = app.buttons.matching(NSPredicate(
+                format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+                "workout.step.", "Step \(boundary.number), "
+            )).firstMatch
+            revealWorkoutStep(row, in: app)
+            XCTAssertTrue(row.label.contains(", \(boundary.title), \(boundary.duration)"), row.label)
+            if boundary.number == 13 || boundary.number == 26 {
+                row.tap()
+                XCTAssertEqual(picker.label, "Step \(boundary.number) of 38")
+                XCTAssertEqual(app.staticTexts["workout.timer"].label, "03:00")
+                capture(app, name: "Circuit recovery at step \(boundary.number)")
+                tap("workout.routinePicker", in: app)
+                XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+            }
+        }
+        capture(app, name: "Third round ends with the authored short rest")
+        let finalRest = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+            "workout.step.", "Step 38, "
+        )).firstMatch
+        finalRest.tap()
+        XCTAssertEqual(picker.label, "Step 38 of 38")
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "00:03")
+        tap("workout.skipStep", in: app)
+        XCTAssertEqual(primary.label, "Review session")
+    }
+
     /// Changes a one-step set back to one run while retaining its authored step and set controls.
     func testSingleStepSetSavesReopensAndReturnsToOneRunWithoutDeletingStep() {
         let app = launchEditor(name: "Single repeat review")
@@ -310,13 +410,13 @@ final class CustomRoutineSetUITests: XCTestCase {
     }
 
     /// Adds to the selected set, creating the first set when the planner is empty.
-    private func addStep(title: String, rest: Bool, setNumber: Int = 1, in app: XCUIApplication) {
+    private func addStep(title: String, rest: Bool, duration: Int = 10, setNumber: Int = 1, in app: XCUIApplication) {
         if !app.buttons["customRoutine.setHeader.1"].exists {
             tap("customRoutine.addSet", in: app)
         } else {
             tap("customRoutine.addSetStep.\(setNumber)", in: app)
         }
-        configureNewStep(title: title, rest: rest, in: app)
+        configureNewStep(title: title, rest: rest, duration: duration, in: app)
         expandSet(in: app, number: setNumber)
         XCTAssertTrue(app.buttons["customRoutine.setHeader.\(setNumber)"].exists)
     }
@@ -328,7 +428,7 @@ final class CustomRoutineSetUITests: XCTestCase {
     }
 
     /// Authors the newly added fixture step and closes its form before another step is added.
-    private func configureNewStep(title: String, rest: Bool, in app: XCUIApplication) {
+    private func configureNewStep(title: String, rest: Bool, duration seconds: Int = 10, in app: XCUIApplication) {
         if rest {
             tap("customRoutine.stepExercise", in: app)
             app.buttons["Rest"].tap()
@@ -336,7 +436,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         let duration = app.textFields["customRoutine.stepDuration"]
         reveal(duration, in: app)
         duration.tap()
-        duration.typeText("10")
+        duration.typeText(String(seconds))
         tap("customRoutine.keyboardDone", in: app)
         let field = app.textFields["customRoutine.stepTitle"]
         reveal(field, in: app)
@@ -355,6 +455,15 @@ final class CustomRoutineSetUITests: XCTestCase {
         let header = app.buttons["customRoutine.setHeader.\(number)"]
         reveal(header, in: app, scrollTowardTop: true)
         if !app.steppers["customRoutine.setRepeatCount.\(number)"].exists {
+            header.tap()
+        }
+    }
+
+    /// Reveals the circuit's shared repeat and between-round recovery controls.
+    private func expandCircuit(in app: XCUIApplication, number: Int = 1) {
+        let header = app.buttons["customRoutine.circuitHeader.\(number)"]
+        reveal(header, in: app, scrollTowardTop: true)
+        if !app.steppers["customRoutine.circuitRepeatCount.\(number)"].exists {
             header.tap()
         }
     }
@@ -391,6 +500,47 @@ final class CustomRoutineSetUITests: XCTestCase {
         let target = app.buttons[identifier].firstMatch
         reveal(target, in: app)
         target.tap()
+    }
+
+    /// Advances through increasing step numbers inside the presented routine sheet.
+    private func revealWorkoutStep(_ target: XCUIElement, in app: XCUIApplication) {
+        let navigationBar = app.navigationBars["Routine"]
+        let rowPredicate = NSPredicate(format: "identifier BEGINSWITH %@", "workout.step.")
+        for _ in 0..<30 {
+            guard navigationBar.exists,
+                  let scrollView = app.scrollViews.allElementsBoundByIndex.last(where: {
+                      $0.buttons.matching(rowPredicate).firstMatch.exists
+                  }) else {
+                capture(app, name: "Routine sheet unavailable while revealing playback step")
+                XCTFail("Routine sheet must remain presented while scrolling its steps")
+                return
+            }
+            let viewport = scrollView.frame.intersection(app.frame)
+            let top = max(viewport.minY, navigationBar.frame.maxY) + 8
+            let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
+            if target.exists && target.isHittable,
+               target.frame.minY >= top, target.frame.maxY <= bottom {
+                return
+            }
+            // The editor's x=8 margin is outside this inset sheet. Drag within
+            // its actual scroll view, and keep moving forward through lazy rows.
+            let origin = scrollView.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(CGVector(
+                dx: viewport.midX - scrollView.frame.minX,
+                dy: top + (bottom - top) * 0.8 - scrollView.frame.minY
+            ))
+            let end = origin.withOffset(CGVector(
+                dx: viewport.midX - scrollView.frame.minX,
+                dy: top + (bottom - top) * 0.3 - scrollView.frame.minY
+            ))
+            start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+        }
+        capture(app, name: "Unavailable playback step")
+        let hierarchy = XCTAttachment(string: app.debugDescription)
+        hierarchy.name = "Unavailable playback step accessibility hierarchy"
+        hierarchy.lifetime = .keepAlways
+        add(hierarchy)
+        XCTFail("Playback step is unavailable: \(target)")
     }
 
     /// Scrolls identified controls into the usable viewport of the routine sheet.

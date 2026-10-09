@@ -12,6 +12,7 @@ struct CustomRoutineEditorView: View {
     @FocusState private var focusedField: String?
     @State private var editMode = EditMode.inactive
     @State private var collapsedSetIDs = Set<String>()
+    @State private var collapsedCircuitIDs = Set<String>()
 
     /// Groups the editable copy by default while retaining persisted set identities and counts.
     init(
@@ -159,9 +160,16 @@ struct CustomRoutineEditorView: View {
             }
             .accessibilityIdentifier("customRoutine.addSet")
 
+            Button {
+                draft.addCircuit()
+            } label: {
+                Label("Add circuit", systemImage: "plus")
+            }
+            .accessibilityIdentifier("customRoutine.addCircuit")
+
         } header: {
             HStack {
-                Text("Sets")
+                Text("Sets & circuits")
                     .accessibilityIdentifier("customRoutine.sets")
                 Spacer()
                 if draft.editorItems.count > 1 {
@@ -179,7 +187,7 @@ struct CustomRoutineEditorView: View {
             }
             .textCase(nil)
         } footer: {
-            Text("Add exercises and rest steps to each set. The repeat count includes the first run.")
+            Text("Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run.")
         }
     }
 
@@ -190,49 +198,167 @@ struct CustomRoutineEditorView: View {
         case .step(let step):
             stepEditor(step)
         case .set(let set, let steps):
-            let number = setNumber(for: set)
-            DisclosureGroup(isExpanded: setExpansionBinding(for: set)) {
-                Stepper(value: setCountBinding(for: set), in: CustomRoutineSet.supportedCounts) {
-                    Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
-                }
-                .accessibilityIdentifier("customRoutine.setRepeatCount.\(number)")
+            setEditor(set, steps: steps)
+        case .circuit(let circuit, let items):
+            circuitEditor(circuit, items: items)
+        }
+    }
 
-                ForEach(steps) { step in
-                    stepEditor(step, inSet: true)
-                }
-
-                Button {
-                    draft.addStep(to: set.id)
-                } label: {
-                    Label("Add step", systemImage: "plus")
-                }
-                .buttonStyle(.borderless)
-                .accessibilityIdentifier("customRoutine.addSetStep.\(number)")
-
-            } label: {
-                VStack(alignment: .leading, spacing: 4) {
-                    Label("Set \(number)", systemImage: "repeat")
-                    if collapsedSetIDs.contains(set.id) {
-                        Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
-                            .font(.subheadline)
-                        Text(steps.map(\.displayTitle).joined(separator: " → "))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityIdentifier("customRoutine.setHeader.\(number)")
+    private func setEditor(_ set: CustomRoutineSet, steps: [CustomRoutineStepDraft]) -> some View {
+        let number = setNumber(for: set)
+        return DisclosureGroup(isExpanded: setExpansionBinding(for: set)) {
+            Stepper(value: setCountBinding(for: set), in: CustomRoutineSet.supportedCounts) {
+                Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
             }
+            .accessibilityIdentifier("customRoutine.setRepeatCount.\(number)")
+
+            ForEach(steps) { step in
+                stepEditor(step, inSet: true)
+            }
+
+            Button {
+                draft.addStep(to: set.id)
+            } label: {
+                Label("Add step", systemImage: "plus")
+            }
+            .buttonStyle(.borderless)
+            .accessibilityIdentifier("customRoutine.addSetStep.\(number)")
+
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Label("Set \(number)", systemImage: "repeat")
+                if collapsedSetIDs.contains(set.id) {
+                    Text("Repeat \(set.repeatCount) \(set.repeatCount == 1 ? "time" : "times")")
+                        .font(.subheadline)
+                    Text(steps.map(\.displayTitle).joined(separator: " → "))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("customRoutine.setHeader.\(number)")
         }
     }
 
     /// Numbers sets in visible order, independent of metadata order and explicitly ungrouped rows.
     private func setNumber(for set: CustomRoutineSet) -> Int {
-        let ids: [String] = draft.editorItems.compactMap { item in
-            guard case .set(let candidate, _) = item else { return nil }
-            return candidate.id
+        let ids = draft.steps.compactMap { step in
+            draft.sets.first(where: { $0.stepIDs.first == step.id })?.id
         }
         return (ids.firstIndex(of: set.id) ?? 0) + 1
+    }
+
+    /// A circuit repeats its contained sets while keeping between-round recovery separate.
+    private func circuitEditor(_ circuit: CustomRoutineCircuit, items: [CustomRoutineEditorItem]) -> some View {
+        let number = circuitNumber(for: circuit)
+        return DisclosureGroup(isExpanded: circuitExpansionBinding(for: circuit)) {
+            Stepper(value: circuitCountBinding(for: circuit), in: CustomRoutineCircuit.supportedCounts) {
+                Text("Repeat \(circuit.repeatCount) \(circuit.repeatCount == 1 ? "time" : "times")")
+            }
+            .accessibilityIdentifier("customRoutine.circuitRepeatCount.\(number)")
+
+            CustomRoutineField("Rest between rounds") {
+                HStack(spacing: 6) {
+                    TextField("", value: circuitRestBinding(for: circuit), format: .number)
+                        .keyboardType(.decimalPad)
+                        .accessibilityLabel("Rest between rounds in seconds")
+                        .accessibilityIdentifier("customRoutine.circuitRest.\(number)")
+                        .focused($focusedField, equals: "\(circuit.id).circuitRest")
+                    Text("sec").foregroundStyle(.secondary)
+                }
+            }
+
+            Text("Rest is added between rounds, after any rest steps in your sets.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+            ForEach(items) { item in
+                circuitChild(item)
+            }
+
+            Button {
+                draft.addSet(to: circuit.id)
+            } label: {
+                Label("Add set", systemImage: "plus")
+            }
+            .buttonStyle(.borderless)
+            .accessibilityIdentifier("customRoutine.addCircuitSet.\(number)")
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Label("Circuit \(number)", systemImage: "repeat.circle")
+                if collapsedCircuitIDs.contains(circuit.id) {
+                    Text("\(circuit.setIDs.count) \(circuit.setIDs.count == 1 ? "set" : "sets") · Repeat \(circuit.repeatCount) \(circuit.repeatCount == 1 ? "time" : "times")")
+                        .font(.subheadline)
+                    if circuit.restBetweenRounds > 0 {
+                        Text("\(circuit.restBetweenRounds.formatted(.number)) sec rest between rounds")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .accessibilityElement(children: .combine)
+            .accessibilityIdentifier("customRoutine.circuitHeader.\(number)")
+        }
+    }
+
+    @ViewBuilder
+    private func circuitChild(_ item: CustomRoutineEditorItem) -> some View {
+        switch item {
+        case .set(let set, let steps):
+            setEditor(set, steps: steps)
+        case .step(let step):
+            stepEditor(step, inSet: true)
+        case .circuit:
+            EmptyView()
+        }
+    }
+
+    private func circuitNumber(for circuit: CustomRoutineCircuit) -> Int {
+        let ids = draft.editorItems.compactMap { item -> String? in
+            guard case .circuit(let candidate, _) = item else { return nil }
+            return candidate.id
+        }
+        return (ids.firstIndex(of: circuit.id) ?? 0) + 1
+    }
+
+    private func circuitExpansionBinding(for circuit: CustomRoutineCircuit) -> Binding<Bool> {
+        Binding(
+            get: { !collapsedCircuitIDs.contains(circuit.id) },
+            set: { expanded in
+                if expanded {
+                    collapsedCircuitIDs.remove(circuit.id)
+                } else {
+                    collapsedCircuitIDs.insert(circuit.id)
+                }
+            }
+        )
+    }
+
+    private func circuitCountBinding(for circuit: CustomRoutineCircuit) -> Binding<Int> {
+        Binding(
+            get: { draft.circuits.first(where: { $0.id == circuit.id })?.repeatCount ?? circuit.repeatCount },
+            set: { count in
+                if var existing = draft.circuits.first(where: { $0.id == circuit.id }) {
+                    existing.repeatCount = count
+                    draft.updateCircuit(existing)
+                }
+            }
+        )
+    }
+
+    private func circuitRestBinding(for circuit: CustomRoutineCircuit) -> Binding<TimeInterval?> {
+        Binding(
+            get: {
+                let value = draft.circuits.first(where: { $0.id == circuit.id })?.restBetweenRounds ?? 0
+                return value == 0 ? nil : value
+            },
+            set: { duration in
+                if var existing = draft.circuits.first(where: { $0.id == circuit.id }) {
+                    existing.restBetweenRounds = duration ?? 0
+                    draft.updateCircuit(existing)
+                }
+            }
+        )
     }
 
     /// Newly created and reopened sets expose their controls and children until explicitly collapsed.
@@ -388,6 +514,19 @@ struct CustomRoutineEditorView: View {
                 issues.append("Set \(index + 1) overlaps another set.")
             case .invalidSetSteps(let index), .duplicateSetID(let index):
                 issues.append("Set \(index + 1) needs consecutive steps.")
+            default: break
+            }
+        }
+        for issue in CustomRoutineValidator.circuitIssues(for: definition) {
+            switch issue {
+            case .invalidCircuitRepeatCount(let index):
+                issues.append("Circuit \(index + 1) needs a repeat count from 1 to 100.")
+            case .invalidCircuitRest(let index):
+                issues.append("Circuit \(index + 1) needs zero or a positive rest duration.")
+            case .overlappingCircuitSets(let index):
+                issues.append("Circuit \(index + 1) overlaps another circuit.")
+            case .invalidCircuitSets(let index), .duplicateCircuitID(let index):
+                issues.append("Circuit \(index + 1) needs consecutive sets.")
             default: break
             }
         }
