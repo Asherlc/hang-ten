@@ -82,7 +82,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.addSet", in: app)
         let duration = app.textFields["customRoutine.stepDuration"]
         reveal(duration, in: app)
-        XCTAssertEqual(duration.value as? String, "e.g. 15")
+        XCTAssertEqual(duration.value as? String, "")
         XCTAssertTrue(app.staticTexts["Duration"].exists)
         XCTAssertFalse(app.buttons["customRoutine.editStepSet"].exists)
         XCTAssertFalse(app.buttons["customRoutine.stepTiming"].exists)
@@ -97,11 +97,10 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.keyboardDone", in: app)
         tap("customRoutine.stepTarget", in: app)
         app.buttons["Edges"].tap()
-        tap("customRoutine.holdDetails", in: app)
         tap("customRoutine.stepDepth", in: app)
         app.buttons["Medium"].tap()
-        tap("customRoutine.holdDetails", in: app)
-        XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
+        XCTAssertFalse(app.buttons["customRoutine.holdDetails"].exists)
+        XCTAssertTrue(app.buttons["customRoutine.stepDepth"].label.contains("Medium"))
         capture(app, name: "Exercise timing and hands in focused groups")
         XCTAssertTrue(app.staticTexts["Instructions"].exists)
         XCTAssertFalse(app.buttons["customRoutine.stepPhase"].exists)
@@ -123,10 +122,57 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertTrue(app.buttons["customRoutine.stepHands"].label.contains("Right hand"))
         XCTAssertTrue(app.buttons["customRoutine.stepExercise"].label.contains("Loaded lift"))
         XCTAssertEqual(app.textFields["customRoutine.stepDuration"].value as? String, "12")
-        XCTAssertTrue(app.buttons["customRoutine.holdDetails"].label.contains("Medium"))
+        reveal(app.buttons["customRoutine.stepDepth"], in: app)
+        XCTAssertTrue(app.buttons["customRoutine.stepDepth"].label.contains("Medium"))
         capture(app, name: "Consolidated selections restored after saving")
         reveal(instructionField, in: app)
         XCTAssertEqual(instructionField.value as? String, "My own cue")
+    }
+
+    /// Unit changes preserve the authored quantities through saving and reopening.
+    func testImperialEntryAndUnitSwitchPreserveLoadAndDepth() {
+        let app = launchEditor(name: "Unit conversion review")
+        chooseUnits("Imperial", in: app)
+        capture(app, name: "Routine metadata and units are inline")
+        tap("customRoutine.addSet", in: app)
+        tap("customRoutine.stepExercise", in: app)
+        app.buttons["Loaded lift"].tap()
+        enter("12", identifier: "customRoutine.stepDuration", in: app)
+        tap("customRoutine.stepTarget", in: app)
+        app.buttons["Edges"].tap()
+        tap("customRoutine.stepDepth", in: app)
+        app.buttons["Range"].tap()
+        let minimum = app.textFields["customRoutine.stepDepthMinimum"]
+        reveal(minimum, in: app)
+        XCTAssertEqual(minimum.value as? String, "")
+        enter("0.5", identifier: "customRoutine.stepDepthMinimum", in: app)
+        enter("1.5", identifier: "customRoutine.stepDepthMaximum", in: app)
+        let load = app.textFields["customRoutine.stepExternalLoad"]
+        reveal(load, in: app)
+        XCTAssertEqual(load.value as? String, "")
+        enter("22.046226", identifier: "customRoutine.stepExternalLoad", in: app)
+        capture(app, name: "Imperial load and inline depth range")
+
+        chooseUnits("Metric", in: app)
+        reveal(minimum, in: app)
+        XCTAssertEqual(minimum.value as? String, "12.7")
+        XCTAssertEqual(app.textFields["customRoutine.stepDepthMaximum"].value as? String, "38.1")
+        reveal(load, in: app)
+        XCTAssertEqual(load.value as? String, "10")
+        chooseUnits("Imperial", in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: "Unit conversion review", in: app)
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        expandSet(in: app)
+        expandStep(titled: "Loaded lift", in: app)
+        reveal(minimum, in: app)
+        XCTAssertEqual(minimum.value as? String, "0.5")
+        XCTAssertEqual(app.textFields["customRoutine.stepDepthMaximum"].value as? String, "1.5")
+        reveal(load, in: app)
+        XCTAssertEqual(load.value as? String, "22.046")
+        capture(app, name: "Imperial quantities survive reopening")
+        chooseUnits("Metric", in: app)
     }
 
     /// Expands the default hang/rest set in order and retains its final recovery interval.
@@ -220,11 +266,26 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Plans"].waitForExistence(timeout: 20))
         tap("customRoutine.create", in: app)
         XCTAssertTrue(app.navigationBars["Create routine"].waitForExistence(timeout: 10))
-        app.buttons["Generic"].tap()
+        XCTAssertTrue(app.buttons["customRoutine.board"].label.contains("No board"))
+        XCTAssertFalse(app.segmentedControls["customRoutine.targetMode"].exists)
         let field = app.textFields["customRoutine.name"]
         field.tap()
         field.typeText(name + "\n")
         return app
+    }
+
+    private func chooseUnits(_ label: String, in app: XCUIApplication) {
+        let units = app.segmentedControls["customRoutine.units"]
+        reveal(units, in: app, scrollTowardTop: true)
+        units.buttons[label].tap()
+    }
+
+    private func enter(_ value: String, identifier: String, in app: XCUIApplication) {
+        let field = app.textFields[identifier]
+        reveal(field, in: app)
+        field.tap()
+        field.typeText(value)
+        tap("customRoutine.keyboardDone", in: app)
     }
 
     /// Adds to the selected set, creating the first set when the planner is empty.

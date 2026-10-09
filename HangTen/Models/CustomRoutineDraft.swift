@@ -1,5 +1,50 @@
 import Foundation
 
+/// Display units never alter the draft's canonical kilograms-force and millimeters.
+enum CustomRoutineDisplayUnit: String, CaseIterable, Identifiable {
+    case metric
+    case imperial
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .metric: "Metric"
+        case .imperial: "Imperial"
+        }
+    }
+
+    var loadUnit: WorkoutLoadAdjustmentDisplayUnit {
+        switch self {
+        case .metric: .kilograms
+        case .imperial: .pounds
+        }
+    }
+
+    var depthUnitLabel: String {
+        switch self {
+        case .metric: "mm"
+        case .imperial: "in"
+        }
+    }
+
+    func loadValue(fromKilogramsForce value: Double) -> Double {
+        value.isFinite ? loadUnit.value(fromKilogramsForce: value) : value
+    }
+
+    func kilogramsForce(fromDisplayedLoad value: Double) -> Double {
+        value.isFinite ? loadUnit.kilogramsForce(fromDisplayedForce: value) : value
+    }
+
+    func depthValue(fromMillimeters value: Double) -> Double {
+        self == .imperial ? value / 25.4 : value
+    }
+
+    func millimeters(fromDisplayedDepth value: Double) -> Double {
+        self == .imperial ? value * 25.4 : value
+    }
+}
+
 struct CustomRoutineStepDraft: Equatable, Identifiable {
     var id: String
     var title: String

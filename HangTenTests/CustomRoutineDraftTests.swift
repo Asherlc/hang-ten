@@ -2,6 +2,115 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testMetricMeasurementsUseCanonicalValues() {
+        let units = CustomRoutineDisplayUnit.metric
+        XCTAssertEqual(units.loadValue(fromKilogramsForce: 11.75), 11.75)
+        XCTAssertEqual(units.kilogramsForce(fromDisplayedLoad: -3.25), -3.25)
+        XCTAssertEqual(units.depthValue(fromMillimeters: 20.25), 20.25)
+        XCTAssertEqual(units.millimeters(fromDisplayedDepth: 20.25), 20.25)
+    }
+
+    func testImperialLoadEntryConvertsPoundsToCanonicalKilogramsForce() {
+        let units = CustomRoutineDisplayUnit.imperial
+        XCTAssertEqual(units.loadValue(fromKilogramsForce: 10), 22.0462262185, accuracy: 0.000_000_001)
+        XCTAssertEqual(units.kilogramsForce(fromDisplayedLoad: -10), -4.5359237, accuracy: 0.000_000_001)
+    }
+
+    func testImperialDepthEntryConvertsInchesToCanonicalMillimeters() {
+        let units = CustomRoutineDisplayUnit.imperial
+        XCTAssertEqual(units.depthValue(fromMillimeters: 25.4), 1, accuracy: 0.000_000_001)
+        XCTAssertEqual(units.millimeters(fromDisplayedDepth: 0.75), 19.05, accuracy: 0.000_000_001)
+    }
+
+    func testNonfiniteLoadInputStillRequiresValidation() {
+        for units in CustomRoutineDisplayUnit.allCases {
+            for value in [Double.nan, .infinity, -.infinity] {
+                var draft = CustomRoutineDraft(createWith: .generic)
+                draft.title = "Invalid load"
+                var step = makeStep(id: "invalid-load", title: "My step")
+                step.externalLoadKGF = units.kilogramsForce(fromDisplayedLoad: value)
+                draft.steps = [step]
+                XCTAssertFalse(step.externalLoadKGF!.isFinite)
+                XCTAssertFalse(units.loadValue(fromKilogramsForce: value).isFinite)
+                XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: draft.definition())
+                    .contains("Step 1 needs a finite external load."))
+            }
+        }
+    }
+
+    func testMeasurementConversionRoundTripsFractionalAuthoredValues() {
+        for units in CustomRoutineDisplayUnit.allCases {
+            XCTAssertEqual(
+                units.kilogramsForce(fromDisplayedLoad: units.loadValue(fromKilogramsForce: -4.25)),
+                -4.25,
+                accuracy: 0.000_000_001
+            )
+            XCTAssertEqual(
+                units.millimeters(fromDisplayedDepth: units.depthValue(fromMillimeters: 20.35)),
+                20.35,
+                accuracy: 0.000_000_001
+            )
+        }
+    }
+
+    func testChangingDisplayUnitsPreservesAuthoredCanonicalMeasurements() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        var step = makeStep(id: "fractional", title: "My step")
+        step.externalLoadKGF = -4.25
+        step.targets = [ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 17.35, maximum: 22.8)),
+            selection: .single
+        )]
+        draft.steps = [step]
+        let original = draft.definition()
+        var units = CustomRoutineDisplayUnit.metric
+
+        for _ in 0..<10 {
+            units = units == .metric ? .imperial : .metric
+            _ = units.loadValue(fromKilogramsForce: draft.steps[0].externalLoadKGF!)
+            if case let .range(range)? = draft.steps[0].targets[0].depth {
+                _ = units.depthValue(fromMillimeters: range.minimum)
+                _ = units.depthValue(fromMillimeters: range.maximum)
+            }
+        }
+
+        let reopened = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        XCTAssertEqual(reopened, original)
+        XCTAssertEqual(reopened.steps[0].externalLoadKGF, -4.25)
+        XCTAssertEqual(reopened.steps[0].workRequirements[0].depth, .range(.init(minimum: 17.35, maximum: 22.8)))
+    }
+
+    func testImperialAuthoredMeasurementsPersistInCanonicalUnits() throws {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        var step = makeStep(id: "imperial", title: "My step")
+        let units = CustomRoutineDisplayUnit.imperial
+        step.externalLoadKGF = units.kilogramsForce(fromDisplayedLoad: 22.0462262185)
+        step.targets = [ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(
+                minimum: units.millimeters(fromDisplayedDepth: 0.5),
+                maximum: units.millimeters(fromDisplayedDepth: 0.75)
+            )),
+            selection: .single
+        )]
+        draft.steps = [step]
+
+        let reopened = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        XCTAssertEqual(try XCTUnwrap(reopened.steps[0].externalLoadKGF), 10, accuracy: 0.000_000_001)
+        guard case let .range(range)? = reopened.steps[0].workRequirements[0].depth else {
+            return XCTFail("Expected a canonical millimeter range after reopening")
+        }
+        XCTAssertEqual(range.minimum, 12.7, accuracy: 0.000_000_001)
+        XCTAssertEqual(range.maximum, 19.05, accuracy: 0.000_000_001)
+    }
+
     func testIncompatibleHoldsProduceActionableSaveFeedback() {
         let error = CustomRoutineStoreError.validationFailed([
             .unresolvableSegmentTargets(stepIndex: 1, segmentIndex: 0), .noCompatibleBoard

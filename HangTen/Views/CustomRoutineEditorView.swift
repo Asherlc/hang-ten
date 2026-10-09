@@ -6,8 +6,8 @@ struct CustomRoutineEditorView: View {
     private let onSave: (CustomRoutineDefinition) throws -> Void
     private let metadataOptions = CustomRoutineMetadataOptions()
     @State private var draft: CustomRoutineDraft
-    @State private var selectedMode: EditorTargetMode
-    @State private var selectedBoardID: String
+    @State private var selectedBoardID: String?
+    @AppStorage("HangTen.customRoutine.displayUnits") private var displayUnits = CustomRoutineDisplayUnit.metric
     @State private var persistenceError: String?
     @State private var hasAttemptedSave = false
     @State private var validationScrollRequest = 0
@@ -24,12 +24,10 @@ struct CustomRoutineEditorView: View {
         _draft = State(initialValue: draft.assigningDefaultSets())
 
         switch draft.targetMode {
-        case let .boardSpecific(boardID):
-            _selectedMode = State(initialValue: .boardSpecific)
+        case .boardSpecific(let boardID):
             _selectedBoardID = State(initialValue: boardID)
         case .generic:
-            _selectedMode = State(initialValue: .generic)
-            _selectedBoardID = State(initialValue: BoardCatalog.defaultBoard.id)
+            _selectedBoardID = State(initialValue: nil)
         }
     }
 
@@ -38,14 +36,7 @@ struct CustomRoutineEditorView: View {
     }
 
     private var selectedBoard: BoardRevision {
-        BoardCatalog.board(for: selectedBoardID)
-    }
-
-    private var isBoardSpecific: Bool {
-        if case .boardSpecific = draft.targetMode {
-            return true
-        }
-        return false
+        BoardCatalog.board(for: selectedBoardID ?? BoardCatalog.defaultBoard.id)
     }
 
     var body: some View {
@@ -123,64 +114,63 @@ struct CustomRoutineEditorView: View {
 
     private var routineSection: some View {
         Section("Routine") {
-            Picker("Target mode", selection: $selectedMode) {
-                ForEach(EditorTargetMode.allCases) { mode in
-                    Text(mode.label).tag(mode)
+            Picker("Board", selection: $selectedBoardID) {
+                Text("No board").tag(String?.none)
+                ForEach(BoardCatalog.all) { board in
+                    Text(board.name).tag(Optional(board.id))
                 }
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(.menu)
+            .modifier(CustomRoutineInputStyle())
             .disabled(isExistingRoutine)
-            .accessibilityIdentifier("customRoutine.targetMode")
-            .onChange(of: selectedMode) { _, mode in
-                replaceDraftTargetMode(mode: mode, boardID: selectedBoardID)
+            .accessibilityIdentifier("customRoutine.board")
+            .onChange(of: selectedBoardID) { _, boardID in
+                replaceDraftTargetMode(boardID: boardID)
             }
 
-            if isBoardSpecific {
-                Picker("Board", selection: $selectedBoardID) {
-                    ForEach(BoardCatalog.all) { board in
-                        Text(board.name).tag(board.id)
-                    }
-                }
-                .accessibilityIdentifier("customRoutine.board")
-                .disabled(isExistingRoutine)
-                .onChange(of: selectedBoardID) { _, boardID in
-                    replaceDraftTargetMode(mode: .boardSpecific, boardID: boardID)
-                }
-            }
-
-            LabeledContent("Name") {
-                TextField("e.g. Evening session", text: $draft.title)
-                    .multilineTextAlignment(.leading)
+            CustomRoutineField("Name") {
+                TextField("e.g. Metolius 10-minute · Entry", text: $draft.title)
                     .focused($focusedField, equals: "routine.name")
                     .accessibilityIdentifier("customRoutine.name")
             }
-            DisclosureGroup("Routine details") {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Description").font(.subheadline.weight(.semibold))
-                    TextField("e.g. My routine for weekday evenings", text: $draft.subtitle, axis: .vertical)
-                        .focused($focusedField, equals: "routine.description")
-                        .accessibilityIdentifier("customRoutine.description")
+            CustomRoutineField("Description") {
+                TextField("e.g. Ten 60-second hangboard sequences.", text: $draft.subtitle, axis: .vertical)
+                    .focused($focusedField, equals: "routine.description")
+                    .accessibilityIdentifier("customRoutine.description")
+            }
+            Picker("Difficulty", selection: $draft.difficulty) {
+                Text("None").tag(String?.none)
+                ForEach(metadataOptions.difficulties, id: \.self) { difficulty in
+                    Text(difficulty).tag(Optional(difficulty))
                 }
-                Picker("Difficulty", selection: $draft.difficulty) {
-                    Text("None").tag(String?.none)
-                    ForEach(metadataOptions.difficulties, id: \.self) { difficulty in
-                        Text(difficulty).tag(Optional(difficulty))
+            }
+            .pickerStyle(.menu)
+            .modifier(CustomRoutineInputStyle())
+            .accessibilityIdentifier("customRoutine.difficulty")
+            Picker("Category", selection: $draft.category) {
+                Text("None").tag(String?.none)
+                ForEach(metadataOptions.categories, id: \.self) { category in
+                    Text(category).tag(Optional(category))
+                }
+            }
+            .pickerStyle(.menu)
+            .modifier(CustomRoutineInputStyle())
+            .accessibilityIdentifier("customRoutine.category")
+            CustomRoutineField("Tags") {
+                TextField("e.g. manufacturer", text: $draft.tagsText)
+                    .focused($focusedField, equals: "routine.tags")
+                    .accessibilityIdentifier("customRoutine.tags")
+            }
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Units").font(.subheadline.weight(.semibold))
+                Picker("Units", selection: $displayUnits) {
+                    ForEach(CustomRoutineDisplayUnit.allCases) { units in
+                        Text(units.label).tag(units)
                     }
                 }
-                    .accessibilityIdentifier("customRoutine.difficulty")
-                Picker("Category", selection: $draft.category) {
-                    Text("None").tag(String?.none)
-                    ForEach(metadataOptions.categories, id: \.self) { category in
-                        Text(category).tag(Optional(category))
-                    }
-                }
-                    .accessibilityIdentifier("customRoutine.category")
-                LabeledContent("Tags") {
-                    TextField("e.g. home, evenings", text: $draft.tagsText)
-                        .multilineTextAlignment(.trailing)
-                        .focused($focusedField, equals: "routine.tags")
-                        .accessibilityIdentifier("customRoutine.tags")
-                }
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("customRoutine.units")
+                .onChange(of: displayUnits) { _, _ in focusedField = nil }
             }
         }
     }
@@ -189,7 +179,7 @@ struct CustomRoutineEditorView: View {
         Section {
             ForEach(draft.editorItems) { item in
                 editorItem(item)
-                .deleteDisabled(editMode.isEditing)
+                    .deleteDisabled(editMode.isEditing)
             }
             .onMove { offsets, destination in
                 draft.moveEditorItems(from: offsets, to: destination)
@@ -233,9 +223,9 @@ struct CustomRoutineEditorView: View {
     /// Renders one editable row, with a shared count and child forms when the row represents a set.
     private func editorItem(_ item: CustomRoutineEditorItem) -> some View {
         switch item {
-        case let .step(step):
+        case .step(let step):
             stepEditor(step)
-        case let .set(set, steps):
+        case .set(let set, let steps):
             let number = setNumber(for: set)
             DisclosureGroup(isExpanded: setExpansionBinding(for: set)) {
                 Stepper(value: setCountBinding(for: set), in: CustomRoutineSet.supportedCounts) {
@@ -275,7 +265,7 @@ struct CustomRoutineEditorView: View {
     /// Numbers sets in visible order, independent of metadata order and explicitly ungrouped rows.
     private func setNumber(for set: CustomRoutineSet) -> Int {
         let ids: [String] = draft.editorItems.compactMap { item in
-            guard case let .set(candidate, _) = item else { return nil }
+            guard case .set(let candidate, _) = item else { return nil }
             return candidate.id
         }
         return (ids.firstIndex(of: set.id) ?? 0) + 1
@@ -302,11 +292,13 @@ struct CustomRoutineEditorView: View {
             focusedField: $focusedField,
             targetMode: draft.targetMode,
             board: selectedBoard,
-            onRemove: inSet ? {
-                if let index = draft.steps.firstIndex(where: { $0.id == step.id }) {
-                    draft.removeSteps(at: IndexSet(integer: index))
-                }
-            } : nil
+            displayUnits: displayUnits,
+            onRemove: inSet
+                ? {
+                    if let index = draft.steps.firstIndex(where: { $0.id == step.id }) {
+                        draft.removeSteps(at: IndexSet(integer: index))
+                    }
+                } : nil
         )
     }
 
@@ -341,17 +333,12 @@ struct CustomRoutineEditorView: View {
         )
     }
 
-    private func replaceDraftTargetMode(mode: EditorTargetMode, boardID: String) {
+    private func replaceDraftTargetMode(boardID: String?) {
         guard !isExistingRoutine else {
             return
         }
 
-        let targetMode: CustomRoutineTargetMode = switch mode {
-        case .boardSpecific:
-            .boardSpecific(boardID: boardID)
-        case .generic:
-            .generic
-        }
+        let targetMode: CustomRoutineTargetMode = boardID.map { .boardSpecific(boardID: $0) } ?? .generic
         guard targetMode != draft.targetMode else {
             return
         }
@@ -375,11 +362,13 @@ struct CustomRoutineEditorView: View {
 
     static func saveErrorMessage(for error: Error) -> String {
         guard let storeError = error as? CustomRoutineStoreError,
-              case let .validationFailed(issues) = storeError else { return error.localizedDescription }
+            case .validationFailed(let issues) = storeError
+        else { return error.localizedDescription }
         for issue in issues {
             switch issue {
-            case let .unresolvableTargets(index), let .unresolvableSegmentTargets(index, _):
-                return "Step \(index + 1)’s holds don’t match an available board. Try another hold type, shape, or depth."
+            case .unresolvableTargets(let index), .unresolvableSegmentTargets(let index, _):
+                return
+                    "Step \(index + 1)’s holds don’t match an available board. Try another hold type, shape, or depth."
             case .noCompatibleBoard:
                 return "These hold choices don’t match an available board. Try another hold type, shape, or depth."
             default: continue
@@ -405,22 +394,25 @@ struct CustomRoutineEditorView: View {
         for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.workRequirements.isEmpty {
             issues.append("Step \(index + 1) needs a hold target.")
         }
-        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+        for (index, step) in definition.steps.enumerated()
+        where !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
             issues.append("Step \(index + 1) needs a side compatible with its hand use.")
         }
-        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
+        for (index, step) in definition.steps.enumerated()
+        where !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
             issues.append("Step \(index + 1) needs positive repetitions for a loaded lift.")
         }
-        for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
+        for (index, step) in definition.steps.enumerated()
+        where !WorkoutStepSemantics.hasValidExternalLoad(step.externalLoadKGF) {
             issues.append("Step \(index + 1) needs a finite external load.")
         }
         for issue in CustomRoutineValidator.setIssues(for: definition) {
             switch issue {
-            case let .invalidSetRepeatCount(index):
+            case .invalidSetRepeatCount(let index):
                 issues.append("Set \(index + 1) needs a repeat count from 1 to 100.")
-            case let .overlappingSetSteps(index):
+            case .overlappingSetSteps(let index):
                 issues.append("Set \(index + 1) overlaps another set.")
-            case let .invalidSetSteps(index), let .duplicateSetID(index):
+            case .invalidSetSteps(let index), .duplicateSetID(let index):
                 issues.append("Set \(index + 1) needs consecutive steps.")
             default: break
             }
@@ -429,45 +421,33 @@ struct CustomRoutineEditorView: View {
     }
 }
 
-private enum EditorTargetMode: String, CaseIterable, Identifiable {
-    case boardSpecific
-    case generic
-
-    var id: String { rawValue }
-
-    var label: String {
-        switch self {
-        case .boardSpecific: "Board-specific"
-        case .generic: "Generic"
-        }
-    }
-}
-
 private struct CustomRoutineStepEditor: View {
     @Binding var step: CustomRoutineStepDraft
     let focusedField: FocusState<String?>.Binding
     let targetMode: CustomRoutineTargetMode
     let board: BoardRevision
+    let displayUnits: CustomRoutineDisplayUnit
     let onRemove: (() -> Void)?
 
     @State private var isExpanded: Bool
-    @State private var areHoldDetailsExpanded = false
     @State private var activeHoldID: String?
     @State private var genericDepthSelection: GenericDepthSelection = .none
-    @State private var exactDepthMinimum = ""
-    @State private var exactDepthMaximum = ""
+    @State private var exactDepthMinimumMM: Double?
+    @State private var exactDepthMaximumMM: Double?
 
     init(
         step: Binding<CustomRoutineStepDraft>,
         focusedField: FocusState<String?>.Binding,
         targetMode: CustomRoutineTargetMode,
         board: BoardRevision,
+        displayUnits: CustomRoutineDisplayUnit,
         onRemove: (() -> Void)?
     ) {
         _step = step
         self.focusedField = focusedField
         self.targetMode = targetMode
         self.board = board
+        self.displayUnits = displayUnits
         self.onRemove = onRemove
         _isExpanded = State(initialValue: step.wrappedValue.duration == 0)
     }
@@ -491,16 +471,14 @@ private struct CustomRoutineStepEditor: View {
                         Text(exercise.label).tag(exercise)
                     }
                 }
-                .frame(minHeight: 44)
+                .modifier(CustomRoutineInputStyle())
                 .accessibilityIdentifier("customRoutine.stepExercise")
 
-                LabeledContent("Duration") {
+                CustomRoutineField("Duration") {
                     HStack(spacing: 6) {
-                        TextField("e.g. 15", value: durationBinding, format: .number)
+                        TextField("", value: durationBinding, format: .number)
                             .keyboardType(.decimalPad)
-                            .multilineTextAlignment(.trailing)
                             .accessibilityLabel("Duration in seconds")
-                            .frame(minHeight: 44)
                             .accessibilityIdentifier("customRoutine.stepDuration")
                             .focused(focusedField, equals: "\(step.id).stepDuration")
                         Text("sec").foregroundStyle(.secondary)
@@ -521,27 +499,30 @@ private struct CustomRoutineStepEditor: View {
                                 }
                             }
                         }
-                        .frame(minHeight: 44)
+                        .modifier(CustomRoutineInputStyle())
                         .accessibilityIdentifier("customRoutine.stepHands")
                         targetEditor
                     }
                     if step.action == .loadedLift {
                         editorGroup("Load") {
-                            LabeledContent("Repetitions") {
-                                TextField("e.g. 5", value: $step.repetitions, format: .number)
+                            CustomRoutineField("Repetitions") {
+                                TextField("", value: $step.repetitions, format: .number)
                                     .keyboardType(.numberPad)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(minHeight: 44)
                                     .accessibilityIdentifier("customRoutine.stepRepetitions")
                                     .focused(focusedField, equals: "\(step.id).stepRepetitions")
                             }
-                            LabeledContent("External load (kg)") {
-                                TextField("e.g. -10", value: $step.externalLoadKGF, format: .number)
+                            CustomRoutineField("External load") {
+                                HStack(spacing: 6) {
+                                    TextField(
+                                        "", value: externalLoadBinding,
+                                        format: .number.precision(.fractionLength(0...3))
+                                    )
                                     .keyboardType(.numbersAndPunctuation)
-                                    .multilineTextAlignment(.trailing)
-                                    .frame(minHeight: 44)
+                                    .accessibilityLabel("External load in \(displayUnits.loadUnit.label)")
                                     .accessibilityIdentifier("customRoutine.stepExternalLoad")
                                     .focused(focusedField, equals: "\(step.id).stepExternalLoad")
+                                    Text(displayUnits.loadUnit.label).foregroundStyle(.secondary)
+                                }
                             }
                             Text("Use a negative load for assistance.")
                                 .font(.caption)
@@ -550,17 +531,13 @@ private struct CustomRoutineStepEditor: View {
                     }
                 }
 
-                LabeledContent("Name") {
-                    TextField("e.g. First hang", text: $step.title)
-                        .multilineTextAlignment(.leading)
-                        .frame(minHeight: 44)
+                CustomRoutineField("Name") {
+                    TextField(nameExample, text: $step.title)
                         .accessibilityIdentifier("customRoutine.stepTitle")
                         .focused(focusedField, equals: "\(step.id).stepTitle")
                 }
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Instructions").font(.subheadline.weight(.semibold))
-                    TextField("e.g. Use my usual board setup", text: $step.instruction, axis: .vertical)
-                        .frame(minHeight: 44)
+                CustomRoutineField("Instructions") {
+                    TextField(instructionExample, text: $step.instruction, axis: .vertical)
                         .accessibilityIdentifier("customRoutine.stepInstruction")
                         .focused(focusedField, equals: "\(step.id).stepInstruction")
                 }
@@ -578,7 +555,6 @@ private struct CustomRoutineStepEditor: View {
             // Automatic pickers in a List can capture the entire grouped row.
             .pickerStyle(.menu)
             .buttonStyle(.borderless)
-            .disclosureGroupStyle(InlineEditorDisclosureStyle())
             .padding(.vertical, 12)
         } label: {
             VStack(alignment: .leading, spacing: 4) {
@@ -595,8 +571,10 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private var stepSummary: String {
-        var parts = [step.exercise.label,
-                     step.duration > 0 ? "\(step.duration.formatted()) sec" : "Set duration"]
+        var parts = [
+            step.exercise.label,
+            step.duration > 0 ? "\(step.duration.formatted()) sec" : "Set duration",
+        ]
         if !step.isRest {
             parts.append(step.handChoice.label)
             if let kind = step.targets.first?.kind { parts.append(kind.label) }
@@ -604,10 +582,33 @@ private struct CustomRoutineStepEditor: View {
         return parts.joined(separator: " · ")
     }
 
+    private var nameExample: String {
+        switch step.exercise {
+        case .hang: "e.g. Jug hang"
+        case .rest: "e.g. Rest"
+        case .isometricPull, .loadedLift: ""
+        }
+    }
+
+    private var instructionExample: String {
+        switch step.exercise {
+        case .hang: "e.g. Hang from the jugs for 15 seconds."
+        case .rest: "e.g. Rest before the next hang."
+        case .isometricPull, .loadedLift: ""
+        }
+    }
+
     private var durationBinding: Binding<Double?> {
         Binding(
             get: { step.duration == 0 ? nil : step.duration },
             set: { step.setDuration($0) }
+        )
+    }
+
+    private var externalLoadBinding: Binding<Double?> {
+        Binding(
+            get: { step.externalLoadKGF.map { displayUnits.loadValue(fromKilogramsForce: $0) } },
+            set: { step.externalLoadKGF = $0.map { displayUnits.kilogramsForce(fromDisplayedLoad: $0) } }
         )
     }
 
@@ -645,73 +646,46 @@ private struct CustomRoutineStepEditor: View {
                         Text(kind.label).tag(Optional(kind))
                     }
                 }
-                .frame(minHeight: 44)
+                .modifier(CustomRoutineInputStyle())
                 .accessibilityIdentifier("customRoutine.stepTarget")
 
                 if genericKind != nil {
-                    DisclosureGroup(isExpanded: $areHoldDetailsExpanded) {
-                        if let kind = genericKind, !Self.supportedShapes(for: kind).isEmpty {
-                            Picker("Hold shape", selection: genericShapeBinding) {
-                                Text("Any shape").tag(HoldShape?.none)
-                                ForEach(Self.supportedShapes(for: kind)) { shape in
-                                    Text(shape.label).tag(Optional(shape))
-                                }
-                            }
-                            .frame(minHeight: 44)
-                            .accessibilityIdentifier("customRoutine.stepShape")
-                        }
-
-                        if genericKind != nil {
-                            Picker("Hold depth", selection: $genericDepthSelection) {
-                                Text("Any depth").tag(GenericDepthSelection.none)
-                                Section("Size") {
-                                    ForEach(HoldSize.allCases) { size in
-                                        Text(size.label).tag(GenericDepthSelection.category(size))
-                                    }
-                                }
-                                Text("Exact range (mm)").tag(GenericDepthSelection.exactRange)
-                            }
-                            .frame(minHeight: 44)
-                            .accessibilityIdentifier("customRoutine.stepDepth")
-                            .onChange(of: genericDepthSelection) { _, selection in
-                                switch selection {
-                                case .none:
-                                    replaceGenericTarget(depth: nil)
-                                case let .category(size):
-                                    replaceGenericTarget(depth: .category(size))
-                                case .exactRange:
-                                    loadExactDepthFields()
-                                    updateExactDepthFromFields()
-                                }
-                            }
-
-                            if genericDepthSelection == .exactRange {
-                                LabeledContent("Minimum depth (mm)") {
-                                    TextField("e.g. 18", text: $exactDepthMinimum)
-                                        .keyboardType(.decimalPad)
-                                        .multilineTextAlignment(.trailing)
-                                        .frame(minHeight: 44)
-                                        .accessibilityIdentifier("customRoutine.stepDepthMinimum")
-                                        .focused(focusedField, equals: "\(step.id).stepDepthMinimum")
-                                        .onChange(of: exactDepthMinimum) { _, _ in updateExactDepthFromFields() }
-                                }
-                                LabeledContent("Maximum depth (mm)") {
-                                    TextField("e.g. 22", text: $exactDepthMaximum)
-                                        .keyboardType(.decimalPad)
-                                        .multilineTextAlignment(.trailing)
-                                        .frame(minHeight: 44)
-                                        .accessibilityIdentifier("customRoutine.stepDepthMaximum")
-                                        .focused(focusedField, equals: "\(step.id).stepDepthMaximum")
-                                        .onChange(of: exactDepthMaximum) { _, _ in updateExactDepthFromFields() }
-                                }
+                    if let kind = genericKind, !Self.supportedShapes(for: kind).isEmpty {
+                        Picker("Shape", selection: genericShapeBinding) {
+                            Text("Any shape").tag(HoldShape?.none)
+                            ForEach(Self.supportedShapes(for: kind)) { shape in
+                                Text(shape == .incut ? "Angled inward" : shape.label).tag(Optional(shape))
                             }
                         }
-                    } label: {
-                        Text(genericRefinementSummary.isEmpty ? "Hold details" : genericRefinementSummary)
-                            .frame(minHeight: 44)
-                            .accessibilityIdentifier("customRoutine.holdDetails")
+                        .modifier(CustomRoutineInputStyle())
+                        .accessibilityIdentifier("customRoutine.stepShape")
                     }
-                    .frame(minHeight: 44)
+                    Picker("Depth", selection: $genericDepthSelection) {
+                        Text("Any depth").tag(GenericDepthSelection.none)
+                        Section("Size") {
+                            ForEach(HoldSize.allCases) { size in
+                                Text(size.label).tag(GenericDepthSelection.category(size))
+                            }
+                        }
+                        Text("Range").tag(GenericDepthSelection.exactRange)
+                    }
+                    .modifier(CustomRoutineInputStyle())
+                    .accessibilityIdentifier("customRoutine.stepDepth")
+                    .onChange(of: genericDepthSelection) { _, selection in
+                        switch selection {
+                        case .none:
+                            replaceGenericTarget(depth: nil)
+                        case .category(let size):
+                            replaceGenericTarget(depth: .category(size))
+                        case .exactRange:
+                            loadExactDepthFields()
+                            updateExactDepthFromFields()
+                        }
+                    }
+                    if genericDepthSelection == .exactRange {
+                        depthField("Minimum", minimum: true)
+                        depthField("Maximum", minimum: false)
+                    }
                 }
             }
             .onAppear(perform: configureGenericDepthSelection)
@@ -720,18 +694,6 @@ private struct CustomRoutineStepEditor: View {
 
     private var genericKind: HoldKind? {
         step.targets.first?.kind
-    }
-
-    private var genericRefinementSummary: String {
-        guard let target = step.targets.first else { return "" }
-        var parts = target.shape.map { ["\($0.label) shape"] } ?? []
-        switch target.depth {
-        case let .category(size): parts.append("\(size.label) depth")
-        case let .range(range):
-            parts.append("\(range.minimum.formatted())–\(range.maximum.formatted()) mm")
-        case nil: break
-        }
-        return parts.joined(separator: " · ")
     }
 
     private var genericKindBinding: Binding<HoldKind?> {
@@ -798,32 +760,62 @@ private struct CustomRoutineStepEditor: View {
     private func configureGenericDepthSelection() {
         guard let depth = step.targets.first?.depth else {
             genericDepthSelection = .none
-            exactDepthMinimum = ""
-            exactDepthMaximum = ""
+            exactDepthMinimumMM = nil
+            exactDepthMaximumMM = nil
             return
         }
         switch depth {
-        case let .category(size):
+        case .category(let size):
             genericDepthSelection = .category(size)
-        case let .range(range):
+        case .range(let range):
             genericDepthSelection = .exactRange
-            exactDepthMinimum = range.minimum.formatted()
-            exactDepthMaximum = range.maximum.formatted()
+            exactDepthMinimumMM = range.minimum
+            exactDepthMaximumMM = range.maximum
         }
     }
 
     private func loadExactDepthFields() {
-        if case let .range(range)? = step.targets.first?.depth {
-            exactDepthMinimum = range.minimum.formatted()
-            exactDepthMaximum = range.maximum.formatted()
+        if case .range(let range)? = step.targets.first?.depth {
+            exactDepthMinimumMM = range.minimum
+            exactDepthMaximumMM = range.maximum
         }
     }
 
+    private func depthField(_ title: String, minimum: Bool) -> some View {
+        let identifier = minimum ? "stepDepthMinimum" : "stepDepthMaximum"
+        return CustomRoutineField(title) {
+            HStack(spacing: 6) {
+                TextField("", value: depthBinding(minimum: minimum), format: .number.precision(.fractionLength(0...3)))
+                    .keyboardType(.decimalPad)
+                    .accessibilityLabel("\(title) depth in \(displayUnits.depthUnitLabel)")
+                    .accessibilityIdentifier("customRoutine.\(identifier)")
+                    .focused(focusedField, equals: "\(step.id).\(identifier)")
+                Text(displayUnits.depthUnitLabel).foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    /// Unit selection changes presentation; only an input edit writes canonical millimeters.
+    private func depthBinding(minimum: Bool) -> Binding<Double?> {
+        Binding(
+            get: {
+                (minimum ? exactDepthMinimumMM : exactDepthMaximumMM)
+                    .map { displayUnits.depthValue(fromMillimeters: $0) }
+            },
+            set: { value in
+                let millimeters = value.map { displayUnits.millimeters(fromDisplayedDepth: $0) }
+                if minimum { exactDepthMinimumMM = millimeters } else { exactDepthMaximumMM = millimeters }
+                updateExactDepthFromFields()
+            }
+        )
+    }
+
     private func updateExactDepthFromFields() {
-        guard let minimum = Double(exactDepthMinimum),
-              let maximum = Double(exactDepthMaximum),
-              minimum > 0,
-              maximum >= minimum else {
+        guard let minimum = exactDepthMinimumMM,
+            let maximum = exactDepthMaximumMM,
+            minimum > 0,
+            maximum >= minimum
+        else {
             replaceGenericTarget(depth: nil)
             return
         }
@@ -847,27 +839,35 @@ private struct CustomRoutineStepEditor: View {
     }
 }
 
-/// Keeps each optional group’s toggle inside its own touch target in a shared List row.
-private struct InlineEditorDisclosureStyle: DisclosureGroupStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Button {
-                withAnimation { configuration.isExpanded.toggle() }
-            } label: {
-                HStack {
-                    configuration.label
-                    Spacer()
-                    Image(systemName: configuration.isExpanded ? "chevron.down" : "chevron.right")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .frame(minHeight: 44)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            if configuration.isExpanded {
-                configuration.content
-            }
+/// Gives text inputs a persistent label and a visible editing surface.
+private struct CustomRoutineField<Content: View>: View {
+    let title: String
+    @ViewBuilder let content: Content
+
+    init(_ title: String, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title).font(.subheadline.weight(.semibold))
+            content.modifier(CustomRoutineInputStyle())
         }
+    }
+}
+
+private struct CustomRoutineInputStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .frame(minHeight: 44)
+            .background(Color(.systemGray6), in: RoundedRectangle(cornerRadius: 8))
+            .overlay {
+                RoundedRectangle(cornerRadius: 8)
+                    .strokeBorder(.secondary.opacity(0.18), lineWidth: 1)
+            }
     }
 }
 
