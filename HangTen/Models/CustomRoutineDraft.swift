@@ -371,15 +371,17 @@ enum CustomRoutineBoardPreview {
     }
 }
 
-/// One reorderable editor row, containing an ungrouped step or an entire set.
-enum CustomRoutineEditorItem: Equatable, Identifiable {
+/// One reorderable editor row, containing a step, a complete set, or a circuit.
+indirect enum CustomRoutineEditorItem: Equatable, Identifiable {
     case step(CustomRoutineStepDraft)
     case set(CustomRoutineSet, steps: [CustomRoutineStepDraft])
+    case circuit(CustomRoutineCircuit, items: [CustomRoutineEditorItem])
 
     var id: String {
         switch self {
         case let .step(step): "step.\(step.id)"
         case let .set(set, _): "set.\(set.id)"
+        case let .circuit(circuit, _): "circuit.\(circuit.id)"
         }
     }
 
@@ -387,6 +389,7 @@ enum CustomRoutineEditorItem: Equatable, Identifiable {
         switch self {
         case let .step(step): [step.id]
         case let .set(_, steps): steps.map(\.id)
+        case let .circuit(_, items): items.flatMap(\.stepIDs)
         }
     }
 }
@@ -402,6 +405,7 @@ struct CustomRoutineDraft: Equatable {
     var tagsText: String
     var steps: [CustomRoutineStepDraft]
     var sets: [CustomRoutineSet]
+    var circuits: [CustomRoutineCircuit]
 
     init(createWith targetMode: CustomRoutineTargetMode) {
         self.init(
@@ -422,6 +426,7 @@ struct CustomRoutineDraft: Equatable {
         tagsText = ""
         steps = []
         sets = []
+        circuits = []
     }
 
     init(duplicate definition: CustomRoutineDefinition) {
@@ -456,6 +461,7 @@ struct CustomRoutineDraft: Equatable {
         tagsText = definition.tags.joined(separator: ", ")
         steps = definition.steps.map(Self.stepDraft(from:))
         sets = definition.sets
+        circuits = definition.circuits
     }
 
     /// Adds to the selected set, defaulting to the last visible set or a new once-only set.
@@ -468,12 +474,29 @@ struct CustomRoutineDraft: Equatable {
 
     /// Starts a separate once-only set with its first editable step.
     @discardableResult
-    mutating func addSet() -> CustomRoutineSet {
+    mutating func addSet(to circuitID: String? = nil) -> CustomRoutineSet {
         let step = Self.newStep()
         let set = CustomRoutineSet(stepIDs: [step.id], repeatCount: 1)
-        steps.append(step)
+        if let circuitID {
+            guard let circuitIndex = circuits.firstIndex(where: { $0.id == circuitID }),
+                  let range = circuits[circuitIndex].stepRange(in: sets, orderedStepIDs: steps.map(\.id))
+            else { return set }
+            steps.insert(step, at: range.upperBound)
+            circuits[circuitIndex].setIDs.append(set.id)
+        } else {
+            steps.append(step)
+        }
         sets.append(set)
         return set
+    }
+
+    /// Starts an independently repeated circuit with one once-only editable set.
+    @discardableResult
+    mutating func addCircuit() -> CustomRoutineCircuit {
+        let set = addSet()
+        let circuit = CustomRoutineCircuit(setIDs: [set.id])
+        circuits.append(circuit)
+        return circuit
     }
 
     /// Adds one-run sets for unused consecutive ranges in a planner copy, retaining existing repeats.
@@ -592,7 +615,17 @@ struct CustomRoutineDraft: Equatable {
         var items: [CustomRoutineEditorItem] = []
         var index = 0
         while index < steps.count {
-            if let set = sets.first(where: {
+            if let circuit = circuits.first(where: {
+                $0.stepRange(in: sets, orderedStepIDs: stepIDs)?.lowerBound == index
+            }), let range = circuit.stepRange(in: sets, orderedStepIDs: stepIDs) {
+                let children: [CustomRoutineEditorItem] = circuit.setIDs.compactMap { setID in
+                    guard let set = sets.first(where: { $0.id == setID }),
+                          let setRange = set.range(in: stepIDs) else { return nil }
+                    return .set(set, steps: Array(steps[setRange]))
+                }
+                items.append(.circuit(circuit, items: children))
+                index = range.upperBound
+            } else if let set = sets.first(where: {
                 $0.range(in: stepIDs)?.lowerBound == index
             }), let range = set.range(in: stepIDs) {
                 items.append(.set(set, steps: Array(steps[range])))
@@ -633,12 +666,19 @@ struct CustomRoutineDraft: Equatable {
             set.stepIDs.removeAll { !remainingIDs.contains($0) }
             return set.stepIDs.isEmpty ? nil : set
         }
+        pruneCircuits()
     }
 
     /// Moves a selected member's complete set and avoids splitting another set at insertion.
     mutating func moveSteps(from offsets: IndexSet, to destination: Int) {
         let stepIDs = steps.map(\.id)
         var movingOffsets = Set(offsets.filter { steps.indices.contains($0) })
+        for circuit in circuits {
+            if let range = circuit.stepRange(in: sets, orderedStepIDs: stepIDs),
+               !movingOffsets.isDisjoint(with: range) {
+                movingOffsets.formUnion(range)
+            }
+        }
         // A set is one sequence: moving any member moves the whole range.
         for set in sets {
             if let range = set.range(in: stepIDs), !movingOffsets.isDisjoint(with: range) {
@@ -656,6 +696,12 @@ struct CustomRoutineDraft: Equatable {
         }
 
         var boundedDestination = min(max(destination, 0), stepIDs.count)
+        for circuit in circuits {
+            if let range = circuit.stepRange(in: sets, orderedStepIDs: stepIDs),
+               boundedDestination > range.lowerBound, boundedDestination < range.upperBound {
+                boundedDestination = destination > sourceOffsets[0] ? range.upperBound : range.lowerBound
+            }
+        }
         for set in sets {
             if let range = set.range(in: stepIDs),
                boundedDestination > range.lowerBound, boundedDestination < range.upperBound {
@@ -699,6 +745,30 @@ struct CustomRoutineDraft: Equatable {
     /// Ungroups the set while retaining all authored steps and their edits.
     mutating func removeSet(id: String) {
         sets.removeAll { $0.id == id }
+        pruneCircuits()
+    }
+
+    /// Retains invalid round inputs for inline feedback while rejecting broken membership.
+    mutating func updateCircuit(_ circuit: CustomRoutineCircuit) {
+        guard circuit.stepRange(in: sets, orderedStepIDs: steps.map(\.id)) != nil,
+              circuits.filter({ $0.id != circuit.id }).allSatisfy({
+                  Set($0.setIDs).isDisjoint(with: circuit.setIDs)
+              }) else { return }
+        if let index = circuits.firstIndex(where: { $0.id == circuit.id }) {
+            circuits[index] = circuit
+        } else {
+            circuits.append(circuit)
+        }
+    }
+
+    private mutating func pruneCircuits() {
+        let remainingSetIDs = Set(sets.map(\.id))
+        let orderedStepIDs = steps.map(\.id)
+        circuits = circuits.compactMap { circuit in
+            var circuit = circuit
+            circuit.setIDs.removeAll { !remainingSetIDs.contains($0) }
+            return circuit.stepRange(in: sets, orderedStepIDs: orderedStepIDs) == nil ? nil : circuit
+        }
     }
 
     /// Retargets only unsaved drafts, preserving their identity and sets while filtering incompatible
@@ -721,6 +791,7 @@ struct CustomRoutineDraft: Equatable {
         retargeted.category = category
         retargeted.tagsText = tagsText
         retargeted.sets = sets
+        retargeted.circuits = circuits
         retargeted.steps = steps.map { step in
             var step = step
             step.targets = Self.compatibleTargets(
@@ -745,7 +816,8 @@ struct CustomRoutineDraft: Equatable {
             tags: CustomRoutineTagNormalizer.normalizedTags(from: tagsText),
             targetMode: targetMode,
             steps: steps.map(Self.stepDefinition(from:)),
-            sets: sets
+            sets: sets,
+            circuits: circuits
         )
     }
 

@@ -92,6 +92,43 @@ struct CustomRoutineSet: Codable, Hashable, Identifiable {
     }
 }
 
+/// Consecutive sets repeated together, with optional recovery between complete rounds.
+struct CustomRoutineCircuit: Codable, Hashable, Identifiable {
+    static let supportedCounts = 1...100
+
+    let id: String
+    var setIDs: [String]
+    var repeatCount: Int
+    var restBetweenRounds: TimeInterval
+
+    init(
+        id: String = UUID().uuidString,
+        setIDs: [String],
+        repeatCount: Int = 1,
+        restBetweenRounds: TimeInterval = 0
+    ) {
+        self.id = id
+        self.setIDs = setIDs
+        self.repeatCount = repeatCount
+        self.restBetweenRounds = restBetweenRounds
+    }
+
+    /// Set membership must follow authored step order without gaps or partial sets.
+    func stepRange(in sets: [CustomRoutineSet], orderedStepIDs: [String]) -> Range<Int>? {
+        guard !setIDs.isEmpty, Set(setIDs).count == setIDs.count else { return nil }
+        var ranges: [Range<Int>] = []
+        for setID in setIDs {
+            let matches = sets.filter { $0.id == setID }
+            guard matches.count == 1,
+                  let range = matches[0].range(in: orderedStepIDs) else { return nil }
+            if let previous = ranges.last, previous.upperBound != range.lowerBound { return nil }
+            ranges.append(range)
+        }
+        guard let first = ranges.first, let last = ranges.last else { return nil }
+        return first.lowerBound..<last.upperBound
+    }
+}
+
 /// An editable routine whose steps remain unexpanded until workout resolution.
 struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
     let id: String
@@ -103,6 +140,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
     let targetMode: CustomRoutineTargetMode
     let steps: [WorkoutStepDefinition]
     let sets: [CustomRoutineSet]
+    let circuits: [CustomRoutineCircuit]
 
     private enum CodingKeys: String, CodingKey {
         case id
@@ -114,6 +152,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         case targetMode
         case steps
         case sets
+        case circuits
         case legacySets = "repeatGroups"
     }
 
@@ -127,7 +166,8 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         tags: [String],
         targetMode: CustomRoutineTargetMode,
         steps: [WorkoutStepDefinition],
-        sets: [CustomRoutineSet] = []
+        sets: [CustomRoutineSet] = [],
+        circuits: [CustomRoutineCircuit] = []
     ) {
         self.id = id
         self.title = title
@@ -138,6 +178,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         self.targetMode = targetMode
         self.steps = steps
         self.sets = sets
+        self.circuits = circuits
     }
 
     /// Prefers current set data and falls back to the legacy repeatGroups field.
@@ -154,6 +195,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         sets = try container.decodeIfPresent([CustomRoutineSet].self, forKey: .sets)
             ?? container.decodeIfPresent([CustomRoutineSet].self, forKey: .legacySets)
             ?? []
+        circuits = try container.decodeIfPresent([CustomRoutineCircuit].self, forKey: .circuits) ?? []
     }
 
     /// Saves authored steps and set metadata using only the current sets field.
@@ -168,6 +210,7 @@ struct CustomRoutineDefinition: Codable, Hashable, Identifiable {
         try container.encode(targetMode, forKey: .targetMode)
         try container.encode(steps, forKey: .steps)
         try container.encode(sets, forKey: .sets)
+        try container.encode(circuits, forKey: .circuits)
     }
 }
 
@@ -203,6 +246,11 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case invalidSetRepeatCount(setIndex: Int)
     case invalidSetSteps(setIndex: Int)
     case overlappingSetSteps(setIndex: Int)
+    case duplicateCircuitID(circuitIndex: Int)
+    case invalidCircuitRepeatCount(circuitIndex: Int)
+    case invalidCircuitRest(circuitIndex: Int)
+    case invalidCircuitSets(circuitIndex: Int)
+    case overlappingCircuitSets(circuitIndex: Int)
     case invalidDuration(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
     case invalidHandUseSide(stepIndex: Int)
@@ -242,6 +290,7 @@ enum CustomRoutineValidator {
             issues.append(issue)
         }
         issues += setIssues(for: definition)
+        issues += circuitIssues(for: definition)
 
         let boards: [BoardRevision]
         switch definition.targetMode {
@@ -399,6 +448,33 @@ enum CustomRoutineValidator {
                 issues.append(.overlappingSetSteps(setIndex: index))
             }
             usedStepIDs.formUnion(set.stepIDs)
+        }
+        return issues
+    }
+
+    /// Reports malformed circuit membership and independently validates its round controls.
+    static func circuitIssues(for definition: CustomRoutineDefinition) -> [CustomRoutineValidationIssue] {
+        var issues: [CustomRoutineValidationIssue] = []
+        var circuitIDs = Set<String>()
+        var usedSetIDs = Set<String>()
+        let stepIDs = definition.steps.map(\.id)
+        for (index, circuit) in definition.circuits.enumerated() {
+            if !circuitIDs.insert(circuit.id).inserted {
+                issues.append(.duplicateCircuitID(circuitIndex: index))
+            }
+            if !CustomRoutineCircuit.supportedCounts.contains(circuit.repeatCount) {
+                issues.append(.invalidCircuitRepeatCount(circuitIndex: index))
+            }
+            if !circuit.restBetweenRounds.isFinite || circuit.restBetweenRounds < 0 {
+                issues.append(.invalidCircuitRest(circuitIndex: index))
+            }
+            if circuit.stepRange(in: definition.sets, orderedStepIDs: stepIDs) == nil {
+                issues.append(.invalidCircuitSets(circuitIndex: index))
+            }
+            if !usedSetIDs.isDisjoint(with: circuit.setIDs) {
+                issues.append(.overlappingCircuitSets(circuitIndex: index))
+            }
+            usedSetIDs.formUnion(circuit.setIDs)
         }
         return issues
     }
@@ -637,6 +713,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
         let metadata = Self.metadata(for: definition)
         var blocks: [WorkoutBlockDefinition] = []
         var references: [WorkoutBlockReference] = []
+        var ranges: [Range<Int>] = []
         let stepIDs = definition.steps.map(\.id)
         var index = 0
         while index < definition.steps.count {
@@ -648,7 +725,106 @@ final class CustomRoutineStore: CustomRoutineStoring {
             )
             blocks.append(block)
             references.append(WorkoutBlockReference(blockID: block.id, repeatCount: set?.repeatCount ?? 1))
+            ranges.append(index..<end)
             index = end
+        }
+        if !definition.circuits.isEmpty {
+            let authoredBlocks = blocks
+            let authoredReferences = references
+            references = []
+            var occupiedIDs = Set<String>()
+            for (block, reference) in zip(authoredBlocks, authoredReferences) {
+                for repetition in 0..<reference.repeatCount {
+                    for (offset, step) in block.steps.enumerated() {
+                        let id = reference.resolvedStepID(
+                            for: step, index: offset, repetition: repetition, patternCount: block.steps.count
+                        )
+                        let canonical = WorkoutStepNormalizer.materializingImplicitSegments(step.resolvedStep(id: id))
+                        occupiedIDs.formUnion(try WorkoutStepNormalizer.expand(canonical).map(\.id))
+                    }
+                }
+            }
+
+            // Keep the shared resolver responsible for segment normalization, numbering,
+            // timing and set repeats. Circuit rounds only repeat its ordered references.
+            func scopedReference(
+                _ reference: WorkoutBlockReference,
+                block: WorkoutBlockDefinition,
+                scope: String
+            ) throws -> WorkoutBlockReference {
+                var scopedIDs: [String] = []
+                for (offset, step) in block.steps.enumerated() {
+                    let base = "\(scope).step-\(offset + 1)"
+                    var candidate = base
+                    var attempt = 0
+                    while true {
+                        var emittedIDs = Set<String>()
+                        for repetition in 0..<reference.repeatCount {
+                            let id = reference.repeatCount > 1 ? "\(candidate)-\(repetition + 1)" : candidate
+                            let canonical = WorkoutStepNormalizer.materializingImplicitSegments(step.resolvedStep(id: id))
+                            emittedIDs.formUnion(try WorkoutStepNormalizer.expand(canonical).map(\.id))
+                        }
+                        if occupiedIDs.isDisjoint(with: emittedIDs) {
+                            occupiedIDs.formUnion(emittedIDs)
+                            scopedIDs.append(candidate)
+                            break
+                        }
+                        attempt += 1
+                        candidate = "\(base).copy-\(attempt)"
+                    }
+                }
+                return WorkoutBlockReference(
+                    blockID: reference.blockID, stepIDs: scopedIDs, repeatCount: reference.repeatCount
+                )
+            }
+
+            var blockIndex = 0
+            while blockIndex < authoredBlocks.count {
+                guard let circuitIndex = definition.circuits.firstIndex(where: {
+                    $0.stepRange(in: definition.sets, orderedStepIDs: stepIDs)?.lowerBound == ranges[blockIndex].lowerBound
+                }) else {
+                    references.append(authoredReferences[blockIndex])
+                    blockIndex += 1
+                    continue
+                }
+                let circuit = definition.circuits[circuitIndex]
+                let circuitRange = circuit.stepRange(in: definition.sets, orderedStepIDs: stepIDs)!
+                let firstBlock = blockIndex
+                while blockIndex < ranges.count, ranges[blockIndex].upperBound <= circuitRange.upperBound {
+                    blockIndex += 1
+                }
+                let recoveryBlock: WorkoutBlockDefinition?
+                if circuit.repeatCount > 1, circuit.restBetweenRounds > 0 {
+                    let recovery = WorkoutBlockDefinition(
+                        id: "\(definition.id).circuit-\(circuitIndex + 1).recovery",
+                        steps: [WorkoutStepDefinition(
+                            id: "\(definition.id).circuit-\(circuitIndex + 1).rest",
+                            title: "Rest between rounds", instruction: "", accessory: "",
+                            duration: circuit.restBetweenRounds, phase: .rest,
+                            segments: [.init(kind: .rest, target: nil, timing: .fixed, duration: circuit.restBetweenRounds)]
+                        )]
+                    )
+                    blocks.append(recovery)
+                    recoveryBlock = recovery
+                } else {
+                    recoveryBlock = nil
+                }
+                for round in 0..<circuit.repeatCount {
+                    let scope = "\(definition.id).circuit-\(circuitIndex + 1).round-\(round + 1)"
+                    for member in firstBlock..<blockIndex {
+                        let reference = authoredReferences[member]
+                        references.append(circuit.repeatCount == 1 ? reference : try scopedReference(
+                            reference, block: authoredBlocks[member], scope: "\(scope).block-\(member)"
+                        ))
+                    }
+                    if round < circuit.repeatCount - 1, let recoveryBlock {
+                        references.append(try scopedReference(
+                            WorkoutBlockReference(blockID: recoveryBlock.id),
+                            block: recoveryBlock, scope: "\(scope).recovery"
+                        ))
+                    }
+                }
+            }
         }
         let planDefinition = PlanDefinition(
             id: definition.id,
@@ -790,7 +966,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                         stepIDs: set.stepIDs.flatMap { expandedIDsBySourceID[$0] ?? [] },
                         repeatCount: set.repeatCount
                     )
-                }
+                },
+                circuits: normalized.circuits
             )
         )
         let issues = CustomRoutineValidator.issues(
@@ -822,7 +999,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 }
                 return definition.targetMode.isBoardSpecific ? step : step.strippingExactContactIDs()
             },
-            sets: definition.sets
+            sets: definition.sets,
+            circuits: definition.circuits
         )
     }
 
