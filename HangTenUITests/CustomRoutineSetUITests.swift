@@ -12,6 +12,68 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    /// The first edit presents its saved draft, and each reopening loads current persisted values.
+    func testEditorFirstPresentationCancelAndSaveReopen() {
+        let originalName = "Modal review"
+        let savedName = "Edited modal"
+        let app = launchEditor(name: originalName)
+        addStep(title: "Hang", rest: false, in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: originalName, in: app)
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.value as? String, originalName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
+        capture(app, name: "First edit presents the saved routine")
+        replace("Draft edit", identifier: "customRoutine.name", in: app)
+        XCTAssertEqual(name.value as? String, "Draft edit")
+        app.navigationBars["Edit routine"].buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        XCTAssertEqual(name.value as? String, originalName)
+        replace(savedName, identifier: "customRoutine.name", in: app)
+        XCTAssertEqual(name.value as? String, savedName)
+        tap("customRoutine.save", in: app)
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts[savedName].firstMatch.waitForExistence(timeout: 5))
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        XCTAssertEqual(name.value as? String, savedName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        capture(app, name: "Reopened edit loads the latest saved routine")
+    }
+
+    /// Duplicate also presents a populated draft as the first sheet opened from the plan screen.
+    func testDuplicateFirstPresentationHasPopulatedDraft() {
+        let sourceName = "Duplicate presentation review"
+        let app = launchEditor(name: sourceName)
+        addStep(title: "Hang", rest: false, in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: sourceName, in: app)
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Duplicate"].tap()
+        XCTAssertTrue(app.navigationBars["Create routine"].waitForExistence(timeout: 10))
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.value as? String, sourceName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
+        capture(app, name: "First duplicate presents the source routine draft")
+        app.navigationBars["Create routine"].buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+    }
+
     /// Checks automatic membership, persistence and inline child editing without extra set actions.
     func testSetSavesReopensAndEditsChildInline() {
         let app = launchEditor(name: "Set review")
@@ -276,8 +338,37 @@ final class CustomRoutineSetUITests: XCTestCase {
         let running = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Pause"), object: primary)
         XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 20), .completed)
         primary.tap()
+        let paused = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Resume"), object: primary)
+        XCTAssertEqual(XCTWaiter.wait(for: [paused], timeout: 20), .completed)
         let picker = app.buttons["workout.routinePicker"]
+        tap("workout.routinePicker", in: app)
+        XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+
+        // Slow automation can advance the short opening intervals before Pause.
+        // Seek back to the first interval while paused before inspecting circuit boundaries.
+        let firstStep = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+            "workout.step.", "Step 1, "
+        )).firstMatch
+        revealWorkoutStep(firstStep, in: app)
+        if firstStep.label.contains(", current step") {
+            // The current row does not seek, so move away before resetting its timer.
+            let secondStep = app.buttons.matching(NSPredicate(
+                format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+                "workout.step.", "Step 2, "
+            )).firstMatch
+            revealWorkoutStep(secondStep, in: app)
+            secondStep.tap()
+            XCTAssertTrue(app.navigationBars["Routine"].waitForNonExistence(timeout: 5))
+            tap("workout.routinePicker", in: app)
+            XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+            revealWorkoutStep(firstStep, in: app)
+        }
+        firstStep.tap()
+        XCTAssertTrue(app.navigationBars["Routine"].waitForNonExistence(timeout: 5))
+        XCTAssertEqual(primary.label, "Resume")
         XCTAssertEqual(picker.label, "Step 1 of 38")
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "00:07")
         tap("workout.routinePicker", in: app)
         XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
 
@@ -502,15 +593,13 @@ final class CustomRoutineSetUITests: XCTestCase {
         target.tap()
     }
 
-    /// Advances through increasing step numbers inside the presented routine sheet.
+    /// Reveals a playback row inside the presented routine sheet without selecting a step.
     private func revealWorkoutStep(_ target: XCUIElement, in app: XCUIApplication) {
         let navigationBar = app.navigationBars["Routine"]
-        let rowPredicate = NSPredicate(format: "identifier BEGINSWITH %@", "workout.step.")
+        // Lazy rows can leave the accessibility query while their scroll view remains presented.
+        let scrollView = app.scrollViews["workout.stepList"]
         for _ in 0..<30 {
-            guard navigationBar.exists,
-                  let scrollView = app.scrollViews.allElementsBoundByIndex.last(where: {
-                      $0.buttons.matching(rowPredicate).firstMatch.exists
-                  }) else {
+            guard navigationBar.exists, scrollView.exists else {
                 capture(app, name: "Routine sheet unavailable while revealing playback step")
                 XCTFail("Routine sheet must remain presented while scrolling its steps")
                 return
@@ -518,22 +607,18 @@ final class CustomRoutineSetUITests: XCTestCase {
             let viewport = scrollView.frame.intersection(app.frame)
             let top = max(viewport.minY, navigationBar.frame.maxY) + 8
             let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
-            if target.exists && target.isHittable,
-               target.frame.minY >= top, target.frame.maxY <= bottom {
-                return
+            if target.exists {
+                let frame = target.frame
+                if target.isHittable, frame.minY >= top, frame.maxY <= bottom {
+                    return
+                }
+                if !frame.isEmpty, frame.minY < top {
+                    scrollView.swipeDown(velocity: .slow)
+                    continue
+                }
             }
-            // Stay inside the sheet's scroll view, in its 20-point blank gutter.
-            // Starting over a row can activate that button and dismiss the picker.
-            let origin = scrollView.coordinate(withNormalizedOffset: .zero)
-            let start = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.8 - scrollView.frame.minY
-            ))
-            let end = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.3 - scrollView.frame.minY
-            ))
-            start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            // Use a native scroll gesture instead of pressing and holding beside step buttons.
+            scrollView.swipeUp(velocity: .slow)
         }
         capture(app, name: "Unavailable playback step")
         let hierarchy = XCTAttachment(string: app.debugDescription)
