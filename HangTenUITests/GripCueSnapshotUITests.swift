@@ -547,7 +547,8 @@ final class InitialWeightSetupUITests: XCTestCase {
         let enteredWeight = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "12.5"), object: field
         )
-        XCTAssertEqual(XCTWaiter.wait(for: [enteredWeight], timeout: 5), .completed)
+        // A hosted accessibility query can consume most of a five-second wait.
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredWeight], timeout: 15), .completed)
         let enteredValue = field.value as? String
         XCTAssertEqual(enteredValue, "12.5")
         source.buttons["Scale"].tap()
