@@ -64,6 +64,7 @@ struct WorkoutStepPickerView: View {
                 }
                 .padding(20)
             }
+            .accessibilityIdentifier("workout.stepList")
             .background(Color.hangBackground)
             .navigationTitle("Routine")
             .navigationBarTitleDisplayMode(.inline)

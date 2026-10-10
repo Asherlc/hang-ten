@@ -593,15 +593,13 @@ final class CustomRoutineSetUITests: XCTestCase {
         target.tap()
     }
 
-    /// Advances through increasing step numbers inside the presented routine sheet.
+    /// Reveals a playback row inside the presented routine sheet without selecting a step.
     private func revealWorkoutStep(_ target: XCUIElement, in app: XCUIApplication) {
         let navigationBar = app.navigationBars["Routine"]
-        let rowPredicate = NSPredicate(format: "identifier BEGINSWITH %@", "workout.step.")
+        // Lazy rows can leave the accessibility query while their scroll view remains presented.
+        let scrollView = app.scrollViews["workout.stepList"]
         for _ in 0..<30 {
-            guard navigationBar.exists,
-                  let scrollView = app.scrollViews.allElementsBoundByIndex.last(where: {
-                      $0.buttons.matching(rowPredicate).firstMatch.exists
-                  }) else {
+            guard navigationBar.exists, scrollView.exists else {
                 capture(app, name: "Routine sheet unavailable while revealing playback step")
                 XCTFail("Routine sheet must remain presented while scrolling its steps")
                 return
@@ -609,22 +607,18 @@ final class CustomRoutineSetUITests: XCTestCase {
             let viewport = scrollView.frame.intersection(app.frame)
             let top = max(viewport.minY, navigationBar.frame.maxY) + 8
             let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
-            if target.exists && target.isHittable,
-               target.frame.minY >= top, target.frame.maxY <= bottom {
-                return
+            if target.exists {
+                let frame = target.frame
+                if target.isHittable, frame.minY >= top, frame.maxY <= bottom {
+                    return
+                }
+                if !frame.isEmpty, frame.minY < top {
+                    scrollView.swipeDown(velocity: .slow)
+                    continue
+                }
             }
-            // Stay inside the sheet's scroll view, in its 20-point blank gutter.
-            // Starting over a row can activate that button and dismiss the picker.
-            let origin = scrollView.coordinate(withNormalizedOffset: .zero)
-            let start = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.8 - scrollView.frame.minY
-            ))
-            let end = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.3 - scrollView.frame.minY
-            ))
-            start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            // Use a native scroll gesture instead of pressing and holding beside step buttons.
+            scrollView.swipeUp(velocity: .slow)
         }
         capture(app, name: "Unavailable playback step")
         let hierarchy = XCTAttachment(string: app.debugDescription)
