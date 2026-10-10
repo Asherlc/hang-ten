@@ -76,7 +76,12 @@ final class CustomRoutineEditorUITests: XCTestCase {
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5),
                       "Correcting the routine name must first focus its text field")
         name.typeText("My routine")
-        XCTAssertEqual(name.value as? String, "My routine")
+        // Text injection can finish before the field publishes the complete value.
+        let enteredName = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "My routine"), object: name
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredName], timeout: 5), .completed,
+                       "The complete typed name must reach the field before checking validation")
         let updated = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label CONTAINS %@ AND NOT label CONTAINS %@",
                                    "Add at least one step.", "A routine name is required."),
