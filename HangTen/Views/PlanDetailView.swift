@@ -61,14 +61,19 @@ private struct PlanHoldSubstitutionInput: Hashable {
     let board: BoardRevision
 }
 
+/// Keeps the draft and sheet identity together so each opening starts with fresh editor state.
+private struct RoutineEditorPresentation: Identifiable {
+    let id = UUID()
+    let draft: CustomRoutineDraft
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
     @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.dismiss) private var dismiss
     let plan: TrainingPlan
-    @State private var editorDraft: CustomRoutineDraft?
-    @State private var isShowingEditor = false
+    @State private var editorPresentation: RoutineEditorPresentation?
     @State private var isShowingDeleteConfirmation = false
     @State private var lifecycleError: String?
     @State private var initialWeightSource = WorkoutInitialWeightSource.untracked
@@ -79,7 +84,7 @@ struct PlanDetailView: View {
     @State private var resolvedMaxHangsInput: MaxHangsEdgeResolutionInput?
     @State private var resolvedMaxHangsPlans: [Double: TrainingPlan] = [:]
     @State private var resolvedSubstitutionInput: PlanHoldSubstitutionInput?
-    @State private var substitutionRequests: [PlanHoldSubstitutionRequest] = []
+    @State private var preparedSubstitutions: PlanHoldSubstitutions.PreparedRequests?
     @State private var substitutionSelections: [PlanHoldSubstitutionRequest.ID: String] = [:]
     @State private var resolvedSessionPlan: TrainingPlan?
 
@@ -112,6 +117,10 @@ struct PlanDetailView: View {
 
     private var substitutionInput: PlanHoldSubstitutionInput? {
         prescribedPlan.map { PlanHoldSubstitutionInput(plan: $0, board: store.board(for: $0)) }
+    }
+
+    private var substitutionRequests: [PlanHoldSubstitutionRequest] {
+        preparedSubstitutions?.requests ?? []
     }
 
     private var currentPlan: TrainingPlan? {
@@ -167,9 +176,9 @@ struct PlanDetailView: View {
             resolvedMaxHangsInput = input
         }
         .onChange(of: substitutionInput, initial: true) { _, input in
-            substitutionRequests = input.map {
-                PlanHoldSubstitutions.requests(for: $0.plan, on: $0.board)
-            } ?? []
+            preparedSubstitutions = input.map {
+                PlanHoldSubstitutions.prepare(for: $0.plan, on: $0.board)
+            }
             substitutionSelections = [:]
             resolvedSubstitutionInput = input
             resolveSubstitutedSession()
@@ -198,10 +207,8 @@ struct PlanDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $isShowingEditor) {
-            if let editorDraft {
-                CustomRoutineEditorView(draft: editorDraft, onSave: store.saveCustomRoutine)
-            }
+        .sheet(item: $editorPresentation) { presentation in
+            CustomRoutineEditorView(draft: presentation.draft, onSave: store.saveCustomRoutine)
         }
         .confirmationDialog(
             "Delete \(currentPlan?.title ?? plan.title)?",
@@ -328,7 +335,7 @@ struct PlanDetailView: View {
             return
         }
         resolvedSessionPlan = PlanHoldSubstitutions.applying(
-            substitutionSelections, to: input.plan, on: input.board
+            substitutionSelections, to: input.plan, on: input.board, prepared: preparedSubstitutions
         )
     }
 
@@ -666,17 +673,20 @@ struct PlanDetailView: View {
         )
     }
 
+    /// Presents an unsaved copy of the resolved routine, reporting duplication errors.
     private func duplicateRoutine() {
         do {
-            editorDraft = CustomRoutineDraft(
-                duplicate: try Self.duplicateDefinition(for: plan, in: store, resolvedPlan: currentPlan)
+            editorPresentation = RoutineEditorPresentation(
+                draft: CustomRoutineDraft(
+                    duplicate: try Self.duplicateDefinition(for: plan, in: store, resolvedPlan: currentPlan)
+                )
             )
-            isShowingEditor = true
         } catch {
             lifecycleError = error.localizedDescription
         }
     }
 
+    /// Loads the latest saved custom routine into a fresh draft, reporting unavailable routines.
     private func editRoutine() {
         guard currentPlan != nil else {
             lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
@@ -686,8 +696,7 @@ struct PlanDetailView: View {
             lifecycleError = "The custom routine could not be found."
             return
         }
-        editorDraft = CustomRoutineDraft(editing: definition)
-        isShowingEditor = true
+        editorPresentation = RoutineEditorPresentation(draft: CustomRoutineDraft(editing: definition))
     }
 
     private func deleteRoutine() {

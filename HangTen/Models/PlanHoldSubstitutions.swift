@@ -25,6 +25,29 @@ struct PlanHoldSubstitutionRequest: Identifiable, Hashable {
 }
 
 enum PlanHoldSubstitutions {
+    /// Retains resolved choices with the complete prescription and board that
+    /// produced them. Only `prepare` can create a snapshot; matching IDs alone
+    /// do not authorize reusing choices after either value changes.
+    struct PreparedRequests: Hashable {
+        fileprivate let plan: TrainingPlan
+        fileprivate let board: BoardRevision
+        let requests: [PlanHoldSubstitutionRequest]
+
+        fileprivate init(plan: TrainingPlan, board: BoardRevision, requests: [PlanHoldSubstitutionRequest]) {
+            self.plan = plan
+            self.board = board
+            self.requests = requests
+        }
+    }
+
+    /// Resolve once when the prescription or board changes, then retain this
+    /// snapshot while the athlete makes explicit substitution choices.
+    static func prepare(for plan: TrainingPlan, on board: BoardRevision) -> PreparedRequests {
+        PreparedRequests(plan: plan, board: board, requests: requests(for: plan, on: board))
+    }
+
+    /// Groups identical missing simultaneous tasks and resolves their available
+    /// alternatives. Supported tasks do not request a substitution.
     static func requests(for plan: TrainingPlan, on board: BoardRevision) -> [PlanHoldSubstitutionRequest] {
         var requests: [PlanHoldSubstitutionRequest] = []
         var indices: [PlanHoldSubstitutionRequest.ID: Int] = [:]
@@ -49,9 +72,16 @@ enum PlanHoldSubstitutions {
         return requests
     }
 
+    /// Returns a session copy only when every missing task has a valid explicit
+    /// choice. A supplied snapshot avoids resolving alternatives again and is
+    /// rejected if the complete prescription or board differs from its context.
+    /// Omitting it prepares current requests for callers that do not retain one.
     static func applying(_ selections: [PlanHoldSubstitutionRequest.ID: PlanHoldSubstitutionOption.ID],
-                         to plan: TrainingPlan, on board: BoardRevision) -> TrainingPlan? {
-        let requests = requests(for: plan, on: board)
+                         to plan: TrainingPlan, on board: BoardRevision,
+                         prepared: PreparedRequests? = nil) -> TrainingPlan? {
+        let prepared = prepared ?? prepare(for: plan, on: board)
+        guard prepared.plan == plan, prepared.board == board else { return nil }
+        let requests = prepared.requests
         let requestIDs = Set(requests.map(\.id))
         guard selections.keys.allSatisfy(requestIDs.contains) else { return nil }
         guard !requests.isEmpty else { return plan }
@@ -270,6 +300,9 @@ enum PlanHoldSubstitutions {
         }
     }
 
+    /// Prescription resolution may tolerate nearby measured depths. A generated
+    /// substitute must describe the resolved contact's exact facts so its label
+    /// and recorded target cannot claim the neighboring candidate's depth.
     private static func matchesFactualFields(_ predicate: PlanContactPredicate, contact: PhysicalContact) -> Bool {
         let factual = factualPredicate(for: contact)
         return predicate.kind == factual.kind && predicate.shape == factual.shape && predicate.depth == factual.depth

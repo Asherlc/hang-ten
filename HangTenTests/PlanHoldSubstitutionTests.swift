@@ -96,6 +96,122 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         XCTAssertNil(PlanHoldSubstitutions.applying([request.id: request.options[0].id], to: missing, on: other))
     }
 
+    func testPreparedRequestsApplySuccessiveExplicitChoicesWithoutChangingTheSource() throws {
+        let board = fixtureBoard(extraContacts: [
+            contact(id: "left-30", name: "30 mm left", depth: 30, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right)
+        ])
+        let source = fixturePlan(steps: [fixtureStep()])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        let request = try XCTUnwrap(prepared.requests.first)
+        for depth in [20, 30] {
+            let option = try XCTUnwrap(request.options.first { $0.label.contains("\(depth) mm left") })
+            let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+                [request.id: option.id], to: source, on: board, prepared: prepared
+            ))
+            XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board)),
+                ["left-\(depth)", "right-\(depth)"])
+            XCTAssertEqual(session.steps[0].duration, 12)
+            XCTAssertEqual(session.steps[0].accessory, "Source accessory.")
+        }
+        XCTAssertEqual(source.steps[0].instruction, "Source instruction.")
+        XCTAssertEqual(source.provenance, .official)
+        XCTAssertNil(source.boardID)
+    }
+
+    func testPreparedRequestsRejectChangedPrescriptionWithTheSamePlanID() throws {
+        let board = fixtureBoard()
+        let source = fixturePlan(steps: [fixtureStep()])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        let request = try XCTUnwrap(prepared.requests.first)
+        let selections = [request.id: try XCTUnwrap(request.options.first).id]
+        var changed = source
+        changed.stepRepeats = [WorkoutStepRepeat(stepRange: 0..<1, repeatCount: 5)]
+
+        XCTAssertNil(PlanHoldSubstitutions.applying(
+            selections, to: changed, on: board, prepared: prepared
+        ))
+        let fresh = PlanHoldSubstitutions.prepare(for: changed, on: board)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            selections, to: changed, on: board, prepared: fresh
+        ))
+        XCTAssertEqual(session.stepRepeats, [WorkoutStepRepeat(stepRange: 0..<1, repeatCount: 5)])
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board)),
+            ["left-20", "right-20"])
+    }
+
+    func testPreparedRequestsRejectChangedBoardFactsWithTheSameBoardAndRevisionIDs() throws {
+        let board = fixtureBoard()
+        let source = fixturePlan(steps: [fixtureStep()])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        let request = try XCTUnwrap(prepared.requests.first)
+        let selections = [request.id: try XCTUnwrap(request.options.first).id]
+        let changed = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "30 mm left", depth: 30, side: .left),
+            contact(id: "right-20", name: "30 mm right", depth: 30, side: .right)
+        ])
+
+        XCTAssertNil(PlanHoldSubstitutions.applying(
+            selections, to: source, on: changed, prepared: prepared
+        ))
+        let fresh = PlanHoldSubstitutions.prepare(for: source, on: changed)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            selections, to: source, on: changed, prepared: fresh
+        ))
+        let targets = try XCTUnwrap(session.steps[0].segments[0].target?.planTasks?.first)
+        XCTAssertEqual(targets.map { $0.target?.depth }, [
+            .measured(.init(minimum: 30, maximum: 30)),
+            .measured(.init(minimum: 30, maximum: 30))
+        ])
+        XCTAssertTrue(session.steps[0].instruction.contains("30 mm left"))
+    }
+
+    func testPreparedCompatibleRequestsCannotBypassChoicesAfterTheBoardChanges() throws {
+        let board = fixtureBoard()
+        let source = fixturePlan(steps: [fixtureStep(target: .tasks([task(depth: 20)]))])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        XCTAssertTrue(prepared.requests.isEmpty)
+        XCTAssertEqual(PlanHoldSubstitutions.applying([:], to: source, on: board, prepared: prepared), source)
+        let changed = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "30 mm left", depth: 30, side: .left),
+            contact(id: "right-20", name: "30 mm right", depth: 30, side: .right)
+        ])
+
+        XCTAssertNil(PlanHoldSubstitutions.applying([:], to: source, on: changed, prepared: prepared))
+        let fresh = PlanHoldSubstitutions.prepare(for: source, on: changed)
+        let request = try XCTUnwrap(fresh.requests.first)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            [request.id: try XCTUnwrap(request.options.first).id], to: source, on: changed, prepared: fresh
+        ))
+        XCTAssertEqual(session.provenance, .adapted)
+        XCTAssertTrue(session.steps[0].instruction.contains("30 mm left"))
+    }
+
+    func testPreparedRequestsStillRequireEveryExplicitValidChoice() throws {
+        let board = fixtureBoard()
+        let source = fixturePlan(steps: [fixtureStep(), fixtureStep(id: "second", target: .tasks([task(depth: 5)]))])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        XCTAssertEqual(prepared.requests.count, 2)
+        let first = try XCTUnwrap(prepared.requests.first)
+        let second = try XCTUnwrap(prepared.requests.last)
+        let firstOption = try XCTUnwrap(first.options.first)
+        let secondOption = try XCTUnwrap(second.options.first)
+        XCTAssertNil(PlanHoldSubstitutions.applying([:], to: source, on: board, prepared: prepared))
+        XCTAssertNil(PlanHoldSubstitutions.applying(
+            [first.id: firstOption.id], to: source, on: board, prepared: prepared
+        ))
+        XCTAssertNil(PlanHoldSubstitutions.applying(
+            [first.id: firstOption.id, second.id: "unknown"], to: source, on: board, prepared: prepared
+        ))
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            [first.id: firstOption.id, second.id: secondOption.id], to: source, on: board, prepared: prepared
+        ))
+        XCTAssertEqual(session.steps.count, 2)
+        for step in session.steps {
+            XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)), ["left-20", "right-20"])
+        }
+    }
+
     func testOneHandedBoardUsesExistingLegacyHandMaterialization() throws {
         let board = fixtureBoard(contacts: [contact(id: "one", name: "20 mm single", depth: 20)], handCapacity: 1)
         let valid = ContactRequirement(kind: .edge, depth: .range(.init(minimum: 20, maximum: 20)), selection: .bilateralPair)
