@@ -33,6 +33,7 @@ HangTen/Models/MotherboardWorkoutPreparation.swift
 HangTen/Models/MotherboardWorkoutRecorder.swift
 HangTen/Models/PitchSixProtocol.swift
 HangTen/Models/PlanFilters.swift
+HangTen/Models/PlanHoldSubstitutions.swift
 HangTen/Models/PlanStorage.swift
 HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
@@ -103,6 +104,7 @@ HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/OrbitPanGestureDelegate.swift
 HangTen/Views/PlanDetailView.swift
 HangTen/Views/PlanFlowPresentation.swift
+HangTen/Views/PlanHoldSubstitutionCard.swift
 HangTen/Views/PlansView.swift
 HangTen/Views/ReportProblemView.swift
 HangTen/Views/RootView.swift
