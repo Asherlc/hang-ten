@@ -56,6 +56,11 @@ private struct MaxHangsEdgeResolutionInput: Hashable {
     let board: BoardRevision
 }
 
+private struct PlanHoldSubstitutionInput: Hashable {
+    let plan: TrainingPlan
+    let board: BoardRevision
+}
+
 /// Keeps the draft and sheet identity together so each opening starts with fresh editor state.
 private struct RoutineEditorPresentation: Identifiable {
     let id = UUID()
@@ -78,6 +83,10 @@ struct PlanDetailView: View {
     @State private var selectedMaxHangsDepth: Double?
     @State private var resolvedMaxHangsInput: MaxHangsEdgeResolutionInput?
     @State private var resolvedMaxHangsPlans: [Double: TrainingPlan] = [:]
+    @State private var resolvedSubstitutionInput: PlanHoldSubstitutionInput?
+    @State private var preparedSubstitutions: PlanHoldSubstitutions.PreparedRequests?
+    @State private var substitutionSelections: [PlanHoldSubstitutionRequest.ID: String] = [:]
+    @State private var resolvedSessionPlan: TrainingPlan?
 
     private var basePlan: TrainingPlan? {
         PlanDetailPlanResolver.resolve(
@@ -96,14 +105,27 @@ struct PlanDetailView: View {
         return resolvedMaxHangsPlans.keys.sorted(by: >)
     }
 
-    private var currentPlan: TrainingPlan? {
+    private var prescribedPlan: TrainingPlan? {
         guard let basePlan else { return nil }
         guard basePlan.id == "research.max-hangs" else { return basePlan }
         guard resolvedMaxHangsInput == maxHangsResolutionInput else { return nil }
         return PlanDetailPlanResolver.maxHangsVariant(
             from: resolvedMaxHangsPlans,
             selectedDepth: selectedMaxHangsDepth
-        )
+        ) ?? basePlan
+    }
+
+    private var substitutionInput: PlanHoldSubstitutionInput? {
+        prescribedPlan.map { PlanHoldSubstitutionInput(plan: $0, board: store.board(for: $0)) }
+    }
+
+    private var substitutionRequests: [PlanHoldSubstitutionRequest] {
+        preparedSubstitutions?.requests ?? []
+    }
+
+    private var currentPlan: TrainingPlan? {
+        guard resolvedSubstitutionInput == substitutionInput else { return prescribedPlan }
+        return resolvedSessionPlan ?? prescribedPlan
     }
 
     @MainActor
@@ -152,6 +174,17 @@ struct PlanDetailView: View {
                 MaxHangsEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
             } ?? [:]
             resolvedMaxHangsInput = input
+        }
+        .onChange(of: substitutionInput, initial: true) { _, input in
+            preparedSubstitutions = input.map {
+                PlanHoldSubstitutions.prepare(for: $0.plan, on: $0.board)
+            }
+            substitutionSelections = [:]
+            resolvedSubstitutionInput = input
+            resolveSubstitutedSession()
+        }
+        .onChange(of: substitutionSelections) { _, _ in
+            resolveSubstitutedSession()
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")
@@ -250,6 +283,14 @@ struct PlanDetailView: View {
                 .hangCard()
             }
 
+            if !substitutionRequests.isEmpty {
+                PlanHoldSubstitutionCard(
+                    requests: substitutionRequests,
+                    selections: $substitutionSelections,
+                    isComplete: resolvedSessionPlan != nil
+                )
+            }
+
             initialWeightSetupCard
 
             switch PlanStartAvailabilityPolicy.availability(
@@ -266,6 +307,7 @@ struct PlanDetailView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .tint(.hangGreenDark)
+                .disabled(resolvedSubstitutionInput != substitutionInput || resolvedSessionPlan == nil)
                 .accessibilityIdentifier("plan.startRoutine")
             case .unavailable(let requirement):
                 VStack(alignment: .leading, spacing: 8) {
@@ -285,6 +327,16 @@ struct PlanDetailView: View {
                 .accessibilityLabel("Routine unavailable. \(requirement)")
             }
         }
+    }
+
+    private func resolveSubstitutedSession() {
+        guard let input = substitutionInput, input == resolvedSubstitutionInput else {
+            resolvedSessionPlan = nil
+            return
+        }
+        resolvedSessionPlan = PlanHoldSubstitutions.applying(
+            substitutionSelections, to: input.plan, on: input.board, prepared: preparedSubstitutions
+        )
     }
 
     private var initialWeightSetupCard: some View {
@@ -454,18 +506,26 @@ struct PlanDetailView: View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first { !$0.isRestStep }
         let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
+        let firstTask = firstStep?.segments.lazy.compactMap { $0.target?.planTasks }.first?.first
+        let previewHandSide: WorkoutSide? = firstTask?.count == 1 && firstTask?.first?.side == nil ? .left : nil
+        let presentationID = WorkoutHighlightResolver.presentationID(
+            for: firstStep, on: board, selectedHandSide: previewHandSide
+        ) ?? board.defaultPresentation.id
+        let resolvedContacts = firstStep.map {
+            WorkoutHighlightResolver.contacts(for: $0, on: board, selectedHandSide: previewHandSide)
+        } ?? []
         // Prefer a pose-backed hold so Dual-style multi-pose boards face the lit contact.
-        let firstStepHold = board.contacts.first { hold in
+        let firstStepHold = (resolvedContacts.isEmpty ? board.contacts : resolvedContacts).first { hold in
             resolvedHoldIDs.contains(hold.id)
                 && board.position(
-                    presentationID: board.defaultPresentation.id,
+                    presentationID: presentationID,
                     containingContactID: hold.id
                 ) != nil
         }
         let firstStepHoldIDs: Set<String> = {
             guard let hold = firstStepHold,
                   let position = board.position(
-                    presentationID: board.defaultPresentation.id,
+                    presentationID: presentationID,
                     containingContactID: hold.id
                   ) else {
                 return resolvedHoldIDs
@@ -484,6 +544,7 @@ struct PlanDetailView: View {
             BoardMapView(
                 board: board,
                 highlightedHoldIDs: firstStepHoldIDs,
+                selectedPresentationID: presentationID,
                 activeHoldID: firstStepHold?.id
             )
                 .padding(.horizontal, 12)

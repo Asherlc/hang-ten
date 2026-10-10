@@ -106,6 +106,7 @@ DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY = "HangTenDebugSimulatorModels"
 CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
     "clavellium-training-block",
     "lattice-mini-bar",
+    "metolius-contact",
     "frictitious-doormount-pro-7",
     "frictitious-megalith",
     "tension-whetstone",

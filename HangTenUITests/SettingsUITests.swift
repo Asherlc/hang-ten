@@ -156,6 +156,7 @@ final class WorkoutChooserUITests: XCTestCase {
         let duration = element(app, "workouts.filter.option.10–under 20 minutes")
         scrollToReach(duration, in: app)
         duration.tap()
+        XCTAssertEqual(duration.value as? String, "Selected")
         let apply = element(app, "workouts.filter.apply")
         XCTAssertTrue(apply.isHittable)
         capture(app, name: "Chooser accessibility text filters")

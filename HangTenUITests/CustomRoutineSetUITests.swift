@@ -258,6 +258,17 @@ final class CustomRoutineSetUITests: XCTestCase {
         changeCount(by: 2, in: app)
         tap("customRoutine.save", in: app)
         openSavedRoutine(named: "Set playback review", in: app)
+        // This generic jug routine needs an explicit substitute on the edge-only board.
+        let substitute = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(substitute.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        tap("plan.substitution.picker.0", in: app)
+        let option = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "plan.substitution.option.0."
+        )).firstMatch
+        XCTAssertTrue(option.waitForExistence(timeout: 5))
+        option.tap()
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         tap("plan.startRoutine", in: app)
         let primary = app.buttons["workout.primaryControl"]
         XCTAssertTrue(primary.waitForExistence(timeout: 20))
@@ -273,7 +284,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         for (index, row) in rows.enumerated() {
             XCTAssertTrue(row.label.contains(index.isMultiple(of: 2) ? "Hang" : "Rest"))
         }
-        reveal(rows[5], in: app)
+        revealWorkoutStep(rows[5], in: app)
         capture(app, name: "Three repetitions expand to six ordered intervals")
         rows[5].tap()
         XCTAssertEqual(picker.label, "Step 6 of 6")
@@ -593,13 +604,13 @@ final class CustomRoutineSetUITests: XCTestCase {
         target.tap()
     }
 
-    /// Reveals a playback row inside the presented routine sheet without selecting a step.
+    /// Reveals a step inside the presented routine sheet.
     private func revealWorkoutStep(_ target: XCUIElement, in app: XCUIApplication) {
         let navigationBar = app.navigationBars["Routine"]
-        // Lazy rows can leave the accessibility query while their scroll view remains presented.
         let scrollView = app.scrollViews["workout.stepList"]
         for _ in 0..<30 {
-            guard navigationBar.exists, scrollView.exists else {
+            guard navigationBar.waitForExistence(timeout: 5),
+                  scrollView.waitForExistence(timeout: 5) else {
                 capture(app, name: "Routine sheet unavailable while revealing playback step")
                 XCTFail("Routine sheet must remain presented while scrolling its steps")
                 return
@@ -607,18 +618,19 @@ final class CustomRoutineSetUITests: XCTestCase {
             let viewport = scrollView.frame.intersection(app.frame)
             let top = max(viewport.minY, navigationBar.frame.maxY) + 8
             let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
-            if target.exists {
-                let frame = target.frame
-                if target.isHittable, frame.minY >= top, frame.maxY <= bottom {
-                    return
-                }
-                if !frame.isEmpty, frame.minY < top {
-                    scrollView.swipeDown(velocity: .slow)
-                    continue
-                }
+            let targetFrame = target.exists ? target.frame : .null
+            if target.exists && target.isHittable,
+               targetFrame.minY >= top, targetFrame.maxY <= bottom {
+                return
             }
-            // Use a native scroll gesture instead of pressing and holding beside step buttons.
-            scrollView.swipeUp(velocity: .slow)
+            // Native swipes cancel row presses; a held gutter drag can select a row.
+            // Recover in either direction if a swipe moves past the target.
+            if targetFrame.height > 0, targetFrame.height.isFinite,
+               targetFrame.minY < top {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
         }
         capture(app, name: "Unavailable playback step")
         let hierarchy = XCTAttachment(string: app.debugDescription)

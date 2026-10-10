@@ -115,9 +115,23 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
         openWorkout(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
-        // Hand/task controls are also mounted during renderer preparation, then
-        // hidden for the initial countdown. Choose the side once work is running.
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        // Cold model preparation can take over a minute on CI. Wait through
+        // preparation and the countdown, then freeze the minute for side selection.
+        let primaryControl = app.buttons["workout.primaryControl"]
+        let running = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                primaryControl.exists && primaryControl.label == "Pause"
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 120), .completed)
+        primaryControl.tap()
+        let paused = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Resume"),
+            object: primaryControl
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [paused], timeout: 10), .completed)
+        XCTAssertEqual(app.buttons["workout.routinePicker"].label, "Step 9 of 10")
         let rightHand = app.buttons["workout.taskHand.right"]
         XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
         rightHand.tap()
@@ -518,9 +532,23 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
                        "Manual tracking must add bodyweight when its switch is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
-        field.tap()
-        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        // Read the draft before focusing; a hosted accessibility query can be slow.
+        let draftCharacterCount = (field.value as? String)?.count ?? 0
+        tapVisibleControl(field, in: app, requireHittable: false)
+        let keyboard = app.keyboards.firstMatch
+        if !keyboard.waitForExistence(timeout: 5) {
+            tapVisibleControl(field, in: app, requireHittable: false)
+        }
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5),
+                      "The manual weight field must show its keyboard before text entry")
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: draftCharacterCount))
         field.typeText("12.5")
+        let enteredWeight = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "12.5"), object: field
+        )
+        // A hosted accessibility query can consume most of a five-second wait.
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredWeight], timeout: 15), .completed)
         let enteredValue = field.value as? String
         XCTAssertEqual(enteredValue, "12.5")
         source.buttons["Scale"].tap()

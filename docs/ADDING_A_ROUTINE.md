@@ -21,7 +21,8 @@ A board-flexible routine names semantic holds such as “Jug,” “Round Sloper
 “Large Edge.” Use `boardID: nil` when the source is board-agnostic, and retain
 every prescribed semantic hand target. `AppStore` lists these plans on every
 board; compatibility is assessed separately, and unresolved targets mark the
-plan “Not on this board.”
+plan “Needs hold substitutes.” The plan detail page offers explicit choices
+from the selected board's factual inventory before the athlete starts.
 
 Catalog resolution checks apply to plans with a declared `boardID`, not every
 board-agnostic routine. Non-custom, source-linked board-agnostic work may record
@@ -165,7 +166,25 @@ The resolver filters factual contacts by the predicate and the step's grip
 metadata, then chooses contacts within that matching set. It does not broaden a
 failed predicate to the closest size or substitute another hold type. Keep the
 source wording and document unresolved compatibility rather than inventing a
-target. The legacy `.selfSelected` work form is restricted to the validator's
+target. `PlanHoldSubstitutions` is a separate athlete-choice flow: it groups
+repeated missing requirements, verifies alternative holds with the same
+resolver, and requires an explicit selection for every missing target. It keeps
+task order, hand use, finger/grip cues, timing, rest, repetitions, and load, while
+changing only the chosen task targets in the session copy. Its choices show the
+actual resolved contact names; they do not claim that another hold is equivalent
+to a manufacturer prescription. The session is marked `adapted` (an existing
+custom routine remains `custom`), and affected instructions identify the chosen
+substitutes separately from the retained original plan text. The source-linked
+catalog and its audit mappings remain the original prescription. Board-specific
+catalog routines remain restricted to their declared board. Requirements with
+no valid alternative remain unavailable.
+Required-hold labels omit internal numeric range bands: some compensate for
+matching tolerance or an audited size inference and are not source-prescribed
+measurements. The original source wording remains in the instructions; substitute
+choices show the selected board's actual measured depths, including effective
+depths for adjustable positions.
+
+The legacy `.selfSelected` work form is restricted to the validator's
 explicit source allowlist and custom plans. Modern `tasks` may contain
 `target: "any"` without that allowlist; this structural permission does not
 establish a source prescription. Justify every athlete-choice target from the
