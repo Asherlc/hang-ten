@@ -111,8 +111,19 @@ final class FreeWorkoutUITests: XCTestCase {
         // The screen-coordinate helper validates visible bounds without asking
         // XCTest for the invalid activation points seen on CI text-field snapshots.
         tapVisibleControl(duration, in: app, requireHittable: false)
+        let keyboard = app.keyboards.firstMatch
+        // Allow one focus re-tap before injecting a single duration value.
+        if !keyboard.waitForExistence(timeout: 5) {
+            tapVisibleControl(duration, in: app, requireHittable: false)
+        }
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5),
+                      "The duration field must show its keyboard before text entry")
         duration.typeText("120")
-        XCTAssertEqual(duration.value as? String, "120")
+        let enteredDuration = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "120"), object: duration
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredDuration], timeout: 5), .completed,
+                       "The complete cancellation-test duration must reach the field")
         // CI can retain a keyboard accessibility element after the onscreen
         // keyboard has disappeared. Only tap the toolbar when its button exists.
         let keyboardDone = app.buttons["freeWorkout.keyboard.done"]
