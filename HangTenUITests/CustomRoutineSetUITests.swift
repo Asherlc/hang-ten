@@ -196,6 +196,17 @@ final class CustomRoutineSetUITests: XCTestCase {
         changeCount(by: 2, in: app)
         tap("customRoutine.save", in: app)
         openSavedRoutine(named: "Set playback review", in: app)
+        // This generic jug routine needs an explicit substitute on the edge-only board.
+        let substitute = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(substitute.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        tap("plan.substitution.picker.0", in: app)
+        let option = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "plan.substitution.option.0."
+        )).firstMatch
+        XCTAssertTrue(option.waitForExistence(timeout: 5))
+        option.tap()
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         tap("plan.startRoutine", in: app)
         let primary = app.buttons["workout.primaryControl"]
         XCTAssertTrue(primary.waitForExistence(timeout: 20))

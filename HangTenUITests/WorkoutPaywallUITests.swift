@@ -246,14 +246,15 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         let field = app.textFields["workout.initialWeight.manualField"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
-        let fieldHittable = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND isHittable == true"),
-            object: field
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [fieldHittable], timeout: 10), .completed)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
         let keyboard = app.keyboards.firstMatch
-        field.tap()
+        let entryScreenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        entryScreenshot.name = "Manual weight field before verified purchase"
+        entryScreenshot.lifetime = .keepAlways
+        add(entryScreenshot)
+        // Hosted accessibility queries can outlast a predicate's wait budget in CI.
+        // Validate the visible coordinate, then require the keyboard and entered value.
+        tapVisibleControl(field, in: app, requireHittable: false, timeout: 30)
         XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "Tapping the manual weight field must present its keyboard")
         field.typeText(
             String(
@@ -262,6 +263,7 @@ final class WorkoutPaywallUITests: XCTestCase {
             )
         )
         field.typeText("12.5")
+        XCTAssertEqual(field.value as? String, "12.5")
         XCTAssertEqual(bodyweight.value as? String, "1")
 
         let start = app.buttons["plan.startRoutine"]
