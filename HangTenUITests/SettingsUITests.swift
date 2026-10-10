@@ -156,17 +156,26 @@ final class WorkoutChooserUITests: XCTestCase {
         let duration = element(app, "workouts.filter.option.10–under 20 minutes")
         scrollToReach(duration, in: app)
         duration.tap()
+        XCTAssertEqual(duration.value as? String, "Selected")
         let apply = element(app, "workouts.filter.apply")
         XCTAssertTrue(apply.isHittable)
         capture(app, name: "Chooser accessibility text filters")
         apply.tap()
-        XCTAssertTrue(element(app, "workouts.removeFilter.10–under 20 minutes").waitForExistence(timeout: 5))
+        let appliedDuration = element(app, "workouts.removeFilter.10–under 20 minutes")
+        // Applying filters retains the results list's previous scroll position.
+        scrollToReach(appliedDuration, in: app, towardTop: true)
+        XCTAssertTrue(appliedDuration.waitForExistence(timeout: 5))
+        capture(app, name: "Chooser accessibility text applied filter")
     }
 
-    private func scrollToReach(_ target: XCUIElement, in app: XCUIApplication) {
+    private func scrollToReach(_ target: XCUIElement, in app: XCUIApplication, towardTop: Bool = false) {
         for _ in 0..<8 {
             if target.exists && target.isHittable { break }
-            app.swipeUp()
+            if towardTop {
+                app.swipeDown()
+            } else {
+                app.swipeUp()
+            }
         }
         XCTAssertTrue(target.exists && target.isHittable)
     }

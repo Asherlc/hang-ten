@@ -222,7 +222,7 @@ final class CustomRoutineSetUITests: XCTestCase {
         for (index, row) in rows.enumerated() {
             XCTAssertTrue(row.label.contains(index.isMultiple(of: 2) ? "Hang" : "Rest"))
         }
-        reveal(rows[5], in: app)
+        revealWorkoutStep(rows[5], in: app)
         capture(app, name: "Three repetitions expand to six ordered intervals")
         rows[5].tap()
         XCTAssertEqual(picker.label, "Step 6 of 6")
@@ -513,15 +513,13 @@ final class CustomRoutineSetUITests: XCTestCase {
         target.tap()
     }
 
-    /// Advances through increasing step numbers inside the presented routine sheet.
+    /// Reveals a step inside the presented routine sheet.
     private func revealWorkoutStep(_ target: XCUIElement, in app: XCUIApplication) {
         let navigationBar = app.navigationBars["Routine"]
-        let rowPredicate = NSPredicate(format: "identifier BEGINSWITH %@", "workout.step.")
+        let scrollView = app.scrollViews["workout.routineSteps"]
         for _ in 0..<30 {
-            guard navigationBar.exists,
-                  let scrollView = app.scrollViews.allElementsBoundByIndex.last(where: {
-                      $0.buttons.matching(rowPredicate).firstMatch.exists
-                  }) else {
+            guard navigationBar.waitForExistence(timeout: 5),
+                  scrollView.waitForExistence(timeout: 5) else {
                 capture(app, name: "Routine sheet unavailable while revealing playback step")
                 XCTFail("Routine sheet must remain presented while scrolling its steps")
                 return
@@ -529,22 +527,19 @@ final class CustomRoutineSetUITests: XCTestCase {
             let viewport = scrollView.frame.intersection(app.frame)
             let top = max(viewport.minY, navigationBar.frame.maxY) + 8
             let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
+            let targetFrame = target.exists ? target.frame : .null
             if target.exists && target.isHittable,
-               target.frame.minY >= top, target.frame.maxY <= bottom {
+               targetFrame.minY >= top, targetFrame.maxY <= bottom {
                 return
             }
-            // Stay inside the sheet's scroll view, in its 20-point blank gutter.
-            // Starting over a row can activate that button and dismiss the picker.
-            let origin = scrollView.coordinate(withNormalizedOffset: .zero)
-            let start = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.8 - scrollView.frame.minY
-            ))
-            let end = origin.withOffset(CGVector(
-                dx: viewport.minX + 8 - scrollView.frame.minX,
-                dy: top + (bottom - top) * 0.3 - scrollView.frame.minY
-            ))
-            start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.1)
+            // Native swipes cancel row presses; a held gutter drag can select a row.
+            // Recover in either direction if a swipe moves past the target.
+            if targetFrame.height > 0, targetFrame.height.isFinite,
+               targetFrame.minY < top {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
         }
         capture(app, name: "Unavailable playback step")
         let hierarchy = XCTAttachment(string: app.debugDescription)
