@@ -281,9 +281,11 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
             "HANGTEN_REVIEW_STEP": "17",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
         ]
         app.terminate()
         app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        chooseSubstitutesAndStartWorkout(in: app)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 30))
         pause.tap()
@@ -322,9 +324,11 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_PORTRAIT": "1",
             "HANGTEN_REVIEW_STEP": "17",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
         ]
         app.terminate()
         app.open(URL(string: "hangten://plan/research.abrahangs/workout")!)
+        chooseSubstitutesAndStartWorkout(in: app)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 30))
         pause.tap()
@@ -346,6 +350,42 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertGreaterThan(board.frame.intersection(app.frame).width, 30, "The workout board must be visible inside the viewport.")
         XCTAssertGreaterThan(board.frame.intersection(app.frame).height, 30, "The workout board must be visible inside the viewport.")
         addScreenshot(named: "Mini portrait natural Rest board and finger cues")
+    }
+
+    private func chooseSubstitutesAndStartWorkout(in app: XCUIApplication) {
+        let pickerPrefix = "plan.substitution.picker."
+        XCTAssertTrue(app.buttons[pickerPrefix + "0"].waitForExistence(timeout: 30))
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertFalse(start.isEnabled, "Missing holds must require explicit choices before starting.")
+        XCTAssertFalse(app.buttons["Pause"].exists)
+
+        let pickers = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", pickerPrefix))
+            .allElementsBoundByIndex
+        for picker in pickers {
+            revealPlanControl(picker, in: app)
+            let optionPrefix = picker.identifier.replacingOccurrences(
+                of: pickerPrefix, with: "plan.substitution.option."
+            ) + "."
+            picker.tap()
+            let option = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", optionPrefix)).firstMatch
+            XCTAssertTrue(option.waitForExistence(timeout: 5), "This layout fixture needs an available hold substitute.")
+            option.tap()
+        }
+        revealPlanControl(start, in: app)
+        XCTAssertTrue(start.isEnabled)
+        start.tap()
+    }
+
+    private func revealPlanControl(_ control: XCUIElement, in app: XCUIApplication) {
+        for _ in 0..<12 {
+            if control.isHittable { return }
+            let scroll = app.scrollViews.firstMatch
+            // The page margin keeps this gesture outside the board's orbit surface.
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.75))
+            let end = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.98, dy: 0.4))
+            start.press(forDuration: 0.1, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+        }
+        XCTAssertTrue(control.isHittable, "The plan control must be visible: \(control.identifier)")
     }
 
     private func waitForNaturalRest(in app: XCUIApplication) {
