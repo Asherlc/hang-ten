@@ -56,6 +56,7 @@ private struct MaxHangsEdgeResolutionInput: Hashable {
     let board: BoardRevision
 }
 
+/// Keeps the draft and sheet identity together so each opening starts with fresh editor state.
 private struct RoutineEditorPresentation: Identifiable {
     let id = UUID()
     let draft: CustomRoutineDraft
@@ -611,6 +612,7 @@ struct PlanDetailView: View {
         )
     }
 
+    /// Presents an unsaved copy of the resolved routine, reporting duplication errors.
     private func duplicateRoutine() {
         do {
             editorPresentation = RoutineEditorPresentation(
@@ -623,6 +625,7 @@ struct PlanDetailView: View {
         }
     }
 
+    /// Loads the latest saved custom routine into a fresh draft, reporting unavailable routines.
     private func editRoutine() {
         guard currentPlan != nil else {
             lifecycleError = PlanDetailResolutionError.unavailable.localizedDescription
