@@ -12,6 +12,68 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    /// The first edit presents its saved draft, and each reopening loads current persisted values.
+    func testEditorFirstPresentationCancelAndSaveReopen() {
+        let originalName = "Modal review"
+        let savedName = "Edited modal"
+        let app = launchEditor(name: originalName)
+        addStep(title: "Hang", rest: false, in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: originalName, in: app)
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.value as? String, originalName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
+        capture(app, name: "First edit presents the saved routine")
+        replace("Draft edit", identifier: "customRoutine.name", in: app)
+        XCTAssertEqual(name.value as? String, "Draft edit")
+        app.navigationBars["Edit routine"].buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        XCTAssertEqual(name.value as? String, originalName)
+        replace(savedName, identifier: "customRoutine.name", in: app)
+        XCTAssertEqual(name.value as? String, savedName)
+        tap("customRoutine.save", in: app)
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts[savedName].firstMatch.waitForExistence(timeout: 5))
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Edit"].tap()
+        XCTAssertTrue(app.navigationBars["Edit routine"].waitForExistence(timeout: 10))
+        XCTAssertEqual(name.value as? String, savedName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        capture(app, name: "Reopened edit loads the latest saved routine")
+    }
+
+    /// Duplicate also presents a populated draft as the first sheet opened from the plan screen.
+    func testDuplicateFirstPresentationHasPopulatedDraft() {
+        let sourceName = "Duplicate presentation review"
+        let app = launchEditor(name: sourceName)
+        addStep(title: "Hang", rest: false, in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: sourceName, in: app)
+
+        tap("customRoutine.actions", in: app)
+        app.buttons["Duplicate"].tap()
+        XCTAssertTrue(app.navigationBars["Create routine"].waitForExistence(timeout: 10))
+        let name = app.textFields["customRoutine.name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.value as? String, sourceName)
+        XCTAssertTrue(app.buttons["customRoutine.save"].isHittable)
+        XCTAssertTrue(app.buttons["customRoutine.setHeader.1"].exists)
+        capture(app, name: "First duplicate presents the source routine draft")
+        app.navigationBars["Create routine"].buttons["Cancel"].tap()
+        XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 10))
+    }
+
     /// Checks automatic membership, persistence and inline child editing without extra set actions.
     func testSetSavesReopensAndEditsChildInline() {
         let app = launchEditor(name: "Set review")

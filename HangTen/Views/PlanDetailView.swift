@@ -56,14 +56,18 @@ private struct MaxHangsEdgeResolutionInput: Hashable {
     let board: BoardRevision
 }
 
+private struct RoutineEditorPresentation: Identifiable {
+    let id = UUID()
+    let draft: CustomRoutineDraft
+}
+
 struct PlanDetailView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var motherboardBluetoothService: MotherboardBluetoothService
     @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.dismiss) private var dismiss
     let plan: TrainingPlan
-    @State private var editorDraft: CustomRoutineDraft?
-    @State private var isShowingEditor = false
+    @State private var editorPresentation: RoutineEditorPresentation?
     @State private var isShowingDeleteConfirmation = false
     @State private var lifecycleError: String?
     @State private var initialWeightSource = WorkoutInitialWeightSource.untracked
@@ -169,10 +173,8 @@ struct PlanDetailView: View {
                 }
             }
         }
-        .sheet(isPresented: $isShowingEditor) {
-            if let editorDraft {
-                CustomRoutineEditorView(draft: editorDraft, onSave: store.saveCustomRoutine)
-            }
+        .sheet(item: $editorPresentation) { presentation in
+            CustomRoutineEditorView(draft: presentation.draft, onSave: store.saveCustomRoutine)
         }
         .confirmationDialog(
             "Delete \(currentPlan?.title ?? plan.title)?",
@@ -611,10 +613,11 @@ struct PlanDetailView: View {
 
     private func duplicateRoutine() {
         do {
-            editorDraft = CustomRoutineDraft(
-                duplicate: try Self.duplicateDefinition(for: plan, in: store, resolvedPlan: currentPlan)
+            editorPresentation = RoutineEditorPresentation(
+                draft: CustomRoutineDraft(
+                    duplicate: try Self.duplicateDefinition(for: plan, in: store, resolvedPlan: currentPlan)
+                )
             )
-            isShowingEditor = true
         } catch {
             lifecycleError = error.localizedDescription
         }
@@ -629,8 +632,7 @@ struct PlanDetailView: View {
             lifecycleError = "The custom routine could not be found."
             return
         }
-        editorDraft = CustomRoutineDraft(editing: definition)
-        isShowingEditor = true
+        editorPresentation = RoutineEditorPresentation(draft: CustomRoutineDraft(editing: definition))
     }
 
     private func deleteRoutine() {
