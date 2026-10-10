@@ -115,9 +115,23 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
         app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
         openWorkout(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
-        // Hand/task controls are also mounted during renderer preparation, then
-        // hidden for the initial countdown. Choose the side once work is running.
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        // Cold model preparation can take over a minute on CI. Wait through
+        // preparation and the countdown, then freeze the minute for side selection.
+        let primaryControl = app.buttons["workout.primaryControl"]
+        let running = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                primaryControl.exists && primaryControl.label == "Pause"
+            },
+            object: nil
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 120), .completed)
+        primaryControl.tap()
+        let paused = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Resume"),
+            object: primaryControl
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [paused], timeout: 10), .completed)
+        XCTAssertEqual(app.buttons["workout.routinePicker"].label, "Step 9 of 10")
         let rightHand = app.buttons["workout.taskHand.right"]
         XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
         rightHand.tap()

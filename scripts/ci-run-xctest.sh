@@ -244,6 +244,7 @@ if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
   for model in \
     clavellium-training-block \
     lattice-mini-bar \
+    metolius-contact \
     frictitious-doormount-pro-7 \
     frictitious-megalith \
     tension-whetstone \
