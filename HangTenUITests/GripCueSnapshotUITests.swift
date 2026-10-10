@@ -532,9 +532,22 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
                        "Manual tracking must add bodyweight when its switch is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
-        field.tap()
-        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        // Read the draft before focusing; a hosted accessibility query can be slow.
+        let draftCharacterCount = (field.value as? String)?.count ?? 0
+        tapVisibleControl(field, in: app, requireHittable: false)
+        let keyboard = app.keyboards.firstMatch
+        if !keyboard.waitForExistence(timeout: 5) {
+            tapVisibleControl(field, in: app, requireHittable: false)
+        }
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5),
+                      "The manual weight field must show its keyboard before text entry")
+        field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: draftCharacterCount))
         field.typeText("12.5")
+        let enteredWeight = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "12.5"), object: field
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredWeight], timeout: 5), .completed)
         let enteredValue = field.value as? String
         XCTAssertEqual(enteredValue, "12.5")
         source.buttons["Scale"].tap()
