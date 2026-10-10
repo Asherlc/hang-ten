@@ -338,8 +338,37 @@ final class CustomRoutineSetUITests: XCTestCase {
         let running = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Pause"), object: primary)
         XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 20), .completed)
         primary.tap()
+        let paused = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", "Resume"), object: primary)
+        XCTAssertEqual(XCTWaiter.wait(for: [paused], timeout: 20), .completed)
         let picker = app.buttons["workout.routinePicker"]
+        tap("workout.routinePicker", in: app)
+        XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+
+        // Slow automation can advance the short opening intervals before Pause.
+        // Seek back to the first interval while paused before inspecting circuit boundaries.
+        let firstStep = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+            "workout.step.", "Step 1, "
+        )).firstMatch
+        revealWorkoutStep(firstStep, in: app)
+        if firstStep.label.contains(", current step") {
+            // The current row does not seek, so move away before resetting its timer.
+            let secondStep = app.buttons.matching(NSPredicate(
+                format: "identifier BEGINSWITH %@ AND label BEGINSWITH %@",
+                "workout.step.", "Step 2, "
+            )).firstMatch
+            revealWorkoutStep(secondStep, in: app)
+            secondStep.tap()
+            XCTAssertTrue(app.navigationBars["Routine"].waitForNonExistence(timeout: 5))
+            tap("workout.routinePicker", in: app)
+            XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
+            revealWorkoutStep(firstStep, in: app)
+        }
+        firstStep.tap()
+        XCTAssertTrue(app.navigationBars["Routine"].waitForNonExistence(timeout: 5))
+        XCTAssertEqual(primary.label, "Resume")
         XCTAssertEqual(picker.label, "Step 1 of 38")
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "00:07")
         tap("workout.routinePicker", in: app)
         XCTAssertTrue(app.navigationBars["Routine"].waitForExistence(timeout: 5))
 
