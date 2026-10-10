@@ -13,6 +13,7 @@
 		1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */; };
 		89F55463D090314CD394F45A /* WorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 280981D68BAEDAE6071622C2 /* WorkoutView.swift */; };
 		876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */; };
+		0825602202EFF33A13FF6113 /* PlanHoldSubstitutionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3466E475539DA400AD355EB2 /* PlanHoldSubstitutionCard.swift */; };
 		5666BC4BFB710FEDA2BB1488 /* PlanDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D692AE3B1846C8951E234D90 /* PlanDetailView.swift */; };
 		CB707FE2387AC0729033FBAF /* PlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */; };
 		A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */; };
@@ -31,6 +32,7 @@
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
+		C8395706A8CF867C5568979C /* PlanHoldSubstitutions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E56A3EEA8DF91A167E4565A1 /* PlanHoldSubstitutions.swift */; };
 		AA0000000000000000000003 /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000003 /* TrainingModels.swift */; };
 		AA0000000000000000000004 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000004 /* DesignSystem.swift */; };
 		AA0000000000000000000005 /* BoardMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000005 /* BoardMapView.swift */; };
@@ -108,6 +110,7 @@
 		AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000087 /* BoardPackageStoreTests.swift */; };
 		AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */; };
 		AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */; };
+		D17B041F5B0D1C9C2EBFC1A4 /* PlanHoldSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3AF0112B3D0384EBE7FE6B /* PlanHoldSubstitutionTests.swift */; };
 		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000091 /* TrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000091 /* TrainView.swift */; };
 		AA0000000000000000000092 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000092 /* AppSettingsView.swift */; };
@@ -272,6 +275,7 @@
 		DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPresentationContent.swift; sourceTree = "<group>"; };
 		280981D68BAEDAE6071622C2 /* WorkoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutView.swift; sourceTree = "<group>"; };
 		2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSessionState.swift; sourceTree = "<group>"; };
+		3466E475539DA400AD355EB2 /* PlanHoldSubstitutionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanHoldSubstitutionCard.swift; sourceTree = "<group>"; };
 		D692AE3B1846C8951E234D90 /* PlanDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailView.swift; sourceTree = "<group>"; };
 		96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlansView.swift; sourceTree = "<group>"; };
 		A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BoardWoodSurfaceShader.metal; sourceTree = "<group>"; };
@@ -300,6 +304,7 @@
 		AE0000000000000000000017 /* SettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUITests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
+		E56A3EEA8DF91A167E4565A1 /* PlanHoldSubstitutions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanHoldSubstitutions.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
 		7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Models/BoardModelRealityTypes.swift; sourceTree = "<group>"; };
 		BB0000000000000000000004 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
@@ -380,6 +385,7 @@
 		BB0000000000000000000087 /* BoardPackageStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryAudit.swift; sourceTree = "<group>"; };
+		5F3AF0112B3D0384EBE7FE6B /* PlanHoldSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanHoldSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000091 /* TrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000092 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
@@ -659,6 +665,7 @@
 			children = (
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
+				E56A3EEA8DF91A167E4565A1 /* PlanHoldSubstitutions.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
 				7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
@@ -732,6 +739,7 @@
 				DA4FE4FCE8D84C5B733C8CCE /* WorkoutPresentationContent.swift */,
 				280981D68BAEDAE6071622C2 /* WorkoutView.swift */,
 				2CF2C8B2702AF877EC0A9457 /* WorkoutSessionState.swift */,
+				3466E475539DA400AD355EB2 /* PlanHoldSubstitutionCard.swift */,
 				D692AE3B1846C8951E234D90 /* PlanDetailView.swift */,
 				F8BB00000000000000000002 /* PlanFlowPresentation.swift */,
 				96F75E43E3A9E27C57CE4FD4 /* PlansView.swift */,
@@ -795,6 +803,7 @@
 				BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */,
 				BB0000000000000000000046 /* PlanStorageTests.swift */,
 				BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */,
+				5F3AF0112B3D0384EBE7FE6B /* PlanHoldSubstitutionTests.swift */,
 				BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */,
 				BB0000000000000000000050 /* WorkoutStopwatchTests.swift */,
 				BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */,
@@ -1102,6 +1111,7 @@
 			files = (
 				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
+				C8395706A8CF867C5568979C /* PlanHoldSubstitutions.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
@@ -1128,6 +1138,7 @@
 				1FA42E3BA262FD5F860FDD87 /* WorkoutPresentationContent.swift in Sources */,
 				89F55463D090314CD394F45A /* WorkoutView.swift in Sources */,
 				876CF8149B56E504650BEB86 /* WorkoutSessionState.swift in Sources */,
+				0825602202EFF33A13FF6113 /* PlanHoldSubstitutionCard.swift in Sources */,
 				5666BC4BFB710FEDA2BB1488 /* PlanDetailView.swift in Sources */,
 				F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */,
 				CB707FE2387AC0729033FBAF /* PlansView.swift in Sources */,
@@ -1255,6 +1266,7 @@
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
 				AA00000000000000000000A3 /* DeepLinkManagerTests.swift in Sources */,
+				D17B041F5B0D1C9C2EBFC1A4 /* PlanHoldSubstitutionTests.swift in Sources */,
 				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
 				AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */,
 				AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */,

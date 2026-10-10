@@ -10,6 +10,59 @@ final class PlanFlowUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    func testMissingHoldsRequireExplicitSubstitutionsBeforeStarting() {
+        let app = launchPlan("research.max-hangs", boardID: "owl-climb.poker")
+        let picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Choose substitutes"].exists)
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        attachScreenshot(named: "Missing hold substitution choices", app: app)
+
+        picker.tap()
+        let option = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "plan.substitution.option.0.")).firstMatch
+        XCTAssertTrue(option.waitForExistence(timeout: 5))
+        option.tap()
+        XCTAssertTrue(app.staticTexts["Your adapted session"].exists)
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        attachScreenshot(named: "Explicitly selected substitute", app: app)
+
+        picker.tap()
+        app.buttons["Clear substitution"].tap()
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+    }
+
+    func testAdjustableBoardSubstitutesShowTheirEffectiveDepths() {
+        let app = launchPlan("metolius.generic-ten-minute.entry", boardID: "plateau.lifting-edge")
+        let picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        for depth in ["10 mm", "15 mm", "18 mm"] {
+            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", depth)).firstMatch.exists)
+        }
+        attachScreenshot(named: "Adjustable board substitution depths", app: app)
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "10 mm")).firstMatch.tap()
+        XCTAssertTrue(picker.label.contains("10 mm"))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled,
+                       "Choosing one hold must not skip the remaining missing requirements.")
+    }
+
+    func testDeepLinkedPlanWithMissingHoldsOffersSubstitutesBeforeStarting() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0"
+        ]
+        app.terminate()
+        app.open(URL(string: "hangten://plan/research.max-hangs/workout")!)
+
+        XCTAssertTrue(app.buttons["plan.substitution.picker.0"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        XCTAssertFalse(app.buttons["Pause"].exists)
+        attachScreenshot(named: "Deep-linked plan requires substitutions", app: app)
+    }
+
     func testRepeaterPreviewGroupsCyclesAndRetainsExceptionalRecovery() {
         let app = launchPlan("rptc.seven-three-repeaters")
         reveal("Repeat 6 times", in: app)
@@ -78,11 +131,12 @@ final class PlanFlowUITests: XCTestCase {
                          app: app, centering: "Do 1 pull-up on a round sloper.")
     }
 
-    private func launchPlan(_ id: String, landscape: Bool = false) -> XCUIApplication {
+    private func launchPlan(_ id: String, landscape: Bool = false, boardID: String? = nil) -> XCUIApplication {
         XCUIDevice.shared.orientation = landscape ? .landscapeLeft : .portrait
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = id
+        if let boardID { app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = boardID }
         app.launchEnvironment[landscape ? "HANGTEN_REVIEW_LANDSCAPE" : "HANGTEN_REVIEW_PORTRAIT"] = "1"
         app.launch()
         XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 20))

@@ -23,7 +23,7 @@ Release ignores those routes; see the simulator guide for supported variables.
 
 Plans uses native focus browsing, All workouts, and My routines. Focus is
 optional source-audited editorial metadata; unsupported categories and empty
-compatible focus destinations are hidden. See
+focus destinations are hidden. See
 [the chooser classification audit](WORKOUT_CHOOSER_CLASSIFICATION_AUDIT_2026-10-05.md).
 Search preserves catalog order and matches names, descriptions, and displayed
 labels. Results expose actual exercise content separately from training goals.
@@ -295,6 +295,19 @@ plans do not contain contact IDs. Athlete-authored custom routines may select
 exact contacts. Resolution failure does not substitute a hold or broaden a
 predicate. Explicit self-selected work records that choice without an invented
 contact snapshot.
+
+Plan detail offers an explicit session adaptation when a required hold is
+missing. Each choice lists factual contacts on the current board and passes the
+same grip, finger-capacity, hand, and position checks used for work resolution.
+Repeated missing targets share one choice. Start waits until every missing
+target has a valid selection; changing the board or training-edge variant clears
+the choices. The resulting session retains the source link and original
+instructions with a substitution label, preserves interval and task structure,
+and records the actual chosen holds. It does not edit the canonical library or
+claim manufacturer endorsement of the athlete's choices. Plans remain visible
+in focus browsing when substitutions are needed. Workout deep links enter plan
+detail when holds are missing, so they require the same explicit choices before
+launching; compatible deep links retain their direct workout launch.
 
 Resolved work retains board/revision identity, optional model hash, the factual
 requirement or per-hand targets, resolved contact IDs and applicable position.

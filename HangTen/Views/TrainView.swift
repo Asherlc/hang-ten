@@ -97,7 +97,11 @@ struct TrainView: View {
             }
             .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
                 if let plan = deepLinkedWorkoutPlan {
-                    WorkoutAccessGate(plan: plan)
+                    if PlanHoldSubstitutions.requests(for: plan, on: store.board(for: plan)).isEmpty {
+                        WorkoutAccessGate(plan: plan)
+                    } else {
+                        PlanDetailView(plan: plan)
+                    }
                 } else {
                     noCompatiblePlan
                 }

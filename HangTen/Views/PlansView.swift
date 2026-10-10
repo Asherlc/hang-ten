@@ -53,7 +53,6 @@ struct PlansView: View {
         WorkoutFocus.allCases.filter { focus in
             store.plans.contains {
                 store.metadata(for: $0).focus == focus
-                    && !store.isIncompatible($0, on: store.selectedBoard)
             }
         }
     }
@@ -176,7 +175,6 @@ private struct WorkoutBrowserResultsView: View {
             case .myRoutines: store.isCustom(plan)
             case .focus(let focus):
                 store.metadata(for: plan).focus == focus
-                    && !store.isIncompatible(plan, on: store.selectedBoard)
             }
         }
     }
@@ -307,7 +305,7 @@ private struct WorkoutBrowserRow: View {
                     Text("\(plan.browserDurationLabel) · \(plan.level)")
                         .font(.subheadline).foregroundStyle(.secondary)
                     if store.isIncompatible(plan, on: store.selectedBoard) {
-                        Label("Not on this board", systemImage: "exclamationmark.circle")
+                        Label("Needs hold substitutes", systemImage: "arrow.triangle.swap")
                             .font(.caption).foregroundStyle(.secondary)
                     }
                     if !plan.subtitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -478,7 +476,7 @@ private struct PlanCard: View {
             }
 
             if isIncompatible {
-                Label("Missing required holds", systemImage: "exclamationmark.triangle")
+                Label("Needs hold substitutes", systemImage: "arrow.triangle.swap")
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
                     .foregroundStyle(Color.holdActiveDeep)
             }
