@@ -138,7 +138,7 @@ jobs:
             --manifest ".context/$owner-runtime-assets/catalog.json" --check
 
       - name: Upload compiled release catalog
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ steps.owner.outputs.owner }}-release-board-assets-${{ github.run_id }}
           overwrite: true
