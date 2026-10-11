@@ -2,6 +2,220 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineStoreTests: XCTestCase {
+    func testSavedGenericBothHandsMissingEdgeSubstitutesAPairOnCompactII() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let source = savedGenericBothHandsDefinition(depth: 10)
+        let storedBytes = try JSONEncoder().encode(CustomRoutineLibrary(routines: [source]))
+        defaults.set(storedBytes, forKey: CustomRoutineStore.defaultKey)
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [
+            board, mirroredBoard(depth: .init(minimum: 10, maximum: 10))
+        ])
+
+        let plan = try store.plan(for: try XCTUnwrap(store.routines.first))
+        XCTAssertTrue(plan.steps.allSatisfy { $0.workRequirements.first?.selection == .bilateralPair })
+        let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: plan, on: board).first)
+        let option = try XCTUnwrap(request.options.first {
+            $0.label.contains("Left 19 mm edge") && $0.label.contains("Right 19 mm edge")
+        })
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: plan, on: board))
+        XCTAssertEqual(session.provenance, .custom)
+        XCTAssertEqual(session.stepRepeats, plan.stepRepeats)
+        XCTAssertEqual(session.steps.count, 3)
+        for step in session.steps {
+            XCTAssertEqual(step.handUse, .double)
+            XCTAssertEqual(step.side, .both)
+            XCTAssertEqual(step.externalLoadKGF, 3.5)
+            XCTAssertEqual(step.accessory, "My saved note")
+            XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
+                ["edge-19-left", "edge-19-right"])
+        }
+        let work = try WorkoutActivityRecorder().segments(for: session, on: board).filter { $0.kind == .work }
+        XCTAssertEqual(work.count, 3)
+        XCTAssertTrue(work.allSatisfy {
+            Set($0.target?.resolvedContactSnapshot?.contactIDs ?? []) == ["edge-19-left", "edge-19-right"]
+        })
+        XCTAssertEqual(store.routines, [source])
+        XCTAssertEqual(source.steps[0].workRequirements.first?.selection, .single)
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), storedBytes)
+    }
+
+    func testSavedGenericBothHandsSupportedEdgePreviewsAndRecordsAPairOnCompactII() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let source = savedGenericBothHandsDefinition(depth: 19)
+        let storedBytes = try JSONEncoder().encode(CustomRoutineLibrary(routines: [source]))
+        defaults.set(storedBytes, forKey: CustomRoutineStore.defaultKey)
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+
+        let plan = try store.plan(for: try XCTUnwrap(store.routines.first))
+        XCTAssertTrue(PlanHoldSubstitutions.requests(for: plan, on: board).isEmpty)
+        XCTAssertEqual(PlanHoldSubstitutions.applying([:], to: plan, on: board), plan)
+        for step in plan.steps {
+            XCTAssertEqual(step.workRequirements.first?.selection, .bilateralPair)
+            XCTAssertEqual(step.workRequirements.first?.depth, source.steps[0].workRequirements.first?.depth)
+            XCTAssertEqual(step.gripType, source.steps[0].gripType)
+            XCTAssertEqual(step.fingerConfiguration, source.steps[0].fingerConfiguration)
+            XCTAssertEqual(step.instruction, source.steps[0].instruction)
+            XCTAssertEqual(step.duration, source.steps[0].duration)
+            XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
+                ["edge-19-left", "edge-19-right"])
+        }
+        let work = try WorkoutActivityRecorder().segments(for: plan, on: board).filter { $0.kind == .work }
+        XCTAssertEqual(work.count, 3)
+        XCTAssertTrue(work.allSatisfy {
+            Set($0.target?.resolvedContactSnapshot?.contactIDs ?? []) == ["edge-19-left", "edge-19-right"]
+        })
+        XCTAssertEqual(store.routines, [source])
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), storedBytes)
+    }
+
+    func testSavedBoardSpecificBothHandsUnpinnedEdgeUsesAPairOnCompactII() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let source = savedGenericBothHandsDefinition(depth: 19, targetMode: .boardSpecific(boardID: board.id))
+        let storedBytes = try JSONEncoder().encode(CustomRoutineLibrary(routines: [source]))
+        defaults.set(storedBytes, forKey: CustomRoutineStore.defaultKey)
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+
+        let plan = try store.plan(for: try XCTUnwrap(store.routines.first))
+        XCTAssertEqual(plan.boardID, board.id)
+        XCTAssertTrue(plan.steps.allSatisfy { $0.workRequirements.first?.selection == .bilateralPair })
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: plan.steps[0], on: board)),
+            ["edge-19-left", "edge-19-right"])
+        let work = try WorkoutActivityRecorder().segments(for: plan, on: board).filter { $0.kind == .work }
+        XCTAssertEqual(work.count, 3)
+        XCTAssertTrue(work.allSatisfy {
+            Set($0.target?.resolvedContactSnapshot?.contactIDs ?? []) == ["edge-19-left", "edge-19-right"]
+        })
+        XCTAssertEqual(store.routines, [source])
+        XCTAssertEqual(defaults.data(forKey: CustomRoutineStore.defaultKey), storedBytes)
+    }
+
+    func testGenericBothHandsRepairPreservesExplicitSharedHoldCompositeAndHandChoices() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let edge = ContactRequirement.edge(depth: .range(.init(minimum: 19, maximum: 19)))
+        let shared = ContactRequirement(kind: .sloper, shape: .round, handCapacity: 2)
+        let task = WorkoutSegmentTarget.tasks([[.init(target: .init(kind: .edge,
+            depth: .measured(.init(minimum: 19, maximum: 19))), side: .left),
+            .init(target: .init(kind: .edge, depth: .measured(.init(minimum: 19, maximum: 19))), side: .right)]])
+        let cases: [(WorkoutSegmentTarget, WorkoutHandUse, WorkoutSide)] = [
+            (.requirements([shared]), .double, .both),
+            (.requirements([edge, .kind(.jug)]), .double, .both),
+            (.requirements([edge]), .single, .right),
+            (.requirements([edge]), .either, .both),
+            (task, .double, .both)
+        ]
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        for (target, handUse, side) in cases {
+            let source = CustomRoutineDefinition(
+                id: "custom.preserved-hand-target", title: "My target", subtitle: "", difficulty: nil,
+                category: nil, tags: [], targetMode: .generic,
+                steps: [WorkoutStepDefinition(id: "hang", title: "Hang", instruction: "", accessory: "",
+                    duration: 10, phase: .hang,
+                    segments: [.init(kind: .work, target: target, timing: .fixed, duration: 10)],
+                    handUse: handUse, side: side)]
+            )
+            let plan = try store.plan(for: source)
+            XCTAssertEqual(plan.steps.first?.segments.first?.target, target)
+            XCTAssertEqual(plan.steps.first?.handUse, handUse)
+            XCTAssertEqual(plan.steps.first?.side, side)
+            if target == .requirements([shared]) {
+                XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: plan.steps[0], on: board), ["sloper-round-center"])
+            }
+        }
+    }
+
+    func testGenericBothHandsRepairPreservesBoardSpecificExactContact() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let requirement = ContactRequirement(contactID: "sloper-round-center", kind: .sloper, shape: .round, handCapacity: 2)
+        let source = CustomRoutineDefinition(
+            id: "custom.exact-shared-contact", title: "My shared hold", subtitle: "", difficulty: nil,
+            category: nil, tags: [], targetMode: .boardSpecific(boardID: board.id),
+            steps: [WorkoutStepDefinition(id: "hang", title: "Hang", instruction: "", accessory: "",
+                duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+                handUse: .double, side: .both)]
+        )
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        let plan = try store.plan(for: source)
+        XCTAssertEqual(plan.steps[0].workRequirements, [requirement])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: plan.steps[0], on: board), ["sloper-round-center"])
+    }
+
+    func testBoardSpecificBothHandsRepairPreservesAnImplicitCenteredSharedContact() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let requirement = ContactRequirement(kind: .sloper, shape: .round)
+        let source = CustomRoutineDefinition(
+            id: "custom.implicit-shared-contact", title: "My shared hold", subtitle: "", difficulty: nil,
+            category: nil, tags: [], targetMode: .boardSpecific(boardID: board.id),
+            steps: [WorkoutStepDefinition(id: "hang", title: "Hang", instruction: "", accessory: "",
+                duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+                handUse: .double, side: .both)]
+        )
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        let plan = try store.plan(for: source)
+        XCTAssertEqual(plan.steps[0].workRequirements, [requirement])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: plan.steps[0], on: board), ["sloper-round-center"])
+        XCTAssertTrue(PlanHoldSubstitutions.requests(for: plan, on: board).isEmpty)
+    }
+
+    func testSavedGenericBothHandsPairRemainsSupportedOnTwoCopiesOfAOneHandBoard() throws {
+        let suite = ownedRoutineSuiteName()
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let contact = PhysicalContact(id: "unit-edge", name: "19 mm edge", kind: .edge,
+            fingerCapacity: 2, handCapacity: 1, depth: .range(.init(minimum: 19, maximum: 19)),
+            gripTypes: [.halfCrimp])
+        let board = BoardRevision(
+            id: "custom-store-one-hand", revisionID: "test", manufacturer: "Fixture", name: "One hand",
+            subtitle: "", dimensions: nil, aspectRatio: 1, handCapacity: 1, contacts: [contact],
+            productURL: URL(string: "https://example.com/one-hand")!, photoAssetName: nil,
+            presentations: [BoardPresentation(id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: [contact.id: [
+                    BoardContactPiece(id: "unit-edge-piece", contactID: contact.id,
+                        frame: CGRect(x: 0.45, y: 0, width: 0.1, height: 0.1),
+                        shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)
+                ]])))])
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        for targetMode in [CustomRoutineTargetMode.generic, .boardSpecific(boardID: board.id)] {
+            for sourceSelection in [ContactSelectionPolicy.single, .bilateralPair] {
+                let source = savedGenericBothHandsDefinition(
+                    depth: 19, targetMode: targetMode, selection: sourceSelection)
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.sortedKeys]
+                let sourceBytes = try encoder.encode(source)
+                let plan = try store.plan(for: source)
+                let selection: ContactSelectionPolicy = targetMode == .generic ? .bilateralPair : sourceSelection
+                XCTAssertTrue(plan.steps.allSatisfy { $0.workRequirements.first?.selection == selection })
+                XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+                XCTAssertTrue(PlanHoldSubstitutions.requests(for: plan, on: board).isEmpty)
+                let both = WorkoutSessionHandResolver.materialized(plan.steps[0], preference: .both, boardIsOneHanded: true)
+                XCTAssertEqual(both.handUse, .double)
+                XCTAssertEqual(both.side, .both)
+                XCTAssertEqual(try ContactResolver.resolve(both.workRequirements, step: both, board: board).map(\.id), [contact.id])
+                XCTAssertEqual(source.steps[0].workRequirements.first?.selection, sourceSelection)
+                XCTAssertEqual(try encoder.encode(source), sourceBytes)
+            }
+        }
+    }
+
     func testCircuitRepeatersRetainEveryShortRestAndOnlyRestBetweenRounds() throws {
         let suite = ownedRoutineSuiteName()
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -32,7 +246,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             let work = plan.steps.filter { !$0.isRestStep }
             XCTAssertEqual(work.count, rounds * 6)
             XCTAssertTrue(work.allSatisfy {
-                $0.workRequirements == [.edge(depth: .range(.init(minimum: 25, maximum: 25)))] &&
+                $0.workRequirements == [.edge(depth: .range(.init(minimum: 25, maximum: 25)), selection: .bilateralPair)] &&
                     $0.gripType == .halfCrimp && $0.instruction == "Pain free"
             })
             XCTAssertTrue(plan.steps.filter(\.isRestStep).allSatisfy { $0.workRequirements.isEmpty })
@@ -288,7 +502,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(Set(plan.steps.map(\.id)).count, 13)
         XCTAssertEqual(plan.steps.map(\.duration).reduce(0, +), 88)
         XCTAssertTrue(plan.steps.filter { $0.phase == .rest }.allSatisfy { $0.workRequirements.isEmpty })
-        XCTAssertTrue(plan.steps.filter { $0.phase != .rest }.allSatisfy { $0.workRequirements == [.kind(.jug)] })
+        XCTAssertTrue(plan.steps.filter { $0.phase != .rest }.allSatisfy { $0.workRequirements == [.kind(.jug, selection: .bilateralPair)] })
 
         var edited = CustomRoutineDraft(editing: saved)
         var set = saved.sets[0]
@@ -695,7 +909,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let plan = try reloaded.plan(for: persisted)
         XCTAssertEqual(plan.id, definition.id)
         XCTAssertEqual(plan.title, definition.title)
-        XCTAssertEqual(plan.steps[0].workRequirements, [.kind(.edge)])
+        XCTAssertEqual(plan.steps[0].workRequirements, [.kind(.edge, selection: .bilateralPair)])
         XCTAssertEqual(plan.provenance, .custom)
         XCTAssertNil(plan.sourceURL)
     }
@@ -1827,6 +2041,27 @@ final class CustomRoutineStoreTests: XCTestCase {
             ?? URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().path
         let owner = URL(fileURLWithPath: worktreePath).lastPathComponent
         return "CustomRoutineStoreTests.\(owner).\(UUID().uuidString)"
+    }
+
+    private func savedGenericBothHandsDefinition(
+        depth: Double,
+        targetMode: CustomRoutineTargetMode = .generic,
+        selection: ContactSelectionPolicy = .single
+    ) -> CustomRoutineDefinition {
+        CustomRoutineDefinition(
+            id: "custom.saved-both-hands", title: "My saved plan", subtitle: "My subtitle", difficulty: "Custom",
+            category: "strength", tags: ["saved"], targetMode: targetMode,
+            steps: [WorkoutStepDefinition(
+                id: "hang", title: "Hang", instruction: "My saved cue", accessory: "My saved note",
+                duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([ContactRequirement(kind: .edge,
+                    depth: .range(.init(minimum: depth, maximum: depth)), fingerCapacity: 2, selection: selection)]),
+                    timing: .fixed, duration: 10)],
+                gripType: .halfCrimp, fingerConfiguration: FingerConfiguration(count: 2),
+                handUse: .double, side: .both, externalLoadKGF: 3.5
+            )],
+            sets: [.init(id: "set", stepIDs: ["hang"], repeatCount: 3)]
+        )
     }
 
     /// Literal v2 persistence shape from Main: already flattened custom rows,

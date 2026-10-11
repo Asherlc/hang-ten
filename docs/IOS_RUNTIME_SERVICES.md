@@ -100,6 +100,14 @@ Loaded lift additionally shows Repetitions and optional Added weight. Its inline
 choice through `HangTen.customRoutine.displayUnits`. Switching units preserves the
 physical quantity; stored load remains in kilograms-force. Depth stays in mm.
 
+Selecting a generic hold type with Both hands requires a matching left/right
+pair. Playback also repairs older unpinned singleton requirements saved with
+Both hands, so previews, substitution choices and recorded contacts use the
+pair. This repair leaves the saved definition, timing, repeats and notes intact.
+Explicit shared holds, exact contacts, composite targets and two copies of a
+one-hand board retain their existing meaning; a board-specific centered hold
+with documented two-hand capacity remains a valid shared contact.
+
 The single Depth input accepts one positive value or a minimum–maximum range.
 An explicitly cleared input removes the depth restriction. Invalid or incomplete input
 blocks Save and retains the previous prescribed depth until a valid edit is made.

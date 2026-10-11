@@ -3769,6 +3769,57 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
+    func testPlanValidationAllowsDoubleHandPairOnTwoCopiesOfDeclaredOneHandBoard() throws {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let source = WorkoutStepDefinition(
+            id: "pair", title: "Pair", instruction: "My cue", accessory: "My note", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+            handUse: .double, side: .both, externalLoadKGF: 3.5
+        )
+        let library = unilateralTestLibrary(step: source, boardID: board.id)
+
+        XCTAssertEqual(library.validationIssues(availableBoards: [board]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [board]).resolve(library.plans[0])
+        let step = try XCTUnwrap(plan.steps.first)
+        XCTAssertEqual(step.workRequirements, [requirement])
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.instruction, source.instruction)
+        XCTAssertEqual(step.accessory, source.accessory)
+        XCTAssertEqual(step.externalLoadKGF, source.externalLoadKGF)
+        let both = WorkoutSessionHandResolver.materialized(step, preference: .both, boardIsOneHanded: true)
+        XCTAssertEqual(both.workRequirements, [requirement.singleHandSelection])
+        XCTAssertEqual(both.handUse, .double)
+        XCTAssertEqual(both.side, .both)
+        XCTAssertEqual(try ContactResolver.resolve(both.workRequirements, step: both, board: board).map(\.id), ["unit-edge"])
+        XCTAssertEqual(library.blocks[0].steps, [source])
+        XCTAssertEqual(source.workRequirements, [requirement])
+    }
+
+    func testPlanValidationRejectsSingleAndEitherHandPairsOnDeclaredOneHandBoard() {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let cases: [(WorkoutHandUse, WorkoutSide)] = [(.single, .left), (.single, .right), (.either, .both)]
+        for (handUse, side) in cases {
+            let source = WorkoutStepDefinition(
+                id: "pair", title: "Pair", instruction: "", accessory: "", duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+                handUse: handUse, side: side
+            )
+            let library = unilateralTestLibrary(step: source, boardID: board.id)
+            XCTAssertEqual(library.validationIssues(availableBoards: [board]).map(\.path),
+                ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+            XCTAssertThrowsError(try PlanDefinitionResolver(library: library, availableBoards: [board]))
+            XCTAssertEqual(library.blocks[0].steps, [source])
+            XCTAssertEqual(source.workRequirements, [requirement])
+        }
+    }
+
     func testPlanValidationRejectsEitherHandPullWork() {
         let step = WorkoutStepDefinition(
             id: "either-pull",
@@ -3867,7 +3918,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    private func handSideBoard(id: String, contacts: [PhysicalContact]) -> BoardRevision {
+    private func handSideBoard(id: String, contacts: [PhysicalContact], handCapacity: Int = 2) -> BoardRevision {
         let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
             let x: CGFloat = switch contact.side {
             case .left: 0.125
@@ -3884,7 +3935,7 @@ final class PlanStorageTests: XCTestCase {
         })
         return BoardRevision(
             id: id, revisionID: "test-fixture", manufacturer: "Fixture", name: "Hand-side board",
-            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            subtitle: "", dimensions: "", aspectRatio: 1, handCapacity: handCapacity, contacts: contacts,
             productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil,
             presentations: [BoardPresentation(
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,

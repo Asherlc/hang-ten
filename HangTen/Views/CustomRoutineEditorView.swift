@@ -842,7 +842,7 @@ private struct CustomRoutineStepEditor: View {
                         depth: current?.depth,
                         fingerCapacity: current?.fingerCapacity,
                         handCapacity: current?.handCapacity,
-                        selection: current?.selection ?? .single
+                        selection: current?.selection ?? (step.handUse == .double ? .bilateralPair : .single)
                     )
                 ]
             }
