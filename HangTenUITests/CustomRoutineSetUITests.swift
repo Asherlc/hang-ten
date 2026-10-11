@@ -12,6 +12,46 @@ final class CustomRoutineSetUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    /// Both-hands generic holds retain a pair when the current board needs a substitute.
+    func testCompactBoardCustomBothHandsOffersMatchingPairSubstitutes() {
+        let name = "Compact pair review"
+        let app = launchEditor(name: name, boardID: "metolius.wood-grips-compact-ii")
+        tap("customRoutine.addSet", in: app)
+        enter("12", identifier: "customRoutine.stepDuration", in: app)
+        tap("customRoutine.stepHands", in: app)
+        app.buttons["Both hands"].tap()
+        tap("customRoutine.stepTarget", in: app)
+        app.buttons["Edges"].tap()
+        enter("10", identifier: "customRoutine.stepDepthValue", in: app)
+        tap("customRoutine.save", in: app)
+        openSavedRoutine(named: name, in: app)
+
+        let picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Replacement for 10 mm edge"].exists)
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        picker.tap()
+        for depth in ["19", "29"] {
+            let pair = app.buttons.matching(NSPredicate(format:
+                "identifier BEGINSWITH %@ AND label == %@",
+                "plan.substitution.option.0.", "\(depth) mm edge")).firstMatch
+            XCTAssertTrue(pair.exists, "Both hands require both matching \(depth) mm edges.")
+        }
+        let options = app.buttons.matching(NSPredicate(format:
+            "identifier BEGINSWITH %@", "plan.substitution.option.0."))
+        XCTAssertEqual(Set(options.allElementsBoundByIndex.map(\.label)), ["19 mm edge", "29 mm edge"],
+            "Available matching edges should keep the replacement on the requested hold type.")
+        capture(app, name: "Compact custom plan offers matching hold pairs")
+        app.buttons.matching(NSPredicate(format:
+            "identifier BEGINSWITH %@ AND label == %@",
+            "plan.substitution.option.0.", "19 mm edge")).firstMatch.tap()
+        XCTAssertTrue(picker.label.contains("Replacement for 10 mm edge: 19 mm edge"))
+        XCTAssertFalse(picker.label.contains("Left"))
+        XCTAssertFalse(picker.label.contains("Right"))
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        capture(app, name: "Compact custom plan selects both 19 mm edges")
+    }
+
     /// The first edit presents its saved draft, and each reopening loads current persisted values.
     func testEditorFirstPresentationCancelAndSaveReopen() {
         let originalName = "Modal review"
@@ -470,12 +510,12 @@ final class CustomRoutineSetUITests: XCTestCase {
     }
 
     /// Opens a named generic draft with isolated storage and deterministic review state.
-    private func launchEditor(name: String) -> XCUIApplication {
+    private func launchEditor(name: String, boardID: String = "tension.grindstone-original") -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_PLANS"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_ISOLATED_CUSTOM_ROUTINES"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PORTRAIT"] = "1"
-        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.grindstone-original"
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = boardID
         app.launchEnvironment["HANGTEN_REVIEW_FREE_WORKOUTS_USED"] = "0"
         app.launch()
         XCTAssertTrue(app.navigationBars["Plans"].waitForExistence(timeout: 20))

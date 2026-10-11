@@ -100,6 +100,14 @@ Loaded lift additionally shows Repetitions and optional Added weight. Its inline
 choice through `HangTen.customRoutine.displayUnits`. Switching units preserves the
 physical quantity; stored load remains in kilograms-force. Depth stays in mm.
 
+Selecting a generic hold type with Both hands requires a matching left/right
+pair. Playback also repairs older unpinned singleton requirements saved with
+Both hands, so previews, substitution choices and recorded contacts use the
+pair. This repair leaves the saved definition, timing, repeats and notes intact.
+Explicit shared holds, exact contacts, composite targets and two copies of a
+one-hand board retain their existing meaning; a board-specific centered hold
+with documented two-hand capacity remains a valid shared contact.
+
 The single Depth input accepts one positive value or a minimum–maximum range.
 An explicitly cleared input removes the depth restriction. Invalid or incomplete input
 blocks Save and retains the previous prescribed depth until a valid edit is made.
@@ -297,8 +305,21 @@ predicate. Explicit self-selected work records that choice without an invented
 contact snapshot.
 
 Plan detail offers an explicit session adaptation when a required hold is
-missing. Each choice lists factual contacts on the current board and passes the
-same grip, finger-capacity, hand, and position checks used for work resolution.
+missing. The picker asks “Replacement for 10 mm edge” and describes each matching
+choice once, such as “19 mm edge”; it resolves the appropriate contacts internally.
+When compatible replacements preserve the requested hold kind, the picker offers
+only those choices. Other kinds remain available as fallbacks when no valid
+same-kind replacement exists. This preference follows all side, pair, grip,
+finger-capacity, and position checks, so an unusable hold cannot hide a fallback.
+Matching two-hand choices retain matching factual depths and shapes. Fixed
+single-hand choices honor the requested side, including legacy single-contact
+requirements; a pinned contact on the opposite side is rejected. Grip cues remain
+separate from the hold label. Pocket finger capacities and effective position
+depths remain visible so different holds do not acquire identical descriptions.
+Every choice passes the same grip, finger-capacity, hand, and position checks used
+for work resolution. Shared contacts must fit both sides and support two hands.
+Canonical two-hand choices on a one-hand board retain “two boards” as equipment
+context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated missing targets share one choice. Start waits until every missing
 target has a valid selection; changing the board or training-edge variant clears
 the choices. The resulting session retains the source link and original

@@ -809,9 +809,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             side: .right
         )
         XCTAssertEqual(
-            try ContactResolver.resolve(singleRequirement, step: singleStep, board: board).map(\.id),
+            try ContactResolver.resolve(singleRequirement, step: legacySingleStep(side: .left), board: board).map(\.id),
             ["pocket-left"]
         )
+        XCTAssertThrowsError(try ContactResolver.resolve(singleRequirement, step: singleStep, board: board)) { error in
+            XCTAssertEqual(error as? ContactResolutionError, .noMatches)
+        }
 
         let pairRequirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
         let pairStep = WorkoutStep(
@@ -825,6 +828,118 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertThrowsError(
             try ContactResolver.resolve(pairRequirement, step: pairStep, board: board)
         )
+    }
+
+    func testLegacySingleRequirementUsesAuthoredSideBeforeGeometry() throws {
+        let board = portableBoard(handCapacity: 2)
+        let requirement = ContactRequirement.kind(.pocket, selection: .single)
+
+        for (side, expected) in [(WorkoutSide.left, "left-a"), (.right, "left-b")] {
+            XCTAssertEqual(
+                try ContactResolver.resolve(requirement, step: legacySingleStep(side: side), board: board).map(\.id),
+                [expected]
+            )
+        }
+    }
+
+    func testLegacySingleRequirementUsesGeometryForUnauthoredSide() throws {
+        let left = PhysicalContact(id: "left", name: "Left edge", kind: .edge)
+        let right = PhysicalContact(id: "right", name: "Right edge", kind: .edge)
+        let board = board(holds: [left, right], presentations: [rasterPresentation(bounds: [
+            left.id: HoldFrame(x: 0.35, y: 0.2, width: 0.1, height: 0.1),
+            right.id: HoldFrame(x: 0.8, y: 0.2, width: 0.1, height: 0.1)
+        ])])
+        let requirement = ContactRequirement.edge(selection: .single)
+
+        for (side, expected) in [(WorkoutSide.left, "left"), (.right, "right")] {
+            XCTAssertEqual(
+                try ContactResolver.resolve(requirement, step: legacySingleStep(side: side), board: board).map(\.id),
+                [expected]
+            )
+        }
+    }
+
+    func testLegacySingleRequirementRejectsOppositeSidePinnedContact() throws {
+        let board = portableBoard(handCapacity: 2)
+        let requirement = ContactRequirement(contactID: "left-a", kind: .pocket, selection: .single)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: legacySingleStep(side: .left), board: board).map(\.id),
+            ["left-a"]
+        )
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: legacySingleStep(side: .right), board: board)) { error in
+            XCTAssertEqual(error as? ContactResolutionError, .noMatches)
+        }
+    }
+
+    func testLegacySingleRequirementAllowsCenteredSharedContactForEitherFixedSide() throws {
+        let center = PhysicalContact(id: "center", name: "Center edge", kind: .edge, handCapacity: 2)
+        let board = board(holds: [center], presentations: [rasterPresentation(bounds: [
+            center.id: HoldFrame(x: 0.4, y: 0.2, width: 0.2, height: 0.1)
+        ])])
+        let requirement = ContactRequirement.edge(selection: .single)
+
+        for side in [WorkoutSide.left, .right] {
+            XCTAssertEqual(
+                try ContactResolver.resolve(requirement, step: legacySingleStep(side: side), board: board).map(\.id),
+                ["center"]
+            )
+        }
+    }
+
+    func testLegacySingleRequirementHonorsAuthoredSideOnCenteredContact() throws {
+        let center = PhysicalContact(id: "center", name: "Center left edge", kind: .edge,
+                                     handCapacity: 2, side: .left)
+        let board = board(holds: [center], presentations: [rasterPresentation(bounds: [
+            center.id: HoldFrame(x: 0.4, y: 0.2, width: 0.2, height: 0.1)
+        ])])
+        let requirement = ContactRequirement.edge(selection: .single)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: legacySingleStep(side: .left), board: board).map(\.id),
+            ["center"]
+        )
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: legacySingleStep(side: .right), board: board)) { error in
+            XCTAssertEqual(error as? ContactResolutionError, .noMatches)
+        }
+    }
+
+    func testLegacySingleRequirementHonorsSideWithinEffectiveDepthPosition() throws {
+        let configured = configuredBoard()
+        let requirement = ContactRequirement.edge(depth: .range(.init(minimum: 10, maximum: 10)), selection: .single)
+        let step = legacySingleStep(side: .right)
+        let selections = [
+            try ContactResolver.resolveSelection(requirement, step: step, board: configured),
+            try ContactResolver.resolveSelection([requirement], step: step, board: configured),
+            try ContactResolver.resolveSelection(requirement, step: step, board: configured, inPosition: "depth-10mm")
+        ]
+
+        for selection in selections {
+            XCTAssertEqual(selection.contacts.map(\.id), ["edge-b"])
+            XCTAssertEqual(selection.positionID, "depth-10mm")
+            XCTAssertEqual(selection.contacts.first?.depth, .range(.init(minimum: 10, maximum: 10)))
+        }
+    }
+
+    func testLegacySingleRequirementIgnoresPhysicalSideOnOneHandedBoard() throws {
+        let board = oneHandedRecordingBoard()
+        let requirement = ContactRequirement.kind(.pocket, selection: .single)
+
+        for side in [WorkoutSide.left, .right] {
+            XCTAssertEqual(
+                try ContactResolver.resolve(requirement, step: legacySingleStep(side: side), board: board).map(\.id),
+                ["one-handed-pocket"]
+            )
+        }
+    }
+
+    func testLegacyUnresolvedEitherRequirementStaysUnsided() throws {
+        let board = portableBoard(handCapacity: 2, secondSide: .left)
+        let requirement = ContactRequirement.kind(.pocket, selection: .single)
+        let step = WorkoutStep(id: "either", number: 1, title: "Either hand", instruction: "",
+                               accessory: "", duration: 10, phase: .hang, handUse: .either, side: .both)
+
+        XCTAssertEqual(try ContactResolver.resolve(requirement, step: step, board: board).map(\.id), ["left-b"])
     }
 
     func testRequirementAndResolvedContactsAreRecordedWithFixedDuration() throws {
@@ -1406,7 +1521,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
-    func testActivityRecordingSingleHandStepDoesNotUseSideMetadataForSelection() throws {
+    func testActivityRecordingSingleHandStepUsesSideMetadataForSelection() throws {
         let board = BoardRevision(
             id: "paired-portable-board",
             revisionID: "test-fixture",
@@ -1444,7 +1559,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(
             records.map { $0.target?.resolvedContactSnapshot?.contactIDs },
-            [["left-a"]]
+            [["right-a"]]
         )
     }
 
@@ -2260,6 +2375,11 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 "Hang Ten could not prepare the workout activity details for Apple Health."
             )
         }
+    }
+
+    private func legacySingleStep(side: WorkoutSide) -> WorkoutStep {
+        WorkoutStep(id: "fixed-single", number: 1, title: "Fixed single hand", instruction: "",
+                    accessory: "", duration: 10, phase: .hang, handUse: .single, side: side)
     }
 
     private func step(targets: [ContactRequirement]) -> WorkoutStep {

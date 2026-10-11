@@ -622,7 +622,10 @@ enum CustomRoutineValidator {
             handUse: handUse,
             side: side
         )
-        return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
+        let resolved = handUse == .double && board.isOneHanded
+            ? WorkoutSessionHandResolver.materialized(step, preference: .both, boardIsOneHanded: true)
+            : step
+        return (try? ContactResolver.resolve(resolved.workRequirements, step: resolved, board: board)) != nil
     }
 }
 
@@ -691,7 +694,7 @@ final class CustomRoutineStore: CustomRoutineStoring {
 
     /// Validates the routine and resolves each set through the shared repeated-block planner.
     func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan {
-        let definition = Self.normalize(definition)
+        let definition = pairingBothHandsTargets(in: Self.normalize(definition))
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: availableBoards)
         guard issues.isEmpty else {
             throw CustomRoutineStoreError.validationFailed(issues)
@@ -843,6 +846,59 @@ final class CustomRoutineStore: CustomRoutineStoring {
         )
         let resolver = try PlanDefinitionResolver(library: library, availableBoards: resolverBoards)
         return try resolver.resolve(planDefinition)
+    }
+
+    /// The generic picker previously defaulted new both-hand targets to a
+    /// single hold. Correct that contradiction in derived playback, including
+    /// routines later assigned a board, while retaining the stored definition.
+    private func pairingBothHandsTargets(in definition: CustomRoutineDefinition) -> CustomRoutineDefinition {
+        let board: BoardRevision?
+        if case let .boardSpecific(boardID) = definition.targetMode {
+            board = availableBoards.first { $0.id == boardID }
+        } else {
+            board = nil
+        }
+        let steps = definition.steps.map { step in
+            guard step.phase != .rest, step.handUse == .double, step.side == .both else { return step }
+            let segments = step.segments.map { segment in
+                guard segment.kind == .work, case let .requirements(requirements) = segment.target,
+                      requirements.count == 1, let requirement = requirements.first,
+                      requirement.contactID == nil, requirement.selection == .single,
+                      requirement.handCapacity != 2 else { return segment }
+                if let board, board.isOneHanded || isSharedContact(requirement, step: step, board: board) { return segment }
+                return WorkoutSegmentDefinition(kind: segment.kind,
+                    target: .requirements([requirement.bilateralSelection]),
+                    timing: segment.timing, duration: segment.duration)
+            }
+            guard segments != step.segments else { return step }
+            return WorkoutStepDefinition(
+                id: step.id, title: step.title, instruction: step.instruction, accessory: step.accessory,
+                duration: step.duration, phase: step.phase, segments: segments, gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration, activeDuration: step.activeDuration,
+                handUse: step.handUse, side: step.side, action: step.action, repetitions: step.repetitions,
+                externalLoadKGF: step.externalLoadKGF
+            )
+        }
+        return CustomRoutineDefinition(
+            id: definition.id, title: definition.title, subtitle: definition.subtitle,
+            difficulty: definition.difficulty, category: definition.category, tags: definition.tags,
+            targetMode: definition.targetMode, steps: steps, sets: definition.sets, circuits: definition.circuits
+        )
+    }
+
+    /// A known board can document a centered two-hand contact even when the
+    /// old requirement omitted its capacity. Follow the resolver's side rules
+    /// before preserving that deliberate shared-hold selection.
+    private func isSharedContact(_ requirement: ContactRequirement, step: WorkoutStepDefinition,
+                                 board: BoardRevision) -> Bool {
+        guard let selection = try? ContactResolver.resolveSelection(requirement, step: step.resolvedStep(), board: board),
+              selection.contacts.count == 1, let contact = selection.contacts.first,
+              contact.handCapacity == 2, contact.side == nil,
+              contact.equipmentObjectID != "left-ring", contact.equipmentObjectID != "right-ring" else { return false }
+        let presentation = board.position(id: selection.positionID).flatMap { board.presentation(id: $0.presentationID) }
+            ?? board.defaultPresentation
+        guard let frame = contact.resolvedFrame(in: presentation) else { return false }
+        return frame.rect.minX <= 0.5 && frame.rect.maxX >= 0.5
     }
 
     /// Reconstructs editable patterns and set counts from a resolved plan's declared repeats.

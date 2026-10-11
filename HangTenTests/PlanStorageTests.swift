@@ -3634,7 +3634,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
     }
 
-    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() {
+    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand",
             title: "Either hand",
@@ -3663,9 +3663,32 @@ final class PlanStorageTests: XCTestCase {
         let library = unilateralTestLibrary(step: step, boardID: mirroredBoard.id)
 
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [mirroredBoard]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [mirroredBoard])
+            .resolve(library.plans[0])
+        for (side, contactID) in [(WorkoutSide.left, "left-edge"), (.right, "right-edge")] {
+            let records = try WorkoutActivityRecorder().segments(
+                for: plan, on: mirroredBoard, selectedHandSide: side
+            )
+            XCTAssertEqual(records.first?.side, side)
+            XCTAssertEqual(records.first?.target?.resolvedContactSnapshot?.contactIDs, [contactID])
+        }
+
+        let leftOnlyBoard = handSideBoard(id: "fixture.left-only",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)])
+        let leftOnlyLibrary = unilateralTestLibrary(step: step, boardID: leftOnlyBoard.id)
+        let issues = PlanLibraryValidator.issues(for: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+        XCTAssertEqual(issues.map(\.path), ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+        XCTAssertThrowsError(try PlanDefinitionResolver(library: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+            .resolve(leftOnlyLibrary.plans[0])) { error in
+            guard let failure = error as? PlanLibraryStoreError,
+                  case .validationFailed(let failures) = failure else {
+                return XCTFail("Expected declared-board contact validation to fail, got \(error)")
+            }
+            XCTAssertEqual(failures, issues)
+        }
     }
 
-    func testEitherHandPlanUsesSingleContactIndependentlyOfContactSide() throws {
+    func testEitherHandPlanReusesSingleContactOnOneHandedBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand", title: "Either hand", instruction: "Hang.", accessory: "",
             duration: 10, phase: .hang,
@@ -3680,14 +3703,14 @@ final class PlanStorageTests: XCTestCase {
             handUse: .either, side: .both
         )
         let asymmetricBoard = handSideBoard(
-            id: "fixture.left-only",
-            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)]
+            id: "fixture.one-handed",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)],
+            handCapacity: 1
         )
 
         let library = unilateralTestLibrary(step: step, boardID: asymmetricBoard.id)
 
-        // Contact side describes the board surface, not the athlete's chosen hand.
-        // Single selection uses presentation geometry and may reuse one surface.
+        // A one-hand board's same physical contact can be used by either hand.
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [asymmetricBoard]), [])
         let plan = try PlanDefinitionResolver(library: library, availableBoards: [asymmetricBoard])
             .resolve(library.plans[0])
@@ -3766,6 +3789,57 @@ final class PlanStorageTests: XCTestCase {
                 handUse == .double ? [] : ["plans[0].blocks[0].steps[0].segments[0].targets[0]"],
                 "A valid bilateral pair requires double-hand work, not an either-hand choice."
             )
+        }
+    }
+
+    func testPlanValidationAllowsDoubleHandPairOnTwoCopiesOfDeclaredOneHandBoard() throws {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let source = WorkoutStepDefinition(
+            id: "pair", title: "Pair", instruction: "My cue", accessory: "My note", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+            handUse: .double, side: .both, externalLoadKGF: 3.5
+        )
+        let library = unilateralTestLibrary(step: source, boardID: board.id)
+
+        XCTAssertEqual(library.validationIssues(availableBoards: [board]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [board]).resolve(library.plans[0])
+        let step = try XCTUnwrap(plan.steps.first)
+        XCTAssertEqual(step.workRequirements, [requirement])
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.instruction, source.instruction)
+        XCTAssertEqual(step.accessory, source.accessory)
+        XCTAssertEqual(step.externalLoadKGF, source.externalLoadKGF)
+        let both = WorkoutSessionHandResolver.materialized(step, preference: .both, boardIsOneHanded: true)
+        XCTAssertEqual(both.workRequirements, [requirement.singleHandSelection])
+        XCTAssertEqual(both.handUse, .double)
+        XCTAssertEqual(both.side, .both)
+        XCTAssertEqual(try ContactResolver.resolve(both.workRequirements, step: both, board: board).map(\.id), ["unit-edge"])
+        XCTAssertEqual(library.blocks[0].steps, [source])
+        XCTAssertEqual(source.workRequirements, [requirement])
+    }
+
+    func testPlanValidationRejectsSingleAndEitherHandPairsOnDeclaredOneHandBoard() {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let cases: [(WorkoutHandUse, WorkoutSide)] = [(.single, .left), (.single, .right), (.either, .both)]
+        for (handUse, side) in cases {
+            let source = WorkoutStepDefinition(
+                id: "pair", title: "Pair", instruction: "", accessory: "", duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+                handUse: handUse, side: side
+            )
+            let library = unilateralTestLibrary(step: source, boardID: board.id)
+            XCTAssertEqual(library.validationIssues(availableBoards: [board]).map(\.path),
+                ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+            XCTAssertThrowsError(try PlanDefinitionResolver(library: library, availableBoards: [board]))
+            XCTAssertEqual(library.blocks[0].steps, [source])
+            XCTAssertEqual(source.workRequirements, [requirement])
         }
     }
 
@@ -3867,7 +3941,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    private func handSideBoard(id: String, contacts: [PhysicalContact]) -> BoardRevision {
+    private func handSideBoard(id: String, contacts: [PhysicalContact], handCapacity: Int = 2) -> BoardRevision {
         let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
             let x: CGFloat = switch contact.side {
             case .left: 0.125
@@ -3884,7 +3958,7 @@ final class PlanStorageTests: XCTestCase {
         })
         return BoardRevision(
             id: id, revisionID: "test-fixture", manufacturer: "Fixture", name: "Hand-side board",
-            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            subtitle: "", dimensions: "", aspectRatio: 1, handCapacity: handCapacity, contacts: contacts,
             productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil,
             presentations: [BoardPresentation(
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,
