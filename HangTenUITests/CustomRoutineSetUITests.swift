@@ -28,20 +28,26 @@ final class CustomRoutineSetUITests: XCTestCase {
 
         let picker = app.buttons["plan.substitution.picker.0"]
         XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Replacement for 10 mm edge"].exists)
         XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
         picker.tap()
         for depth in ["19", "29"] {
             let pair = app.buttons.matching(NSPredicate(format:
-                "identifier BEGINSWITH %@ AND label CONTAINS %@ AND label CONTAINS %@",
-                "plan.substitution.option.0.", "Left \(depth) mm edge", "Right \(depth) mm edge")).firstMatch
+                "identifier BEGINSWITH %@ AND label == %@",
+                "plan.substitution.option.0.", "\(depth) mm edge")).firstMatch
             XCTAssertTrue(pair.exists, "Both hands require both matching \(depth) mm edges.")
         }
+        let options = app.buttons.matching(NSPredicate(format:
+            "identifier BEGINSWITH %@", "plan.substitution.option.0."))
+        XCTAssertEqual(Set(options.allElementsBoundByIndex.map(\.label)), ["19 mm edge", "29 mm edge"],
+            "Available matching edges should keep the replacement on the requested hold type.")
         capture(app, name: "Compact custom plan offers matching hold pairs")
         app.buttons.matching(NSPredicate(format:
-            "identifier BEGINSWITH %@ AND label CONTAINS %@ AND label CONTAINS %@",
-            "plan.substitution.option.0.", "Left 19 mm edge", "Right 19 mm edge")).firstMatch.tap()
-        XCTAssertTrue(picker.label.contains("Left 19 mm edge"))
-        XCTAssertTrue(picker.label.contains("Right 19 mm edge"))
+            "identifier BEGINSWITH %@ AND label == %@",
+            "plan.substitution.option.0.", "19 mm edge")).firstMatch.tap()
+        XCTAssertTrue(picker.label.contains("Replacement for 10 mm edge: 19 mm edge"))
+        XCTAssertFalse(picker.label.contains("Left"))
+        XCTAssertFalse(picker.label.contains("Right"))
         XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         capture(app, name: "Compact custom plan selects both 19 mm edges")
     }

@@ -3634,7 +3634,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
     }
 
-    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() {
+    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand",
             title: "Either hand",
@@ -3663,9 +3663,32 @@ final class PlanStorageTests: XCTestCase {
         let library = unilateralTestLibrary(step: step, boardID: mirroredBoard.id)
 
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [mirroredBoard]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [mirroredBoard])
+            .resolve(library.plans[0])
+        for (side, contactID) in [(WorkoutSide.left, "left-edge"), (.right, "right-edge")] {
+            let records = try WorkoutActivityRecorder().segments(
+                for: plan, on: mirroredBoard, selectedHandSide: side
+            )
+            XCTAssertEqual(records.first?.side, side)
+            XCTAssertEqual(records.first?.target?.resolvedContactSnapshot?.contactIDs, [contactID])
+        }
+
+        let leftOnlyBoard = handSideBoard(id: "fixture.left-only",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)])
+        let leftOnlyLibrary = unilateralTestLibrary(step: step, boardID: leftOnlyBoard.id)
+        let issues = PlanLibraryValidator.issues(for: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+        XCTAssertEqual(issues.map(\.path), ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+        XCTAssertThrowsError(try PlanDefinitionResolver(library: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+            .resolve(leftOnlyLibrary.plans[0])) { error in
+            guard let failure = error as? PlanLibraryStoreError,
+                  case .validationFailed(let failures) = failure else {
+                return XCTFail("Expected declared-board contact validation to fail, got \(error)")
+            }
+            XCTAssertEqual(failures, issues)
+        }
     }
 
-    func testEitherHandPlanUsesSingleContactIndependentlyOfContactSide() throws {
+    func testEitherHandPlanReusesSingleContactOnOneHandedBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand", title: "Either hand", instruction: "Hang.", accessory: "",
             duration: 10, phase: .hang,
@@ -3680,14 +3703,14 @@ final class PlanStorageTests: XCTestCase {
             handUse: .either, side: .both
         )
         let asymmetricBoard = handSideBoard(
-            id: "fixture.left-only",
-            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)]
+            id: "fixture.one-handed",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)],
+            handCapacity: 1
         )
 
         let library = unilateralTestLibrary(step: step, boardID: asymmetricBoard.id)
 
-        // Contact side describes the board surface, not the athlete's chosen hand.
-        // Single selection uses presentation geometry and may reuse one surface.
+        // A one-hand board's same physical contact can be used by either hand.
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [asymmetricBoard]), [])
         let plan = try PlanDefinitionResolver(library: library, availableBoards: [asymmetricBoard])
             .resolve(library.plans[0])

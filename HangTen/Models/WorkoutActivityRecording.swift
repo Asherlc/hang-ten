@@ -643,21 +643,26 @@ enum ContactResolver {
         if let positionID {
             guard let position = board.position(id: positionID),
                   let presentation = board.presentation(id: position.presentationID) else { throw ContactResolutionError.noMatches }
-            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: presentation,
+            return Selection(contacts: try resolveCandidates(requirement, step: step, boardIsOneHanded: board.isOneHanded, presentation: presentation,
                 contacts: board.contacts(inPosition: positionID)), positionID: positionID)
         }
         guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
-            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: board.defaultPresentation,
+            return Selection(contacts: try resolveCandidates(requirement, step: step, boardIsOneHanded: board.isOneHanded, presentation: board.defaultPresentation,
                 contacts: board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }), positionID: nil)
         }
         return try resolveSelection([requirement], step: step, board: board)
     }
 
-    private static func resolveCandidates(_ requirement: ContactRequirement, step: WorkoutStep,
+    private static func resolveCandidates(_ requirement: ContactRequirement, step: WorkoutStep, boardIsOneHanded: Bool,
                                           presentation: BoardPresentation, contacts: [PhysicalContact]) throws -> [PhysicalContact] {
         var candidates = contacts.filter { contact in
             matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
+        }
+
+        if requirement.selection == .single, step.handUse == .single,
+           step.side == .left || step.side == .right, !boardIsOneHanded {
+            candidates = candidates.filter { contact($0, fits: step.side, in: presentation) }
         }
 
         guard !candidates.isEmpty else {
@@ -708,7 +713,8 @@ enum ContactResolver {
             var selected = Set<String>()
             var valid = true
             for requirement in requirements {
-                guard let contacts = try? resolveCandidates(requirement, step: step, presentation: presentation, contacts: available) else {
+                guard let contacts = try? resolveCandidates(requirement, step: step, boardIsOneHanded: board.isOneHanded,
+                    presentation: presentation, contacts: available) else {
                     valid = false; break
                 }
                 selected.formUnion(contacts.map(\.id))

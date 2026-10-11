@@ -305,12 +305,21 @@ predicate. Explicit self-selected work records that choice without an invented
 contact snapshot.
 
 Plan detail offers an explicit session adaptation when a required hold is
-missing. Each choice lists factual contacts on the current board and passes the
-same grip, finger-capacity, hand, and position checks used for work resolution.
-Shared contacts must fit both hand sides as well as support two hands. Canonical
-two-hand choices on a one-hand board say “two boards”; a centered contact shared
-by both hands says “both hands,” so a deduplicated hold name retains its hand
-and equipment context.
+missing. The picker asks “Replacement for 10 mm edge” and describes each matching
+choice once, such as “19 mm edge”; it resolves the appropriate contacts internally.
+When compatible replacements preserve the requested hold kind, the picker offers
+only those choices. Other kinds remain available as fallbacks when no valid
+same-kind replacement exists. This preference follows all side, pair, grip,
+finger-capacity, and position checks, so an unusable hold cannot hide a fallback.
+Matching two-hand choices retain matching factual depths and shapes. Fixed
+single-hand choices honor the requested side, including legacy single-contact
+requirements; a pinned contact on the opposite side is rejected. Grip cues remain
+separate from the hold label. Pocket finger capacities and effective position
+depths remain visible so different holds do not acquire identical descriptions.
+Every choice passes the same grip, finger-capacity, hand, and position checks used
+for work resolution. Shared contacts must fit both sides and support two hands.
+Canonical two-hand choices on a one-hand board retain “two boards” as equipment
+context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated missing targets share one choice. Start waits until every missing
 target has a valid selection; changing the board or training-edge variant clears
 the choices. The resulting session retains the source link and original

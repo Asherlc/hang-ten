@@ -18,7 +18,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertTrue(plan.steps.allSatisfy { $0.workRequirements.first?.selection == .bilateralPair })
         let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: plan, on: board).first)
         let option = try XCTUnwrap(request.options.first {
-            $0.label.contains("Left 19 mm edge") && $0.label.contains("Right 19 mm edge")
+            $0.label == "19 mm edge"
         })
         let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: plan, on: board))
         XCTAssertEqual(session.provenance, .custom)
