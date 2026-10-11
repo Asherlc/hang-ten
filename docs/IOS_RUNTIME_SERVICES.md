@@ -299,6 +299,10 @@ contact snapshot.
 Plan detail offers an explicit session adaptation when a required hold is
 missing. Each choice lists factual contacts on the current board and passes the
 same grip, finger-capacity, hand, and position checks used for work resolution.
+Shared contacts must fit both hand sides as well as support two hands. Canonical
+two-hand choices on a one-hand board say “two boards”; a centered contact shared
+by both hands says “both hands,” so a deduplicated hold name retains its hand
+and equipment context.
 Repeated missing targets share one choice. Start waits until every missing
 target has a valid selection; changing the board or training-edge variant clears
 the choices. The resulting session retains the source link and original

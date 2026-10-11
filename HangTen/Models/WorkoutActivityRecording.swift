@@ -580,8 +580,8 @@ enum ContactResolver {
             return [best.0, best.1]
         }
 
-        let shared = candidates[0].filter { first in
-            first.handCapacity == 2 && candidates[1].contains(where: { $0.id == first.id })
+        let shared = firstCandidates.filter { first in
+            first.handCapacity == 2 && secondCandidates.contains(where: { $0.id == first.id })
         }
         if let selected = try? singleCandidate(from: shared, in: presentation).first {
             return [selected, selected]

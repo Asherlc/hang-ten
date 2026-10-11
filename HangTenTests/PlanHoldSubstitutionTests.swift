@@ -85,6 +85,54 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         XCTAssertTrue(request.options.isEmpty)
     }
 
+    func testTwoHandSubstitutionsRejectSharedContactsFromOneSide() throws {
+        let cases: [(ContactSide?, CGFloat)] = [(.left, 0.45), (.right, 0.45), (nil, 0.1), (nil, 0.8)]
+        let handSides: [[WorkoutSide?]] = [[nil, nil], [.left, .right], [.right, .left]]
+        for (side, x) in cases {
+            let board = fixtureBoard(contacts: [
+                contact(id: "only", name: "One-sided hold", depth: 20, side: side, handCapacity: 2)
+            ], frames: ["only": CGRect(x: x, y: 0.2, width: 0.1, height: 0.1)])
+            let source = fixturePlan(steps: [fixtureStep()])
+            let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+            XCTAssertTrue(request.options.isEmpty, "A one-sided contact cannot replace both hands.")
+            XCTAssertNil(PlanHoldSubstitutions.applying([:], to: source, on: board))
+            for sides in handSides {
+                XCTAssertThrowsError(try ContactResolver.resolve(task(depth: 20, sides: sides),
+                    step: source.steps[0], board: board))
+            }
+        }
+    }
+
+    func testTwoHandSubstitutionsOfferThePairWithoutAOneSidedSharedContact() throws {
+        let board = fixtureBoard(extraContacts: [
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right, handCapacity: 2)
+        ])
+        let source = fixturePlan(steps: [fixtureStep()])
+        let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+        XCTAssertEqual(request.options.count, 1)
+        let option = try XCTUnwrap(request.options.first)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board)),
+            ["left-20", "right-20"])
+    }
+
+    func testCenteredTwoHandContactRemainsAValidSubstitute() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "shared", name: "Centered edge", depth: 20, handCapacity: 2)
+        ], frames: ["shared": CGRect(x: 0.45, y: 0.2, width: 0.1, height: 0.1)])
+        let source = fixturePlan(steps: [fixtureStep()])
+        let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+        XCTAssertEqual(request.options.count, 1)
+        let option = try XCTUnwrap(request.options.first)
+        XCTAssertTrue(option.label.contains("both hands"))
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+        let selectedTask = try XCTUnwrap(session.steps[0].segments[0].target?.planTasks?.first)
+        XCTAssertEqual(try ContactResolver.resolve(selectedTask, step: session.steps[0], board: board).map(\.id),
+            ["shared", "shared"])
+        let work = try XCTUnwrap(try WorkoutActivityRecorder().segments(for: session, on: board).first { $0.kind == .work })
+        XCTAssertEqual(work.target?.resolvedContactSnapshot?.contactIDs, ["shared", "shared"])
+    }
+
     func testCompatiblePlansAreReturnedUnchangedAndForeignBoardChoicesAreRejected() throws {
         let board = fixtureBoard()
         let source = fixturePlan(steps: [fixtureStep(target: .tasks([task(depth: 20)]))])
@@ -305,10 +353,27 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         let source = fixturePlan(steps: [fixtureStep()])
         let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
         XCTAssertEqual(request.options.count, 1)
+        XCTAssertTrue(request.options[0].label.contains("two boards"))
         let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: request.options[0].id], to: source, on: board))
         let tasks = try XCTUnwrap(session.steps[0].segments[0].target?.planTasks)
         XCTAssertEqual(tasks[0].count, 2)
         XCTAssertEqual(try ContactResolver.resolve(tasks[0], step: session.steps[0], board: board).map(\.id), ["one", "one"])
+    }
+
+    func testMixedTwoHandTaskOnOneHandBoardLabelsDifferentContactsAsTwoBoards() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "edge-20", name: "20 mm edge", depth: 20),
+            contact(id: "edge-30", name: "30 mm edge", depth: 30)
+        ], handCapacity: 1)
+        let missing = task(depth: 10, sides: [.left]) + task(depth: 15, sides: [.right])
+        let source = fixturePlan(steps: [fixtureStep(target: .tasks([missing]))])
+        let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+        let option = try XCTUnwrap(request.options.first { $0.label.contains("20 mm edge") && $0.label.contains("30 mm edge") })
+        XCTAssertTrue(option.label.contains("two boards"))
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+        let selectedTask = try XCTUnwrap(session.steps[0].segments[0].target?.planTasks?.first)
+        XCTAssertEqual(Set(try ContactResolver.resolve(selectedTask, step: session.steps[0], board: board).map(\.id)),
+            ["edge-20", "edge-30"])
     }
 
     func testCatalogMaxHangsOnSupportedBeastmakerKeepsItsSourcePrescription() throws {
@@ -376,18 +441,20 @@ final class PlanHoldSubstitutionTests: XCTestCase {
     }
 
     private func contact(id: String, name: String, depth: Double, capacity: Int = 4,
-                         grip: Set<GripType> = [.halfCrimp], side: ContactSide? = nil) -> PhysicalContact {
-        PhysicalContact(id: id, name: name, kind: .edge, fingerCapacity: capacity, handCapacity: 1,
+                         grip: Set<GripType> = [.halfCrimp], side: ContactSide? = nil,
+                         handCapacity: Int = 1) -> PhysicalContact {
+        PhysicalContact(id: id, name: name, kind: .edge, fingerCapacity: capacity, handCapacity: handCapacity,
             depth: .range(.init(minimum: depth, maximum: depth)), gripTypes: grip, side: side)
     }
 
     private func fixtureBoard(id: String = "board", contacts: [PhysicalContact]? = nil,
-                              extraContacts: [PhysicalContact] = [], handCapacity: Int = 2) -> BoardRevision {
+                              extraContacts: [PhysicalContact] = [], handCapacity: Int = 2,
+                              frames: [String: CGRect] = [:]) -> BoardRevision {
         let contacts = (contacts ?? [contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
                                     contact(id: "right-20", name: "20 mm right", depth: 20, side: .right)]) + extraContacts
         let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
             (contact.id, [BoardContactPiece(id: contact.id + "-piece", contactID: contact.id,
-                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0.2, width: 0.1, height: 0.1),
+                frame: frames[contact.id] ?? CGRect(x: index == 0 ? 0.1 : 0.8, y: 0.2, width: 0.1, height: 0.1),
                 shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)])
         })
         let presentation = BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true,

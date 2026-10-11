@@ -255,7 +255,19 @@ enum PlanHoldSubstitutions {
                 guard hasEffectiveDepth, let depth = contact.depth else { return contact.name }
                 return "\(contact.name) (\(label(for: ContactRequirement(depth: depth), includingMeasuredRanges: true)))"
             }).joined(separator: ", ")
-            options.append(PlanHoldSubstitutionOption(id: id, label: names, target: alternative))
+            let handContext: String
+            if case .tasks(let tasks) = alternative, tasks.first?.count == 2 {
+                if board.isOneHanded {
+                    handContext = " (two boards)"
+                } else if resolved.contacts.count == 2, resolved.contacts[0].id == resolved.contacts[1].id {
+                    handContext = " (both hands)"
+                } else {
+                    handContext = ""
+                }
+            } else {
+                handContext = ""
+            }
+            options.append(PlanHoldSubstitutionOption(id: id, label: names + handContext, target: alternative))
         }
         return options.sorted { $0.label == $1.label ? $0.id < $1.id : $0.label.localizedStandardCompare($1.label) == .orderedAscending }
     }

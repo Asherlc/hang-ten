@@ -37,7 +37,9 @@ final class PlanFlowUITests: XCTestCase {
         XCTAssertTrue(picker.waitForExistence(timeout: 10))
         picker.tap()
         for depth in ["10 mm", "15 mm", "18 mm"] {
-            XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", depth)).firstMatch.exists)
+            let option = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", depth)).firstMatch
+            XCTAssertTrue(option.exists)
+            XCTAssertTrue(option.label.contains("two boards"))
         }
         attachScreenshot(named: "Adjustable board substitution depths", app: app)
         app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "10 mm")).firstMatch.tap()
