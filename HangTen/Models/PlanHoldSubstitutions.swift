@@ -103,7 +103,6 @@ enum PlanHoldSubstitutions {
             chosen[request.id] = option
         }
         let steps = plan.steps.map { step in
-            var notices: [String] = []
             let segments = step.segments.map { segment -> WorkoutSegment in
                 guard segment.kind == .work, let target = segment.target else { return segment }
                 let replacement: WorkoutSegmentTarget
@@ -116,23 +115,18 @@ enum PlanHoldSubstitutions {
                         let id = requestID(for: unit, step: step, plan: plan, board: board)
                         guard let option = chosen[id], case .tasks(let alternatives) = option.target,
                               let substitute = alternatives.first else { return task }
-                        let notice = "Session substitution: \(label(for: unit)) → \(option.label)."
-                        if !notices.contains(notice) { notices.append(notice) }
                         return substitute
                     })
                 case .requirements:
                     let id = requestID(for: target, step: step, plan: plan, board: board)
                     guard let option = chosen[id] else { return segment }
                     replacement = option.target
-                    let notice = "Session substitution: \(label(for: target)) → \(option.label)."
-                    if !notices.contains(notice) { notices.append(notice) }
                 }
                 return WorkoutSegment(kind: segment.kind, target: replacement,
                     timing: segment.timing, duration: segment.duration)
             }
-            guard !notices.isEmpty else { return step }
-            return replacing(step, segments: segments,
-                instruction: notices.joined(separator: "\n") + "\nOriginal plan instruction: " + step.instruction)
+            guard segments != step.segments else { return step }
+            return replacing(step, segments: segments)
         }
         var result = TrainingPlan(id: plan.id, title: plan.title, subtitle: plan.subtitle,
             level: plan.level, sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
@@ -453,9 +447,9 @@ enum PlanHoldSubstitutions {
         value.formatted(.number.precision(.fractionLength(0...2)))
     }
 
-    private static func replacing(_ step: WorkoutStep, segments: [WorkoutSegment], instruction: String? = nil) -> WorkoutStep {
+    private static func replacing(_ step: WorkoutStep, segments: [WorkoutSegment]) -> WorkoutStep {
         WorkoutStep(id: step.id, number: step.number, title: step.title,
-            instruction: instruction ?? step.instruction, accessory: step.accessory,
+            instruction: step.instruction, accessory: step.accessory,
             duration: step.duration, phase: step.phase, segments: segments,
             gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
             handUse: step.handUse, side: step.side, action: step.action,

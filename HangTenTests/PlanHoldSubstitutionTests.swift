@@ -340,8 +340,7 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         XCTAssertEqual(session.boardID, board.id)
         XCTAssertEqual(session.steps.count, 2)
         for step in session.steps {
-            XCTAssertTrue(step.instruction.contains("Source instruction."))
-            XCTAssertTrue(step.instruction.contains(option.label))
+            XCTAssertEqual(step.instruction, "Source instruction.")
             XCTAssertEqual(step.accessory, "Source accessory.")
             XCTAssertEqual(step.duration, 12)
             XCTAssertEqual(step.timedWorkDuration, 10)
@@ -532,7 +531,7 @@ final class PlanHoldSubstitutionTests: XCTestCase {
             .measured(.init(minimum: 30, maximum: 30)),
             .measured(.init(minimum: 30, maximum: 30))
         ])
-        XCTAssertTrue(session.steps[0].instruction.contains("30 mm edge"))
+        XCTAssertEqual(session.steps[0].instruction, source.steps[0].instruction)
     }
 
     func testPreparedCompatibleRequestsCannotBypassChoicesAfterTheBoardChanges() throws {
@@ -553,7 +552,7 @@ final class PlanHoldSubstitutionTests: XCTestCase {
             [request.id: try XCTUnwrap(request.options.first).id], to: source, on: changed, prepared: fresh
         ))
         XCTAssertEqual(session.provenance, .adapted)
-        XCTAssertTrue(session.steps[0].instruction.contains("30 mm edge"))
+        XCTAssertEqual(session.steps[0].instruction, source.steps[0].instruction)
     }
 
     func testPreparedRequestsStillRequireEveryExplicitValidChoice() throws {
@@ -716,7 +715,7 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
             [request.id: request.options[0].id], to: source, on: board
         ))
-        XCTAssertTrue(session.steps[0].instruction.contains(source.steps[0].instruction))
+        XCTAssertEqual(session.steps[0].instruction, source.steps[0].instruction)
     }
 
     func testEffectiveDepthChoicesForTheSameContactHaveDistinctFactualLabels() throws {
