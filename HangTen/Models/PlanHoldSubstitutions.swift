@@ -7,7 +7,7 @@ struct PlanHoldSubstitutionOption: Identifiable, Hashable {
 }
 
 struct PlanHoldSubstitutionRequest: Identifiable, Hashable {
-    struct ID: Hashable {
+    struct ID: Codable, Hashable {
         let planID: String
         let boardID: String
         let revisionID: String
@@ -349,9 +349,9 @@ enum PlanHoldSubstitutions {
         }
     }
 
-    /// Prescription resolution may tolerate nearby measured depths. A generated
-    /// substitute must describe the resolved contact's exact facts so its label
-    /// and recorded target cannot claim the neighboring candidate's depth.
+    /// Prescribed intervals may overlap a contact's measured range. A generated
+    /// substitute retains the resolved contact's exact facts so its label and
+    /// recorded target describe the athlete's selected hold.
     private static func matchesFactualFields(_ predicate: PlanContactPredicate, contact: PhysicalContact) -> Bool {
         let factual = factualPredicate(for: contact)
         return predicate.kind == factual.kind && predicate.shape == factual.shape && predicate.depth == factual.depth
@@ -423,10 +423,8 @@ enum PlanHoldSubstitutions {
             switch depth {
             case .category(let size): parts.append(size.label.lowercased())
             case .range(let range):
-                // Some catalog bands compensate for numeric match tolerance
-                // or an audited size inference. They are resolution inputs,
-                // not source-prescribed ranges. Retain those ranges in the
-                // original instruction rather than presenting the internal band.
+                // Keep range prescriptions in the original step instruction;
+                // substitute labels include the board's measured ranges.
                 if range.minimum == range.maximum {
                     parts.append("\(number(range.minimum)) mm")
                 } else if includingMeasuredRanges {

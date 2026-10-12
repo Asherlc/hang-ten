@@ -2,6 +2,24 @@ import XCTest
 @testable import HangTen
 
 final class PlanHoldSubstitutionTests: XCTestCase {
+    func testNearbyDepthRequiresAnExplicitHoldSelection() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-19", name: "19 mm left", depth: 19, side: .left),
+            contact(id: "right-19", name: "19 mm right", depth: 19, side: .right)
+        ])
+        let source = fixturePlan(steps: [fixtureStep(target: .tasks([task(depth: 20)]))])
+        let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+        XCTAssertNil(PlanHoldSubstitutions.applying([:], to: source, on: board))
+        let option = try XCTUnwrap(request.options.first)
+        XCTAssertEqual(option.label, "19 mm edge")
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            [request.id: option.id], to: source, on: board))
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board)),
+                       ["left-19", "right-19"])
+        XCTAssertEqual(session.provenance, .adapted)
+        XCTAssertTrue(session.steps[0].instruction.contains(source.steps[0].instruction))
+    }
+
     func testMatchingPairLabelsRemoveInteriorAndHyphenatedSideWordsWithoutLosingHoldFacts() throws {
         let cases: [(HoldKind, Int, String, String, String)] = [
             (.edge, 4, "Outer left middle edge", "Outer RIGHT middle edge", "Outer middle edge"),

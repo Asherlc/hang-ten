@@ -140,9 +140,9 @@ targets. Routines never contain board contact IDs or visual-frame references:
 - `shape` only for a documented physical qualifier such as “flat,” “round,”
   “incut,” or “slot”;
 - `depth: {"category":"medium"}` for a source size word, or
-  `depth: {"minMM":20,"maxMM":35}` for a stated measurement or an explicitly
-  documented inferred band in an adapted plan. Never present an inferred band
-  as a manufacturer prescription; use equal bounds for one exact measurement;
+  `depth: {"minMM":20,"maxMM":35}` for a stated measurement or range. Preserve
+  size words as categories; do not convert them into invented millimeter bands.
+  Use equal bounds for one exact measurement;
 - `fingerCapacity` when the source specifies it. For edges this is the minimum
   room needed for the grip: larger authored capacities qualify, and omitted edge
   capacity adds no restriction. An explicitly smaller edge is rejected. For
@@ -166,7 +166,10 @@ The resolver filters factual contacts by the predicate and the step's grip
 metadata, then chooses contacts within that matching set. It does not broaden a
 failed predicate to the closest size or substitute another hold type. Keep the
 source wording and document unresolved compatibility rather than inventing a
-target. `PlanHoldSubstitutions` is a separate athlete-choice flow: it groups
+target. Numeric depths match only when their stated intervals overlap, without
+additional tolerance. A size category matches only the same authored category;
+a measured depth cannot establish a source size word. `PlanHoldSubstitutions`
+is a separate athlete-choice flow: it groups
 repeated missing requirements, verifies alternative holds with the same
 resolver, and requires an explicit selection for every missing target. It keeps
 task order, hand use, finger/grip cues, timing, rest, repetitions, and load, while
@@ -178,11 +181,10 @@ substitutes separately from the retained original plan text. The source-linked
 catalog and its audit mappings remain the original prescription. Board-specific
 catalog routines remain restricted to their declared board. Requirements with
 no valid alternative remain unavailable.
-Required-hold labels omit internal numeric range bands: some compensate for
-matching tolerance or an audited size inference and are not source-prescribed
-measurements. The original source wording remains in the instructions; substitute
-choices show the selected board's actual measured depths, including effective
-depths for adjustable positions.
+The original source wording remains in the instructions; substitute choices
+show the selected board's actual measured depths, including effective depths
+for adjustable positions. Selecting a substitute establishes the athlete's
+choice for that board and plan, without converting the catalog's source target.
 
 The legacy `.selfSelected` work form is restricted to the validator's
 explicit source allowlist and custom plans. Modern `tasks` may contain
@@ -190,39 +192,32 @@ explicit source allowlist and custom plans. Modern `tasks` may contain
 establish a source prescription. Justify every athlete-choice target from the
 plan's evidence. Custom athlete-authored routines may also use exact contact IDs.
 
-### Metolius edge-name cross-reference (checked September 29, 2026)
+### Metolius edge-name evidence (checked October 11, 2026)
 
 The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
 uses Large, Medium, and Small Edge without millimeter measurements. The separate
 [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
 uses numbered deep, medium, shallow, and extra-shallow edges. Metolius's
 [numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619)
-provides the following measurements. Matching the generic names across the
-two guides is an inference, not a manufacturer-published conversion table.
+provides the following board-specific measurements. Metolius publishes no
+conversion between the generic guide's size words and these measured contacts.
 
-| Generic guide term | Simulator 3D term | Number | Depth |
-| --- | --- | ---: | ---: |
-| Large Edge | Deep edge | 7 | 36 mm |
-| Medium Edge | Medium edge | 5 | 25 mm |
-| Small Edge | Shallow edge | 6 | 19 mm |
-| No generic counterpart | Extra-shallow edge | 11 | 14 mm |
+| Simulator 3D term | Number | Depth |
+| --- | ---: | ---: |
+| Deep edge | 7 | 36 mm |
+| Medium edge | 5 | 25 mm |
+| Shallow edge | 6 | 19 mm |
+| Extra-shallow edge | 11 | 14 mm |
 
 The Simulator matrix calls #5 “shallow” once in its Entry minute 6, despite
-calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. The
-cross-reference supports an inferred 8–19 mm resolution band for the Metolius
-generic plan's Small Edge tasks: 8–15 mm comes from Hang Ten's existing Small
-category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
-This is specific to those tasks; the shared Small category remains 8–15 mm for
-other plans and saved routines. The band overlaps Medium Edge on a board with
-only two edge depths. On Simulator 3D, Hang Ten's center-nearest resolver
-currently highlights the same #6 19 mm edge for both generic Small Edge and
-Medium Edge tasks; that overlap is an app mapping, not a manufacturer-published
-equivalence. It is not a manufacturer-prescribed numeric range and
-does not change any contact's factual depth. Because numeric `HoldDepth.matches`
-allows 1 mm of tolerance on each end, the serialized requirement uses 9–18 mm
-to match point-depth contacts from 8 through 19 mm, excluding 7.5 and 20 mm.
-Contacts with measured depth ranges still match when their range intersects
-that band. The Intermediate generic guide's
+calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. These
+board-specific measurements do not establish a conversion for the generic
+guide's size words. The generic guide's Intermediate minute 3 names Small Edge,
+and minute 6 names Jug/Small Edge. Their targets use `category: "small"` in
+`metolius.generic-ten-minute.intermediate.sequence-7`, `sequence-15`, and
+`sequence-16`. The previous inferred 8–19 mm mapping and its tolerance-adjusted
+9–18 mm encoding are removed. Measured contacts require an explicit athlete
+choice when the source category cannot resolve. The Intermediate generic guide's
 minute 9 says only “Slope,” so its target is an unqualified sloper. Its
 Advanced section explicitly says “Large Slope,” and that target remains
 size-qualified.
