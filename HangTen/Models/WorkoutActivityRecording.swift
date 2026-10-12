@@ -865,6 +865,8 @@ enum ContactResolver {
 
 struct WorkoutActivityRecorder {
     /// Records activity for a completed session.
+    /// An elapsed limit records only reached steps and clips fixed intervals;
+    /// stopwatch work retains its observed duration and untimed work stays unknown.
     ///
     /// Resolution priority:
     /// 1. `sessionSteps` — already-materialized session timeline (preferred)
@@ -878,7 +880,8 @@ struct WorkoutActivityRecorder {
         handPreference: WorkoutSessionHandPreference? = nil,
         sessionSteps: [WorkoutStep]? = nil,
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
-        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil
+        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
+        elapsed: TimeInterval? = nil
     ) throws -> [RecordedActivitySegment] {
         let recordingSteps = try resolvedRecordingSteps(
             for: plan,
@@ -888,16 +891,25 @@ struct WorkoutActivityRecorder {
             sessionSteps: sessionSteps
         )
         var result: [RecordedActivitySegment] = []
+        var stepStart: TimeInterval = 0
         for recordedStep in recordingSteps {
+            defer { stepStart += recordedStep.duration }
+            if let elapsed, stepStart >= elapsed { break }
+            var segmentStart = stepStart
             for (index, segment) in recordedStep.segments.enumerated() {
+                defer { segmentStart += segment.duration ?? 0 }
+                if let elapsed, segmentStart >= elapsed { break }
                 let key = WorkoutActivitySegmentKey(stepID: recordedStep.id, segmentIndex: index)
+                let fixedDuration = segment.duration.map { duration in
+                    elapsed.map { min(duration, max(0, $0 - segmentStart)) } ?? duration
+                }
                 let duration: TimeInterval?
                 switch segment.kind {
                 case .rest:
-                    duration = segment.duration
+                    duration = fixedDuration
                 case .work:
                     switch segment.timing {
-                    case .fixed: duration = segment.duration
+                    case .fixed: duration = fixedDuration
                     case .undefined: duration = nil
                     case .stopwatch:
                         if let observed = stopwatchDurations[key] {
@@ -1180,7 +1192,8 @@ struct WorkoutActivityRecorder {
         sessionSteps: [WorkoutStep]? = nil,
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
         selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
-        stepMeasurements: [WorkoutStepMeasurement] = []
+        stepMeasurements: [WorkoutStepMeasurement] = [],
+        elapsed: TimeInterval? = nil
     ) throws -> WorkoutActivityMetadata {
         WorkoutActivityMetadata(
             segments: try segments(
@@ -1191,7 +1204,8 @@ struct WorkoutActivityRecorder {
                 handPreference: handPreference,
                 sessionSteps: sessionSteps,
                 performedTaskIndicesByStepID: performedTaskIndicesByStepID,
-                selectedTaskSidesByStepID: selectedTaskSidesByStepID
+                selectedTaskSidesByStepID: selectedTaskSidesByStepID,
+                elapsed: elapsed
             ),
             measurements: measuredSteps(from: stepMeasurements)
         )

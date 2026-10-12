@@ -1215,6 +1215,169 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0].durationSeconds, 8.75)
     }
 
+    func testEarlyRecordingClipsFixedWorkBeforeFutureRest() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
+            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50)
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            elapsed: 4
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records.first?.kind, .work)
+        XCTAssertEqual(records.first?.target, .selfSelected)
+        XCTAssertEqual(records.first?.durationSeconds, 4)
+    }
+
+    func testEarlyRecordingClipsReachedRestToElapsedTime() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
+            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50)
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            elapsed: 13
+        )
+
+        XCTAssertEqual(records.map(\.kind), [.work, .rest])
+        XCTAssertEqual(records.map(\.durationSeconds), [10, 3])
+        XCTAssertNil(records.last?.target)
+    }
+
+    func testEarlyRecordingOmitsNextStepAtExactBoundary() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 60)
+        ])
+        let futureStep = WorkoutStep(
+            id: "future", number: 2, title: "Next hang", instruction: "", accessory: "",
+            duration: 20, phase: .hang,
+            segments: [
+                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 20)
+            ]
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            sessionSteps: [workout.steps[0], futureStep],
+            elapsed: 60
+        )
+
+        XCTAssertEqual(records.map(\.stepID), ["step"])
+        XCTAssertEqual(records.map(\.durationSeconds), [60])
+    }
+
+    func testEarlyRecordingWithZeroElapsedOmitsAllActivity() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 60)
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            elapsed: 0
+        )
+
+        XCTAssertTrue(records.isEmpty)
+    }
+
+    func testEarlyRecordingPreservesObservedStopwatchDuration() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .stopwatch, duration: nil)
+        ])
+        let key = WorkoutActivitySegmentKey(stepID: "step", segmentIndex: 0)
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            stopwatchDurations: [key: 3.25],
+            elapsed: 12
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records.first?.durationSeconds, 3.25)
+    }
+
+    func testEarlyRecordingDoesNotInventUnobservedStopwatchDuration() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .stopwatch, duration: nil)
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            elapsed: 12
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertNil(records.first?.durationSeconds)
+    }
+
+    func testEarlyRecordingKeepsUndefinedWorkDurationUnknown() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .undefined, duration: nil)
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            elapsed: 12
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertNil(records.first?.durationSeconds)
+    }
+
+    func testEarlyRecordingKeepsPerformedTaskSelectionWithoutInventingTaskDuration() throws {
+        let workout = plan([
+            WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(), .init()],
+                    [.init(side: .right)]
+                ]),
+                timing: .fixed,
+                duration: 60
+            )
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            performedTaskIndicesByStepID: ["step": [1]],
+            elapsed: 12
+        )
+
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records.first?.target, .selfSelected)
+        XCTAssertEqual(records.first?.handUse, .single)
+        XCTAssertEqual(records.first?.side, .right)
+        XCTAssertNil(records.first?.durationSeconds)
+    }
+
+    func testEarlyRecordingMetadataOmitsUnreachedActivity() throws {
+        let workout = plan([
+            WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
+            WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50)
+        ])
+
+        let metadata = try WorkoutActivityRecorder().metadata(
+            for: workout,
+            on: board,
+            elapsed: 6
+        )
+
+        XCTAssertEqual(metadata.segments.count, 1)
+        XCTAssertEqual(metadata.segments.first?.kind, .work)
+        XCTAssertEqual(metadata.segments.first?.durationSeconds, 6)
+    }
+
     func testStopwatchWorkWithoutObservedDurationIsNil() throws {
         let workout = plan([
             WorkoutSegment(

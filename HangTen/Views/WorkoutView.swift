@@ -14,6 +14,12 @@ struct WorkoutView: View {
         }
     }
 
+    private enum EndSessionResume {
+        case paused
+        case running
+        case countdown(PendingCountdownStart)
+    }
+
     private struct RendererPreparationContent: Equatable {
         let presentationID: String
         let contactIDs: Set<String>
@@ -56,12 +62,16 @@ struct WorkoutView: View {
     @State private var sessionState = WorkoutSessionState()
     @State private var didAutoStart = false
     @State private var showEndConfirmation = false
+    @State private var endSessionResume = EndSessionResume.paused
+    @State private var endSessionRunningStopwatches: Set<WorkoutActivitySegmentKey> = []
+    @State private var endSessionDate: Date?
     @State private var showsStepPicker = false
     @State private var showsReportProblem = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
 	    @State private var recorder = MotherboardWorkoutRecorder()
 	@State private var completedSession: WorkoutSessionRecord?
+	@State private var completedRecordingElapsed: TimeInterval?
 	@State private var summarySession: WorkoutSessionRecord?
     @State private var didSaveSession = false
     @State private var didInterruptRecorder = false
@@ -318,7 +328,7 @@ struct WorkoutView: View {
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button("End") {
-                    showEndConfirmation = true
+                    requestEndConfirmation()
                 }
                 .accessibilityIdentifier("workout.end")
             }
@@ -356,13 +366,21 @@ struct WorkoutView: View {
             )
             .environmentObject(store)
         }
-        .confirmationDialog("End this session?", isPresented: $showEndConfirmation, titleVisibility: .visible) {
-            Button("End session", role: .destructive) {
+        .alert("End this session?", isPresented: $showEndConfirmation) {
+            Button("Save session") {
+                saveEndedSession()
+            }
+            .disabled(sessionState.routineStartedAt == nil || sessionState.pausedElapsed <= 0)
+            .accessibilityIdentifier("workout.end.save")
+            Button("Discard session", role: .destructive) {
                 endSession()
             }
-            Button("Keep training", role: .cancel) {}
+            .accessibilityIdentifier("workout.end.discard")
+            Button("Keep training", role: .cancel) {
+                keepTraining()
+            }
         } message: {
-            Text("This will stop the timer without logging a workout to Apple Health.")
+            Text("Save your progress to history and Apple Health, if connected, or discard this session.")
         }
 		.sheet(item: $summarySession) { session in
 			WorkoutSummaryView(
@@ -1386,6 +1404,52 @@ struct WorkoutView: View {
 		audioCoach.stop()
     }
 
+    private func requestEndConfirmation() {
+        let monotonicTime = WorkoutClock.monotonicTime
+        endSessionDate = Date()
+        endSessionRunningStopwatches = Set(stopwatches.compactMap { key, stopwatch in
+            stopwatch.isRunning ? key : nil
+        })
+        if let pendingCountdownStart {
+            endSessionResume = .countdown(pendingCountdownStart)
+        } else if sessionState.countdownRemaining(at: monotonicTime) > 0 {
+            endSessionResume = .countdown(sessionState.countdownKind == .skip
+                ? .skip(targetElapsed: sessionState.pausedElapsed) : .initial)
+        } else if rendererStartGate.isPending || countdownArmTask != nil {
+            endSessionResume = .countdown(.initial)
+        } else {
+            endSessionResume = sessionState.activeStartUptime == nil ? .paused : .running
+        }
+        pauseForInterruption(at: monotonicTime)
+        showEndConfirmation = true
+    }
+
+    private func keepTraining() {
+        guard scenePhase == .active else { return }
+        switch endSessionResume {
+        case .paused: break
+        case .running: toggleRunning()
+        case .countdown(let countdown): requestCountdownStart(countdown)
+        }
+        let monotonicTime = WorkoutClock.monotonicTime
+        for key in endSessionRunningStopwatches {
+            stopwatches[key]?.start(at: monotonicTime)
+        }
+        endSessionRunningStopwatches = []
+        endSessionDate = nil
+    }
+
+    private func saveEndedSession() {
+        let monotonicTime = WorkoutClock.monotonicTime
+        let elapsed = currentElapsed(at: monotonicTime)
+        let recordedAt = endSessionDate ?? Date()
+        guard elapsed > 0, let startedAt = sessionState.routineStartedAt,
+              startedAt < recordedAt else { return }
+        finalizeRoutine(monotonicTime: monotonicTime, elapsed: elapsed,
+                        recordedAt: recordedAt, presentsSummary: false)
+        if let completedSession { save(completedSession) }
+    }
+
 	private func endSession() {
 		cancelPendingCountdownArm()
 		interruptRecorderIfNeeded()
@@ -1395,9 +1459,8 @@ struct WorkoutView: View {
         dismiss()
     }
 
-	private func pauseForInterruption() {
+	private func pauseForInterruption(at monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
 		cancelPendingCountdownArm()
-		let monotonicTime = WorkoutClock.monotonicTime
 		pauseStopwatches(at: monotonicTime)
 		guard sessionState.activeStartUptime != nil else {
 			audioCoach.stop()
@@ -1477,20 +1540,32 @@ struct WorkoutView: View {
 		)
 	}
 
-	private func finalizeRoutine(monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
+	private func finalizeRoutine(
+        monotonicTime: TimeInterval = WorkoutClock.monotonicTime,
+        elapsed: TimeInterval? = nil,
+        recordedAt: Date = Date(),
+        presentsSummary: Bool = true
+    ) {
 		guard !didComplete else { return }
 		didComplete = true
+        completedRecordingElapsed = elapsed
+        let recordingElapsed = elapsed ?? sessionDuration
+        var stepStart: TimeInterval = 0
+        let recordingSteps = activeSteps.filter { step in
+            defer { stepStart += step.duration }
+            return elapsed == nil || stepStart < recordingElapsed
+        }
 		completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
 			at: monotonicTime,
 			in: &stopwatches
 		)
-		recorder.pause(at: sessionDuration)
+		recorder.pause(at: recordingElapsed)
 
 		let completedMeasurements = Dictionary(
-			uniqueKeysWithValues: recorder.finish(at: sessionDuration).map { ($0.stepID, $0) }
+			uniqueKeysWithValues: recorder.finish(at: recordingElapsed).map { ($0.stepID, $0) }
 		)
 		// Session steps already carry resolved handUse/side (left/right/both/alternate expansion).
-		let steps = activeSteps.map { step in
+		let steps = recordingSteps.map { step in
 			let measurement = completedMeasurements[step.id] ?? WorkoutStepMeasurement(
 				stepID: step.id,
 				plannedActiveDuration: step.activeDuration,
@@ -1519,8 +1594,7 @@ struct WorkoutView: View {
 				isRest: step.isRestStep
 			)
 		}
-		let recordedAt = Date()
-		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-sessionDuration)
+		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-recordingElapsed)
 		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
 			recordedAt: recordedAt
@@ -1535,7 +1609,7 @@ struct WorkoutView: View {
 			motherboardIdentifier: initialWeight.source == .sensor ? motherboardBluetoothService.connectedDeviceID?.uuidString : nil,
 			batteryValue: initialWeight.source == .sensor ? motherboardBluetoothService.batteryValue : nil,
 			steps: steps,
-			stepTitles: activeSteps.map(\.title),
+			stepTitles: recordingSteps.map(\.title),
 			forceSensorProfile: WorkoutSessionPolicy.recordedForceSensorProfile(
 				source: initialWeight.source,
 				connectedProfile: motherboardBluetoothService.connectedProfile,
@@ -1552,7 +1626,7 @@ struct WorkoutView: View {
 				&& motherboardMeasurementCollector.didTruncate
 		)
 		completedSession = session
-		summarySession = session
+		if presentsSummary { summarySession = session }
 	}
 
 	private func configureRecorder() {
@@ -1591,7 +1665,8 @@ struct WorkoutView: View {
 			sessionSteps: planNeedsHandChoice ? sessionSteps : nil,
 			performedTaskIndicesByStepID: taskCursor.performedTaskIndicesByStepID,
 			selectedTaskSidesByStepID: taskCursor.selectedTaskSidesByStepID,
-			session: session
+			session: session,
+            elapsed: completedRecordingElapsed
 		)
 		summarySession = nil
 		dismiss()

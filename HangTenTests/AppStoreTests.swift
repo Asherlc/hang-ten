@@ -396,6 +396,56 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
+    func testEarlyCompletionPersistsClippedActivityAndUploadsItAfterConnect() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(requirement: nil)
+        let board = appStore.board(for: plan)
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_004)
+
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate,
+            elapsed: 4
+        )
+        waitForHistory(in: appStore)
+
+        let expectedSegment = RecordedActivitySegment(
+            stepID: "activity-step",
+            stepNumber: 1,
+            kind: .work,
+            target: .selfSelected,
+            durationSeconds: 4,
+            handUse: .double,
+            side: .both
+        )
+        let pendingContext = try XCTUnwrap(historyStore.load().first?.activityContext)
+        XCTAssertEqual(pendingContext.activitySegments, [expectedSegment])
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+
+        healthStore.authorizationState = .authorized
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let savedContext = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(savedContext.boardID, board.id)
+        XCTAssertEqual(savedContext.activitySegments, [expectedSegment])
+    }
+
     func testCompletionConvenienceOverloadForwardsSelectedEitherHand() throws {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

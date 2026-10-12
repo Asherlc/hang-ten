@@ -1,5 +1,97 @@
 import XCTest
 
+final class WorkoutEndUITests: XCTestCase {
+    private var initialSessionCount = 0
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
+
+    override func tearDownWithError() throws {
+        XCUIApplication().terminate()
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testEndOffersSaveDiscardAndKeepTraining() {
+        let app = openWorkout()
+        app.buttons["workout.end"].tap()
+        XCTAssertTrue(app.buttons["Save session"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Discard session"].exists)
+        app.buttons["Keep training"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
+    }
+
+    func testEndSavesAnEarlySessionToHistory() {
+        let app = openWorkout()
+        app.buttons["workout.end"].tap()
+        XCTAssertTrue(app.buttons["Save session"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "End workout save or discard")
+        app.alerts.buttons["Save session"].firstMatch.tap()
+        XCTAssertFalse(app.buttons["workout.end"].waitForExistence(timeout: 2))
+        app.tabBars.buttons["History"].tap()
+        let sessions = historySessions(in: app)
+        let session = sessions.firstMatch
+        XCTAssertTrue(session.waitForExistence(timeout: 10))
+        XCTAssertEqual(sessions.count, initialSessionCount + 1)
+        session.tap()
+        XCTAssertTrue(app.navigationBars["Session summary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Max hang · set 1"].exists)
+        XCTAssertFalse(app.staticTexts["Max hang · set 2"].exists)
+        attachScreenshot(named: "Saved early workout first step only")
+    }
+
+    func testKeepTrainingPreservesAnAlreadyPausedSession() {
+        let app = openWorkout()
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        app.buttons["workout.end"].tap()
+        app.buttons["Keep training"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+    }
+
+    func testEndDiscardsWithoutAddingHistory() {
+        let app = openWorkout()
+        app.buttons["workout.end"].tap()
+        XCTAssertTrue(app.buttons["Discard session"].waitForExistence(timeout: 5))
+        app.alerts.buttons["Discard session"].firstMatch.tap()
+        XCTAssertFalse(app.buttons["workout.end"].waitForExistence(timeout: 2))
+        app.tabBars.buttons["History"].tap()
+        XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 10))
+        XCTAssertEqual(historySessions(in: app).count, initialSessionCount)
+    }
+
+    private func openWorkout() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_PORTRAIT": "1"
+        ]
+        app.terminate()
+        app.launch()
+        XCTAssertTrue(app.tabBars.buttons["History"].waitForExistence(timeout: 20))
+        app.tabBars.buttons["History"].tap()
+        XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 10))
+        initialSessionCount = historySessions(in: app).count
+        app.tabBars.buttons["Train"].tap()
+        app.open(URL(string: "hangten://plan/research.max-hangs/workout")!)
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 60))
+        return app
+    }
+
+    private func historySessions(in app: XCUIApplication) -> XCUIElementQuery {
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Max Hangs"))
+    }
+
+    private func attachScreenshot(named name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+}
+
 final class PlanFlowUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false

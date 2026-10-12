@@ -346,7 +346,12 @@ Log session creates a detailed local record through `WorkoutSessionStore` and
 passes a pending record to `WorkoutHistoryService` for optional HealthKit sync.
 The local detailed History list is distinct from the HealthKit-derived progress
 snapshot, so a visible History row does not prove a HealthKit save or import.
-End session dismisses without completion logging or a HealthKit write.
+End pauses the workout and offers Save session, Discard session, or Keep training.
+Save retains the reached steps, closes measurements at the current elapsed time,
+and clips fixed activity segments to that position before recording history and
+optional HealthKit sync. Save is unavailable before the session starts. Discard
+dismisses without history or a HealthKit write. Keep training restores the prior
+running, paused, or countdown state, including any running stopwatches.
 
 ## Apple Health authorization and synchronization
 

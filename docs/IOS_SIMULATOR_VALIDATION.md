@@ -355,8 +355,9 @@ checks. Common review cases are:
 - Portrait/landscape rotation with stable clock, grip and contact state.
 - Stopwatch Start/Stop/Resume, pause accumulation and finalization on navigation
   or rest; never-started work must retain an omitted observed duration.
-- Log session with the selected board and ordered work/rest records; End session
-  must not log a completion.
+- Log session with the selected board and ordered work/rest records; End must
+  offer save/discard, save only reached activity, and discard without logging.
+  Keep training must preserve the prior running or paused state.
 - Health permission requested only by Connect Apple Health, plus authorization,
   local fallback, source and error states after Settings/scene refresh.
 
