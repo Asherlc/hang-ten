@@ -6,6 +6,38 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    func testShaderPreparationSharesCompilationWithoutBlockingMainActor() async throws {
+        let compilerStarted = expectation(description: "Shader compiler started")
+        let mainActorResponded = expectation(description: "Main actor remains responsive")
+        var releaseCompiler: CheckedContinuation<Void, Never>?
+        var compilerCalls = 0
+        let programs = BoardModelShaderPrograms { _ in
+            compilerCalls += 1
+            compilerStarted.fulfill()
+            await withCheckedContinuation { releaseCompiler = $0 }
+            return nil
+        }
+        defer { releaseCompiler?.resume() }
+        let first = Task { await programs.program(named: "wood") }
+        let second = Task { await programs.program(named: "wood") }
+        await fulfillment(of: [compilerStarted], timeout: 2)
+        Task { @MainActor in mainActorResponded.fulfill() }
+
+        await fulfillment(of: [mainActorResponded], timeout: 2)
+        XCTAssertEqual(compilerCalls, 1)
+        first.cancel()
+        releaseCompiler?.resume()
+        releaseCompiler = nil
+        let firstResult = await first.value
+        let secondResult = await second.value
+        let cachedResult = await programs.program(named: "wood")
+        XCTAssertNil(firstResult)
+        XCTAssertNil(secondResult)
+        XCTAssertNil(cachedResult)
+        XCTAssertEqual(compilerCalls, 1, "Canceling a preview must retain the shared compilation")
+    }
+
+    @MainActor
     func testClavelliumPitchMovesBoardAroundCordPivotWhileSupportAndCameraStayFixed() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "clavellium-training-block"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
@@ -1941,7 +1973,7 @@ final class BoardModelRealityTests: XCTestCase {
     // MARK: - Helpers
 
     @MainActor
-    func testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood() throws {
+    func testNestedSurfaceSelectorsPreserveAttachmentNeutralityAndInheritedWood() async throws {
         let contact = BoardModelContactDescriptor(
             nodeIDs: ["Group/Left"],
             facePlaneAABB: .init(minimum: [0, 0], maximum: [1, 1]), center: [0.5, 0.5])
@@ -1986,7 +2018,7 @@ final class BoardModelRealityTests: XCTestCase {
                 inheritedMeshes.append(unnamedMesh)
                 attachments.append(hardware)
             }
-            scene.applyBoardMaterials()
+            try await scene.applyBoardMaterials()
             for entity in contacts + inheritedMeshes {
                 XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
                               "Relative selector and unnamed-child inheritance must apply in each instance")

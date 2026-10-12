@@ -12,6 +12,11 @@ Train is the default tab, with the selected board and favorite plans. Both
 originating tab. `train.settings` opens Settings. History opens the chronological
 list of detailed local sessions.
 
+Board preview shaders compile through shared asynchronous RealityKit programs. Model
+loading awaits those tasks without blocking navigation or accessibility queries;
+scene updates and highlight baselines remain on the main actor. Canceling one
+preview does not cancel material preparation needed by other previews.
+
 Board detail and active workouts expose Report a problem through
 `boardDetail.reportProblem` and `workout.reportProblem`. Configured Sentry User
 Feedback receives the user's message, optional typed email, and ID tags
