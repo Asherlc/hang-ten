@@ -619,8 +619,21 @@ final class CustomRoutineSetUITests: XCTestCase {
 
     /// Opens a saved custom routine from My routines and waits for the plan screen.
     private func openSavedRoutine(named name: String, in app: XCUIApplication) {
-        XCTAssertTrue(app.navigationBars["Plans"].waitForExistence(timeout: 10))
-        tap("workouts.myRoutines", in: app)
+        // Plans remains in the hierarchy underneath the editor. Wait for the
+        // editor to leave before resolving its underlying navigation controls.
+        XCTAssertTrue(app.buttons["customRoutine.save"].waitForNonExistence(timeout: 10),
+                      "The routine editor must dismiss before opening My routines.")
+        let plans = app.navigationBars["Plans"]
+        XCTAssertTrue(plans.waitForExistence(timeout: 10))
+        let myRoutines = app.navigationBars["My routines"]
+        for _ in 0..<3 {
+            tap("workouts.myRoutines", in: app)
+            if myRoutines.waitForExistence(timeout: 5) { break }
+            // If the tap did not start navigation, re-resolve it only while
+            // still on the originating screen.
+            if !plans.exists || !plans.isHittable { break }
+        }
+        XCTAssertTrue(myRoutines.exists, "My routines must open before looking for the saved routine.")
         let row = app.staticTexts[name].firstMatch
         XCTAssertTrue(row.waitForExistence(timeout: 10))
         reveal(row, in: app)
