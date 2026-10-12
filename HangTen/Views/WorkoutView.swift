@@ -60,6 +60,7 @@ struct WorkoutView: View {
     }
 
     @State private var sessionState = WorkoutSessionState()
+    @State private var activityProgress = WorkoutActivityProgress()
     @State private var didAutoStart = false
     @State private var showEndConfirmation = false
     @State private var endSessionResume = EndSessionResume.paused
@@ -72,6 +73,7 @@ struct WorkoutView: View {
 	    @State private var recorder = MotherboardWorkoutRecorder()
 	@State private var completedSession: WorkoutSessionRecord?
 	@State private var completedRecordingElapsed: TimeInterval?
+    @State private var completedActivityIntervals: [Range<TimeInterval>]?
 	@State private var summarySession: WorkoutSessionRecord?
     @State private var didSaveSession = false
     @State private var didInterruptRecorder = false
@@ -370,7 +372,7 @@ struct WorkoutView: View {
             Button("Save session") {
                 saveEndedSession()
             }
-            .disabled(sessionState.routineStartedAt == nil || sessionState.pausedElapsed <= 0)
+            .disabled(sessionState.routineStartedAt == nil || !hasRecordedActivity)
             .accessibilityIdentifier("workout.end.save")
             Button("Discard session", role: .destructive) {
                 endSession()
@@ -432,6 +434,11 @@ struct WorkoutView: View {
 						sessionState.pausedElapsed = activeSteps
 							.prefix(min(requestedStep - 1, activeSteps.count))
 							.reduce(0) { $0 + $1.duration }
+                    // The completion fixture represents a fully performed workout.
+                    // Ordinary step previews do not simulate earlier activity.
+                    if requestedStep > activeSteps.count, sessionDuration > 0 {
+                        activityProgress = WorkoutActivityProgress(intervals: [0..<sessionDuration])
+                    }
 				}
 			}
 
@@ -1288,6 +1295,7 @@ struct WorkoutView: View {
 			)
 		}
 		let monotonicTime = WorkoutClock.monotonicTime
+		activityProgress.capture(sessionState, planDuration: sessionDuration, at: monotonicTime)
 		if rendererStartGate.isPending || pendingCountdownStart != nil || countdownArmTask != nil {
             let shouldPause = WorkoutSessionPolicy.shouldPauseAfterCancellingPendingCountdown(
                 kind: pendingCountdownStart?.kind,
@@ -1388,6 +1396,11 @@ struct WorkoutView: View {
 		_ countdown: PendingCountdownStart,
 		at armUptime: TimeInterval
 	) {
+        // Audio and the destination clock are scheduled from armUptime. A late
+        // MainActor wake must not also count that countdown as the previous step.
+        let captureUptime = min(WorkoutClock.monotonicTime, armUptime)
+        activityProgress.capture(sessionState, planDuration: sessionDuration, at: captureUptime)
+        recorder.pause(at: currentElapsed(at: captureUptime))
 		switch countdown {
 		case .initial:
             rendererStartGate.finishPreparation()
@@ -1400,6 +1413,7 @@ struct WorkoutView: View {
     private func cancelCountdown() {
         rendererStartGate.cancel()
 		let monotonicTime = WorkoutClock.monotonicTime
+		activityProgress.capture(sessionState, planDuration: sessionDuration, at: monotonicTime)
 		sessionState.cancelCountdown(at: monotonicTime)
 		audioCoach.stop()
     }
@@ -1443,7 +1457,7 @@ struct WorkoutView: View {
         let monotonicTime = WorkoutClock.monotonicTime
         let elapsed = currentElapsed(at: monotonicTime)
         let recordedAt = endSessionDate ?? Date()
-        guard elapsed > 0, let startedAt = sessionState.routineStartedAt,
+        guard hasRecordedActivity, let startedAt = sessionState.routineStartedAt,
               startedAt < recordedAt else { return }
         finalizeRoutine(monotonicTime: monotonicTime, elapsed: elapsed,
                         recordedAt: recordedAt, presentsSummary: false)
@@ -1460,6 +1474,7 @@ struct WorkoutView: View {
     }
 
 	private func pauseForInterruption(at monotonicTime: TimeInterval = WorkoutClock.monotonicTime) {
+		activityProgress.capture(sessionState, planDuration: sessionDuration, at: monotonicTime)
 		cancelPendingCountdownArm()
 		pauseStopwatches(at: monotonicTime)
 		guard sessionState.activeStartUptime != nil else {
@@ -1547,18 +1562,24 @@ struct WorkoutView: View {
         presentsSummary: Bool = true
     ) {
 		guard !didComplete else { return }
+		activityProgress.capture(sessionState, planDuration: sessionDuration, at: monotonicTime)
 		didComplete = true
+        completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
+            at: monotonicTime,
+            in: &stopwatches
+        )
         completedRecordingElapsed = elapsed
-        let recordingElapsed = elapsed ?? sessionDuration
+        completedActivityIntervals = activityProgress.intervals
+        let recordingElapsed = elapsed ?? currentElapsed(at: monotonicTime)
         var stepStart: TimeInterval = 0
         let recordingSteps = activeSteps.filter { step in
             defer { stepStart += step.duration }
-            return elapsed == nil || stepStart < recordingElapsed
+            return WorkoutActivityProgress.duration(
+                in: stepStart..<(stepStart + step.duration), intervals: activityProgress.intervals
+            ) > 0 || completedStopwatchDurations.contains { key, duration in
+                key.stepID == step.id && duration > 0
+            } || liftCompletion.completedRepetitions(for: step) > 0
         }
-		completedStopwatchDurations = WorkoutStopwatchLifecycle.finalizeAndSnapshotStopwatches(
-			at: monotonicTime,
-			in: &stopwatches
-		)
 		recorder.pause(at: recordingElapsed)
 
 		let completedMeasurements = Dictionary(
@@ -1666,7 +1687,8 @@ struct WorkoutView: View {
 			performedTaskIndicesByStepID: taskCursor.performedTaskIndicesByStepID,
 			selectedTaskSidesByStepID: taskCursor.selectedTaskSidesByStepID,
 			session: session,
-            elapsed: completedRecordingElapsed
+            elapsed: completedRecordingElapsed,
+            activityIntervals: completedActivityIntervals
 		)
 		summarySession = nil
 		dismiss()
@@ -1715,6 +1737,13 @@ struct WorkoutView: View {
         sessionState.currentElapsed(planDuration: sessionDuration, at: uptime)
     }
 
+    private var hasRecordedActivity: Bool {
+        let uptime = WorkoutClock.monotonicTime
+        return activityProgress.hasActivity || stopwatches.values.contains {
+            ($0.elapsed(at: uptime) ?? 0) > 0
+        } || activeSteps.contains { liftCompletion.completedRepetitions(for: $0) > 0 }
+    }
+
     private func countdownRemaining(at uptime: TimeInterval) -> Int {
         sessionState.countdownRemaining(at: uptime)
     }
@@ -1735,6 +1764,8 @@ struct WorkoutView: View {
     }
 
     private func seek(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
+        activityProgress.capture(sessionState, planDuration: sessionDuration, at: uptime)
+        recorder.pause(at: currentElapsed(at: uptime))
         sessionState.seek(to: targetElapsed, planDuration: sessionDuration, at: uptime)
         audioCoach.stop()
     }
@@ -1758,7 +1789,7 @@ struct WorkoutView: View {
         audioCoach.stop()
         switch decision {
         case .seek(let target):
-            sessionState.seek(to: target, planDuration: sessionDuration, at: monotonicTime)
+            seek(to: target, at: monotonicTime)
         case .countdown(let target):
             requestCountdownStart(.skip(targetElapsed: target))
         }

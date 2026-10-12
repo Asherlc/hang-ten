@@ -2,6 +2,7 @@ import XCTest
 
 final class WorkoutEndUITests: XCTestCase {
     private var initialSessionCount = 0
+    private var activeHistoryTitle = "Max Hangs"
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -40,6 +41,108 @@ final class WorkoutEndUITests: XCTestCase {
         attachScreenshot(named: "Saved early workout first step only")
     }
 
+    func testEndAfterReturningToFirstStepSavesOnlyPerformedSets() {
+        let app = openWorkout()
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        selectWorkoutStep(titled: "Max hang · set 3", in: app)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        app.buttons["Resume"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 10))
+        Thread.sleep(forTimeInterval: 0.25)
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        selectWorkoutStep(titled: "Max hang · set 1", in: app)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "00:10")
+        app.buttons["workout.end"].tap()
+        let save = app.alerts.buttons["workout.end.save"].firstMatch
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertTrue(save.isEnabled, "Returning to the start must preserve previously performed work.")
+        attachScreenshot(named: "End after returning to first step preserves save")
+        save.tap()
+
+        XCTAssertFalse(app.buttons["workout.end"].waitForExistence(timeout: 2))
+        app.tabBars.buttons["History"].tap()
+        let sessions = historySessions(in: app)
+        XCTAssertTrue(sessions.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(sessions.count, initialSessionCount + 1)
+        sessions.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["Session summary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Max hang · set 1"].exists)
+        XCTAssertTrue(app.staticTexts["Max hang · set 3"].exists)
+        XCTAssertFalse(app.staticTexts["Max hang · set 2"].exists)
+        attachScreenshot(named: "Saved navigation workout contains only performed sets one and three")
+    }
+
+    func testSkippingUnperformedFinalSetOmitsUnvisitedSetsFromSummary() {
+        let app = openWorkout()
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+
+        selectWorkoutStep(titled: "Max hang · set 5", in: app)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        attachScreenshot(named: "Unperformed final set selected while paused")
+        app.buttons["workout.skipStep"].tap()
+
+        XCTAssertTrue(app.navigationBars["Summary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Max hang · set 1"].exists)
+        for set in 2...5 {
+            XCTAssertFalse(app.staticTexts["Max hang · set \(set)"].exists,
+                           "Navigating past set \(set) must not count it as performed.")
+        }
+        attachScreenshot(named: "Skipping final set summary contains only performed first set")
+    }
+
+    func testEndSavesIndependentStopwatchWorkWhileRoutineRemainsPaused() {
+        let app = openWorkout(URL(string: "hangten://plan/tension-long-hangs/workout")!,
+                              historyTitle: "Tension Long Hangs")
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        selectWorkoutStep(titled: "Long hang 2 of 3", in: app)
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        let pausedTimer = app.staticTexts["workout.timer"].label
+        XCTAssertEqual(pausedTimer, "00:15")
+
+        // SwiftUI propagates the containing stopwatch identifier to its button.
+        let stopwatch = app.buttons["workout.stopwatch"]
+        XCTAssertTrue(stopwatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(stopwatch.label, "Start stopwatch")
+        stopwatch.tap()
+        let running = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Stop stopwatch"), object: stopwatch
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [running], timeout: 5), .completed)
+        Thread.sleep(forTimeInterval: 0.25)
+        stopwatch.tap()
+        let stopped = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label == %@", "Resume stopwatch"), object: stopwatch
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [stopped], timeout: 5), .completed)
+        XCTAssertTrue(app.buttons["Resume"].exists)
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, pausedTimer)
+        attachScreenshot(named: "Second long hang stopwatch recorded while routine timer stays paused")
+
+        app.buttons["workout.end"].tap()
+        let save = app.alerts.buttons["workout.end.save"].firstMatch
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        XCTAssertTrue(save.isEnabled)
+        save.tap()
+        XCTAssertFalse(app.buttons["workout.end"].waitForExistence(timeout: 2))
+        app.tabBars.buttons["History"].tap()
+        let sessions = historySessions(in: app)
+        XCTAssertTrue(sessions.firstMatch.waitForExistence(timeout: 10))
+        XCTAssertEqual(sessions.count, initialSessionCount + 1)
+        sessions.firstMatch.tap()
+        XCTAssertTrue(app.navigationBars["Session summary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Long hang 1 of 3"].exists)
+        XCTAssertTrue(app.staticTexts["Long hang 2 of 3"].exists)
+        XCTAssertFalse(app.staticTexts["Long hang 3 of 3"].exists)
+        attachScreenshot(named: "Saved paused stopwatch workout contains first and second long hangs")
+    }
+
     func testKeepTrainingPreservesAnAlreadyPausedSession() {
         let app = openWorkout()
         app.buttons["Pause"].tap()
@@ -60,7 +163,11 @@ final class WorkoutEndUITests: XCTestCase {
         XCTAssertEqual(historySessions(in: app).count, initialSessionCount)
     }
 
-    private func openWorkout() -> XCUIApplication {
+    private func openWorkout(
+        _ url: URL = URL(string: "hangten://plan/research.max-hangs/workout")!,
+        historyTitle: String = "Max Hangs"
+    ) -> XCUIApplication {
+        activeHistoryTitle = historyTitle
         let app = XCUIApplication()
         app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
         app.launchEnvironment = [
@@ -75,13 +182,49 @@ final class WorkoutEndUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 10))
         initialSessionCount = historySessions(in: app).count
         app.tabBars.buttons["Train"].tap()
-        app.open(URL(string: "hangten://plan/research.max-hangs/workout")!)
+        app.open(url)
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 60))
         return app
     }
 
     private func historySessions(in app: XCUIApplication) -> XCUIElementQuery {
-        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Max Hangs"))
+        app.buttons.matching(NSPredicate(format: "label CONTAINS %@", activeHistoryTitle))
+    }
+
+    private func selectWorkoutStep(titled title: String, in app: XCUIApplication) {
+        app.buttons["workout.routinePicker"].tap()
+        let navigationBar = app.navigationBars["Routine"]
+        XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))
+        let scrollView = app.scrollViews["workout.stepList"]
+        XCTAssertTrue(scrollView.waitForExistence(timeout: 5))
+        let row = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@ AND label CONTAINS %@",
+            "workout.step.", title
+        )).firstMatch
+        for _ in 0..<10 {
+            let viewport = scrollView.frame.intersection(app.frame)
+            let top = max(viewport.minY, navigationBar.frame.maxY) + 8
+            let bottom = min(viewport.maxY, app.frame.maxY - 34) - 8
+            let frame = row.exists ? row.frame : .null
+            let visible = frame.intersection(CGRect(
+                x: viewport.minX, y: top, width: viewport.width, height: max(0, bottom - top)
+            ))
+            if row.exists, row.isHittable, visible.width > 40, visible.height >= 80 {
+                row.coordinate(withNormalizedOffset: CGVector(
+                    dx: (visible.midX - frame.minX) / frame.width,
+                    dy: (visible.midY - frame.minY) / frame.height
+                )).tap()
+                XCTAssertTrue(navigationBar.waitForNonExistence(timeout: 5))
+                return
+            }
+            if frame.height > 0, frame.height.isFinite, frame.minY < top {
+                scrollView.swipeDown()
+            } else {
+                scrollView.swipeUp()
+            }
+        }
+        attachScreenshot(named: "Workout step unavailable: \(title)")
+        XCTFail("Workout step must be selectable: \(title)")
     }
 
     private func attachScreenshot(named name: String) {

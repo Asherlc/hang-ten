@@ -446,6 +446,91 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(savedContext.activitySegments, [expectedSegment])
     }
 
+    func testCompletionAfterBackwardSeekPersistsExecutedIntervalsAndUploadsThemAfterConnect() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let fixture = activityPlan(requirement: nil)
+        let plan = TrainingPlan(
+            id: fixture.id,
+            title: fixture.title,
+            subtitle: fixture.subtitle,
+            level: fixture.level,
+            sourceLabel: fixture.sourceLabel,
+            sourceURL: fixture.sourceURL,
+            provenance: fixture.provenance,
+            boardID: fixture.boardID,
+            steps: (1...3).map { number in
+                WorkoutStep(
+                    id: "activity-step-\(number)",
+                    number: number,
+                    title: fixture.steps[0].title,
+                    instruction: fixture.steps[0].instruction,
+                    accessory: fixture.steps[0].accessory,
+                    duration: 10,
+                    phase: .hang,
+                    segments: fixture.steps[0].segments,
+                    handUse: .double,
+                    side: .both
+                )
+            }
+        )
+        let board = appStore.board(for: plan)
+
+        // Run part of step 3, then seek backward and run part of step 1.
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_009),
+            elapsed: 3,
+            activityIntervals: [20..<26, 0..<3]
+        )
+        waitForHistory(in: appStore)
+
+        let expectedSegments = [
+            RecordedActivitySegment(
+                stepID: "activity-step-1",
+                stepNumber: 1,
+                kind: .work,
+                target: .selfSelected,
+                durationSeconds: 3,
+                handUse: .double,
+                side: .both
+            ),
+            RecordedActivitySegment(
+                stepID: "activity-step-3",
+                stepNumber: 3,
+                kind: .work,
+                target: .selfSelected,
+                durationSeconds: 6,
+                handUse: .double,
+                side: .both
+            )
+        ]
+        let pendingContext = try XCTUnwrap(historyStore.load().first?.activityContext)
+        XCTAssertEqual(pendingContext.activitySegments, expectedSegments)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+
+        healthStore.authorizationState = .authorized
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let savedContext = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(savedContext.boardID, board.id)
+        XCTAssertEqual(savedContext.activitySegments, expectedSegments)
+    }
+
     func testCompletionConvenienceOverloadForwardsSelectedEitherHand() throws {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

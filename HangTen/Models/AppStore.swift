@@ -430,7 +430,8 @@ final class AppStore: ObservableObject {
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
         selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
         session: WorkoutSessionRecord? = nil,
-        elapsed: TimeInterval? = nil
+        elapsed: TimeInterval? = nil,
+        activityIntervals: [Range<TimeInterval>]? = nil
     ) {
         if let session {
             workoutSessionStore.append(session) { [weak self] result in
@@ -461,7 +462,8 @@ final class AppStore: ObservableObject {
                 performedTaskIndicesByStepID: performedTaskIndicesByStepID,
                 selectedTaskSidesByStepID: selectedTaskSidesByStepID,
                 stepMeasurements: session?.steps ?? [],
-                elapsed: elapsed
+                elapsed: elapsed,
+                activityIntervals: activityIntervals
             )
             activityContext = PendingWorkoutActivityContext(
                 boardID: board.id,

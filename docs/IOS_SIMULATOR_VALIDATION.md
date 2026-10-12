@@ -356,7 +356,10 @@ checks. Common review cases are:
 - Stopwatch Start/Stop/Resume, pause accumulation and finalization on navigation
   or rest; never-started work must retain an omitted observed duration.
 - Log session with the selected board and ordered work/rest records; End must
-  offer save/discard, save only reached activity, and discard without logging.
+  offer save/discard, save only performed activity, and discard without logging.
+  Verify that forward selection and final-step Skip omit unperformed steps, while
+  partial attempts and activity recorded before a backward jump remain saved.
+  A paused return to the start must still allow saving earlier activity.
   Keep training must preserve the prior running or paused state.
 - Health permission requested only by Connect Apple Health, plus authorization,
   local fallback, source and error states after Settings/scene refresh.
