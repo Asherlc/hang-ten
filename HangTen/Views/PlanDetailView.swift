@@ -173,18 +173,33 @@ struct PlanDetailView: View {
             resolvedMaxHangsPlans = input.map {
                 MaxHangsEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
             } ?? [:]
+            selectedMaxHangsDepth = input.flatMap {
+                store.rememberedMaxHangsDepth(for: $0.plan, on: $0.board,
+                    availableDepths: Array(resolvedMaxHangsPlans.keys))
+            }
             resolvedMaxHangsInput = input
+        }
+        .onChange(of: selectedMaxHangsDepth) { _, depth in
+            guard let depth, let input = maxHangsResolutionInput,
+                  resolvedMaxHangsInput == input else { return }
+            store.rememberMaxHangsDepth(depth, for: input.plan, on: input.board,
+                availableDepths: Array(resolvedMaxHangsPlans.keys))
         }
         .onChange(of: substitutionInput, initial: true) { _, input in
             preparedSubstitutions = input.map {
                 PlanHoldSubstitutions.prepare(for: $0.plan, on: $0.board)
             }
-            substitutionSelections = [:]
+            substitutionSelections = preparedSubstitutions.map {
+                store.rememberedHoldSubstitutions(for: $0)
+            } ?? [:]
             resolvedSubstitutionInput = input
             resolveSubstitutedSession()
         }
         .onChange(of: substitutionSelections) { _, _ in
             resolveSubstitutedSession()
+            if resolvedSubstitutionInput == substitutionInput, let preparedSubstitutions {
+                store.rememberHoldSubstitutions(substitutionSelections, for: preparedSubstitutions)
+            }
         }
         .background(Color.hangBackground)
         .navigationTitle("Plan")

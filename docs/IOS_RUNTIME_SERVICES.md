@@ -318,11 +318,20 @@ separate from the hold label. Pocket finger capacities and effective position
 depths remain visible so different holds do not acquire identical descriptions.
 Every choice passes the same grip, finger-capacity, hand, and position checks used
 for work resolution. Shared contacts must fit both sides and support two hands.
+Named depth categories match only the same authored category; they do not imply
+a millimeter range. Measured depths match only overlapping authored intervals,
+without a numeric tolerance. Missing exact facts go through the picker.
 Canonical two-hand choices on a one-hand board retain “two boards” as equipment
 context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated missing targets share one choice. Start waits until every missing
-target has a valid selection; changing the board or training-edge variant clears
-the choices. The resulting session retains the source link and original
+target has a valid selection. Picker edits, including partial selections and
+cleared choices, are remembered locally for each plan, board revision, source
+target and grip context. Reopening the plan or returning to that board restores
+valid choices as editable defaults; changed targets or unavailable hold options
+require a new selection. The picker remains available after restoration.
+The max-hang training-edge picker also remembers the athlete's chosen depth for
+each plan and board revision, restoring it only while that size remains eligible.
+The resulting session retains the source link and original
 instructions with a substitution label, preserves interval and task structure,
 and records the actual chosen holds. It does not edit the canonical library or
 claim manufacturer endorsement of the athlete's choices. Plans remain visible

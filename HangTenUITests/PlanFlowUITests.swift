@@ -48,9 +48,52 @@ final class PlanFlowUITests: XCTestCase {
                        "Choosing one hold must not skip the remaining missing requirements.")
     }
 
+    func testHoldSelectionIsRestoredAfterRelaunchAndRemainsEditable() {
+        var app = launchPlan("metolius.generic-ten-minute.entry", boardID: "plateau.lifting-edge")
+        var picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        let options = app.buttons.matching(NSPredicate(
+            format: "identifier BEGINSWITH %@", "plan.substitution.option.0."))
+        XCTAssertGreaterThan(options.count, 1)
+        let firstLabel = options.element(boundBy: 0).label
+        options.element(boundBy: 0).tap()
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled,
+                       "Restoring one selection must still require the remaining missing holds.")
+        app.terminate()
+
+        app = launchPlan("metolius.generic-ten-minute.entry", boardID: "plateau.lifting-edge", resetHoldSelections: false)
+        picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(picker.label.contains(firstLabel))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled,
+                       "Restoring one selection must still require the remaining missing holds.")
+        attachScreenshot(named: "Remembered editable hold selection", app: app)
+        picker.tap()
+        let otherOption = app.buttons.matching(identifier: "plan.substitution.option.0.1").firstMatch
+        XCTAssertTrue(otherOption.waitForExistence(timeout: 5))
+        let secondLabel = otherOption.label
+        otherOption.tap()
+        app.terminate()
+
+        app = launchPlan("metolius.generic-ten-minute.entry", boardID: "plateau.lifting-edge", resetHoldSelections: false)
+        picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(picker.label.contains(secondLabel))
+        picker.tap()
+        app.buttons["Clear substitution"].tap()
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        app.terminate()
+
+        app = launchPlan("metolius.generic-ten-minute.entry", boardID: "plateau.lifting-edge", resetHoldSelections: false)
+        XCTAssertTrue(app.buttons["plan.substitution.picker.0"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Choose substitutes"].exists)
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+    }
+
     func testDeepLinkedPlanWithMissingHoldsOffersSubstitutesBeforeStarting() {
         let app = XCUIApplication()
-        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO", "-HangTen.planHoldSelections.v1", ""]
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
             "HANGTEN_REVIEW_PORTRAIT": "1",
@@ -63,6 +106,48 @@ final class PlanFlowUITests: XCTestCase {
         XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
         XCTAssertFalse(app.buttons["Pause"].exists)
         attachScreenshot(named: "Deep-linked plan requires substitutions", app: app)
+    }
+
+    func testCompleteRememberedSelectionPrepopulatesAnEnabledStart() {
+        var app = launchPlan("research.max-hangs", boardID: "owl-climb.poker")
+        let picker = app.buttons["plan.substitution.picker.0"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        let option = app.buttons["plan.substitution.option.0.0"]
+        XCTAssertTrue(option.waitForExistence(timeout: 5))
+        let selectedLabel = option.label
+        option.tap()
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        app.terminate()
+
+        app = launchPlan("research.max-hangs", boardID: "owl-climb.poker", resetHoldSelections: false)
+        XCTAssertTrue(app.buttons["plan.substitution.picker.0"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["plan.substitution.picker.0"].label.contains(selectedLabel))
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        attachScreenshot(named: "Remembered complete hold selection", app: app)
+    }
+
+    func testMaxHangsTrainingEdgeIsRestoredAfterRelaunch() {
+        var app = launchPlan("research.max-hangs", boardID: "beastmaker-1000")
+        let picker = app.buttons["plan.maxHangs.edgePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        picker.tap()
+        let smallerEdge = app.buttons["15 mm"]
+        XCTAssertTrue(smallerEdge.waitForExistence(timeout: 5))
+        smallerEdge.tap()
+        XCTAssertTrue(picker.label.contains("15 mm"))
+        app.terminate()
+
+        app = launchPlan("research.max-hangs", boardID: "beastmaker-1000", resetHoldSelections: false)
+        let restoredPicker = app.buttons["plan.maxHangs.edgePicker"]
+        XCTAssertTrue(restoredPicker.waitForExistence(timeout: 10))
+        XCTAssertTrue(restoredPicker.label.contains("15 mm"))
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        attachScreenshot(named: "Remembered training edge", app: app)
+        restoredPicker.tap()
+        XCTAssertTrue(app.buttons["20 mm"].waitForExistence(timeout: 5))
+        app.buttons["20 mm"].tap()
+        XCTAssertTrue(restoredPicker.label.contains("20 mm"))
     }
 
     func testRepeaterPreviewGroupsCyclesAndRetainsExceptionalRecovery() {
@@ -133,9 +218,13 @@ final class PlanFlowUITests: XCTestCase {
                          app: app, centering: "Do 1 pull-up on a round sloper.")
     }
 
-    private func launchPlan(_ id: String, landscape: Bool = false, boardID: String? = nil) -> XCUIApplication {
+    private func launchPlan(_ id: String, landscape: Bool = false, boardID: String? = nil,
+                            resetHoldSelections: Bool = true) -> XCUIApplication {
         XCUIDevice.shared.orientation = landscape ? .landscapeLeft : .portrait
         let app = XCUIApplication()
+        if resetHoldSelections {
+            app.launchArguments = ["-HangTen.planHoldSelections.v1", "", "-HangTen.maxHangsDepths.v1", ""]
+        }
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = id
         if let boardID { app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = boardID }

@@ -1118,8 +1118,9 @@ final class CustomRoutineStore: CustomRoutineStoring {
             case let .range(range):
                 guard historicDepth >= range.minimum,
                       historicDepth <= range.maximum else { return requirement }
-            case let .category(size):
-                guard size.depthRange.contains(historicDepth) else { return requirement }
+            case .category:
+                // A size word does not establish the historic numeric depth.
+                return requirement
             }
         }
         return ContactRequirement(

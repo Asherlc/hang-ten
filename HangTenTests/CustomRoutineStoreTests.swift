@@ -1465,8 +1465,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         ).routines[0]
         let depthCases: [[HoldDepth?]] = [
             [nil, nil],
-            [.range(.init(minimum: 0, maximum: 25)), .range(.init(minimum: 0, maximum: 25))],
-            [.category(.small), .category(.medium)]
+            [.range(.init(minimum: 0, maximum: 25)), .range(.init(minimum: 0, maximum: 25))]
         ]
         for depths in depthCases {
             let suite = ownedRoutineSuiteName()
@@ -1530,6 +1529,12 @@ final class CustomRoutineStoreTests: XCTestCase {
             )),
             ("contradictory depth category", .init(
                 contactID: "blocker-edge-10", kind: .edge, depth: .category(.large), handCapacity: 1
+            )),
+            ("small category cannot prove 10 mm", .init(
+                contactID: "blocker-edge-10", kind: .edge, depth: .category(.small), handCapacity: 1
+            )),
+            ("medium category cannot prove 15 mm", .init(
+                contactID: "blocker-edge-15", kind: .edge, depth: .category(.medium), handCapacity: 1
             )),
             ("contradictory kind", .init(
                 contactID: "blocker-edge-10", kind: .pocket, depth: tenMillimeters, handCapacity: 1
