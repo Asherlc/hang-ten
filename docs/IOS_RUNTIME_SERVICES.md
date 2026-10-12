@@ -349,7 +349,9 @@ snapshot, so a visible History row does not prove a HealthKit save or import.
 End pauses the workout and offers Save session, Discard session, or Keep training.
 Save retains the reached steps, closes measurements at the current elapsed time,
 and clips fixed activity segments to that position before recording history and
-optional HealthKit sync. Save is unavailable before the session starts. Discard
+optional HealthKit sync. Following unknown work timing, rest is recorded only
+when the step declares its work/rest boundary; observed stopwatch time does not
+establish that boundary. Save is unavailable before the session starts. Discard
 dismisses without history or a HealthKit write. Keep training restores the prior
 running, paused, or countdown state, including any running stopwatches.
 

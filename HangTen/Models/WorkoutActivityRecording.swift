@@ -895,13 +895,23 @@ struct WorkoutActivityRecorder {
         for recordedStep in recordingSteps {
             defer { stepStart += recordedStep.duration }
             if let elapsed, stepStart >= elapsed { break }
-            var segmentStart = stepStart
+            var segmentStart: TimeInterval? = stepStart
             for (index, segment) in recordedStep.segments.enumerated() {
-                defer { segmentStart += segment.duration ?? 0 }
-                if let elapsed, segmentStart >= elapsed { break }
+                defer {
+                    segmentStart = followingSegmentStart(
+                        after: index, in: recordedStep,
+                        stepStart: stepStart, currentStart: segmentStart
+                    )
+                }
+                if let elapsed {
+                    guard let segmentStart, segmentStart < elapsed else { break }
+                }
                 let key = WorkoutActivitySegmentKey(stepID: recordedStep.id, segmentIndex: index)
                 let fixedDuration = segment.duration.map { duration in
-                    elapsed.map { min(duration, max(0, $0 - segmentStart)) } ?? duration
+                    if let elapsed, let segmentStart {
+                        return min(duration, max(0, elapsed - segmentStart))
+                    }
+                    return duration
                 }
                 let duration: TimeInterval?
                 switch segment.kind {
@@ -1106,6 +1116,32 @@ struct WorkoutActivityRecorder {
             }
         }
         return result
+    }
+
+    /// Unknown work timing can reach a rest suffix only at a declared step boundary.
+    /// Observed stopwatch time describes activity, not its place in the workout timeline.
+    private func followingSegmentStart(
+        after index: Int,
+        in step: WorkoutStep,
+        stepStart: TimeInterval,
+        currentStart: TimeInterval?
+    ) -> TimeInterval? {
+        guard let currentStart else { return nil }
+        let segment = step.segments[index]
+        if segment.timing == .fixed, let duration = segment.duration {
+            return currentStart + duration
+        }
+
+        let following = step.segments.dropFirst(index + 1)
+        guard segment.kind == .work,
+              !following.isEmpty,
+              following.allSatisfy({ $0.kind == .rest && $0.timing == .fixed && $0.duration != nil }),
+              let workDuration = step.timedWorkDuration,
+              workDuration.isFinite, workDuration > 0, workDuration <= step.duration else {
+            return nil
+        }
+        let restStart = stepStart + workDuration
+        return restStart >= currentStart ? restStart : nil
     }
 
     private func resolvedRecordingSteps(
