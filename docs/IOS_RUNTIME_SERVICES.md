@@ -343,9 +343,9 @@ launching; compatible deep links retain their direct workout launch.
 Resolved work retains board/revision identity, optional model hash, the factual
 requirement or per-hand targets, resolved contact IDs and applicable position.
 Ordered source segments remain ordered records. Rest has identity and duration
-but no target. Fixed work stores prescribed active duration; stopwatch work
-stores observed active seconds. Never-started stopwatch and genuinely untimed
-work omit duration.
+but no target. In a running workout, fixed work and rest store the time actually
+spent in their timeline ranges; stopwatch work stores observed active seconds.
+Never-started stopwatch and genuinely untimed work omit duration.
 
 Stopwatch controls begin at `00:00` and expose Start, Stop and Resume. They do
 not advance the enclosing workout clock. Workout pause or scene interruption
@@ -356,7 +356,21 @@ Log session creates a detailed local record through `WorkoutSessionStore` and
 passes a pending record to `WorkoutHistoryService` for optional HealthKit sync.
 The local detailed History list is distinct from the HealthKit-derived progress
 snapshot, so a visible History row does not prove a HealthKit save or import.
-End session dismisses without completion logging or a HealthKit write.
+End pauses the workout and offers Save session, Discard session, or Keep training.
+Save retains the steps with actual activity and closes measurements before
+recording history and optional HealthKit sync. An execution ledger captures the
+clock before pause, navigation, skip countdown, and completion. Skipped timeline
+ranges contribute no work or rest; partial attempts retain their executed time,
+and repeated visits add their durations. Earlier and later activity survives a
+backward jump, including a paused return to the start. Countdown and paused time
+contribute no fixed activity. Independently observed stopwatch work remains
+recorded even when the enclosing clock is paused. Explicitly completed loaded
+lifts also retain their repetitions and entered load; they supply no synthetic
+timed duration. Following unknown work timing, rest is recorded only when the
+step declares its work/rest boundary; observed stopwatch time does not establish
+that boundary. Save is unavailable until activity has been recorded. Discard
+dismisses without history or a HealthKit write. Keep training restores the prior
+running, paused, or countdown state, including any running stopwatches.
 
 ## Apple Health authorization and synchronization
 

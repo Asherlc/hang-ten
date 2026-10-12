@@ -732,6 +732,7 @@ jobs:
               HangTenUITests/SettingsUITests
               HangTenUITests/WorkoutChooserUITests
               HangTenUITests/PlanFlowUITests
+              HangTenUITests/WorkoutEndUITests
               HangTenUITests/PendingWorkoutSummaryUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndDiscardKeepsLastLocked

@@ -863,8 +863,61 @@ enum ContactResolver {
     }
 }
 
+/// Actual running ranges in workout timeline coordinates. Separate visits are
+/// retained so navigation cannot invent activity or erase repeated attempts.
+struct WorkoutActivityProgress {
+    private(set) var intervals: [Range<TimeInterval>]
+    private var runStartUptime: TimeInterval?
+    private var runStartElapsed: TimeInterval?
+    private var capturedThrough: TimeInterval = 0
+
+    init(intervals: [Range<TimeInterval>] = []) {
+        self.intervals = intervals
+    }
+
+    var hasActivity: Bool { !intervals.isEmpty }
+
+    /// Capture before changing the clock. Repeated checkpoints of one run are idempotent.
+    mutating func capture(_ state: WorkoutSessionState, planDuration: TimeInterval, at uptime: TimeInterval) {
+        guard let startUptime = state.activeStartUptime,
+              startUptime.isFinite, state.pausedElapsed.isFinite,
+              planDuration.isFinite, planDuration > 0, uptime.isFinite else { return }
+        if runStartUptime != startUptime || runStartElapsed != state.pausedElapsed {
+            runStartUptime = startUptime
+            runStartElapsed = state.pausedElapsed
+            capturedThrough = min(planDuration, max(0, state.pausedElapsed))
+        }
+        guard uptime >= startUptime else { return }
+        let end = state.currentElapsed(planDuration: planDuration, at: uptime)
+        guard end > capturedThrough else { return }
+        if let last = intervals.last, last.upperBound == capturedThrough {
+            intervals[intervals.count - 1] = last.lowerBound..<end
+        } else {
+            intervals.append(capturedThrough..<end)
+        }
+        capturedThrough = end
+    }
+
+    func snapshot(_ state: WorkoutSessionState, planDuration: TimeInterval, at uptime: TimeInterval) -> [Range<TimeInterval>] {
+        var progress = self
+        progress.capture(state, planDuration: planDuration, at: uptime)
+        return progress.intervals
+    }
+
+    /// Sum intersections, including distinct attempts at the same timeline position.
+    static func duration(in range: Range<TimeInterval>, intervals: [Range<TimeInterval>]) -> TimeInterval {
+        intervals.reduce(0) { total, interval in
+            guard interval.lowerBound.isFinite, interval.upperBound.isFinite else { return total }
+            return total + max(0, min(range.upperBound, interval.upperBound) - max(range.lowerBound, interval.lowerBound))
+        }
+    }
+}
+
 struct WorkoutActivityRecorder {
     /// Records activity for a completed session.
+    /// Execution intervals omit skipped work and sum partial or repeated attempts.
+    /// An elapsed limit alone records only reached steps and clips fixed intervals;
+    /// stopwatch work retains its observed duration and untimed work stays unknown.
     ///
     /// Resolution priority:
     /// 1. `sessionSteps` — already-materialized session timeline (preferred)
@@ -878,7 +931,10 @@ struct WorkoutActivityRecorder {
         handPreference: WorkoutSessionHandPreference? = nil,
         sessionSteps: [WorkoutStep]? = nil,
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
-        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil
+        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
+        elapsed: TimeInterval? = nil,
+        activityIntervals: [Range<TimeInterval>]? = nil,
+        performedWorkStepIDs: Set<String> = []
     ) throws -> [RecordedActivitySegment] {
         let recordingSteps = try resolvedRecordingSteps(
             for: plan,
@@ -888,16 +944,54 @@ struct WorkoutActivityRecorder {
             sessionSteps: sessionSteps
         )
         var result: [RecordedActivitySegment] = []
+        var stepStart: TimeInterval = 0
         for recordedStep in recordingSteps {
+            defer { stepStart += recordedStep.duration }
+            if activityIntervals == nil, let elapsed, stepStart >= elapsed { break }
+            var segmentStart: TimeInterval? = stepStart
             for (index, segment) in recordedStep.segments.enumerated() {
                 let key = WorkoutActivitySegmentKey(stepID: recordedStep.id, segmentIndex: index)
+                let hasObservedWork = segment.kind == .work && segment.timing == .stopwatch
+                    && (stopwatchDurations[key] ?? 0) > 0
+                let hasCompletedWork = segment.kind == .work && performedWorkStepIDs.contains(recordedStep.id)
+                defer {
+                    segmentStart = followingSegmentStart(
+                        after: index, in: recordedStep,
+                        stepStart: stepStart, currentStart: segmentStart
+                    )
+                }
+                if activityIntervals != nil {
+                    guard segmentStart != nil else { break }
+                } else if let elapsed {
+                    guard let segmentStart, segmentStart < elapsed else { break }
+                }
+                let performedDuration: TimeInterval?
+                if let activityIntervals, let segmentStart {
+                    let end = followingSegmentStart(after: index, in: recordedStep,
+                        stepStart: stepStart, currentStart: segmentStart) ?? (stepStart + recordedStep.duration)
+                    guard end > segmentStart else { continue }
+                    let performed = WorkoutActivityProgress.duration(
+                        in: segmentStart..<end, intervals: activityIntervals
+                    )
+                    guard performed > 0 || hasObservedWork || hasCompletedWork else { continue }
+                    performedDuration = performed
+                } else {
+                    performedDuration = nil
+                }
+                let fixedDuration = segment.duration.flatMap { duration -> TimeInterval? in
+                    if let performedDuration { return performedDuration > 0 ? performedDuration : nil }
+                    if let elapsed, let segmentStart {
+                        return min(duration, max(0, elapsed - segmentStart))
+                    }
+                    return duration
+                }
                 let duration: TimeInterval?
                 switch segment.kind {
                 case .rest:
-                    duration = segment.duration
+                    duration = fixedDuration
                 case .work:
                     switch segment.timing {
-                    case .fixed: duration = segment.duration
+                    case .fixed: duration = fixedDuration
                     case .undefined: duration = nil
                     case .stopwatch:
                         if let observed = stopwatchDurations[key] {
@@ -1096,6 +1190,32 @@ struct WorkoutActivityRecorder {
         return result
     }
 
+    /// Unknown work timing can reach a rest suffix only at a declared step boundary.
+    /// Observed stopwatch time describes activity, not its place in the workout timeline.
+    private func followingSegmentStart(
+        after index: Int,
+        in step: WorkoutStep,
+        stepStart: TimeInterval,
+        currentStart: TimeInterval?
+    ) -> TimeInterval? {
+        guard let currentStart else { return nil }
+        let segment = step.segments[index]
+        if segment.timing == .fixed, let duration = segment.duration {
+            return currentStart + duration
+        }
+
+        let following = step.segments.dropFirst(index + 1)
+        guard segment.kind == .work,
+              !following.isEmpty,
+              following.allSatisfy({ $0.kind == .rest && $0.timing == .fixed && $0.duration != nil }),
+              let workDuration = step.timedWorkDuration,
+              workDuration.isFinite, workDuration > 0, workDuration <= step.duration else {
+            return nil
+        }
+        let restStart = stepStart + workDuration
+        return restStart >= currentStart ? restStart : nil
+    }
+
     private func resolvedRecordingSteps(
         for plan: TrainingPlan,
         on board: BoardRevision,
@@ -1180,7 +1300,9 @@ struct WorkoutActivityRecorder {
         sessionSteps: [WorkoutStep]? = nil,
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
         selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
-        stepMeasurements: [WorkoutStepMeasurement] = []
+        stepMeasurements: [WorkoutStepMeasurement] = [],
+        elapsed: TimeInterval? = nil,
+        activityIntervals: [Range<TimeInterval>]? = nil
     ) throws -> WorkoutActivityMetadata {
         WorkoutActivityMetadata(
             segments: try segments(
@@ -1191,7 +1313,12 @@ struct WorkoutActivityRecorder {
                 handPreference: handPreference,
                 sessionSteps: sessionSteps,
                 performedTaskIndicesByStepID: performedTaskIndicesByStepID,
-                selectedTaskSidesByStepID: selectedTaskSidesByStepID
+                selectedTaskSidesByStepID: selectedTaskSidesByStepID,
+                elapsed: elapsed,
+                activityIntervals: activityIntervals,
+                performedWorkStepIDs: Set(stepMeasurements.filter {
+                    $0.action == .loadedLift && ($0.completedRepetitions ?? 0) > 0
+                }.map(\.stepID))
             ),
             measurements: measuredSteps(from: stepMeasurements)
         )
