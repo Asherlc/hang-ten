@@ -259,7 +259,7 @@ final class BoardModelRealityScene {
 
         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
         // each finish before highlighting so deselection restores the authored finish.
-        applyBoardMaterials()
+        try await applyBoardMaterials()
 
         // Build contact entity mapping from descriptor
         // Highlight baselines were captured by applyBoardMaterials().
@@ -343,14 +343,15 @@ final class BoardModelRealityScene {
         return Transform(matrix: matrix * Self.reflectionMatrix(center: Self.boundsCenter(descriptor.modelBounds)))
     }
 
-    func applyBoardMaterials() {
+    func applyBoardMaterials() async throws {
+        try Task.checkCancellation()
         for instance in instanceEntities {
-            applyBoardMaterials(to: instance, relativeTo: instance, inheritedFinish: display.surfaceFinish)
+            try await applyBoardMaterials(to: instance, relativeTo: instance, inheritedFinish: display.surfaceFinish)
         }
     }
 
     private func applyBoardMaterials(to entity: Entity, relativeTo instanceRoot: Entity,
-                                     inheritedFinish: BoardSurfaceFinish) {
+                                     inheritedFinish: BoardSurfaceFinish) async throws {
         // CAD descriptor names identify the authored surfaces. Carry the finish
         // through any unnamed mesh children inserted by the USDZ importer.
         let nodeID = findNodeID(for: entity, relativeTo: instanceRoot, bindings: finishByNodeID)
@@ -358,59 +359,45 @@ final class BoardModelRealityScene {
         if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
             let material: any RealityKit.Material
             switch finish {
-            case .wood: material = Self.woodMaterial
-            case .plastic: material = Self.plasticMaterial
-            case .granite: material = Self.graniteMaterial
+            case .wood: material = await Self.makeWoodMaterial()
+            case .plastic: material = await Self.makePlasticMaterial()
+            case .granite: material = await Self.makeGraniteMaterial()
             case .neutral: material = Self.neutralMaterial()
             }
+            try Task.checkCancellation()
             modelEntity.model?.materials = [material]
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyBoardMaterials(to: child, relativeTo: instanceRoot, inheritedFinish: finish)
+            try await applyBoardMaterials(to: child, relativeTo: instanceRoot, inheritedFinish: finish)
         }
     }
 
-    private static let woodMaterial: any RealityKit.Material = {
+    private static let shaderPrograms = BoardModelShaderPrograms()
+    private static var preparedMaterials: [String: any RealityKit.Material] = [:]
+
+    private static func makeWoodMaterial() async -> any RealityKit.Material {
+        if let cached = preparedMaterials["boardWoodSurfaceShader"] { return cached }
         var base = PhysicallyBasedMaterial()
         base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
         base.roughness = .init(floatLiteral: 0.82)
         base.metallic = .init(floatLiteral: 0)
         base.faceCulling = .none
-        guard let device = MTLCreateSystemDefaultDevice(),
-              let library = device.makeDefaultLibrary() else { return base }
-        do {
-            let shader = CustomMaterial.SurfaceShader(named: "boardWoodSurfaceShader", in: library)
-            return try CustomMaterial(from: base, surfaceShader: shader)
-        } catch {
-            #if DEBUG
-            print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
-            #endif
-            // A warm matte fallback still identifies wood on unsupported devices.
-            return base
-        }
-    }()
+        return await preparedMaterial(named: "boardWoodSurfaceShader", base: base)
+    }
 
-    private static let graniteMaterial: any RealityKit.Material = {
+    private static func makeGraniteMaterial() async -> any RealityKit.Material {
+        if let cached = preparedMaterials["boardGraniteSurfaceShader"] { return cached }
         var base = PhysicallyBasedMaterial()
         base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
         base.roughness = .init(floatLiteral: 0.92)
         base.metallic = .init(floatLiteral: 0)
         base.faceCulling = .none
-        guard let device = MTLCreateSystemDefaultDevice(),
-              let library = device.makeDefaultLibrary() else { return base }
-        do {
-            let shader = CustomMaterial.SurfaceShader(named: "boardGraniteSurfaceShader", in: library)
-            return try CustomMaterial(from: base, surfaceShader: shader)
-        } catch {
-            #if DEBUG
-            print("[BoardModelRealityScene] Granite shader unavailable: \(error)")
-            #endif
-            return base
-        }
-    }()
+        return await preparedMaterial(named: "boardGraniteSurfaceShader", base: base)
+    }
 
-    private static let plasticMaterial: any RealityKit.Material = {
+    private static func makePlasticMaterial() async -> any RealityKit.Material {
+        if let cached = preparedMaterials["boardPlasticSurfaceShader"] { return cached }
         var base = PhysicallyBasedMaterial()
         // Seafoam mint is the app's display palette, not a product color fact.
         base.baseColor = .init(tint: UIColor(red: 123.0 / 255, green: 203.0 / 255,
@@ -420,18 +407,29 @@ final class BoardModelRealityScene {
         // Like the neutral finish, retain front surfaces when an instance's
         // reflection reverses winding. CustomMaterial inherits this setting.
         base.faceCulling = .none
-        guard let device = MTLCreateSystemDefaultDevice(),
-              let library = device.makeDefaultLibrary() else { return base }
-        do {
-            let shader = CustomMaterial.SurfaceShader(named: "boardPlasticSurfaceShader", in: library)
-            return try CustomMaterial(from: base, surfaceShader: shader)
-        } catch {
-            #if DEBUG
-            print("[BoardModelRealityScene] Plastic shader unavailable: \(error)")
-            #endif
-            return base
+        return await preparedMaterial(named: "boardPlasticSurfaceShader", base: base)
+    }
+
+    private static func preparedMaterial(
+        named shaderName: String, base: PhysicallyBasedMaterial
+    ) async -> any RealityKit.Material {
+        if let cached = preparedMaterials[shaderName] { return cached }
+        let program = await shaderPrograms.program(named: shaderName)
+        if let cached = preparedMaterials[shaderName] { return cached }
+        let prepared: any RealityKit.Material
+        if let program {
+            var material = CustomMaterial(program: program)
+            material.baseColor = .init(base.baseColor)
+            material.roughness = .init(base.roughness)
+            material.metallic = .init(base.metallic)
+            material.faceCulling = base.faceCulling
+            prepared = material
+        } else {
+            prepared = base
         }
-    }()
+        preparedMaterials[shaderName] = prepared
+        return prepared
+    }
 
     private func setupCameraFraming() {
         var allPoints: [SIMD3<Float>] = []
@@ -1749,6 +1747,42 @@ final class BoardModelRealityResourceLease: @unchecked Sendable {
         self.lease = lease
     }
 
+}
+
+/// Share asynchronous shader compilation without blocking the main run loop.
+/// RealityKit material construction and scene application remain on MainActor.
+@MainActor
+final class BoardModelShaderPrograms {
+    typealias Compiler = @MainActor (String) async -> CustomMaterial.Program?
+    private let compile: Compiler
+    private var tasks: [String: Task<CustomMaterial.Program?, Never>] = [:]
+
+    init(compile: Compiler? = nil) {
+        self.compile = compile ?? Self.compileProgram
+    }
+
+    func program(named shaderName: String) async -> CustomMaterial.Program? {
+        if let task = tasks[shaderName] { return await task.value }
+        let task = Task { await compile(shaderName) }
+        tasks[shaderName] = task
+        return await task.value
+    }
+
+    private static func compileProgram(named shaderName: String) async -> CustomMaterial.Program? {
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return nil }
+        do {
+            var descriptor = CustomMaterial.Program.Descriptor()
+            descriptor.lightingModel = .lit
+            let shader = CustomMaterial.SurfaceShader(named: shaderName, in: library)
+            return try await CustomMaterial.Program(surfaceShader: shader, descriptor: descriptor)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Shader \(shaderName) unavailable: \(error)")
+            #endif
+            return nil
+        }
+    }
 }
 
 /// Cache for loaded RealityKit model sources.
