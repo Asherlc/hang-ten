@@ -332,9 +332,10 @@ require a new selection. The picker remains available after restoration.
 The max-hang training-edge picker also remembers the athlete's chosen depth for
 each plan and board revision, restoring it only while that size remains eligible.
 The resulting session retains the source link and original
-instructions with a substitution label, preserves interval and task structure,
-and records the actual chosen holds. It does not edit the canonical library or
-claim manufacturer endorsement of the athlete's choices. Plans remain visible
+instructions without adding substitution descriptions, preserves interval and
+task structure, and records the actual chosen holds. It does not edit the
+canonical library or claim manufacturer endorsement of the athlete's choices.
+Plans remain visible
 in focus browsing when substitutions are needed. Workout deep links enter plan
 detail when holds are missing, so they require the same explicit choices before
 launching; compatible deep links retain their direct workout launch.
