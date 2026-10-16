@@ -33,7 +33,7 @@ final class AppStoreTests: XCTestCase {
         ])
     }
 
-    func testMetoliusIntermediateIsCompatibleWithWoodGripsCompactII() throws {
+    func testMetoliusIntermediateRequiresHoldChoicesOnMeasuredWoodGripsCompactII() throws {
         let store = AppStore(defaults: makeDefaults())
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
         let plan = try XCTUnwrap(
@@ -48,10 +48,18 @@ final class AppStoreTests: XCTestCase {
             }
             return hasUnresolvedTask ? step.id : nil
         }
-        XCTAssertFalse(
+        XCTAssertTrue(
             store.isIncompatible(plan, on: board),
             "Unresolved task steps: \(unresolvedSteps); one-handed board: \(board.isOneHanded)"
         )
+        let prepared = PlanHoldSubstitutions.prepare(for: plan, on: board)
+        XCTAssertFalse(prepared.requests.isEmpty)
+        let selections = Dictionary(uniqueKeysWithValues: try prepared.requests.map { request in
+            (request.id, try XCTUnwrap(request.options.first).id)
+        })
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            selections, to: plan, on: board, prepared: prepared))
+        XCTAssertFalse(store.isIncompatible(session, on: board))
     }
 
     func testSelectedBoardPersistsAndRestoresByStableID() throws {
@@ -74,6 +82,179 @@ final class AppStoreTests: XCTestCase {
         let store = AppStore(defaults: defaults)
 
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
+    }
+
+    func testRememberedHoldSubstitutionsRestoreAfterRelaunch() throws {
+        let defaults = makeDefaults()
+        let prepared = holdSubstitutionFixture()
+        let request = try XCTUnwrap(prepared.requests.first)
+        let option = try XCTUnwrap(request.options.first)
+        let selections = [request.id: option.id]
+        let store = AppStore(defaults: defaults)
+        XCTAssertTrue(store.rememberedHoldSubstitutions(for: prepared).isEmpty)
+
+        store.rememberHoldSubstitutions(selections, for: prepared)
+
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared), selections)
+    }
+
+    func testRememberedHoldSubstitutionsKeepBoardPlanRevisionGripAndTargetContextsSeparate() throws {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let original = holdSubstitutionFixture()
+        let request = try XCTUnwrap(original.requests.first)
+        let selections = [request.id: try XCTUnwrap(request.options.first).id]
+        store.rememberHoldSubstitutions(selections, for: original)
+        let otherContexts = [
+            holdSubstitutionFixture(boardID: "another-board"),
+            holdSubstitutionFixture(planID: "another-plan"),
+            holdSubstitutionFixture(revisionID: "v2"),
+            holdSubstitutionFixture(grip: .openHand),
+            holdSubstitutionFixture(requiredDepths: [5])
+        ]
+
+        for prepared in otherContexts {
+            XCTAssertTrue(store.rememberedHoldSubstitutions(for: prepared).isEmpty)
+            let otherRequest = try XCTUnwrap(prepared.requests.first)
+            let otherSelections = [otherRequest.id: try XCTUnwrap(otherRequest.options.last).id]
+            store.rememberHoldSubstitutions(otherSelections, for: prepared)
+            XCTAssertEqual(store.rememberedHoldSubstitutions(for: original), selections)
+            XCTAssertEqual(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared), otherSelections)
+        }
+
+        store.rememberHoldSubstitutions([:], for: original)
+        XCTAssertTrue(store.rememberedHoldSubstitutions(for: original).isEmpty)
+        for prepared in otherContexts {
+            XCTAssertEqual(store.rememberedHoldSubstitutions(for: prepared).count, 1)
+        }
+    }
+
+    func testRememberedHoldSubstitutionsPreservePartialChoicesAndAllowEditingAndClearing() throws {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let prepared = holdSubstitutionFixture(requiredDepths: [10, 5])
+        XCTAssertEqual(prepared.requests.count, 2)
+        let first = try XCTUnwrap(prepared.requests.first)
+        let second = try XCTUnwrap(prepared.requests.last)
+        let firstOption = try XCTUnwrap(first.options.first)
+        let replacementOption = try XCTUnwrap(first.options.last)
+        XCTAssertNotEqual(firstOption.id, replacementOption.id)
+        let secondOption = try XCTUnwrap(second.options.first)
+
+        store.rememberHoldSubstitutions([first.id: firstOption.id], for: prepared)
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared),
+                       [first.id: firstOption.id])
+
+        store.rememberHoldSubstitutions([first.id: replacementOption.id, second.id: secondOption.id], for: prepared)
+        XCTAssertEqual(store.rememberedHoldSubstitutions(for: prepared),
+                       [first.id: replacementOption.id, second.id: secondOption.id])
+
+        store.rememberHoldSubstitutions([second.id: secondOption.id], for: prepared)
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared),
+                       [second.id: secondOption.id])
+
+        store.rememberHoldSubstitutions([:], for: prepared)
+        XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared).isEmpty)
+    }
+
+    func testRememberedHoldSubstitutionsRejectUnknownRequestsAndOptionIDs() throws {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let prepared = holdSubstitutionFixture()
+        let request = try XCTUnwrap(prepared.requests.first)
+        let otherRequest = try XCTUnwrap(holdSubstitutionFixture(planID: "another-plan").requests.first)
+        let otherOption = try XCTUnwrap(otherRequest.options.first)
+
+        store.rememberHoldSubstitutions([request.id: "removed-option", otherRequest.id: otherOption.id], for: prepared)
+
+        XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared).isEmpty)
+    }
+
+    func testRememberedHoldSubstitutionsRejectChangedHoldFactsWithTheSameOptionID() throws {
+        let defaults = makeDefaults()
+        let original = holdSubstitutionFixture()
+        let request = try XCTUnwrap(original.requests.first)
+        let option = try XCTUnwrap(request.options.first)
+        let store = AppStore(defaults: defaults)
+        store.rememberHoldSubstitutions([request.id: option.id], for: original)
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: original),
+                       [request.id: option.id])
+        let changed = holdSubstitutionFixture(availableDepths: [40, 50])
+        let changedRequest = try XCTUnwrap(changed.requests.first)
+        let changedOption = try XCTUnwrap(changedRequest.options.first { $0.id == option.id })
+        XCTAssertEqual(changedRequest.id, request.id)
+        XCTAssertNotEqual(changedOption.target, option.target)
+
+        XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: changed).isEmpty)
+    }
+
+    func testRememberedHoldSubstitutionsIgnoreCorruptStoredPreferences() {
+        let defaults = makeDefaults()
+        defaults.set(Data("not-json".utf8), forKey: "HangTen.planHoldSelections.v1")
+
+        XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: holdSubstitutionFixture()).isEmpty)
+    }
+
+    func testRememberedMaxHangsDepthRestoresOnlyTheAthletesSelectionAfterRelaunch() {
+        let defaults = makeDefaults()
+        let fixture = maxHangsDepthPreferenceFixture()
+        let store = AppStore(defaults: defaults)
+        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
+
+        store.rememberMaxHangsDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+            for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
+
+        store.rememberMaxHangsDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+            for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 20)
+    }
+
+    func testRememberedMaxHangsDepthKeepsPlanBoardAndRevisionContextsSeparate() {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let original = maxHangsDepthPreferenceFixture()
+        store.rememberMaxHangsDepth(15, for: original.plan, on: original.board, availableDepths: [15, 20])
+        let otherContexts = [
+            maxHangsDepthPreferenceFixture(planID: "another-plan"),
+            maxHangsDepthPreferenceFixture(boardID: "another-board"),
+            maxHangsDepthPreferenceFixture(revisionID: "v2")
+        ]
+
+        for fixture in otherContexts {
+            XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
+            store.rememberMaxHangsDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+            XCTAssertEqual(store.rememberedMaxHangsDepth(for: original.plan, on: original.board, availableDepths: [15, 20]), 15)
+            XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+                for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 20)
+        }
+    }
+
+    func testRememberedMaxHangsDepthRejectsUnavailableAndNonfiniteDepths() {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let fixture = maxHangsDepthPreferenceFixture()
+        store.rememberMaxHangsDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+        XCTAssertEqual(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
+        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [20]))
+        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: []))
+
+        for depth in [30, Double.infinity, Double.nan] {
+            store.rememberMaxHangsDepth(depth, for: fixture.plan, on: fixture.board,
+                                       availableDepths: [15, 20, .infinity, .nan])
+            XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+                for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
+        }
+    }
+
+    func testRememberedMaxHangsDepthIgnoresCorruptStoredPreferences() {
+        let defaults = makeDefaults()
+        defaults.set(Data("not-json".utf8), forKey: "HangTen.maxHangsDepths.v1")
+        let fixture = maxHangsDepthPreferenceFixture()
+
+        XCTAssertNil(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+            for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
     }
 
     func testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice() throws {
@@ -394,6 +575,141 @@ final class AppStoreTests: XCTestCase {
                 activitySegments: pendingContext.activitySegments
             )]
         )
+    }
+
+    func testEarlyCompletionPersistsClippedActivityAndUploadsItAfterConnect() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(requirement: nil)
+        let board = appStore.board(for: plan)
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let endDate = Date(timeIntervalSinceReferenceDate: 1_004)
+
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: startDate,
+            endDate: endDate,
+            elapsed: 4
+        )
+        waitForHistory(in: appStore)
+
+        let expectedSegment = RecordedActivitySegment(
+            stepID: "activity-step",
+            stepNumber: 1,
+            kind: .work,
+            target: .selfSelected,
+            durationSeconds: 4,
+            handUse: .double,
+            side: .both
+        )
+        let pendingContext = try XCTUnwrap(historyStore.load().first?.activityContext)
+        XCTAssertEqual(pendingContext.activitySegments, [expectedSegment])
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+
+        healthStore.authorizationState = .authorized
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let savedContext = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(savedContext.boardID, board.id)
+        XCTAssertEqual(savedContext.activitySegments, [expectedSegment])
+    }
+
+    func testCompletionAfterBackwardSeekPersistsExecutedIntervalsAndUploadsThemAfterConnect() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .notDetermined
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let fixture = activityPlan(requirement: nil)
+        let plan = TrainingPlan(
+            id: fixture.id,
+            title: fixture.title,
+            subtitle: fixture.subtitle,
+            level: fixture.level,
+            sourceLabel: fixture.sourceLabel,
+            sourceURL: fixture.sourceURL,
+            provenance: fixture.provenance,
+            boardID: fixture.boardID,
+            steps: (1...3).map { number in
+                WorkoutStep(
+                    id: "activity-step-\(number)",
+                    number: number,
+                    title: fixture.steps[0].title,
+                    instruction: fixture.steps[0].instruction,
+                    accessory: fixture.steps[0].accessory,
+                    duration: 10,
+                    phase: .hang,
+                    segments: fixture.steps[0].segments,
+                    handUse: .double,
+                    side: .both
+                )
+            }
+        )
+        let board = appStore.board(for: plan)
+
+        // Run part of step 3, then seek backward and run part of step 1.
+        appStore.markSessionComplete(
+            plan,
+            board: board,
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_009),
+            elapsed: 3,
+            activityIntervals: [20..<26, 0..<3]
+        )
+        waitForHistory(in: appStore)
+
+        let expectedSegments = [
+            RecordedActivitySegment(
+                stepID: "activity-step-1",
+                stepNumber: 1,
+                kind: .work,
+                target: .selfSelected,
+                durationSeconds: 3,
+                handUse: .double,
+                side: .both
+            ),
+            RecordedActivitySegment(
+                stepID: "activity-step-3",
+                stepNumber: 3,
+                kind: .work,
+                target: .selfSelected,
+                durationSeconds: 6,
+                handUse: .double,
+                side: .both
+            )
+        ]
+        let pendingContext = try XCTUnwrap(historyStore.load().first?.activityContext)
+        XCTAssertEqual(pendingContext.activitySegments, expectedSegments)
+        XCTAssertEqual(healthStore.saveCallCount, 0)
+
+        healthStore.authorizationState = .authorized
+        appStore.requestHealthAuthorization()
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let savedContext = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(savedContext.boardID, board.id)
+        XCTAssertEqual(savedContext.activitySegments, expectedSegments)
     }
 
     func testCompletionConvenienceOverloadForwardsSelectedEitherHand() throws {
@@ -2021,29 +2337,47 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(sessionStore.asynchronousFlushCount, 0)
     }
 
-    func testTwoHandedLatticePlansResolvePairedHoldsOnAtLeastOneBoard() throws {
+    func testTwoHandedLatticePlansResolvePairsAfterRequiredHoldChoices() throws {
         let store = AppStore(defaults: makeDefaults())
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-2000"))
 
         for planID in ["research.max-hangs", "research.abrahangs"] {
             let plan = try XCTUnwrap(store.plans.first { $0.id == planID })
-
-            let compatibleBoards = BoardCatalog.all.filter { !store.isIncompatible(plan, on: $0) }
-            XCTAssertFalse(
-                compatibleBoards.isEmpty,
-                "\(planID) must resolve on at least one registered board"
-            )
-
-            let resolvesAPair = compatibleBoards.contains { board in
-                plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
-                    step.segments.filter { $0.kind == .work }.allSatisfy { segment in
-                        guard let tasks = segment.target?.planTasks, !tasks.isEmpty else { return false }
-                        return tasks.allSatisfy { task in
-                            ((try? ContactResolver.resolve(task, step: step, board: board)) ?? []).count == 2
-                        }
+            let prepared = PlanHoldSubstitutions.prepare(for: plan, on: board)
+            let needsHoldChoice = planID == "research.abrahangs"
+            XCTAssertEqual(store.isIncompatible(plan, on: board), needsHoldChoice)
+            XCTAssertEqual(prepared.requests.isEmpty, !needsHoldChoice)
+            var selections: [PlanHoldSubstitutionRequest.ID: String] = [:]
+            if needsHoldChoice {
+                // The retained Abrahangs source prescribes 14 mm; this board's
+                // nearest authored four-finger edges are 15 mm, requiring consent.
+                let firstWorkStep = try XCTUnwrap(plan.steps.first { !$0.isRestStep })
+                let firstTask = try XCTUnwrap(firstWorkStep.segments.first { $0.kind == .work }?.target?.planTasks?.first)
+                let sourceDepth = PlanDepth.measured(.init(minimum: 14, maximum: 14))
+                XCTAssertEqual(firstTask.map { $0.target?.depth }, [sourceDepth, sourceDepth])
+                XCTAssertEqual(prepared.requests.count, 1)
+                XCTAssertNil(PlanHoldSubstitutions.applying([:], to: plan, on: board, prepared: prepared))
+                let request = try XCTUnwrap(prepared.requests.first)
+                let selectedDepth = PlanDepth.measured(.init(minimum: 15, maximum: 15))
+                let option = try XCTUnwrap(request.options.first { option in
+                    option.target.planTasks?.first?.allSatisfy { $0.target?.depth == selectedDepth } == true
+                })
+                selections[request.id] = option.id
+            }
+            let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+                selections, to: plan, on: board, prepared: prepared))
+            XCTAssertFalse(store.isIncompatible(session, on: board))
+            for step in session.steps where !step.isRestStep {
+                for segment in step.segments where segment.kind == .work {
+                    let tasks = try XCTUnwrap(segment.target?.planTasks)
+                    XCTAssertFalse(tasks.isEmpty)
+                    for task in tasks {
+                        let contacts = try ContactResolver.resolve(task, step: step, board: board)
+                        XCTAssertEqual(contacts.count, 2)
+                        XCTAssertEqual(Set(contacts.map(\.id)).count, 2)
                     }
                 }
             }
-            XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")
         }
     }
 
@@ -2075,6 +2409,57 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             store.isIncompatible(plan, on: board),
             "A two-handed plan must be hidden on a capacity-2 board that cannot form a pair"
         )
+    }
+
+    private func maxHangsDepthPreferenceFixture(
+        planID: String = "research.max-hangs",
+        boardID: String = "selection-board",
+        revisionID: String = "v1"
+    ) -> (plan: TrainingPlan, board: BoardRevision) {
+        let plan = TrainingPlan(id: planID, title: "Depth selection plan", subtitle: "", level: "Entry",
+            sourceLabel: "Fixture", sourceURL: nil, provenance: .official, boardID: nil, steps: [])
+        let board = BoardRevision(id: boardID, revisionID: revisionID, manufacturer: "Fixture",
+            name: "Depth selection board", subtitle: "", dimensions: nil, aspectRatio: 1,
+            contacts: [], productURL: URL(string: "https://example.com/depth-selection-board")!, photoAssetName: nil)
+        return (plan, board)
+    }
+
+    private func holdSubstitutionFixture(
+        boardID: String = "selection-board",
+        revisionID: String = "v1",
+        planID: String = "selection-plan",
+        grip: GripType = .halfCrimp,
+        requiredDepths: [Double] = [10],
+        availableDepths: [Double] = [20, 30]
+    ) -> PlanHoldSubstitutions.PreparedRequests {
+        let contacts = availableDepths.enumerated().map { index, depth in
+            PhysicalContact(id: "edge-\(index)", name: "\(depth) mm edge", kind: .edge,
+                            fingerCapacity: 4, handCapacity: 1,
+                            depth: .range(.init(minimum: depth, maximum: depth)),
+                            gripTypes: [.halfCrimp, .openHand])
+        }
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(id: "\(contact.id)-piece", contactID: contact.id,
+                frame: CGRect(x: CGFloat(index) * 0.5, y: 0.2, width: 0.25, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface)])
+        })
+        let board = BoardRevision(id: boardID, revisionID: revisionID, manufacturer: "Fixture",
+            name: "Selection board", subtitle: "", dimensions: nil, aspectRatio: 2, handCapacity: 1,
+            contacts: contacts, productURL: URL(string: "https://example.com/selection-board")!, photoAssetName: nil,
+            presentations: [BoardPresentation(id: "front", name: "Front", aspectRatio: 2, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry)))])
+        let steps = requiredDepths.enumerated().map { index, depth in
+            WorkoutStep(id: "step-\(index)", number: index + 1, title: "Fixture hang",
+                instruction: "Fixture source instruction.", accessory: "", duration: 10, phase: .hang,
+                segments: [WorkoutSegment(kind: .work,
+                    target: .tasks([[PlanHandTarget(target: PlanContactPredicate(kind: .edge,
+                        depth: .measured(.init(minimum: depth, maximum: depth))))]]),
+                    timing: .fixed, duration: 10)], gripType: grip, handUse: .single, side: .left)
+        }
+        let plan = TrainingPlan(id: planID, title: "Selection plan", subtitle: "", level: "Entry",
+            sourceLabel: "Fixture", sourceURL: URL(string: "https://example.com/selection-plan"),
+            provenance: .official, boardID: nil, steps: steps)
+        return PlanHoldSubstitutions.prepare(for: plan, on: board)
     }
 
     private func makeDefaults() -> UserDefaults {

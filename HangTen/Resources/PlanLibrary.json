@@ -729,8 +729,7 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 18,
-                          "minMM": 9
+                          "category": "small"
                         },
                         "kind": "edge"
                       }
@@ -738,8 +737,7 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 18,
-                          "minMM": 9
+                          "category": "small"
                         },
                         "kind": "edge"
                       }
@@ -993,8 +991,7 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 18,
-                          "minMM": 9
+                          "category": "small"
                         },
                         "kind": "edge"
                       }
@@ -1036,8 +1033,7 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 18,
-                          "minMM": 9
+                          "category": "small"
                         },
                         "kind": "edge"
                       }
@@ -5995,8 +5991,8 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 19,
-                          "minMM": 9
+                          "maxMM": 20,
+                          "minMM": 8
                         },
                         "kind": "edge"
                       }
@@ -6004,8 +6000,8 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 19,
-                          "minMM": 9
+                          "maxMM": 20,
+                          "minMM": 8
                         },
                         "kind": "edge"
                       }
@@ -6056,8 +6052,8 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 19,
-                          "minMM": 9
+                          "maxMM": 20,
+                          "minMM": 8
                         },
                         "kind": "edge"
                       }
@@ -6065,8 +6061,8 @@
                     {
                       "target": {
                         "depth": {
-                          "maxMM": 19,
-                          "minMM": 9
+                          "maxMM": 20,
+                          "minMM": 8
                         },
                         "kind": "edge"
                       }

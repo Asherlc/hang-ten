@@ -9,8 +9,8 @@ expanded intervals.
 
 The library retains 45 plans and 24 distinct source URLs, represented by
 415 reusable blocks, 489 stored step definitions and 103 declared repeat
-references. Its 779,793-byte canonical document has SHA-256
-`4a4fb9125448d3248404b7f86d358d386b032cb01a2f115e82cda0960b975bbf`.
+references. Its 779,673-byte canonical document has SHA-256
+`6e3db76610f27bfb59f963e5b74e017a2bd3bfd6e4c35ea1e44c7a2a20b54582`.
 
 A block contains one prescription pattern; a plan reference's `repeatCount`
 is its total run count, including the first. Optional `stepIDs` can contain one
@@ -53,8 +53,20 @@ The 19 optional focus classifications are editorial adaptations covered by the
 Neither block factoring nor template labels change those classifications,
 source URLs, provenance labels or adaptation disclosures.
 
-The source-prescription mappings below cover the same expanded content as
-revision `07b9127`. Each fingerprint hashes the canonical sorted JSON for a
+The source-prescription mappings below retain the expanded content of revision
+`07b9127` with two source-backed depth corrections checked October 11, 2026:
+
+- The [Metolius generic guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+  names Small Edge in Intermediate minutes 3 and 6 without a measurement.
+  Blocks `metolius.generic-ten-minute.intermediate.sequence-7`, `sequence-15`,
+  and `sequence-16` retain that category and remove the inferred 9–18 mm band.
+  See [the edge-name mapping](../ADDING_A_ROUTINE.md#metolius-edge-name-evidence-checked-october-11-2026).
+- [López's MAW prescription, §2.1.2](https://en-eva-lopez.blogspot.com/2018/)
+  specifies the 8–20 mm choice range. Blocks `research.max-hangs.sequence-1`
+  and `sequence-5` encode that range directly instead of compensating for the
+  removed 1 mm matching tolerance. See [the MAW audit](../plan-audits/2026-10-01-lopez-max-hangs.md).
+
+Each fingerprint hashes the canonical sorted JSON for a
 plan's ID, metadata, optional board ID and fully expanded original source
 steps, before runtime segment normalization. It includes the complete original
 step identities and labels as well as all prescription fields. Independent
@@ -64,7 +76,7 @@ continue to inspect source boundaries and resulting runtime assignments.
 | Plan | Source | Expanded source steps | SHA-256 |
 | --- | --- | ---: | --- |
 | `metolius.generic-ten-minute.entry` | [Source](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | 20 | `bd9f18db936973141f29cd2dee2d1be6ee04bcef0f26c723216cf9b1a268f356` |
-| `metolius.generic-ten-minute.intermediate` | [Source](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | 26 | `ce8f12f205768a621d7306fa054a5621bab39899583f51a0ba4cda6c4a9b8fe1` |
+| `metolius.generic-ten-minute.intermediate` | [Source](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | 26 | `39df6e8c21a0905b87a31192eea262b9b56b09dbab50ef37eb99979b224b8140` |
 | `metolius.generic-ten-minute.advanced` | [Source](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | 27 | `f3ec308e3f128b9ef43e4f5b37124cebd966f5292e5332075e3a46d2282c65b6` |
 | `metolius.contact.entry` | [Source](https://www.metoliusclimbing.com/pages/contact-training-guide) | 10 | `a5ebd0328577f58c127e15cf222934ba89d29895762c1b7a3a5cde3abd3b078c` |
 | `metolius.contact.intermediate` | [Source](https://www.metoliusclimbing.com/pages/contact-training-guide) | 10 | `1297a76f9eefb94b967e5b1929ee96a63edc82c18389066f9a2c9fd069f28121` |
@@ -74,7 +86,7 @@ continue to inspect source boundaries and resulting runtime assignments.
 | `metolius.simulator-3d.advanced` | [Source](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | 10 | `fae59a3a6afd418a465af41a99283ad18c1ca867feb846cb0b88b3f8b331a542` |
 | `metolius.rock-rings.ten-minute` | [Source](https://www.metoliusclimbing.com/pages/rock-ring-training-guide) | 10 | `af137d7aeed7706bb79174cf298a853be0559acd69bdcd3b11df3a0cc1a9a003` |
 | `rptc.seven-three-repeaters` | [Source](https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155) | 8 | `24ad51f906cb766a6d72aa7530c4d665a64a3e9e9aa568eac01907f995efc819` |
-| `research.max-hangs` | [Source](https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html) | 5 | `0ac1426de92362319e028d6ae39bdc6eefa501f1f121455e2db4f56d098e875c` |
+| `research.max-hangs` | [Source](https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html) | 5 | `219bcf2112f203a4732d831665f0cc00c395e0ee287e4618bdbfb93a34720903` |
 | `research.force-feedback-f80` | [Source](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | 38 | `d6d415aeb5a3e89aa16efc9f81c81c45fe945d8c17b7ff29e7e8256ce751bb66` |
 | `research.force-feedback-f100` | [Source](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | 24 | `31dac2f62ae6f91db25db14bab22c747d3a21f8a770e4238989ed74362b20375` |
 | `research.eva-int-hangs` | [Source](https://pubmed.ncbi.nlm.nih.gov/30988852/) | 17 | `30aa76b3ddcffbf3e4ca9becf4a29862535190786ecf98e04a3116a2a4ac88ee` |

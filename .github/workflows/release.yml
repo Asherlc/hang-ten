@@ -138,7 +138,7 @@ jobs:
             --manifest ".context/$owner-runtime-assets/catalog.json" --check
 
       - name: Upload compiled release catalog
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ steps.owner.outputs.owner }}-release-board-assets-${{ github.run_id }}
           overwrite: true
@@ -237,7 +237,7 @@ jobs:
       # Apple-Actions/download-provisioning-profiles v6.1.0
       - name: Download App Store provisioning profile
         id: provisioning-profiles
-        uses: Apple-Actions/download-provisioning-profiles@2126b5f86a0e2863cbf4d2d312112b22b943a594
+        uses: Apple-Actions/download-provisioning-profiles@230860ab5f632551a5f9a5e1d98a774485463888
         with:
           bundle-id: com.hangten.training
           profile-type: IOS_APP_STORE
@@ -369,7 +369,7 @@ jobs:
 
       # Apple-Actions/upload-testflight-build v5.2.1
       - name: Upload to App Store Connect
-        uses: Apple-Actions/upload-testflight-build@14df18fee5a4ff3b76971dd382f033494a0194e9
+        uses: Apple-Actions/upload-testflight-build@155ea93be9ee6d5186c71f660a612f5eddb14510
         with:
           app-path: build/export/HangTen.ipa
           app-type: ios

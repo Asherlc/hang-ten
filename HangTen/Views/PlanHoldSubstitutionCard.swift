@@ -18,10 +18,16 @@ struct PlanHoldSubstitutionCard: View {
 
             ForEach(Array(requests.enumerated()), id: \.element.id) { index, request in
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Plan requires: \(request.requiredHoldLabel)")
+                    Text("Replacement for \(request.requiredHoldLabel)")
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .foregroundStyle(Color.hangInk)
                         .fixedSize(horizontal: false, vertical: true)
+                    if let gripContext = request.gripContextLabel {
+                        Text(gripContext)
+                            .font(.system(.caption, design: .rounded))
+                            .foregroundStyle(Color.hangMuted)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     if request.stepTitles.count > 1 {
                         Text("This choice applies to each matching cue.")
                             .font(.system(.caption, design: .rounded))
@@ -82,7 +88,7 @@ struct PlanHoldSubstitutionCard: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.hangGreen.opacity(0.15), in: RoundedRectangle(cornerRadius: 10))
         }
-        .accessibilityLabel("Substitute for \(request.requiredHoldLabel): \(selected?.label ?? "Choose a substitute")")
+        .accessibilityLabel("Replacement for \(request.requiredHoldLabel): \(selected?.label ?? "Choose a substitute")")
         .accessibilityIdentifier("plan.substitution.picker.\(index)")
     }
 }

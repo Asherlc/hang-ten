@@ -12,6 +12,11 @@ Train is the default tab, with the selected board and favorite plans. Both
 originating tab. `train.settings` opens Settings. History opens the chronological
 list of detailed local sessions.
 
+Board preview shaders compile through shared asynchronous RealityKit programs. Model
+loading awaits those tasks without blocking navigation or accessibility queries;
+scene updates and highlight baselines remain on the main actor. Canceling one
+preview does not cancel material preparation needed by other previews.
+
 Board detail and active workouts expose Report a problem through
 `boardDetail.reportProblem` and `workout.reportProblem`. Configured Sentry User
 Feedback receives the user's message, optional typed email, and ID tags
@@ -99,6 +104,14 @@ Loaded lift additionally shows Repetitions and optional Added weight. Its inline
 **kg / lb** picker changes how weight is entered and displayed, remembering the
 choice through `HangTen.customRoutine.displayUnits`. Switching units preserves the
 physical quantity; stored load remains in kilograms-force. Depth stays in mm.
+
+Selecting a generic hold type with Both hands requires a matching left/right
+pair. Playback also repairs older unpinned singleton requirements saved with
+Both hands, so previews, substitution choices and recorded contacts use the
+pair. This repair leaves the saved definition, timing, repeats and notes intact.
+Explicit shared holds, exact contacts, composite targets and two copies of a
+one-hand board retain their existing meaning; a board-specific centered hold
+with documented two-hand capacity remains a valid shared contact.
 
 The single Depth input accepts one positive value or a minimum–maximum range.
 An explicitly cleared input removes the depth restriction. Invalid or incomplete input
@@ -297,14 +310,37 @@ predicate. Explicit self-selected work records that choice without an invented
 contact snapshot.
 
 Plan detail offers an explicit session adaptation when a required hold is
-missing. Each choice lists factual contacts on the current board and passes the
-same grip, finger-capacity, hand, and position checks used for work resolution.
+missing. The picker asks “Replacement for 10 mm edge” and describes each matching
+choice once, such as “19 mm edge”; it resolves the appropriate contacts internally.
+When compatible replacements preserve the requested hold kind, the picker offers
+only those choices. Other kinds remain available as fallbacks when no valid
+same-kind replacement exists. This preference follows all side, pair, grip,
+finger-capacity, and position checks, so an unusable hold cannot hide a fallback.
+Matching two-hand choices retain matching factual depths and shapes. Fixed
+single-hand choices honor the requested side, including legacy single-contact
+requirements; a pinned contact on the opposite side is rejected. Grip cues remain
+separate from the hold label. Pocket finger capacities and effective position
+depths remain visible so different holds do not acquire identical descriptions.
+Every choice passes the same grip, finger-capacity, hand, and position checks used
+for work resolution. Shared contacts must fit both sides and support two hands.
+Named depth categories match only the same authored category; they do not imply
+a millimeter range. Measured depths match only overlapping authored intervals,
+without a numeric tolerance. Missing exact facts go through the picker.
+Canonical two-hand choices on a one-hand board retain “two boards” as equipment
+context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated missing targets share one choice. Start waits until every missing
-target has a valid selection; changing the board or training-edge variant clears
-the choices. The resulting session retains the source link and original
-instructions with a substitution label, preserves interval and task structure,
-and records the actual chosen holds. It does not edit the canonical library or
-claim manufacturer endorsement of the athlete's choices. Plans remain visible
+target has a valid selection. Picker edits, including partial selections and
+cleared choices, are remembered locally for each plan, board revision, source
+target and grip context. Reopening the plan or returning to that board restores
+valid choices as editable defaults; changed targets or unavailable hold options
+require a new selection. The picker remains available after restoration.
+The max-hang training-edge picker also remembers the athlete's chosen depth for
+each plan and board revision, restoring it only while that size remains eligible.
+The resulting session retains the source link and original
+instructions without adding substitution descriptions, preserves interval and
+task structure, and records the actual chosen holds. It does not edit the
+canonical library or claim manufacturer endorsement of the athlete's choices.
+Plans remain visible
 in focus browsing when substitutions are needed. Workout deep links enter plan
 detail when holds are missing, so they require the same explicit choices before
 launching; compatible deep links retain their direct workout launch.
@@ -312,9 +348,9 @@ launching; compatible deep links retain their direct workout launch.
 Resolved work retains board/revision identity, optional model hash, the factual
 requirement or per-hand targets, resolved contact IDs and applicable position.
 Ordered source segments remain ordered records. Rest has identity and duration
-but no target. Fixed work stores prescribed active duration; stopwatch work
-stores observed active seconds. Never-started stopwatch and genuinely untimed
-work omit duration.
+but no target. In a running workout, fixed work and rest store the time actually
+spent in their timeline ranges; stopwatch work stores observed active seconds.
+Never-started stopwatch and genuinely untimed work omit duration.
 
 Stopwatch controls begin at `00:00` and expose Start, Stop and Resume. They do
 not advance the enclosing workout clock. Workout pause or scene interruption
@@ -325,7 +361,21 @@ Log session creates a detailed local record through `WorkoutSessionStore` and
 passes a pending record to `WorkoutHistoryService` for optional HealthKit sync.
 The local detailed History list is distinct from the HealthKit-derived progress
 snapshot, so a visible History row does not prove a HealthKit save or import.
-End session dismisses without completion logging or a HealthKit write.
+End pauses the workout and offers Save session, Discard session, or Keep training.
+Save retains the steps with actual activity and closes measurements before
+recording history and optional HealthKit sync. An execution ledger captures the
+clock before pause, navigation, skip countdown, and completion. Skipped timeline
+ranges contribute no work or rest; partial attempts retain their executed time,
+and repeated visits add their durations. Earlier and later activity survives a
+backward jump, including a paused return to the start. Countdown and paused time
+contribute no fixed activity. Independently observed stopwatch work remains
+recorded even when the enclosing clock is paused. Explicitly completed loaded
+lifts also retain their repetitions and entered load; they supply no synthetic
+timed duration. Following unknown work timing, rest is recorded only when the
+step declares its work/rest boundary; observed stopwatch time does not establish
+that boundary. Save is unavailable until activity has been recorded. Discard
+dismisses without history or a HealthKit write. Keep training restores the prior
+running, paused, or countdown state, including any running stopwatches.
 
 ## Apple Health authorization and synchronization
 

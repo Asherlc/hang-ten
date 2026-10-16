@@ -2,6 +2,9 @@
 
 Checked October 1, 2026. Board-flexible, adapted session; ID remains
 `research.max-hangs` to preserve links and favorites.
+Depth target rechecked October 11, 2026 against the author's
+[2018 archive, §2.1.2](https://en-eva-lopez.blogspot.com/2018/), which retains
+the primary article's MAW prescription.
 
 Primary prescription: [Eva López, Fingerboard Training Guide II, §2.1.2](https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html).
 Her broader MAW guidance permits 3–5 sets, chosen 8–20 mm edges, 5–15-second
@@ -15,7 +18,7 @@ three 10-second hangs on 18 mm, with a 3-second margin and 3-minute recovery.
 | 180-second rest | Worked-example recovery between sets; no trailing recovery after the last set. |
 | Intensity cue | Worked example: load permitting 13 seconds, stop at 10. |
 | Edge picker | Broader MAW edge range, 8–20 mm; options require measured point depths and two resolvable hand targets. |
-| Target | Bilateral edge range serialized as 9–19 mm because numeric matching adds 1 mm tolerance. Selected sessions narrow to the chosen measured depth. |
+| Target | Bilateral edge range serialized directly as 8–20 mm in `research.max-hangs.sequence-1` and `sequence-5`, matching §2.1.2. Numeric matching uses actual interval overlap without tolerance. Selected sessions narrow to the chosen measured depth. |
 | Provenance / subtitle | Explicitly adapted fixed session, not a complete periodized training program. |
 
 Original research: [López-Rivera & González-Badillo, 2012](https://doi.org/10.1080/19346182.2012.716061),
@@ -27,8 +30,9 @@ Start, without invented timed warm-up segments. The study itself used 18 mm,
 10 seconds, a 3-second reserve, 3-minute rests, and weekly progression from
 three to four to five sets; this app session does not reproduce that schedule.
 
-Board mapping is separate from prescription. The 1000 offers 10 and 20 mm
-paired edges; the 2000 offers 15 mm paired edges. The picker resolves each
+Board mapping is separate from prescription. The retained native manifests in
+`Hangboards/beastmaker-1000.FCStd` and `Hangboards/beastmaker-2000.FCStd` give
+the 1000 15 and 20 mm paired edges and the 2000 15 mm paired edges. The picker resolves each
 candidate through ContactResolver and requires the returned physical contacts
 to match its measured depth exactly. Nonmatching sizes, pockets and lone
 one-hand-capacity contacts are excluded. Preview, workout and recording use

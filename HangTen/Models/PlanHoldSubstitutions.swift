@@ -7,7 +7,7 @@ struct PlanHoldSubstitutionOption: Identifiable, Hashable {
 }
 
 struct PlanHoldSubstitutionRequest: Identifiable, Hashable {
-    struct ID: Hashable {
+    struct ID: Codable, Hashable {
         let planID: String
         let boardID: String
         let revisionID: String
@@ -22,6 +22,17 @@ struct PlanHoldSubstitutionRequest: Identifiable, Hashable {
     let requiredHoldLabel: String
     var stepTitles: [String]
     let options: [PlanHoldSubstitutionOption]
+
+    var gripContextLabel: String? {
+        var parts: [String] = []
+        if let grip = id.gripType { parts.append(grip.label) }
+        if let fingers = id.fingerConfiguration {
+            parts.append(fingers.hasExactFingers
+                ? fingers.orderedFingers.map { $0.rawValue.capitalized }.joined(separator: ", ")
+                : "\(fingers.count) fingers")
+        }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
 }
 
 enum PlanHoldSubstitutions {
@@ -63,7 +74,7 @@ enum PlanHoldSubstitutions {
                     } else {
                         indices[id] = requests.count
                         requests.append(PlanHoldSubstitutionRequest(id: id,
-                            requiredHoldLabel: requestLabel(for: unit, step: step), stepTitles: [step.title],
+                            requiredHoldLabel: label(for: unit), stepTitles: [step.title],
                             options: options(for: unit, step: step, board: board)))
                     }
                 }
@@ -92,7 +103,6 @@ enum PlanHoldSubstitutions {
             chosen[request.id] = option
         }
         let steps = plan.steps.map { step in
-            var notices: [String] = []
             let segments = step.segments.map { segment -> WorkoutSegment in
                 guard segment.kind == .work, let target = segment.target else { return segment }
                 let replacement: WorkoutSegmentTarget
@@ -105,23 +115,18 @@ enum PlanHoldSubstitutions {
                         let id = requestID(for: unit, step: step, plan: plan, board: board)
                         guard let option = chosen[id], case .tasks(let alternatives) = option.target,
                               let substitute = alternatives.first else { return task }
-                        let notice = "Session substitution: \(label(for: unit)) → \(option.label)."
-                        if !notices.contains(notice) { notices.append(notice) }
                         return substitute
                     })
                 case .requirements:
                     let id = requestID(for: target, step: step, plan: plan, board: board)
                     guard let option = chosen[id] else { return segment }
                     replacement = option.target
-                    let notice = "Session substitution: \(label(for: target)) → \(option.label)."
-                    if !notices.contains(notice) { notices.append(notice) }
                 }
                 return WorkoutSegment(kind: segment.kind, target: replacement,
                     timing: segment.timing, duration: segment.duration)
             }
-            guard !notices.isEmpty else { return step }
-            return replacing(step, segments: segments,
-                instruction: notices.joined(separator: "\n") + "\nOriginal plan instruction: " + step.instruction)
+            guard segments != step.segments else { return step }
+            return replacing(step, segments: segments)
         }
         var result = TrainingPlan(id: plan.id, title: plan.title, subtitle: plan.subtitle,
             level: plan.level, sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
@@ -232,12 +237,21 @@ enum PlanHoldSubstitutions {
         }
         var options: [PlanHoldSubstitutionOption] = []
         var seen: Set<String> = []
+        var hasKindPreservingOption = false
         var mostUnchangedHands = -1
         for alternative in alternatives {
             guard let resolved = resolution(of: alternative, step: step, board: board),
                   !resolved.contacts.isEmpty,
                   preservesFingerRoom(of: target, alternative: alternative, resolved: resolved,
                     step: step, board: board) else { continue }
+            let preservesKinds = preservesRequiredKinds(in: alternative, from: target)
+            guard !hasKindPreservingOption || preservesKinds else { continue }
+            if preservesKinds && !hasKindPreservingOption {
+                hasKindPreservingOption = true
+                mostUnchangedHands = -1
+                options.removeAll()
+                seen.removeAll()
+            }
             let unchangedHands = unchangedHandCount(in: alternative, from: target)
             guard unchangedHands >= mostUnchangedHands else { continue }
             if unchangedHands > mostUnchangedHands {
@@ -248,16 +262,51 @@ enum PlanHoldSubstitutions {
             let components = unique(resolved.positionIDs).sorted() + ["contacts"] + unique(resolved.contacts.map(\.id)).sorted()
             let id = components.map { "\($0.utf8.count):\($0)" }.joined(separator: "|")
             guard seen.insert(id).inserted else { continue }
-            let hasEffectiveDepth = resolved.positionIDs.contains {
-                !(board.position(id: $0)?.effectiveDepths.isEmpty ?? true)
+            let descriptions = resolved.contacts.map(replacementHoldLabel)
+            let names: String
+            if case .tasks(let sourceTasks) = target, let source = sourceTasks.first,
+               source.count == 2, source[0].target != source[1].target,
+               case .tasks(let alternatives) = alternative, let task = alternatives.first,
+               descriptions.count == 2 {
+                let firstSide = task[0].side ?? (task[1].side == .left ? .right : .left)
+                let secondSide = task[1].side ?? (firstSide == .left ? .right : .left)
+                names = "\(firstSide.rawValue.capitalized): \(descriptions[0]) · \(secondSide.rawValue.capitalized): \(descriptions[1])"
+            } else {
+                names = unique(descriptions).joined(separator: " + ")
             }
-            let names = unique(resolved.contacts.map { contact in
-                guard hasEffectiveDepth, let depth = contact.depth else { return contact.name }
-                return "\(contact.name) (\(label(for: ContactRequirement(depth: depth), includingMeasuredRanges: true)))"
-            }).joined(separator: ", ")
-            options.append(PlanHoldSubstitutionOption(id: id, label: names, target: alternative))
+            let handContext: String
+            if case .tasks(let tasks) = alternative, tasks.first?.count == 2 {
+                if board.isOneHanded {
+                    handContext = " (two boards)"
+                } else {
+                    handContext = ""
+                }
+            } else {
+                handContext = ""
+            }
+            options.append(PlanHoldSubstitutionOption(id: id, label: names + handContext, target: alternative))
         }
         return options.sorted { $0.label == $1.label ? $0.id < $1.id : $0.label.localizedStandardCompare($1.label) == .orderedAscending }
+    }
+
+    /// Prefer valid alternatives that keep every authored hold kind. Unspecified
+    /// and athlete-selected hand targets add no inferred kind restriction.
+    private static func preservesRequiredKinds(in alternative: WorkoutSegmentTarget, from original: WorkoutSegmentTarget) -> Bool {
+        switch (original, alternative) {
+        case (.tasks(let originalTasks), .tasks(let alternatives)):
+            guard let source = originalTasks.first, let selected = alternatives.first,
+                  source.count == selected.count else { return false }
+            return zip(source, selected).allSatisfy { required, replacement in
+                required.target?.kind == nil || required.target?.kind == replacement.target?.kind
+            }
+        case (.requirements(let source), .requirements(let selected)):
+            guard source.count == selected.count else { return false }
+            return zip(source, selected).allSatisfy { required, replacement in
+                required.kind == nil || required.kind == replacement.kind
+            }
+        default:
+            return false
+        }
     }
 
     private static func unchangedHandCount(in alternative: WorkoutSegmentTarget, from original: WorkoutSegmentTarget) -> Int {
@@ -300,9 +349,9 @@ enum PlanHoldSubstitutions {
         }
     }
 
-    /// Prescription resolution may tolerate nearby measured depths. A generated
-    /// substitute must describe the resolved contact's exact facts so its label
-    /// and recorded target cannot claim the neighboring candidate's depth.
+    /// Prescribed intervals may overlap a contact's measured range. A generated
+    /// substitute retains the resolved contact's exact facts so its label and
+    /// recorded target describe the athlete's selected hold.
     private static func matchesFactualFields(_ predicate: PlanContactPredicate, contact: PhysicalContact) -> Bool {
         let factual = factualPredicate(for: contact)
         return predicate.kind == factual.kind && predicate.shape == factual.shape && predicate.depth == factual.depth
@@ -344,36 +393,38 @@ enum PlanHoldSubstitutions {
                 hand.target.map { label(for: $0.legacyRequirement) } ?? "Athlete-selected hold"
             }
             if Set(descriptions).count == 1, let first = descriptions.first {
-                return first + (task.count == 2 ? " (2 hands)" : " (1 hand)")
+                return first
             }
-            return descriptions.joined(separator: " + ")
+            return zip(task, descriptions).map { hand, description in
+                hand.side.map { "\($0.rawValue.capitalized): \(description)" } ?? description
+            }.joined(separator: " + ")
         }.joined(separator: "; ")
         }
     }
 
-    private static func requestLabel(for target: WorkoutSegmentTarget, step: WorkoutStep) -> String {
-        var parts = [label(for: target)]
-        if let grip = step.gripType { parts.append(grip.label) }
-        if let fingers = step.fingerConfiguration {
-            if fingers.hasExactFingers {
-                parts.append(fingers.orderedFingers.map { $0.rawValue.capitalized }.joined(separator: ", "))
-            } else {
-                parts.append("\(fingers.count) fingers")
-            }
+    private static func replacementHoldLabel(_ contact: PhysicalContact) -> String {
+        if contact.depth == nil {
+            // Keep authored names when the structured facts omit a distinguishing
+            // measurement or angle, while removing redundant left/right words.
+            let neutralName = contact.name.replacingOccurrences(
+                of: #"\b(?:left|right)-\b|-\b(?:left|right)\b|\b(?:left|right)\b"#,
+                with: "", options: [.regularExpression, .caseInsensitive]
+            )
+            let words = neutralName.split(whereSeparator: \.isWhitespace)
+            if !words.isEmpty { return words.joined(separator: " ") }
         }
-        return parts.joined(separator: " · ")
+        return label(for: ContactRequirement(kind: contact.kind, shape: contact.shape,
+            depth: contact.depth, fingerCapacity: contact.fingerCapacity), includingMeasuredRanges: true)
     }
 
     private static func label(for requirement: ContactRequirement, includingMeasuredRanges: Bool = false) -> String {
         var parts: [String] = []
         if let depth = requirement.depth {
             switch depth {
-            case .category(let size): parts.append(size.label)
+            case .category(let size): parts.append(size.label.lowercased())
             case .range(let range):
-                // Some catalog bands compensate for numeric match tolerance
-                // or an audited size inference. They are resolution inputs,
-                // not source-prescribed ranges. Retain those ranges in the
-                // original instruction rather than presenting the internal band.
+                // Keep range prescriptions in the original step instruction;
+                // substitute labels include the board's measured ranges.
                 if range.minimum == range.maximum {
                     parts.append("\(number(range.minimum)) mm")
                 } else if includingMeasuredRanges {
@@ -381,19 +432,22 @@ enum PlanHoldSubstitutions {
                 }
             }
         }
-        if let shape = requirement.shape { parts.append(shape.label) }
-        if let kind = requirement.kind { parts.append(kind.detailLabel) }
-        if let fingers = requirement.fingerCapacity { parts.append("\(fingers) fingers") }
-        return parts.isEmpty ? requirement.contactID ?? "Required hold" : parts.joined(separator: " · ")
+        if let shape = requirement.shape { parts.append(shape.label.lowercased()) }
+        if requirement.kind == .pocket, let fingers = requirement.fingerCapacity {
+            let count = [1: "one", 2: "two", 3: "three", 4: "four"][fingers] ?? String(fingers)
+            parts.append("\(count)-finger")
+        }
+        if let kind = requirement.kind { parts.append(kind.detailLabel.lowercased()) }
+        return parts.isEmpty ? requirement.contactID ?? "Required hold" : parts.joined(separator: " ")
     }
 
     private static func number(_ value: Double) -> String {
         value.formatted(.number.precision(.fractionLength(0...2)))
     }
 
-    private static func replacing(_ step: WorkoutStep, segments: [WorkoutSegment], instruction: String? = nil) -> WorkoutStep {
+    private static func replacing(_ step: WorkoutStep, segments: [WorkoutSegment]) -> WorkoutStep {
         WorkoutStep(id: step.id, number: step.number, title: step.title,
-            instruction: instruction ?? step.instruction, accessory: step.accessory,
+            instruction: step.instruction, accessory: step.accessory,
             duration: step.duration, phase: step.phase, segments: segments,
             gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
             handUse: step.handUse, side: step.side, action: step.action,

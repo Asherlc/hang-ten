@@ -735,16 +735,6 @@ enum HoldSize: String, Codable, Hashable, CaseIterable, Identifiable {
         case .large: "Large"
         }
     }
-
-    /// Community-convention depth range in millimeters for this size category.
-    var depthRange: ClosedRange<Double> {
-        switch self {
-        case .tiny: 0...8
-        case .small: 8...15
-        case .medium: 15...25
-        case .large: 25...50
-        }
-    }
 }
 
 struct MillimeterRange: Codable, Hashable {
@@ -793,8 +783,6 @@ struct MillimeterRange: Codable, Hashable {
 }
 
 enum HoldDepth: Codable, Hashable {
-    private static let numericMatchToleranceMillimeters = 1.0
-
     case category(HoldSize)
     case range(MillimeterRange)
 
@@ -849,12 +837,9 @@ enum HoldDepth: Codable, Hashable {
         return switch (self, contactDepth) {
         case let (.category(required), .category(actual)):
             required == actual
-        case let (.category(required), .range(actual)):
-            required.depthRange.overlaps(actual.minimum...actual.maximum)
         case let (.range(required), .range(actual)):
-            required.minimum <= actual.maximum + Self.numericMatchToleranceMillimeters
-                && required.maximum + Self.numericMatchToleranceMillimeters >= actual.minimum
-        case (.range, .category):
+            required.minimum <= actual.maximum && required.maximum >= actual.minimum
+        case (.category, .range), (.range, .category):
             false
         }
     }
@@ -1996,8 +1981,8 @@ enum MaxHangsEdgeSelection {
                 timedWorkDuration: step.timedWorkDuration
             )
         }
-        // Numeric matching has a tolerance. Offer a size only when its resolved
-        // physical contacts actually have that exact measured point depth.
+        // Offer a size only when its resolved physical contacts have that
+        // exact measured point depth rather than an overlapping depth range.
         guard steps.filter({ !$0.isRestStep }).allSatisfy({ step in
             guard let contacts = try? ContactResolver.resolve(target, step: step, board: board).first,
                   contacts.count == 2 else { return false }

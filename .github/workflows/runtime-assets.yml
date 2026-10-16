@@ -37,7 +37,7 @@ jobs:
 
       # Artifacts share the fetch even when a manual caller caps cache access at read.
       - name: Share verified source objects with all compiler jobs
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ steps.sources.outputs.owner }}-lfs-objects-${{ github.run_id }}
           overwrite: true
@@ -85,7 +85,7 @@ jobs:
           shard-count: '8'
 
       - name: Upload complete board shard
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           # A failed-job retry can combine retained successful shards with rerun shards.
           name: ${{ steps.compile.outputs.owner }}-board-shard-${{ matrix.shard }}-${{ github.run_id }}
@@ -163,7 +163,7 @@ jobs:
           echo "artifact-name=$owner-board-assets-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
 
       - name: Upload complete compiled catalog
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: ${{ steps.catalog.outputs.artifact-name }}
           path: |

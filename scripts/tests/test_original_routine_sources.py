@@ -36,6 +36,23 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
             with self.subTest(plan_id=plan_id):
                 self.assertIn(count, [ref.get("repeatCount", 1) for ref in self.plans[plan_id]["blocks"]])
 
+    def test_lopez_max_hangs_targets_preserve_the_prescribed_edge_range(self):
+        work = [step for step in self.steps("research.max-hangs") if step["phase"] == "hang"]
+        self.assertTrue(work)
+        for step in work:
+            for hand in step["segments"][0]["target"]["tasks"][0]:
+                self.assertEqual(hand["target"]["depth"], {"minMM": 8, "maxMM": 20})
+
+    def test_metolius_small_edge_retains_source_size_without_a_numeric_conversion(self):
+        work = {step["id"]: step for step in self.steps("metolius.generic-ten-minute.intermediate")}
+        for step_id in ["intermediate.minute-3.task-1", "intermediate.minute-6.task-1",
+                        "intermediate.minute-6.task-2"]:
+            hands = work[step_id]["segments"][0]["target"]["tasks"][0]
+            edges = [hand["target"] for hand in hands if hand["target"].get("kind") == "edge"]
+            self.assertTrue(edges, step_id)
+            for edge in edges:
+                self.assertEqual(edge["depth"], {"category": "small"}, step_id)
+
     def test_abrahamsson_original_ten_hang_sequence(self):
         plan_id = "research.abrahangs"
         self.assertEqual(self.plans[plan_id]["metadata"]["sourceURL"],
