@@ -237,7 +237,7 @@ jobs:
       # Apple-Actions/download-provisioning-profiles v6.1.0
       - name: Download App Store provisioning profile
         id: provisioning-profiles
-        uses: Apple-Actions/download-provisioning-profiles@2126b5f86a0e2863cbf4d2d312112b22b943a594
+        uses: Apple-Actions/download-provisioning-profiles@230860ab5f632551a5f9a5e1d98a774485463888
         with:
           bundle-id: com.hangten.training
           profile-type: IOS_APP_STORE
