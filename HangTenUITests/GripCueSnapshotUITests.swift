@@ -219,7 +219,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     func testPublishedPresetVisualCheckpoints() throws {
         let cases = [
             ("tension-6-and-10", "metolius.wood-grips-compact-ii", "1", "Tension matched edge and half-crimp cue"),
-            ("cameron-horst-one-arm", "metolius.wood-grips-compact-ii", "1", "Cameron Horst single-hand strength cue"),
+            // The 20–24 mm prescription needs the Beastmaker's 20 mm edges.
+            ("cameron-horst-one-arm", "beastmaker-1000", "1", "Cameron Horst single-hand strength cue"),
             ("rock-prodigy.rptc-intermediate", "trango.rock-prodigy-training-center", "1", "RPTC warm-up jug highlight"),
             ("rock-prodigy.pivot-intermediate", "trango.rock-prodigy-pivot", "1", "Pivot manual orientation instruction")
         ]

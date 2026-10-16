@@ -1620,7 +1620,10 @@ enum PlanLibraryValidator {
                         gripType: gripType,
                         handUse: assignmentHandUse, side: assignmentSide
                     )
-                    return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
+                    let resolved = assignmentHandUse == .double && board.isOneHanded
+                        ? WorkoutSessionHandResolver.materialized(step, preference: .both, boardIsOneHanded: true)
+                        : step
+                    return (try? ContactResolver.resolve(resolved.workRequirements, step: resolved, board: board)) != nil
                 }
             }
             let isValid = !boards.isEmpty && resolvableBoards.count == boards.count

@@ -37,9 +37,10 @@ final class PlanStorageTests: XCTestCase {
     }
 
 
-    func testExpandedCanonicalPrescriptionsMatchBeforeDeduplication() throws {
+    func testExpandedCanonicalPrescriptionsMatchAuditedSourceMappings() throws {
         // Captured from the audited canonical source at 07b9127. Includes every
         // original ID/title, metadata field, ordered target, cue and duration.
+        // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
@@ -62,7 +63,7 @@ final class PlanStorageTests: XCTestCase {
             "metolius.contact.intermediate": "1297a76f9eefb94b967e5b1929ee96a63edc82c18389066f9a2c9fd069f28121",
             "metolius.generic-ten-minute.advanced": "f3ec308e3f128b9ef43e4f5b37124cebd966f5292e5332075e3a46d2282c65b6",
             "metolius.generic-ten-minute.entry": "bd9f18db936973141f29cd2dee2d1be6ee04bcef0f26c723216cf9b1a268f356",
-            "metolius.generic-ten-minute.intermediate": "ce8f12f205768a621d7306fa054a5621bab39899583f51a0ba4cda6c4a9b8fe1",
+            "metolius.generic-ten-minute.intermediate": "39df6e8c21a0905b87a31192eea262b9b56b09dbab50ef37eb99979b224b8140",
             "metolius.rock-rings.ten-minute": "af137d7aeed7706bb79174cf298a853be0559acd69bdcd3b11df3a0cc1a9a003",
             "metolius.simulator-3d.advanced": "fae59a3a6afd418a465af41a99283ad18c1ca867feb846cb0b88b3f8b331a542",
             "metolius.simulator-3d.entry": "a8529c7ca3daa0d5928795477dc5511367252d83540d228f26e7d494a705b8a7",
@@ -73,7 +74,7 @@ final class PlanStorageTests: XCTestCase {
             "research.eva-int-hangs": "30aa76b3ddcffbf3e4ca9becf4a29862535190786ecf98e04a3116a2a4ac88ee",
             "research.force-feedback-f100": "31dac2f62ae6f91db25db14bab22c747d3a21f8a770e4238989ed74362b20375",
             "research.force-feedback-f80": "d6d415aeb5a3e89aa16efc9f81c81c45fe945d8c17b7ff29e7e8256ce751bb66",
-            "research.max-hangs": "0ac1426de92362319e028d6ae39bdc6eefa501f1f121455e2db4f56d098e875c",
+            "research.max-hangs": "219bcf2112f203a4732d831665f0cc00c395e0ee287e4618bdbfb93a34720903",
             "research.megos-one-arm-7-3": "069b713030fd32fbae5b5e47c2f1797fe1ed36a8da41d8282307b98fc76c8538",
             "research.seven-three-repeaters": "3fda2dfbe46c33b325977c3b931ef0c1359a0208129db60a236786cd128a028e",
             "rock-prodigy.original-advanced": "fd39b9ace30c97dfad1cf092d53bffbcf74dfaeaf6c84d83c1d21fde087acbb8",
@@ -346,14 +347,14 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(large.matches(.category(.large)))
         XCTAssertFalse(large.matches(medium))
         XCTAssertFalse(large.matches(tenToTwenty))
-        XCTAssertTrue(large.matches(twentyToThirty))
+        XCTAssertFalse(large.matches(twentyToThirty))
         XCTAssertTrue(twentyToThirty.matches(thirtyToForty))
         XCTAssertFalse(twentyToThirty.matches(.category(.large)))
         XCTAssertFalse(large.matches(nil))
         XCTAssertFalse(twentyToThirty.matches(nil))
     }
 
-    func testGenericSmallEdgeCategoryDoesNotRetargetNineteenMillimeterEdges() {
+    func testNamedDepthCategoriesDoNotInferMeasuredDepths() {
         let small = HoldDepth.category(.small)
         let medium = HoldDepth.category(.medium)
         let fourteen = HoldDepth.range(MillimeterRange(minimum: 14, maximum: 14))
@@ -361,14 +362,24 @@ final class PlanStorageTests: XCTestCase {
         let nineteen = HoldDepth.range(MillimeterRange(minimum: 19, maximum: 19))
         let twenty = HoldDepth.range(MillimeterRange(minimum: 20, maximum: 20))
 
-        XCTAssertTrue(small.matches(fourteen))
-        XCTAssertTrue(small.matches(fifteen))
+        XCTAssertFalse(small.matches(fourteen))
+        XCTAssertFalse(small.matches(fifteen))
         XCTAssertFalse(small.matches(nineteen))
-        XCTAssertTrue(medium.matches(nineteen))
+        XCTAssertFalse(medium.matches(nineteen))
         XCTAssertFalse(small.matches(twenty))
     }
 
-    func testMetoliusIntermediateSmallEdgeExcludesExactDepthsOutsideInferredBand() throws {
+    func testNumericDepthsRequireActualIntervalOverlap() {
+        let twenty = HoldDepth.range(.init(minimum: 20, maximum: 20))
+        XCTAssertTrue(twenty.matches(.range(.init(minimum: 20, maximum: 20))))
+        XCTAssertTrue(twenty.matches(.range(.init(minimum: 18, maximum: 22))))
+        XCTAssertFalse(twenty.matches(.range(.init(minimum: 19, maximum: 19))))
+        XCTAssertFalse(twenty.matches(.range(.init(minimum: 21, maximum: 21))))
+        XCTAssertFalse(twenty.matches(.range(.init(minimum: 20.01, maximum: 22))))
+        XCTAssertFalse(twenty.matches(.range(.init(minimum: 18, maximum: 19.99))))
+    }
+
+    func testMetoliusIntermediateSmallEdgeRetainsSourceSizeCategory() throws {
         let step = try XCTUnwrap(
             CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.first {
                 $0.id == "intermediate.minute-3.task-1"
@@ -376,10 +387,9 @@ final class PlanStorageTests: XCTestCase {
         )
         let depth = try XCTUnwrap(step.workRequirements.first?.depth)
 
-        XCTAssertFalse(depth.matches(.range(.init(minimum: 7.5, maximum: 7.5))))
-        XCTAssertTrue(depth.matches(.range(.init(minimum: 8, maximum: 8))))
-        XCTAssertTrue(depth.matches(.range(.init(minimum: 19, maximum: 19))))
-        XCTAssertFalse(depth.matches(.range(.init(minimum: 20, maximum: 20))))
+        XCTAssertEqual(depth, .category(.small))
+        XCTAssertTrue(depth.matches(.category(.small)))
+        XCTAssertFalse(depth.matches(.range(.init(minimum: 19, maximum: 19))))
     }
 
     func testHoldDepthEncodesAndDecodesTaggedCategoryAndRange() throws {
@@ -2392,9 +2402,7 @@ final class PlanStorageTests: XCTestCase {
             (entry, "entry.minute-2.task-1", .init(kind: .sloper, shape: .round)),
             (entry, "entry.minute-3.task-1", .init(kind: .edge, depth: .category(.medium))),
             (entry, "entry.minute-4.task-1", .init(kind: .pocket)),
-            (intermediate, "intermediate.minute-3.task-1", .init(
-                kind: .edge, depth: .measured(.init(minimum: 9, maximum: 18))
-            )),
+            (intermediate, "intermediate.minute-3.task-1", .init(kind: .edge, depth: .category(.small))),
             (advanced, "advanced.minute-1.task-1", .init(kind: .sloper, depth: .category(.large))),
             (advanced, "advanced.minute-1.task-2", .init(kind: .edge, shape: .flat, fingerCapacity: 4))
         ]
@@ -2411,39 +2419,54 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testMetoliusIntermediateSmallEdgeResolvesCompactNineteenMillimeterEdge() throws {
+    func testMetoliusIntermediateSmallEdgeNeedsAthleteChoiceOnMeasuredCompactEdges() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
         for stepID in ["intermediate.minute-3.task-1", "intermediate.minute-6.task-1"] {
             let step = try XCTUnwrap(
                 CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate").steps.first { $0.id == stepID }
             )
 
-            let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
-
-            XCTAssertEqual(contacts.count, stepID == "intermediate.minute-3.task-1" ? 1 : 2, stepID)
-            XCTAssertEqual(
-                contacts.last?.depth,
-                .range(MillimeterRange(minimum: 19, maximum: 19)),
-                stepID
-            )
+            XCTAssertThrowsError(try ContactResolver.resolve(step.workRequirements, step: step, board: board), stepID)
             if stepID == "intermediate.minute-6.task-1" {
-                XCTAssertEqual(contacts.first?.kind, .jug)
+                let jug = try XCTUnwrap(step.workRequirements.first { $0.kind == .jug })
+                XCTAssertEqual(try ContactResolver.resolve(jug, step: step, board: board).first?.kind, .jug)
             }
         }
     }
 
-    func testHoopersMinimalEdgeStillResolvesSimulatorFourteenMillimeterEdge() throws {
+    func testHoopersMinimalEdgeRequiresExplicitChoiceForSimulatorMeasuredEdges() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.simulator-3d"))
+        let source = CanonicalPlanSourceFixture.plan("hoopers-beta.introductory-home-hangboard")
         let step = try XCTUnwrap(
-            CanonicalPlanSourceFixture.plan("hoopers-beta.introductory-home-hangboard").steps.first {
+            source.steps.first {
                 $0.id == "hoopers-intro-round-4-set-1-hang"
             }
         )
 
-        let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
+        XCTAssertEqual(step.workRequirements.first?.depth, .category(.small))
+        XCTAssertThrowsError(try ContactResolver.resolve(step.workRequirements, step: step, board: board))
+        XCTAssertTrue(WorkoutHighlightResolver.contactIDs(for: step, on: board).isEmpty)
+
+        let oneStepPlan = TrainingPlan(
+            id: source.id, title: source.title, subtitle: source.subtitle, level: source.level,
+            sourceLabel: source.sourceLabel, sourceURL: source.sourceURL,
+            provenance: source.provenance, boardID: source.boardID, steps: [step]
+        )
+        let prepared = PlanHoldSubstitutions.prepare(for: oneStepPlan, on: board)
+        XCTAssertEqual(prepared.requests.count, 1)
+        let request = try XCTUnwrap(prepared.requests.first)
+        let fourteen = MillimeterRange(minimum: 14, maximum: 14)
+        let option = try XCTUnwrap(request.options.first {
+            $0.target.planTasks?.first?.first?.target?.depth == .measured(fourteen)
+        })
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
+            [request.id: option.id], to: oneStepPlan, on: board, prepared: prepared
+        ))
+        let selectedStep = try XCTUnwrap(session.steps.first)
+        let contacts = try ContactResolver.resolve(selectedStep.workRequirements, step: selectedStep, board: board)
 
         XCTAssertEqual(contacts.count, 1)
-        XCTAssertEqual(contacts.first?.depth, .range(MillimeterRange(minimum: 14, maximum: 14)))
+        XCTAssertEqual(contacts.first?.depth, .range(fourteen))
     }
 
     func testMetoliusIntermediateUnqualifiedSlopeResolvesCompactSloper() throws {
@@ -2977,8 +3000,8 @@ final class PlanStorageTests: XCTestCase {
                 WorkoutSegment(
                     kind: .work,
                     target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19)))),
-                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))))
+                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 8, maximum: 20)))),
+                        PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 8, maximum: 20))))
                     ]]),
                     timing: .fixed,
                     duration: 10
@@ -3634,7 +3657,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
     }
 
-    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() {
+    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand",
             title: "Either hand",
@@ -3663,9 +3686,32 @@ final class PlanStorageTests: XCTestCase {
         let library = unilateralTestLibrary(step: step, boardID: mirroredBoard.id)
 
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [mirroredBoard]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [mirroredBoard])
+            .resolve(library.plans[0])
+        for (side, contactID) in [(WorkoutSide.left, "left-edge"), (.right, "right-edge")] {
+            let records = try WorkoutActivityRecorder().segments(
+                for: plan, on: mirroredBoard, selectedHandSide: side
+            )
+            XCTAssertEqual(records.first?.side, side)
+            XCTAssertEqual(records.first?.target?.resolvedContactSnapshot?.contactIDs, [contactID])
+        }
+
+        let leftOnlyBoard = handSideBoard(id: "fixture.left-only",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)])
+        let leftOnlyLibrary = unilateralTestLibrary(step: step, boardID: leftOnlyBoard.id)
+        let issues = PlanLibraryValidator.issues(for: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+        XCTAssertEqual(issues.map(\.path), ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+        XCTAssertThrowsError(try PlanDefinitionResolver(library: leftOnlyLibrary, availableBoards: [leftOnlyBoard])
+            .resolve(leftOnlyLibrary.plans[0])) { error in
+            guard let failure = error as? PlanLibraryStoreError,
+                  case .validationFailed(let failures) = failure else {
+                return XCTFail("Expected declared-board contact validation to fail, got \(error)")
+            }
+            XCTAssertEqual(failures, issues)
+        }
     }
 
-    func testEitherHandPlanUsesSingleContactIndependentlyOfContactSide() throws {
+    func testEitherHandPlanReusesSingleContactOnOneHandedBoard() throws {
         let step = WorkoutStepDefinition(
             id: "either-hand", title: "Either hand", instruction: "Hang.", accessory: "",
             duration: 10, phase: .hang,
@@ -3680,14 +3726,14 @@ final class PlanStorageTests: XCTestCase {
             handUse: .either, side: .both
         )
         let asymmetricBoard = handSideBoard(
-            id: "fixture.left-only",
-            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)]
+            id: "fixture.one-handed",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)],
+            handCapacity: 1
         )
 
         let library = unilateralTestLibrary(step: step, boardID: asymmetricBoard.id)
 
-        // Contact side describes the board surface, not the athlete's chosen hand.
-        // Single selection uses presentation geometry and may reuse one surface.
+        // A one-hand board's same physical contact can be used by either hand.
         XCTAssertEqual(PlanLibraryValidator.issues(for: library, availableBoards: [asymmetricBoard]), [])
         let plan = try PlanDefinitionResolver(library: library, availableBoards: [asymmetricBoard])
             .resolve(library.plans[0])
@@ -3766,6 +3812,57 @@ final class PlanStorageTests: XCTestCase {
                 handUse == .double ? [] : ["plans[0].blocks[0].steps[0].segments[0].targets[0]"],
                 "A valid bilateral pair requires double-hand work, not an either-hand choice."
             )
+        }
+    }
+
+    func testPlanValidationAllowsDoubleHandPairOnTwoCopiesOfDeclaredOneHandBoard() throws {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let source = WorkoutStepDefinition(
+            id: "pair", title: "Pair", instruction: "My cue", accessory: "My note", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+            handUse: .double, side: .both, externalLoadKGF: 3.5
+        )
+        let library = unilateralTestLibrary(step: source, boardID: board.id)
+
+        XCTAssertEqual(library.validationIssues(availableBoards: [board]), [])
+        let plan = try PlanDefinitionResolver(library: library, availableBoards: [board]).resolve(library.plans[0])
+        let step = try XCTUnwrap(plan.steps.first)
+        XCTAssertEqual(step.workRequirements, [requirement])
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.instruction, source.instruction)
+        XCTAssertEqual(step.accessory, source.accessory)
+        XCTAssertEqual(step.externalLoadKGF, source.externalLoadKGF)
+        let both = WorkoutSessionHandResolver.materialized(step, preference: .both, boardIsOneHanded: true)
+        XCTAssertEqual(both.workRequirements, [requirement.singleHandSelection])
+        XCTAssertEqual(both.handUse, .double)
+        XCTAssertEqual(both.side, .both)
+        XCTAssertEqual(try ContactResolver.resolve(both.workRequirements, step: both, board: board).map(\.id), ["unit-edge"])
+        XCTAssertEqual(library.blocks[0].steps, [source])
+        XCTAssertEqual(source.workRequirements, [requirement])
+    }
+
+    func testPlanValidationRejectsSingleAndEitherHandPairsOnDeclaredOneHandBoard() {
+        let board = handSideBoard(id: "fixture.one-hand-unit", contacts: [
+            PhysicalContact(id: "unit-edge", name: "Unit edge", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+        let cases: [(WorkoutHandUse, WorkoutSide)] = [(.single, .left), (.single, .right), (.either, .both)]
+        for (handUse, side) in cases {
+            let source = WorkoutStepDefinition(
+                id: "pair", title: "Pair", instruction: "", accessory: "", duration: 10, phase: .hang,
+                segments: [.init(kind: .work, target: .requirements([requirement]), timing: .fixed, duration: 10)],
+                handUse: handUse, side: side
+            )
+            let library = unilateralTestLibrary(step: source, boardID: board.id)
+            XCTAssertEqual(library.validationIssues(availableBoards: [board]).map(\.path),
+                ["plans[0].blocks[0].steps[0].segments[0].targets[0]"])
+            XCTAssertThrowsError(try PlanDefinitionResolver(library: library, availableBoards: [board]))
+            XCTAssertEqual(library.blocks[0].steps, [source])
+            XCTAssertEqual(source.workRequirements, [requirement])
         }
     }
 
@@ -3867,7 +3964,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    private func handSideBoard(id: String, contacts: [PhysicalContact]) -> BoardRevision {
+    private func handSideBoard(id: String, contacts: [PhysicalContact], handCapacity: Int = 2) -> BoardRevision {
         let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
             let x: CGFloat = switch contact.side {
             case .left: 0.125
@@ -3884,7 +3981,7 @@ final class PlanStorageTests: XCTestCase {
         })
         return BoardRevision(
             id: id, revisionID: "test-fixture", manufacturer: "Fixture", name: "Hand-side board",
-            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            subtitle: "", dimensions: "", aspectRatio: 1, handCapacity: handCapacity, contacts: contacts,
             productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil,
             presentations: [BoardPresentation(
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,

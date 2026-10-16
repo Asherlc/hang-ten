@@ -936,7 +936,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
 
-    func testHighlightResolverUsesCenterNearestSemanticTargetForSingleHandSteps() {
+    func testHighlightResolverUsesRequestedSideForSingleHandSemanticTargets() {
         let board = BoardRevision(
             id: "portable",
             revisionID: "test-fixture",
@@ -1029,7 +1029,7 @@ final class WorkoutTimelineTests: XCTestCase {
         )
         XCTAssertEqual(
             WorkoutHighlightResolver.contactIDs(for: rightStep, on: board),
-            ["left-pocket"]
+            ["right-pocket"]
         )
     }
 
@@ -4074,7 +4074,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
         let offsetTargets = [
             ContactRequirement.kind(.jug),
-            ContactRequirement.edge(depth: .range(.init(minimum: 9, maximum: 18)))
+            ContactRequirement.edge(depth: .category(.small))
         ]
         XCTAssertEqual(steps[0].workRequirements, offsetTargets)
         XCTAssertEqual(steps[1].workRequirements, offsetTargets)

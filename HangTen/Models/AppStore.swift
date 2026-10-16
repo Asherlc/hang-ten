@@ -7,6 +7,21 @@ final class AppStore: ObservableObject {
     private static let selectedBoardIDKey = "HangTen.selectedBoardID.v1"
     private static let favoritePlanIDsKey = "favoritePlanIDs"
     private static let favoriteBoardIDsKey = "favoriteBoardIDs"
+    private static let planHoldSelectionsKey = "HangTen.planHoldSelections.v1"
+    private static let maxHangsDepthsKey = "HangTen.maxHangsDepths.v1"
+
+    private struct RememberedHoldSubstitution: Codable {
+        let requestID: PlanHoldSubstitutionRequest.ID
+        let optionID: String
+        let target: WorkoutSegmentTarget
+    }
+
+    private struct RememberedMaxHangsDepth: Codable {
+        let planID: String
+        let boardID: String
+        let revisionID: String
+        let depth: Double
+    }
 
     @Published private(set) var selectedBoard: BoardRevision
     @Published private(set) var workoutHistory: WorkoutHistorySnapshot
@@ -191,6 +206,72 @@ final class AppStore: ObservableObject {
         defaults.set(board.id, forKey: Self.selectedBoardIDKey)
         guard let family = telemetryBoardFamily(for: board) else { return }
         telemetry.tracking.track(.boardSelected(family: family))
+    }
+
+    func rememberedHoldSubstitutions(
+        for prepared: PlanHoldSubstitutions.PreparedRequests
+    ) -> [PlanHoldSubstitutionRequest.ID: String] {
+        let records = loadRememberedHoldSubstitutions()
+        var selections: [PlanHoldSubstitutionRequest.ID: String] = [:]
+        for request in prepared.requests {
+            guard let record = records.last(where: { record in
+                record.requestID == request.id && request.options.contains {
+                    $0.id == record.optionID && $0.target == record.target
+                }
+            }) else { continue }
+            selections[request.id] = record.optionID
+        }
+        return selections
+    }
+
+    /// Replaces only the current requests so clearing a choice is remembered
+    /// while choices for another board, plan, or prescription remain available.
+    func rememberHoldSubstitutions(
+        _ selections: [PlanHoldSubstitutionRequest.ID: String],
+        for prepared: PlanHoldSubstitutions.PreparedRequests
+    ) {
+        let requestIDs = Set(prepared.requests.map(\.id))
+        var records = loadRememberedHoldSubstitutions().filter { !requestIDs.contains($0.requestID) }
+        for request in prepared.requests {
+            guard let optionID = selections[request.id],
+                  let option = request.options.first(where: { $0.id == optionID }) else { continue }
+            records.append(RememberedHoldSubstitution(requestID: request.id, optionID: option.id,
+                                                      target: option.target))
+        }
+        guard let data = try? JSONEncoder().encode(records) else { return }
+        defaults.set(data, forKey: Self.planHoldSelectionsKey)
+    }
+
+    private func loadRememberedHoldSubstitutions() -> [RememberedHoldSubstitution] {
+        guard let data = defaults.data(forKey: Self.planHoldSelectionsKey) else { return [] }
+        return (try? JSONDecoder().decode([RememberedHoldSubstitution].self, from: data)) ?? []
+    }
+
+    func rememberedMaxHangsDepth(
+        for plan: TrainingPlan, on board: BoardRevision, availableDepths: [Double]
+    ) -> Double? {
+        loadRememberedMaxHangsDepths().last {
+            $0.planID == plan.id && $0.boardID == board.id && $0.revisionID == board.revisionID
+                && $0.depth.isFinite && availableDepths.contains($0.depth)
+        }?.depth
+    }
+
+    func rememberMaxHangsDepth(
+        _ depth: Double, for plan: TrainingPlan, on board: BoardRevision, availableDepths: [Double]
+    ) {
+        guard depth.isFinite, availableDepths.contains(depth) else { return }
+        var records = loadRememberedMaxHangsDepths().filter {
+            $0.planID != plan.id || $0.boardID != board.id || $0.revisionID != board.revisionID
+        }
+        records.append(RememberedMaxHangsDepth(planID: plan.id, boardID: board.id,
+                                             revisionID: board.revisionID, depth: depth))
+        guard let data = try? JSONEncoder().encode(records) else { return }
+        defaults.set(data, forKey: Self.maxHangsDepthsKey)
+    }
+
+    private func loadRememberedMaxHangsDepths() -> [RememberedMaxHangsDepth] {
+        guard let data = defaults.data(forKey: Self.maxHangsDepthsKey) else { return [] }
+        return (try? JSONDecoder().decode([RememberedMaxHangsDepth].self, from: data)) ?? []
     }
 
     func submitUserReport(_ report: HangTenUserReport) {
@@ -429,7 +510,9 @@ final class AppStore: ObservableObject {
         sessionSteps: [WorkoutStep]? = nil,
         performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
         selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
-        session: WorkoutSessionRecord? = nil
+        session: WorkoutSessionRecord? = nil,
+        elapsed: TimeInterval? = nil,
+        activityIntervals: [Range<TimeInterval>]? = nil
     ) {
         if let session {
             workoutSessionStore.append(session) { [weak self] result in
@@ -459,7 +542,9 @@ final class AppStore: ObservableObject {
                 sessionSteps: sessionSteps,
                 performedTaskIndicesByStepID: performedTaskIndicesByStepID,
                 selectedTaskSidesByStepID: selectedTaskSidesByStepID,
-                stepMeasurements: session?.steps ?? []
+                stepMeasurements: session?.steps ?? [],
+                elapsed: elapsed,
+                activityIntervals: activityIntervals
             )
             activityContext = PendingWorkoutActivityContext(
                 boardID: board.id,

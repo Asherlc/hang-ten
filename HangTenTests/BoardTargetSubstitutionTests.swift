@@ -378,7 +378,7 @@ final class ContactResolverTests: XCTestCase {
         XCTAssertEqual(tasks.count, 1)
         let task = try XCTUnwrap(tasks.first)
         let sourceTarget = PlanHandTarget(target: .init(
-            kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))
+            kind: .edge, depth: .measured(.init(minimum: 8, maximum: 20))
         ))
         XCTAssertEqual(task, [sourceTarget, sourceTarget])
         XCTAssertEqual(step.handUse, .double)
@@ -402,7 +402,7 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    func testMetoliusEntryHighlightsJugAndMediumEdgeOnDual() throws {
+    func testMetoliusEntryHighlightsJugButRequiresAMediumEdgeChoiceOnDual() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
         let jugStep = try XCTUnwrap(
             CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps.first { $0.id == "entry.minute-1.task-1" }
@@ -429,12 +429,8 @@ final class ContactResolverTests: XCTestCase {
             PlanHandTarget(target: .init(kind: .edge, depth: .category(.medium))),
             PlanHandTarget(target: .init(kind: .edge, depth: .category(.medium)))
         ])
-        let mediumContacts = try ContactResolver.resolve(mediumTask, step: mediumStep, board: board)
-        let mediumIDs = WorkoutHighlightResolver.contactIDs(for: mediumStep, on: board)
-        XCTAssertEqual(mediumIDs, mediumContacts.map(\.id))
-        XCTAssertEqual(mediumIDs.count, 2)
-        XCTAssertEqual(Set(mediumIDs).count, 1)
-        XCTAssertTrue(mediumIDs.allSatisfy { $0 == "curved-edge-20" || $0 == "straight-edge-20" })
+        XCTAssertThrowsError(try ContactResolver.resolve(mediumTask, step: mediumStep, board: board))
+        XCTAssertTrue(WorkoutHighlightResolver.contactIDs(for: mediumStep, on: board).isEmpty)
     }
 
     func testEmptyContactGripTypesDoNotConstrainStepGrip() throws {
@@ -572,13 +568,13 @@ final class ContactResolverTests: XCTestCase {
         XCTAssertEqual(sourceTasks.count, 1)
         let sourceTask = try XCTUnwrap(sourceTasks.first)
         let sourceTarget = PlanHandTarget(target: .init(
-            kind: .edge, depth: .measured(.init(minimum: 9, maximum: 19))
+            kind: .edge, depth: .measured(.init(minimum: 8, maximum: 20))
         ))
         XCTAssertEqual(sourceTask, [sourceTarget, sourceTarget])
         // The broad source range matches three physical pairs. Do not invent
         // an automatic size choice in the legacy bilateral-pair API. Flattening
         // canonical hand tasks would discard this explicit selection contract.
-        let broadPair = ContactRequirement.edge(depth: .range(.init(minimum: 9, maximum: 19)),
+        let broadPair = ContactRequirement.edge(depth: .range(.init(minimum: 8, maximum: 20)),
                                                 selection: .bilateralPair)
         XCTAssertThrowsError(try ContactResolver.resolve(broadPair, step: step, board: board)) {
             XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 6))

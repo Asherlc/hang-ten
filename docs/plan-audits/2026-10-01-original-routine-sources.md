@@ -30,8 +30,8 @@ the instruction, without an invented millimeter range or depth category.
 
 The source's “crimp” edge tasks do not require physically two-finger-sized
 edges: engaged-finger configuration carries that cue separately from the
-contact's capacity. Board matching retains the existing numeric tolerance;
-the 14 mm source value itself remains exact in the predicate. Provenance is
+contact's capacity. Board matching requires actual numeric interval overlap;
+the 14 mm source value remains exact in the predicate. Provenance is
 adapted because semantic matching cannot enforce relative effort or deep
 pocket depth. The former Lattice six-grip sequence and universal 20 mm target
 are removed.
@@ -159,7 +159,7 @@ right-arm efforts on each grip and discloses that ordering as an adaptation.
 Between-effort rests apply at every effort boundary, including grip/side
 transitions; no extra invented between-set rest or warm-up is added. “Easy” and
 “hard” sloper are athlete-relative instructions, not inferred sloper geometry.
-The existing numeric contact-matching tolerance remains unchanged. Source
+Numeric contact matching uses actual interval overlap without tolerance. Source
 depths stay exact in authored predicates. Compatible-board resolution must
 not substitute a different hold kind to admit more boards.
 
@@ -179,9 +179,12 @@ beginner recruitment and expert velocity on Beastmaker 1000; expert recruitment
 on both Beastmakers; expert density on Beastmaker 1000, Helium Mobile, Moon
 Armstrong, and Tension Honestone; beginner velocity on Beastmaker 2000 and
 Metolius Simulator 3D. Beginner density resolves on Simulator 3D, Wood Grips
-Deluxe II, Moon Armstrong, and So iLL Split Palm. Abrahangs resolves on Beastmaker
-2000 with its complete edge/pocket inventory. These results do not loosen the
-source's hold predicates to make other boards appear compatible.
+Deluxe II, Moon Armstrong, and So iLL Split Palm. Abrahangs retains its exact
+14 mm four-finger edge target. Beastmaker 2000 has a 15 mm four-finger pair, so
+strict matching requires the athlete to select that pair as a session adaptation;
+the former automatic compatibility result depended on the removed 1 mm
+tolerance. The source predicate remains 14 mm. Other boards likewise require
+explicit substitutions whenever their factual inventory cannot resolve it.
 
 Native validation attempted the complete `HangTenTests/PlanStorageTests` and
 `HangTenTests/AppStoreTests` suites with Xcode, Debug configuration, explicit
