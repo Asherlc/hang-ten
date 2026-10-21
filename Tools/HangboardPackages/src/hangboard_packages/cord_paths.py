@@ -41,14 +41,42 @@ def _closest(a, b, c, d):
     return distance, s, t, overlap
 
 
+def _endpoint_arc_distances(paths, lengths, tolerance):
+    """Shortest cord lengths through unambiguous degree-two endpoint joins."""
+    ports = [(identifier, end) for identifier in paths for end in (0, 1)]
+    points = {(identifier, end): path[0 if end == 0 else -1]
+              for identifier, path in paths.items() for end in (0, 1)}
+    neighbors = {port: [other for other in ports if other != port
+                        and _distance(points[port], points[other]) <= tolerance]
+                 for port in ports}
+    distances = {port: {other: 0.0 if port == other else float("inf")
+                        for other in ports} for port in ports}
+    for identifier, length in lengths.items():
+        first, last = (identifier, 0), (identifier, 1)
+        distances[first][last] = distances[last][first] = length
+    for port, matches in neighbors.items():
+        # Three or more incident ports have no unique continuation. Do not
+        # infer which pieces meet, including at shared suspension supports.
+        if len(matches) == 1 and neighbors[matches[0]] == [port]:
+            distances[port][matches[0]] = 0.0
+    for via in ports:
+        for first in ports:
+            for last in ports:
+                distances[first][last] = min(
+                    distances[first][last], distances[first][via] + distances[via][last],
+                )
+    return distances
+
+
 def validate_cord_paths(paths, radii=None, tolerance=1e-6):
     """Reject crossings, retracing and nonlocal tube intersections.
 
     Shared support or mouth endpoints may join different strands. Within one
     strand only adjacent joins and its intentional first/last closure may meet.
-    Radius checks exclude the immediate neighborhood of an ordinary bend.
+    Radius checks exclude the immediate neighborhood of an ordinary bend,
+    including across unambiguous degree-two endpoint joins between strands.
     """
-    segments = []
+    segments, lengths = [], {}
     for identifier, points in paths.items():
         if len(points) < 2 or any(len(p) != 3 or not all(math.isfinite(v) for v in p) for p in points):
             raise ValueError("native cord paths must be finite 3D polylines")
@@ -59,6 +87,8 @@ def validate_cord_paths(paths, radii=None, tolerance=1e-6):
                 raise ValueError("native cord path contains a duplicate point")
             segments.append((identifier,index,start,end,arc,arc+span,len(points)-2))
             arc += span
+        lengths[identifier] = arc
+    endpoint_distances = _endpoint_arc_distances(paths, lengths, tolerance) if radii is not None else None
     for i, first in enumerate(segments):
         aid, ai, a, b, astart, aend, afinal = first
         for bid, bi, c, d, bstart, bend, bfinal in segments[i+1:]:
@@ -80,6 +110,12 @@ def validate_cord_paths(paths, radii=None, tolerance=1e-6):
             if distance <= tolerance:
                 raise ValueError(f"native cord paths intersect: {aid}/{ai}, {bid}/{bi}")
             if radii is not None and distance < radius-1e-8:
-                separation = abs((astart+s*(aend-astart))-(bstart+t*(bend-bstart))) if same else float("inf")
+                a_arc, b_arc = astart+s*(aend-astart), bstart+t*(bend-bstart)
+                separation = abs(a_arc-b_arc) if same else float("inf")
+                for a_port, a_distance in ((0, a_arc), (1, lengths[aid]-a_arc)):
+                    for b_port, b_distance in ((0, b_arc), (1, lengths[bid]-b_arc)):
+                        separation = min(separation, a_distance
+                                         + endpoint_distances[(aid, a_port)][(bid, b_port)]
+                                         + b_distance)
                 if separation > 2*radius:
                     raise ValueError(f"native cord tubes intersect: {aid}/{ai}, {bid}/{bi}")

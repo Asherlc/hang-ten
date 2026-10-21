@@ -245,6 +245,7 @@
 		D10000000000000000000042 /* yy-verticalboard-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000042 /* yy-verticalboard-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-evo", ); }; };
 		D10000000000000000000043 /* tension-honestone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000043 /* tension-honestone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-honestone", ); }; };
 		D10000000000000000000044 /* tension-grindstone-original Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000044 /* tension-grindstone-original Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-original", ); }; };
+		D10000000000000000000048 /* tension-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000048 /* tension-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-block", ); }; };
 		F8BB00000000000000000001 /* PlanFlowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000002 /* PlanFlowPresentation.swift */; };
 		F8BB00000000000000000003 /* PlanFlowPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */; };
 		F8BB00000000000000000005 /* PlanFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB00000000000000000006 /* PlanFlowUITests.swift */; };
@@ -509,6 +510,7 @@
 		D20000000000000000000042 /* yy-verticalboard-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000043 /* tension-honestone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-honestone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-honestone/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000044 /* tension-grindstone-original Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-original Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-original/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000048 /* tension-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-block/Hangboards"; sourceTree = "<absolute>"; };
 		F8BB00000000000000000002 /* PlanFlowPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentation.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000004 /* PlanFlowPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowPresentationTests.swift; sourceTree = "<group>"; };
 		F8BB00000000000000000006 /* PlanFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFlowUITests.swift; sourceTree = "<group>"; };
@@ -581,6 +583,7 @@
 				D2000000000000000000000C /* nature-stone-hanger Hangboards */,
 				D20000000000000000000012 /* soill-training-tiles Hangboards */,
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
+				D20000000000000000000048 /* tension-block Hangboards */,
 				D2000000000000000000002E /* tension-grindstone Hangboards */,
 				D20000000000000000000031 /* tension-whetstone Hangboards */,
 				D20000000000000000000039 /* yy-travelboard Hangboards */,
@@ -986,6 +989,7 @@
 				D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */,
 				D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */,
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
+				D10000000000000000000048 /* tension-block Hangboards in Resources */,
 				D1000000000000000000002E /* tension-grindstone Hangboards in Resources */,
 				D10000000000000000000031 /* tension-whetstone Hangboards in Resources */,
 				D10000000000000000000039 /* yy-travelboard Hangboards in Resources */,
