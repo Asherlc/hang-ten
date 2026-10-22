@@ -17,6 +17,7 @@ import Part
 
 
 def assert_recomputed(document):
+    """Recompute in memory and reject stale features or invalid nonempty shapes."""
     document.recompute()
     stale = {
         obj.Name: list(obj.State)
@@ -72,6 +73,7 @@ def assert_final_face_contacts(document, solid):
 
 
 def main():
+    """Check reversible scratch-source edits and write a receipt only on success."""
     source = Path(sys.argv[1]).resolve()
     original_digest = hashlib.sha256(source.read_bytes()).hexdigest()
     document = App.openDocument(str(source))

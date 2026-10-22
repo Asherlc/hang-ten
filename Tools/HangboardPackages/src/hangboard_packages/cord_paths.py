@@ -4,23 +4,28 @@ import math
 
 
 def _sub(a, b):
+    """Subtract corresponding coordinates for the centerline vector calculations."""
     return tuple(x-y for x, y in zip(a, b))
 
 
 def _dot(a, b):
+    """Return the scalar dot product used by closest-point equations."""
     return sum(x*y for x, y in zip(a, b))
 
 
 def _point(a, u, parameter):
+    """Return the origin plus parameter times direction, without clamping."""
     return tuple(x+parameter*y for x, y in zip(a, u))
 
 
 def _distance(a, b):
+    """Measure Euclidean separation in the input centerlines' length unit."""
     delta = _sub(a, b)
     return math.sqrt(_dot(delta, delta))
 
 
 def _closest(a, b, c, d):
+    """Return segment distance, clamped parameters, and collinear overlap length."""
     u, v, w = _sub(b, a), _sub(d, c), _sub(a, c)
     aa, bb, cc, dd, ee = _dot(u,u), _dot(u,v), _dot(v,v), _dot(u,w), _dot(v,w)
     clamp = lambda value: max(0.0, min(1.0, value))
