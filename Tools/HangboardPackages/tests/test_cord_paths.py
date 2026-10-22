@@ -51,6 +51,25 @@ def test_a_closed_cord_keeps_the_bend_neighborhood_across_its_closure():
                         {"loop": .0025})
 
 
+def test_a_closed_cord_keeps_its_closure_with_another_strand_at_the_support():
+    paths = {
+        "loop": [(0, 0, 0), (.0027, 0, 0), (.02, 0, 0),
+                 (.02, .02, 0), (0, .02, 0), (0, 0, 0)],
+        "other": [(0, 0, 0), (-.02, 0, 0)],
+    }
+    validate_cord_paths(paths, {"loop": .0025, "other": .0001})
+
+
+def test_a_strand_at_a_closed_cord_support_has_no_inferred_continuation():
+    paths = {
+        "loop": [(0, 0, 0), (.02, 0, 0),
+                 (.02, .02, 0), (0, .02, 0), (0, 0, 0)],
+        "other": [(0, 0, 0), (-.001, 0, 0), (-.001, -.02, 0)],
+    }
+    with pytest.raises(ValueError, match=r"tubes intersect: loop/\d+, other/\d+"):
+        validate_cord_paths(paths, {"loop": .0025, "other": .0001})
+
+
 def test_three_endpoint_ports_do_not_define_a_continuous_bend():
     paths = {
         "lead": [(.02, .02, 0), (.0027, 0, 0), (0, 0, 0)],

@@ -42,7 +42,7 @@ def _closest(a, b, c, d):
 
 
 def _endpoint_arc_distances(paths, lengths, tolerance):
-    """Shortest cord lengths through unambiguous degree-two endpoint joins."""
+    """Shortest cord lengths through closures and unambiguous degree-two joins."""
     ports = [(identifier, end) for identifier in paths for end in (0, 1)]
     points = {(identifier, end): path[0 if end == 0 else -1]
               for identifier, path in paths.items() for end in (0, 1)}
@@ -54,6 +54,9 @@ def _endpoint_arc_distances(paths, lengths, tolerance):
     for identifier, length in lengths.items():
         first, last = (identifier, 0), (identifier, 1)
         distances[first][last] = distances[last][first] = length
+        # A path defines its own closure even when other ports share its support.
+        if _distance(points[first], points[last]) <= tolerance:
+            distances[first][last] = distances[last][first] = 0.0
     for port, matches in neighbors.items():
         # Three or more incident ports have no unique continuation. Do not
         # infer which pieces meet, including at shared suspension supports.
