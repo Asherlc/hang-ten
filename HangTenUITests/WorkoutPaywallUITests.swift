@@ -82,12 +82,17 @@ final class CustomRoutineEditorUITests: XCTestCase {
         )
         XCTAssertEqual(XCTWaiter.wait(for: [enteredName], timeout: 5), .completed,
                        "The complete typed name must reach the field before checking validation")
-        let updated = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label CONTAINS %@ AND NOT label CONTAINS %@",
-                                   "Add at least one step.", "A routine name is required."),
-            object: issues
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed)
+        // Resolve the current row on every poll so validation edits are not
+        // checked against a retained pre-edit accessibility snapshot.
+        let updated = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let currentIssues = app.staticTexts["customRoutine.validationErrors"]
+            guard currentIssues.exists else { return false }
+            let message = currentIssues.label
+            return message.contains("Add at least one step.")
+                && !message.contains("A routine name is required.")
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [updated], timeout: 5), .completed,
+                       "Correcting the name must clear its error while keeping the missing-step feedback")
         XCTAssertTrue(save.exists)
         let corrected = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         corrected.name = "Routine validation updates after entering a name"
