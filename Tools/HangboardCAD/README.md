@@ -292,6 +292,12 @@ Position `effectiveDepths` carries source-backed configured grip depths.
    native checks and package validation, then review exported geometry and
    selected contacts in the app.
 
+After a native save, inspect ignored files too: `rtk proxy rg --files --hidden
+--no-ignore Hangboards`. FreeCAD can leave timestamped `.FCBak` files beside the
+source. Move only backups created by the current workspace into its `.context`
+scratch before catalog and app source-boundary checks; Git status alone does
+not reveal them.
+
 Follow [AGENTS.md](../../AGENTS.md) and the
 [geometry precautions](../../docs/freecad-authoring-lessons.md). Direct native
 authoring and human review are required. Measuring an approved display mesh's

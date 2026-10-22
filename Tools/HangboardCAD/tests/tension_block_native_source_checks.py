@@ -1,13 +1,14 @@
 """Native final-face membership and depth-edit checks for Tension's Block.
 
-Run through ``run_freecad.py`` against a scratch copy of the FCStd. No source
-document is saved. These checks exercise the saved feature graph rather than
-rebuilding geometry through the temporary authoring script.
+Run through ``run_freecad.py`` with a scratch FCStd path and a JSON result path.
+No source document is saved. These checks exercise the saved feature graph
+rather than rebuilding geometry through the temporary authoring script.
 """
 
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 import sys
 
@@ -109,6 +110,11 @@ def main():
     finally:
         App.closeDocument(document.Name)
     assert hashlib.sha256(source.read_bytes()).hexdigest() == original_digest
+    Path(sys.argv[2]).write_text(json.dumps({
+        "status": "passed",
+        "sourceSHA256": original_digest,
+        "editedTools": ["Edge20Tool", "MonoTool"],
+    }) + "\n")
     print("native Block contact edit checks passed", flush=True)
 
 

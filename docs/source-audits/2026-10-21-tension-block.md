@@ -50,7 +50,15 @@ V1 is [Block Overview with Quinn Spadafora](https://www.youtube.com/watch?v=DTeH
 published by Tension Climbing and linked directly from its
 [2025-09-08 overview page](https://tensionclimbing.com/blogs/training-tools/the-block-overview).
 The pale maple body, six-recess layout and stepped side silhouette match approved
-I2/I3. Its 3:13–3:39 demonstration moves the cord through the board and adjusts
+I2/I3. The [full frame at 1:46](2026-10-21-tension-block-evidence/v1-106s-wide-pinch.png)
+shows four fingers engaging the near exterior flat sidewall. The far thumb is
+occluded; opposition against the other sidewall at native CAD Z± is inferred
+from the demonstrated grip rather than fully visible. Combined with the current
+manufacturer's Wide Flat Pinch name, this supports the physical mapping below
+as a labeled inference; the video does not speak that exact label or publish
+pinch width.
+
+Its 3:13–3:39 demonstration moves the cord through the board and adjusts
 exterior loops. The authoring represents that connection graph as five joined
 spans: two back-face leads, two straight through-bore segments, and one exposed
 front-face bridge. Retained full frames support the physical relationships:
@@ -89,7 +97,7 @@ retained with this audit; full videos and transcripts are not catalog sources.
 | Two-finger pocket | Pocket; nominal depth 25 mm; `fingerCapacity: 2` | Product page; oblong pocket in I2/I3 |
 | Mono pocket | Pocket; nominal depth 25 mm; `fingerCapacity: 1` | Product page; round pocket in I2/I3 |
 | Narrow incut pinch | Named incut pinch; opposing inner long walls/rims of the 10 mm and 20 mm front recesses, shared with those edges | Current product name/classification; I2/I3; V2 at 0:47 and 1:50 with older-revision caveat |
-| Wide flat pinch | Manufacturer names this pinch option and classifies it as flat | Product page and retained extracted-facts record |
+| Wide flat pinch | Named flat pinch; opposing exterior flat sidewalls at native CAD Z± | Current product name/classification; current V1 at 1:46; approved side profile I4 |
 | Micro flat pinch | Manufacturer names this pinch option and classifies it as flat | Product page and retained extracted-facts record |
 | Adjustable attachment point | Product supports weights, resistance bands and free-hanging setups | Product page and retained extracted-facts record |
 
@@ -128,13 +136,45 @@ has **estimated `fingerCapacity: 4`**, reviewed 2026-10-21 from the complete
 ridge span in I2/I3 and the demonstrated multiple-finger opposition in V2.
 The video is not claimed to publish a four-finger count.
 
-The manufacturer's **wide flat** and **micro flat** pinch labels remain genuine
-product facts, but their distinct physical surfaces are not mapped by the
-reviewed primary evidence. This audit assigns neither an invented highlight
-region nor finger count to them. Nine named options are not evidence for nine
-disjoint regions. Preserve the entire physical board geometry while omitting
-unmapped selectable contact labels until a specific physical/source mapping is
-established.
+`pinch-wide-flat` uses the opposing **exterior flat sidewalls at native CAD
+Z±**, spanning the physical short dimension. This mapping is a physical review
+inference combining the current manufacturer's Wide Flat Pinch name with the
+current-maple V1 demonstration at 1:46 and the complete side profile in I4.
+It is distinct from pinching inside the long front recesses. Both exterior
+walls belong to one pinch contact, without a new cut or duplicated body surface.
+**`fingerCapacity: 4` is a visual estimate**, reviewed 2026-10-21 from the full
+current-video demonstration and complete exterior walls in the approved images;
+it is not a published finger count or pinch-width measurement.
+
+The manufacturer's **micro flat** pinch label remains a genuine product fact,
+but no reviewed primary source explicitly maps it to a current physical region.
+It receives no invented highlight or finger count. The eight mapped logical
+contacts include shared physical surfaces; the nine named options do not imply
+nine disjoint regions. Preserve the entire physical board while omitting the
+unmapped micro-flat selectable contact.
+
+### Further research limits
+
+Thirteen archived original manufacturer usage-gallery JPEGs were reviewed,
+including alternate compositions of the same scenes. Only the useful
+[central-pinch view](2026-10-21-tension-block-evidence/legacy-BlockWR_5-central-pinch.jpg),
+[second central-pinch composition](2026-10-21-tension-block-evidence/legacy-Block_WR_7-central-pinch.jpg),
+and [rear-edge view](2026-10-21-tension-block-evidence/legacy-Block_WR_6-rear-edge.jpg)
+are retained here. Their gallery association is retained in the manufacturer's
+[5 September 2022 page capture](https://web.archive.org/web/20220905141744id_/https://tensionclimbing.com/product/the-block-2/)
+and [20 May 2024 page capture](https://web.archive.org/web/20240520223708id_/https://tensionclimbing.com/product/the-block-2/).
+Availability in the 2022 capture predates the documented maple change; neither
+the hosting path nor capture date establishes the exact material or factory
+revision of every pictured unit. The later page reuses the images. They
+corroborate the central pinch but do not identify the current Micro Flat Pinch.
+The rear-edge photo shows fingertip edge use, not a demonstrated opposing micro
+pinch, and its markings may belong to an earlier edge revision.
+
+Retail descriptions such as a 25 mm two-finger pinch, 7 cm pinch descriptions,
+or imperial body dimensions are not adopted as current-maple metrology or as
+an exact current-label map. No new pocket pinch or rear-face pinch is invented
+from those descriptions. The micro-flat option remains omitted until its
+specific current physical surfaces are supported.
 
 ## Published dimensions and display estimates
 
@@ -166,13 +206,13 @@ Cord and pose inputs are also **display estimates**:
 | Back-face lead allowances | 220 mm per lead |
 | Exposed front bridge allowance | 60 mm |
 | Through-bore allowances | 50 mm per bore segment, over a 44 mm native channel |
-| Canonical poses | Seven estimated rotations/cameras: four edges, two pockets and narrow incut pinch |
-| Four edge poses and narrow incut pinch | World X display offset +80 mm |
+| Canonical poses | Eight estimated rotations/cameras: four edges, two pockets, narrow incut pinch and wide flat pinch |
+| Four edge poses and both mapped pinches | World X display offset +80 mm |
 | Back-face 8 mm and 6 mm edge poses | World Z display offset −140 mm, in addition to +80 mm world X |
 | Pocket poses | No authored X/Z display offset |
 
 These per-span rest-length allowances are solver inputs, not factory cord
-measurements or a measured total cord length. The seven canonical poses relate
+measurements or a measured total cord length. The eight canonical poses relate
 to the sourced contact inventory; their rotations, cameras and placement are
 authored display choices.
 
@@ -182,6 +222,15 @@ and narrow incut pinch use `[0, -0.12, -1]` (model-space −Z). The back-face
 6/8 mm edges use `[0, -0.12, 1]` (model-space +Z) to expose their actual rear
 contact surfaces. These directions are display-camera choices tied to the
 contact locations in approved I1–I3, not sourced product tilt measurements.
+
+The wide-flat pinch uses the estimated Z-axis 90° quaternion
+`[0, 0, 0.7071067811865476, 0.7071067811865476]`, model-space camera direction
+`[0, -0.5, -1]`, and padding `0.12`. Its more oblique camera exposes the
+exterior wall and the opposite rim; the opaque board can occlude the far wall.
+The two native contact regions include the flat Z± sidewall pads and their
+existing front/back long-edge roundovers, ending at the X-end corner tangencies.
+The small existing step transitions belong to those same sidewall rims. These
+are reviewed display-region boundaries, not measured finger-pad outlines.
 
 ## Suspension connection graph and CAD mapping
 
@@ -218,7 +267,7 @@ no hidden lateral passage or U-turn and uses the existing schema.
 rest-length allowance. The solver does **not** simulate continuous sliding of
 one rope between spans or redistribute a measured total rope length. The
 2.5 mm radius, 220 mm lead allowances, 60 mm bridge allowance, 50 mm bore
-allowances and all seven canonical poses are the display estimates listed
+allowances and all eight canonical poses are the display estimates listed
 above. The 80 mm world-X shift in the edge and pinch displays and the
 additional −140 mm world-Z shift for the two back-face edges are pose-placement
 estimates; they do not change the retained physical board geometry. Knot
@@ -239,21 +288,22 @@ suspension artifact under the [cord authoring contract](../HANGBOARD_CORD_AUTHOR
 ## Authored geometry review artifact
 
 [Front, side and top geometry review](2026-10-21-tension-block-evidence/authored-geometry-review.png)
-is an **authored Hang Ten review sheet**, shown to the user during this addition.
-It places gray native-export previews beside the four complete approved
-manufacturer images. It is not a manufacturer photograph, a dimensional source,
-or evidence of runtime cord rendering. This is a new catalog addition with no
-prior committed Tension Block geometry; the sheet labels that absence rather
-than supplying invented prior views. The source manifest records its separate
-artifact type, provenance, caveat and hash. Physical geometry is unchanged by
-the suspension pose offsets above.
+is an **authored Hang Ten review sheet**, shown to the user for the wide-pinch
+refinement. It places front, side and top exports built from the prior committed
+seven-contact source beside the current eight-contact source. Both columns
+identify their source and USDZ hashes. The physical solid and its complete
+exported surface are unchanged; the new contact partitions existing exterior
+sidewall triangles. The approved manufacturer images are retained separately.
+The sheet is not manufacturer evidence, a dimensional source, or evidence of
+runtime cord rendering. Its artifact type, provenance and hashes are recorded
+in the source manifest.
 
 ## Native app review artifacts
 
 These representative native iOS app screenshots were independently visually
 reviewed. They show the unselected board, front and rear edge highlighting,
-the two-finger pocket in both orientations, the shared narrow-pinch rim/wall
-highlights, and the visible cord spans. They are **runtime review artifacts**,
+the two-finger pocket in both orientations, both mapped pinches, and the visible
+cord spans. They are **runtime review artifacts**,
 not manufacturer evidence or additional geometry sources:
 
 - [Unselected board, portrait](2026-10-21-tension-block-evidence/app-normal-portrait.png).
@@ -262,13 +312,17 @@ not manufacturer evidence or additional geometry sources:
 - [25 mm two-finger pocket, portrait](2026-10-21-tension-block-evidence/app-pocket-two-finger-25-portrait.png).
 - [Narrow incut pinch, portrait](2026-10-21-tension-block-evidence/app-pinch-narrow-incut-portrait.png).
 - [25 mm two-finger pocket, landscape](2026-10-21-tension-block-evidence/app-pocket-two-finger-25-landscape.png).
+- [Wide flat pinch, portrait](2026-10-21-tension-block-evidence/app-pinch-wide-flat-portrait.png).
+- [Wide flat pinch, landscape](2026-10-21-tension-block-evidence/app-pinch-wide-flat-landscape.png).
 
-The source manifest binds these unchanged screenshots to native source SHA-256
-`6ce0fc85d838ebacabced3d5d5a25ed4f5e41023c5f3261e9e89d9bfc271dfef`
+The source manifest binds these screenshots to native source SHA-256
+`6671f9e60c44931febc21bce788adf76f90621049435217ff3e3fc46fe16bd42`
 and generated model SHA-256
-`14ffd797a5e5422a5600a9fc28d17898f66e2eb4bab03ac600698a85c4deb725`.
+`7bb8fad6ed02459bdb2e7d540c1fb600857de1d289a8b8e1f0f5d7b4589a6489`.
 The rear-edge capture exposes the rear contact and its two back-face leads;
-the pinch capture shows both reused inner rims rather than adding a new
-surface over the central body. These images establish the displayed states
+the narrow-pinch capture shows both reused inner rims, and the wide-pinch
+captures show the exterior sidewall/rim highlights with normal automatic
+selection framing. The far wall is occluded by the opaque body. These images
+establish the displayed states
 only. Broader runtime validation and delivery records remain separate from
 the source facts in this audit.
