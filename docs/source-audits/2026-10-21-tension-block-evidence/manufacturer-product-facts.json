@@ -1,0 +1,71 @@
+{
+  "provenance": "Extracted factual fields from the manufacturer product response; not an unmodified raw snapshot. Marketing prose, safety paragraphs, price, availability and inventory are excluded.",
+  "source": {
+    "publisher": "Tension Climbing (manufacturer)",
+    "url": "https://tensionclimbing.com/products/the-block-2.js",
+    "productPageURL": "https://tensionclimbing.com/products/the-block-2",
+    "reviewedDate": "2026-10-21",
+    "rawSourceSHA256": "5dd334c1ad8c4b75fa4281889475840f9e57b59a7cdb1fead72953390cbc40ca"
+  },
+  "extractedFacts": {
+    "productID": 8010356195509,
+    "title": "The Block",
+    "currentHandle": "the-block-2",
+    "material": "Maple",
+    "publishedContactFeatures": [
+      {
+        "name": "20mm Edge",
+        "kind": "edge",
+        "depthMillimeters": 20
+      },
+      {
+        "name": "10mm Edge",
+        "kind": "edge",
+        "depthMillimeters": 10
+      },
+      {
+        "name": "8mm Edge",
+        "kind": "edge",
+        "depthMillimeters": 8
+      },
+      {
+        "name": "6mm Edge",
+        "kind": "edge",
+        "depthMillimeters": 6
+      },
+      {
+        "name": "25mm Two-finger pocket",
+        "kind": "pocket",
+        "depthMillimeters": 25,
+        "publishedFingerCount": 2
+      },
+      {
+        "name": "25mm Mono-pocket",
+        "kind": "pocket",
+        "depthMillimeters": 25,
+        "publishedFingerCount": 1
+      },
+      {
+        "name": "Narrow Incut Pinch",
+        "kind": "pinch",
+        "shape": "incut"
+      },
+      {
+        "name": "Wide Flat Pinch",
+        "kind": "pinch",
+        "shape": "flat"
+      },
+      {
+        "name": "Micro Flat Pinch",
+        "kind": "pinch",
+        "shape": "flat"
+      }
+    ],
+    "galleryURLs": [
+      "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/TheBlock1.png?v=1726542608",
+      "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/TheBlock2.png?v=1726542608",
+      "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/TheBlock3.png?v=1726542608",
+      "https://cdn.shopify.com/s/files/1/0653/3706/5653/files/TheBlock4.png?v=1726542608"
+    ]
+  }
+}

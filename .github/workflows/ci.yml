@@ -339,6 +339,7 @@ jobs:
           python -c 'import numpy, pxr, trimesh, shapely, rtree, scipy, networkx'
           python -m pytest \
             Tools/HangboardCAD/tests/test_transgression_packages.py \
+            Tools/HangboardCAD/tests/test_tension_block_native.py \
             Tools/HangboardCAD/tests/test_clavellium_native.py \
             Tools/HangboardCAD/tests/test_confirmed_cord_diameter.py \
             Tools/HangboardCAD/tests/test_rope_physics_export.py \
