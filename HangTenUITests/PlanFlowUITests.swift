@@ -277,6 +277,10 @@ final class PlanFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["workout.end"].waitForExistence(timeout: 15))
         let renderedBoard = app.descendants(matching: .any).matching(identifier: "boardModel.3d").firstMatch
         XCTAssertTrue(renderedBoard.waitForExistence(timeout: 60))
+        let highlights = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "Left 25 mm edge, Right 25 mm edge"),
+            object: renderedBoard)
+        XCTAssertEqual(XCTWaiter.wait(for: [highlights], timeout: 15), .completed)
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 15))
         pause.tap()
