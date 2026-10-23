@@ -566,8 +566,7 @@ enum ContactResolver {
         let pairs = firstCandidates.flatMap { first in
             secondCandidates.compactMap { second -> (PhysicalContact, PhysicalContact, CGFloat)? in
                 guard first.id != second.id,
-                      !needsMatchingHolds || (first.kind == second.kind && first.shape == second.shape
-                        && first.depth == second.depth),
+                      !needsMatchingHolds || first.depth == second.depth,
                       let firstFrame = first.resolvedFrame(in: presentation),
                       let secondFrame = second.resolvedFrame(in: presentation) else {
                     return nil

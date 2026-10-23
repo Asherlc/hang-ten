@@ -257,7 +257,7 @@ final class PlanFlowUITests: XCTestCase {
             let picker = app.buttons["plan.substitution.picker.\(index)"]
             for _ in 0..<12 {
                 if picker.isHittable { break }
-                app.swipeUp()
+                scrollUp(in: app)
             }
             XCTAssertTrue(picker.isHittable)
             picker.tap()
@@ -269,15 +269,14 @@ final class PlanFlowUITests: XCTestCase {
         let start = app.buttons["plan.startRoutine"]
         for _ in 0..<8 {
             if start.isHittable { break }
-            app.swipeUp()
+            scrollUp(in: app)
         }
         XCTAssertTrue(start.isEnabled)
         attachScreenshot(named: "Hooper shared substitutions selected", app: app)
         start.tap()
         XCTAssertTrue(app.buttons["workout.end"].waitForExistence(timeout: 15))
-        let ready = XCTNSPredicateExpectation(
-            predicate: NSPredicate { _, _ in !app.staticTexts["workout.preparingRenderers"].exists }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 60), .completed)
+        let renderedBoard = app.descendants(matching: .any).matching(identifier: "boardModel.3d").firstMatch
+        XCTAssertTrue(renderedBoard.waitForExistence(timeout: 60))
         let pause = app.buttons["Pause"]
         XCTAssertTrue(pause.waitForExistence(timeout: 15))
         pause.tap()

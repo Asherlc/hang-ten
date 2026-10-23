@@ -122,6 +122,71 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         }
     }
 
+    func testMatchingDepthDoesNotConstrainUnspecifiedKindOrShape() throws {
+        let cases: [[PhysicalContact]] = [
+            [contact(id: "left", name: "Edge", depth: 20, side: .left),
+             PhysicalContact(id: "right", name: "Pocket", kind: .pocket, fingerCapacity: 4,
+                handCapacity: 1, depth: .range(.init(minimum: 20, maximum: 20)), side: .right)],
+            [contact(id: "left", name: "Edge", depth: 20, side: .left),
+             PhysicalContact(id: "right", name: "Incut", kind: .edge, shape: .incut, fingerCapacity: 4,
+                handCapacity: 1, depth: .range(.init(minimum: 20, maximum: 20)), side: .right)]
+        ]
+        for contacts in cases {
+            let board = fixtureBoard(contacts: contacts)
+            let predicate = PlanContactPredicate(depth: .measured(.init(minimum: 20, maximum: 20)))
+            let task = [PlanHandTarget(target: predicate), PlanHandTarget(target: predicate)]
+            let step = fixtureStep(target: .tasks([task]))
+            XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: board).map(\.id), ["left", "right"])
+        }
+    }
+
+    @MainActor
+    func testLegacyHandChoicesRetainAthleteIntentWhenGrouped() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, capacity: 3, side: .left),
+            contact(id: "right-20", name: "20 mm right", depth: 20, capacity: 4, side: .right),
+            contact(id: "right-30", name: "30 mm right", depth: 30, capacity: 4, side: .right)
+        ])
+        let rightTask = task(depth: 10, sides: [.right])
+        let source = fixturePlan(steps: [
+            fixtureStep(id: "left", target: .tasks([task(depth: 10, sides: [.left])]), handUse: .single, side: .left),
+            fixtureStep(id: "right", target: .tasks([rightTask]), handUse: .single, side: .right),
+            fixtureStep(id: "both", target: .tasks([task(depth: 10)]))
+        ])
+        let prepared = PlanHoldSubstitutions.prepare(for: source, on: board)
+        let request = try XCTUnwrap(prepared.requests.first)
+        struct SavedChoice: Encodable {
+            let requestID: PlanHoldSubstitutionRequest.ID
+            let optionID: String
+            let target: WorkoutSegmentTarget
+        }
+        let legacyID = PlanHoldSubstitutionRequest.ID(planID: "source", boardID: "board", revisionID: "v1",
+            target: .tasks([rightTask]), gripType: .halfCrimp, fingerConfiguration: nil, handUse: .single, side: .right)
+        let selected = PlanHandTarget(target: .init(kind: .edge,
+            depth: .measured(.init(minimum: 20, maximum: 20)), fingerCapacity: 4), side: .right)
+        let record = SavedChoice(requestID: legacyID, optionID: "8:contacts|8:right-20", target: .tasks([[selected]]))
+        let suite = "LegacyHoldChoice-\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        defaults.set(try JSONEncoder().encode([record]), forKey: "HangTen.planHoldSelections.v1")
+        let store = AppStore(defaults: defaults)
+        XCTAssertEqual(store.rememberedHoldSubstitutions(for: prepared), [request.id: try XCTUnwrap(request.options.first).id])
+        let leftID = PlanHoldSubstitutionRequest.ID(planID: "source", boardID: "board", revisionID: "v1",
+            target: .tasks([task(depth: 10, sides: [.left])]), gripType: .halfCrimp,
+            fingerConfiguration: nil, handUse: .single, side: .left)
+        let leftSelected = PlanHandTarget(target: .init(kind: .edge,
+            depth: .measured(.init(minimum: 20, maximum: 20)), fingerCapacity: 3), side: .left)
+        let rightSelected = PlanHandTarget(target: .init(kind: .edge,
+            depth: .measured(.init(minimum: 30, maximum: 30)), fingerCapacity: 4), side: .right)
+        let conflicting = [
+            SavedChoice(requestID: leftID, optionID: "8:contacts|7:left-20", target: .tasks([[leftSelected]])),
+            SavedChoice(requestID: legacyID, optionID: "8:contacts|8:right-30", target: .tasks([[rightSelected]]))
+        ]
+        defaults.set(try JSONEncoder().encode(conflicting), forKey: "HangTen.planHoldSelections.v1")
+        XCTAssertTrue(store.rememberedHoldSubstitutions(for: prepared).isEmpty,
+                      "An old per-hand conflict must not silently select the one shared depth that remains available.")
+    }
+
     func testNearbyDepthRequiresAnExplicitHoldSelection() throws {
         let board = fixtureBoard(contacts: [
             contact(id: "left-19", name: "19 mm left", depth: 19, side: .left),

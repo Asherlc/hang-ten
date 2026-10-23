@@ -333,14 +333,18 @@ one choice across left-hand, right-hand, and two-hand cues. The picker offers
 only factual replacements that resolve every affected hand assignment; applying
 the choice preserves each task's original hand count, side, and order. Mixed
 per-hand prescriptions remain distinct. Matching two-hand tasks that prescribe
-depth resolve contacts with equal factual depth and shape even when the source
-predicate covers a range. Omitted depth and athlete-selected holds stay unrestricted.
+depth resolve contacts with equal factual depth even when the source predicate
+covers a range. Kind and shape constrain candidates only when prescribed;
+omitted fields and athlete-selected holds add no inferred restrictions.
 Start waits until every missing
 target has a valid selection. Picker edits, including partial selections and
 cleared choices, are remembered locally for each plan, board revision, source
 target and grip context. Reopening the plan or returning to that board restores
 valid choices as editable defaults; changed targets or unavailable hold options
 require a new selection. The picker remains available after restoration.
+Saved choices from the previous contact-based ID format restore only when their
+source cue, contact IDs, and factual replacement still validate. Conflicting
+old per-hand choices require one new shared choice; clearing removes their aliases.
 The max-hang training-edge picker also remembers the athlete's chosen depth for
 each plan and board revision, restoring it only while that size remains eligible.
 The resulting session retains the source link and original
