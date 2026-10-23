@@ -2,6 +2,126 @@ import XCTest
 @testable import HangTen
 
 final class PlanHoldSubstitutionTests: XCTestCase {
+    func testMatchingHoldChoiceIsSharedAcrossLeftRightAndBilateralTasks() throws {
+        let board = fixtureBoard()
+        let source = fixturePlan(steps: [
+            fixtureStep(id: "left", target: .tasks([task(depth: 10, sides: [.left])]), handUse: .single, side: .left),
+            fixtureStep(id: "right", target: .tasks([task(depth: 10, sides: [.right])]), handUse: .single, side: .right),
+            fixtureStep(id: "both", target: .tasks([task(depth: 10)]))
+        ])
+        let requests = PlanHoldSubstitutions.requests(for: source, on: board)
+        XCTAssertEqual(requests.count, 1)
+        let request = try XCTUnwrap(requests.first)
+        let option = try XCTUnwrap(request.options.first)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board), ["left-20"])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: session.steps[1], on: board), ["right-20"])
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[2], on: board)), ["left-20", "right-20"])
+        XCTAssertEqual(session.steps.map(\.handUse), [.single, .single, .double])
+        XCTAssertEqual(session.steps.map(\.instruction), ["Source instruction.", "Source instruction.", "Source instruction."])
+        let recorded = try WorkoutActivityRecorder().segments(for: session, on: board).filter { $0.kind == .work }
+        XCTAssertEqual(recorded.map { $0.target?.resolvedContactSnapshot?.contactIDs },
+                       [["left-20"], ["right-20"], ["left-20", "right-20"]])
+    }
+
+    func testBroadMatchingTaskSelectsMatchingDepthsInsteadOfWidestMixedPair() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right),
+            contact(id: "right-20", name: "20 mm right", depth: 20, side: .right)
+        ], frames: ["right-20": CGRect(x: 0.65, y: 0.2, width: 0.1, height: 0.1)])
+        let predicate = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: 20, maximum: 30)))
+        let step = fixtureStep(target: .tasks([[.init(target: predicate), .init(target: predicate)]]))
+        XCTAssertEqual(try ContactResolver.resolveSelection(step.segments[0].target!.planTasks![0], step: step, board: board).contacts.map(\.id),
+                       ["left-20", "right-20"])
+    }
+
+    func testBroadMatchingTaskWithOnlyDifferentDepthsRequiresSubstitution() {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right)
+        ])
+        let predicate = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: 20, maximum: 30)))
+        let step = fixtureStep(target: .tasks([[.init(target: predicate), .init(target: predicate)]]))
+        XCTAssertTrue(WorkoutHighlightResolver.contactIDs(for: step, on: board).isEmpty)
+        XCTAssertEqual(PlanHoldSubstitutions.requests(for: fixturePlan(steps: [step]), on: board).count, 1)
+    }
+
+    func testHoopersSmallEdgeChoiceAppliesToRecruitmentPullsAndMinimalEdgeHangs() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone"))
+        let source = try XCTUnwrap(PlanCatalog.plan(id: "hoopers-beta.introductory-home-hangboard"))
+        let requests = PlanHoldSubstitutions.requests(for: source, on: board)
+        let smallEdges = requests.filter { $0.requiredHoldLabel == "small edge" && $0.id.gripType == .halfCrimp }
+        XCTAssertEqual(smallEdges.count, 1)
+        let selections = try Dictionary(uniqueKeysWithValues: requests.map { request in
+            (request.id, try XCTUnwrap(request.options.first).id)
+        })
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying(selections, to: source, on: board))
+        for id in ["hoopers-intro-round-2-set-1-rep-1-left", "hoopers-intro-round-2-set-1-rep-1-right", "hoopers-intro-round-4-set-1-hang"] {
+            let step = try XCTUnwrap(session.steps.first { $0.id == id })
+            let contacts = WorkoutHighlightResolver.contacts(for: step, on: board)
+            XCTAssertEqual(contacts.count, id.contains("round-4") ? 2 : 1)
+            XCTAssertEqual(Set(contacts.compactMap(\.depth)).count, 1)
+            XCTAssertFalse(contacts.isEmpty)
+        }
+        let roundOne = try XCTUnwrap(session.steps.first { $0.id == "hoopers-intro-round-1-set-2-hang" })
+        let pair = WorkoutHighlightResolver.contacts(for: roundOne, on: board)
+        XCTAssertEqual(pair.count, 2)
+        XCTAssertEqual(pair[0].depth, pair[1].depth)
+    }
+
+    func testSharedChoiceKeepsFallbackWhenOnlyOneHandHasAnEdge() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-edge", name: "20 mm edge left", depth: 20, side: .left),
+            PhysicalContact(id: "left-pocket", name: "30 mm pocket left", kind: .pocket, fingerCapacity: 4,
+                handCapacity: 1, depth: .range(.init(minimum: 30, maximum: 30)), side: .left),
+            PhysicalContact(id: "right-pocket", name: "30 mm pocket right", kind: .pocket, fingerCapacity: 4,
+                handCapacity: 1, depth: .range(.init(minimum: 30, maximum: 30)), side: .right)
+        ], frames: ["left-pocket": CGRect(x: 0.2, y: 0.4, width: 0.1, height: 0.1)])
+        let source = fixturePlan(steps: [
+            fixtureStep(id: "left", target: .tasks([task(depth: 10, sides: [.left])])),
+            fixtureStep(id: "right", target: .tasks([task(depth: 10, sides: [.right])])),
+            fixtureStep(id: "both", target: .tasks([task(depth: 10)]))
+        ])
+        let requests = PlanHoldSubstitutions.requests(for: source, on: board)
+        XCTAssertEqual(requests.count, 1)
+        let request = try XCTUnwrap(requests.first)
+        XCTAssertEqual(request.options.map(\.label), ["30 mm four-finger pocket"])
+        let option = try XCTUnwrap(request.options.first)
+        let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: session.steps[0], on: board), ["left-pocket"])
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: session.steps[1], on: board), ["right-pocket"])
+        XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[2], on: board)), ["left-pocket", "right-pocket"])
+    }
+
+    func testAthleteSelectedHandsCanUseDifferentDepths() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right)
+        ])
+        let hands = [PlanHandTarget(target: nil), PlanHandTarget(target: nil)]
+        let step = fixtureStep(target: .tasks([hands]))
+        XCTAssertEqual(try ContactResolver.resolve(hands, step: step, board: board).map(\.id), ["left-20", "right-30"])
+    }
+
+    func testSharedEdgeChoiceHandlesDifferentCapacitiesAndContactOrder() throws {
+        let contacts = [contact(id: "right-20", name: "20 mm right", depth: 20, capacity: 4, side: .right),
+                        contact(id: "left-20", name: "20 mm left", depth: 20, capacity: 3, side: .left)]
+        for ordered in [contacts, Array(contacts.reversed())] {
+            let board = fixtureBoard(contacts: ordered)
+            let source = fixturePlan(steps: [
+                fixtureStep(id: "left", target: .tasks([task(depth: 10, sides: [.left])])),
+                fixtureStep(id: "right", target: .tasks([task(depth: 10, sides: [.right])])),
+                fixtureStep(id: "both", target: .tasks([task(depth: 10)]))
+            ])
+            let request = try XCTUnwrap(PlanHoldSubstitutions.requests(for: source, on: board).first)
+            XCTAssertEqual(request.options.map(\.label), ["20 mm edge"])
+            let option = try XCTUnwrap(request.options.first)
+            let session = try XCTUnwrap(PlanHoldSubstitutions.applying([request.id: option.id], to: source, on: board))
+            XCTAssertEqual(Set(WorkoutHighlightResolver.contactIDs(for: session.steps[2], on: board)), ["left-20", "right-20"])
+        }
+    }
+
     func testNearbyDepthRequiresAnExplicitHoldSelection() throws {
         let board = fixtureBoard(contacts: [
             contact(id: "left-19", name: "19 mm left", depth: 19, side: .left),
@@ -541,8 +661,11 @@ final class PlanHoldSubstitutionTests: XCTestCase {
             selections, to: source, on: changed, prepared: prepared
         ))
         let fresh = PlanHoldSubstitutions.prepare(for: source, on: changed)
+        XCTAssertNil(PlanHoldSubstitutions.applying(selections, to: source, on: changed, prepared: fresh))
+        let freshRequest = try XCTUnwrap(fresh.requests.first)
+        let freshSelections = [freshRequest.id: try XCTUnwrap(freshRequest.options.first).id]
         let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
-            selections, to: source, on: changed, prepared: fresh
+            freshSelections, to: source, on: changed, prepared: fresh
         ))
         let targets = try XCTUnwrap(session.steps[0].segments[0].target?.planTasks?.first)
         XCTAssertEqual(targets.map { $0.target?.depth }, [

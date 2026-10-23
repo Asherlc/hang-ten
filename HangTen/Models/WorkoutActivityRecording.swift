@@ -562,9 +562,12 @@ enum ContactResolver {
 
         let firstCandidates = candidates[0].filter { contact($0, fits: firstSide, in: presentation) }
         let secondCandidates = candidates[1].filter { contact($0, fits: secondSide, in: presentation) }
+        let needsMatchingHolds = task[0].target?.depth != nil && task[0].target == task[1].target
         let pairs = firstCandidates.flatMap { first in
             secondCandidates.compactMap { second -> (PhysicalContact, PhysicalContact, CGFloat)? in
                 guard first.id != second.id,
+                      !needsMatchingHolds || (first.kind == second.kind && first.shape == second.shape
+                        && first.depth == second.depth),
                       let firstFrame = first.resolvedFrame(in: presentation),
                       let secondFrame = second.resolvedFrame(in: presentation) else {
                     return nil

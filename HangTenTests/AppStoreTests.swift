@@ -170,7 +170,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared).isEmpty)
     }
 
-    func testRememberedHoldSubstitutionsRejectChangedHoldFactsWithTheSameOptionID() throws {
+    func testRememberedHoldSubstitutionsRejectChangedHoldFacts() throws {
         let defaults = makeDefaults()
         let original = holdSubstitutionFixture()
         let request = try XCTUnwrap(original.requests.first)
@@ -181,9 +181,9 @@ final class AppStoreTests: XCTestCase {
                        [request.id: option.id])
         let changed = holdSubstitutionFixture(availableDepths: [40, 50])
         let changedRequest = try XCTUnwrap(changed.requests.first)
-        let changedOption = try XCTUnwrap(changedRequest.options.first { $0.id == option.id })
         XCTAssertEqual(changedRequest.id, request.id)
-        XCTAssertNotEqual(changedOption.target, option.target)
+        XCTAssertFalse(changedRequest.options.contains { $0.id == option.id },
+                       "Shared hold choice IDs include their factual predicate.")
 
         XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: changed).isEmpty)
     }

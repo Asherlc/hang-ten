@@ -328,7 +328,14 @@ a millimeter range. Measured depths match only overlapping authored intervals,
 without a numeric tolerance. Missing exact facts go through the picker.
 Canonical two-hand choices on a one-hand board retain “two boards” as equipment
 context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
-Repeated missing targets share one choice. Start waits until every missing
+Repeated matching hold predicates with the same grip and finger context share
+one choice across left-hand, right-hand, and two-hand cues. The picker offers
+only factual replacements that resolve every affected hand assignment; applying
+the choice preserves each task's original hand count, side, and order. Mixed
+per-hand prescriptions remain distinct. Matching two-hand tasks that prescribe
+depth resolve contacts with equal factual depth and shape even when the source
+predicate covers a range. Omitted depth and athlete-selected holds stay unrestricted.
+Start waits until every missing
 target has a valid selection. Picker edits, including partial selections and
 cleared choices, are remembered locally for each plan, board revision, source
 target and grip context. Reopening the plan or returning to that board restores
