@@ -214,12 +214,28 @@ final class AppStore: ObservableObject {
         let records = loadRememberedHoldSubstitutions()
         var selections: [PlanHoldSubstitutionRequest.ID: String] = [:]
         for request in prepared.requests {
-            guard let record = records.last(where: { record in
+            if let record = records.last(where: { record in
                 record.requestID == request.id && request.options.contains {
                     $0.id == record.optionID && $0.target == record.target
                 }
-            }) else { continue }
-            selections[request.id] = record.optionID
+            }) {
+                selections[request.id] = record.optionID
+                continue
+            }
+            let legacyRecords = records.filter {
+                !$0.optionID.hasPrefix("hold:")
+                    && PlanHoldSubstitutions.currentRequestID(for: $0.requestID, in: prepared) == request.id
+            }
+            let restored = legacyRecords.map { record in
+                PlanHoldSubstitutions.legacyOptionID(record.optionID, target: record.target,
+                    requestID: record.requestID, in: prepared)
+            }
+            // Previously independent hand choices may disagree. Ask once
+            // again if any old choice cannot migrate; dropping it could hide
+            // a conflict with the old choices that still fit this board.
+            guard restored.allSatisfy({ $0 != nil }) else { continue }
+            let legacyOptions = Set(restored.compactMap { $0 })
+            if legacyOptions.count == 1 { selections[request.id] = legacyOptions.first }
         }
         return selections
     }
@@ -231,7 +247,10 @@ final class AppStore: ObservableObject {
         for prepared: PlanHoldSubstitutions.PreparedRequests
     ) {
         let requestIDs = Set(prepared.requests.map(\.id))
-        var records = loadRememberedHoldSubstitutions().filter { !requestIDs.contains($0.requestID) }
+        var records = loadRememberedHoldSubstitutions().filter {
+            guard let id = PlanHoldSubstitutions.currentRequestID(for: $0.requestID, in: prepared) else { return true }
+            return !requestIDs.contains(id)
+        }
         for request in prepared.requests {
             guard let optionID = selections[request.id],
                   let option = request.options.first(where: { $0.id == optionID }) else { continue }

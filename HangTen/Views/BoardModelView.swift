@@ -165,13 +165,14 @@ struct BoardModelSurface: View {
         )
     }
 
-    /// Expose all highlighted hold cues, including bilateral and mixed tasks.
+    /// Keep each highlighted hold's authored name, including its side. Grip
+    /// cue labels intentionally merge sides and cannot describe this selection.
     static func highlightedContactCue(
         for contacts: [PhysicalContact],
         highlightedContactIDs: Set<String>
     ) -> String? {
-        let cues = Set(contacts.filter { highlightedContactIDs.contains($0.id) }
-            .map { GripDiagramView.cueLabel(for: $0) }).sorted()
+        let cues = contacts.filter { highlightedContactIDs.contains($0.id) }
+            .map(\.name).sorted()
         return cues.isEmpty ? nil : cues.joined(separator: ", ")
     }
 

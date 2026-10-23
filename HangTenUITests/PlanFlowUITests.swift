@@ -245,6 +245,48 @@ final class PlanFlowUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    func testHoopersSubstitutionsShareOneSmallEdgeChoiceAndLaunchWorkout() {
+        let app = launchPlan("hoopers-beta.introductory-home-hangboard", boardID: "tension.grindstone", reviewStep: 10)
+        XCTAssertEqual(app.staticTexts.matching(identifier: "Replacement for small edge").count, 1)
+        attachScreenshot(named: "Hooper substitutions share one small edge choice", app: app,
+                         centering: "Replacement for small edge")
+        let pickers = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "plan.substitution.picker."))
+        let count = pickers.count
+        XCTAssertGreaterThan(count, 0)
+        for index in 0..<count {
+            let picker = app.buttons["plan.substitution.picker.\(index)"]
+            for _ in 0..<12 {
+                if picker.isHittable { break }
+                scrollUp(in: app)
+            }
+            XCTAssertTrue(picker.isHittable)
+            picker.tap()
+            let option = app.buttons["plan.substitution.option.\(index).0"]
+            XCTAssertTrue(option.waitForExistence(timeout: 5))
+            option.tap()
+        }
+        XCTAssertTrue(app.staticTexts["Your adapted session"].exists)
+        let start = app.buttons["plan.startRoutine"]
+        for _ in 0..<8 {
+            if start.isHittable { break }
+            scrollUp(in: app)
+        }
+        XCTAssertTrue(start.isEnabled)
+        attachScreenshot(named: "Hooper shared substitutions selected", app: app)
+        start.tap()
+        XCTAssertTrue(app.buttons["workout.end"].waitForExistence(timeout: 15))
+        let renderedBoard = app.descendants(matching: .any).matching(identifier: "boardModel.3d").firstMatch
+        XCTAssertTrue(renderedBoard.waitForExistence(timeout: 60))
+        let highlights = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "Left 25 mm edge, Right 25 mm edge"),
+            object: renderedBoard)
+        XCTAssertEqual(XCTWaiter.wait(for: [highlights], timeout: 15), .completed)
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 15))
+        pause.tap()
+        attachScreenshot(named: "Hooper matching depth workout", app: app)
+    }
+
     func testMissingHoldsRequireExplicitSubstitutionsBeforeStarting() {
         let app = launchPlan("research.max-hangs", boardID: "owl-climb.poker")
         let picker = app.buttons["plan.substitution.picker.0"]
@@ -454,7 +496,7 @@ final class PlanFlowUITests: XCTestCase {
     }
 
     private func launchPlan(_ id: String, landscape: Bool = false, boardID: String? = nil,
-                            resetHoldSelections: Bool = true) -> XCUIApplication {
+                            resetHoldSelections: Bool = true, reviewStep: Int? = nil) -> XCUIApplication {
         XCUIDevice.shared.orientation = landscape ? .landscapeLeft : .portrait
         let app = XCUIApplication()
         if resetHoldSelections {
@@ -463,6 +505,11 @@ final class PlanFlowUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = id
         if let boardID { app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = boardID }
+        if let reviewStep {
+            app.launchEnvironment["HANGTEN_REVIEW_STEP"] = String(reviewStep)
+            // This route reviews hold selection, independently of simulator audio services.
+            app.launchArguments += ["-workoutAudioCuesEnabled", "NO"]
+        }
         app.launchEnvironment[landscape ? "HANGTEN_REVIEW_LANDSCAPE" : "HANGTEN_REVIEW_PORTRAIT"] = "1"
         app.launch()
         XCTAssertTrue(app.navigationBars["Plan"].waitForExistence(timeout: 20))

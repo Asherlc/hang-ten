@@ -84,6 +84,30 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
     }
 
+    func testLegacyRememberedHoldChoiceRestoresAndClearsWithoutResurrection() throws {
+        let defaults = makeDefaults()
+        let prepared = holdSubstitutionFixture()
+        let request = try XCTUnwrap(prepared.requests.first)
+        let option = try XCTUnwrap(request.options.first { $0.label == "20 mm edge" })
+        let legacyID = PlanHoldSubstitutionRequest.ID(planID: "selection-plan", boardID: "selection-board",
+            revisionID: "v1", target: request.id.target, gripType: .halfCrimp,
+            fingerConfiguration: nil, handUse: .single, side: .left)
+        struct SavedChoice: Encodable {
+            let requestID: PlanHoldSubstitutionRequest.ID
+            let optionID: String
+            let target: WorkoutSegmentTarget
+        }
+        let saved = SavedChoice(requestID: legacyID, optionID: "8:contacts|6:edge-0", target: option.target)
+        defaults.set(try JSONEncoder().encode([saved]), forKey: "HangTen.planHoldSelections.v1")
+        let store = AppStore(defaults: defaults)
+        XCTAssertEqual(store.rememberedHoldSubstitutions(for: prepared), [request.id: option.id])
+        // Changed board facts must still invalidate a legacy choice.
+        XCTAssertTrue(store.rememberedHoldSubstitutions(
+            for: holdSubstitutionFixture(availableDepths: [40, 50])).isEmpty)
+        store.rememberHoldSubstitutions([:], for: prepared)
+        XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared).isEmpty)
+    }
+
     func testRememberedHoldSubstitutionsRestoreAfterRelaunch() throws {
         let defaults = makeDefaults()
         let prepared = holdSubstitutionFixture()
@@ -170,7 +194,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: prepared).isEmpty)
     }
 
-    func testRememberedHoldSubstitutionsRejectChangedHoldFactsWithTheSameOptionID() throws {
+    func testRememberedHoldSubstitutionsRejectChangedHoldFacts() throws {
         let defaults = makeDefaults()
         let original = holdSubstitutionFixture()
         let request = try XCTUnwrap(original.requests.first)
@@ -181,9 +205,9 @@ final class AppStoreTests: XCTestCase {
                        [request.id: option.id])
         let changed = holdSubstitutionFixture(availableDepths: [40, 50])
         let changedRequest = try XCTUnwrap(changed.requests.first)
-        let changedOption = try XCTUnwrap(changedRequest.options.first { $0.id == option.id })
         XCTAssertEqual(changedRequest.id, request.id)
-        XCTAssertNotEqual(changedOption.target, option.target)
+        XCTAssertFalse(changedRequest.options.contains { $0.id == option.id },
+                       "Shared hold choice IDs include their factual predicate.")
 
         XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: changed).isEmpty)
     }

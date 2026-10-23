@@ -2,6 +2,15 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testHighlightedContactCuePreservesBothSidedEdges() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone"))
+        XCTAssertEqual(BoardModelSurface.highlightedContactCue(for: board.contacts,
+            highlightedContactIDs: ["edge-25-left", "edge-25-right"]), "Left 25 mm edge, Right 25 mm edge")
+        XCTAssertEqual(BoardModelSurface.highlightedContactCue(for: board.contacts,
+            highlightedContactIDs: ["edge-25-left"]), "Left 25 mm edge")
+        XCTAssertNil(BoardModelSurface.highlightedContactCue(for: board.contacts, highlightedContactIDs: []))
+    }
+
     func testLopezMaxHangsOffersBothBeastmakersAndRecordsChosenEdges() throws {
         for (boardID, depth, ids, expectedCue) in [
             ("beastmaker-1000", 20.0, Set(["pocket-bottom-outer-left", "pocket-bottom-outer-right"]),

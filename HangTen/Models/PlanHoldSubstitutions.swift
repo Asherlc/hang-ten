@@ -21,7 +21,7 @@ struct PlanHoldSubstitutionRequest: Identifiable, Hashable {
     let id: ID
     let requiredHoldLabel: String
     var stepTitles: [String]
-    let options: [PlanHoldSubstitutionOption]
+    var options: [PlanHoldSubstitutionOption]
 
     var gripContextLabel: String? {
         var parts: [String] = []
@@ -57,8 +57,66 @@ enum PlanHoldSubstitutions {
         PreparedRequests(plan: plan, board: board, requests: requests(for: plan, on: board))
     }
 
-    /// Groups identical missing simultaneous tasks and resolves their available
-    /// alternatives. Supported tasks do not request a substitution.
+    /// Map a stored request only when it is current or represents an actual
+    /// source cue in this snapshot. This also lets clearing remove old aliases.
+    static func currentRequestID(for storedID: PlanHoldSubstitutionRequest.ID,
+                                 in prepared: PreparedRequests) -> PlanHoldSubstitutionRequest.ID? {
+        if prepared.requests.contains(where: { $0.id == storedID }) { return storedID }
+        for step in prepared.plan.steps {
+            for segment in step.segments where segment.kind == .work {
+                guard let target = segment.target else { continue }
+                for unit in units(in: target) where rawRequestID(for: unit, step: step,
+                    plan: prepared.plan, board: prepared.board) == storedID {
+                    let id = requestID(for: unit, step: step, plan: prepared.plan, board: prepared.board)
+                    if prepared.requests.contains(where: { $0.id == id }) { return id }
+                }
+            }
+        }
+        return nil
+    }
+
+    /// Previous versions keyed choices by resolved contacts. Verify those IDs
+    /// and their retained factual predicate before restoring a shared choice.
+    static func legacyOptionID(_ storedOptionID: String, target: WorkoutSegmentTarget,
+                               requestID storedID: PlanHoldSubstitutionRequest.ID,
+                               in prepared: PreparedRequests) -> String? {
+        guard !storedOptionID.hasPrefix("hold:"),
+              let id = currentRequestID(for: storedID, in: prepared),
+              let request = prepared.requests.first(where: { $0.id == id }),
+              let predicate = matchingPredicate(in: target) else { return nil }
+        for step in prepared.plan.steps {
+            for segment in step.segments where segment.kind == .work {
+                guard let source = segment.target else { continue }
+                for unit in units(in: source) where rawRequestID(for: unit, step: step,
+                    plan: prepared.plan, board: prepared.board) == storedID {
+                    guard replacement(target, in: unit) == target,
+                          let resolved = resolution(of: target, step: step, board: prepared.board),
+                          resolved.contacts.allSatisfy({
+                              matchesFactualFields(predicate, contact: $0)
+                                  && hasRoom($0, for: predicate.fingerCapacity ?? 0)
+                                  && (predicate.kind == .edge || predicate.fingerCapacity == $0.fingerCapacity)
+                          }) else { continue }
+                    let components = unique(resolved.positionIDs).sorted() + ["contacts"]
+                        + unique(resolved.contacts.map(\.id)).sorted()
+                    let legacyID = components.map { "\($0.utf8.count):\($0)" }.joined(separator: "|")
+                    guard legacyID == storedOptionID else { continue }
+                    // Edge capacity is a minimum, so different predicates can
+                    // identify the same chosen holds. Preserve the old cue's
+                    // actual contacts and position instead of comparing IDs.
+                    return request.options.first { option in
+                        guard let current = resolution(of: replacement(option.target, in: unit),
+                            step: step, board: prepared.board) else { return false }
+                        return current.positionIDs == resolved.positionIDs
+                            && current.contacts.map(\.id) == resolved.contacts.map(\.id)
+                    }?.id
+                }
+            }
+        }
+        return nil
+    }
+
+    /// Matching single- and two-hand cues share one factual hold choice. Keep
+    /// only alternatives usable by every affected hand assignment.
     static func requests(for plan: TrainingPlan, on board: BoardRevision) -> [PlanHoldSubstitutionRequest] {
         var requests: [PlanHoldSubstitutionRequest] = []
         var indices: [PlanHoldSubstitutionRequest.ID: Int] = [:]
@@ -67,7 +125,26 @@ enum PlanHoldSubstitutions {
                 guard let target = segment.target else { continue }
                 for unit in units(in: target) where resolution(of: unit, step: step, board: board) == nil {
                     let id = requestID(for: unit, step: step, plan: plan, board: board)
+                    let alternatives = options(for: unit, step: step, board: board,
+                        filterPreferences: matchingPredicate(in: unit) == nil).compactMap { option -> PlanHoldSubstitutionOption? in
+                        guard matchingPredicate(in: unit) != nil,
+                              let replacement = matchingPredicate(in: option.target) else { return option }
+                        let encoder = JSONEncoder()
+                        encoder.outputFormatting = [.sortedKeys]
+                        // Physical left/right contact IDs differ between cues;
+                        // the shared choice is the factual replacement predicate.
+                        guard let data = try? encoder.encode(replacement) else { return nil }
+                        return PlanHoldSubstitutionOption(id: "hold:" + data.base64EncodedString(),
+                            label: option.label, target: option.target)
+                    }
                     if let index = indices[id] {
+                        for option in alternatives {
+                            if let existing = requests[index].options.firstIndex(where: { $0.id == option.id }) {
+                                if option.label.hasSuffix(" (two boards)") { requests[index].options[existing] = option }
+                            } else {
+                                requests[index].options.append(option)
+                            }
+                        }
                         if !requests[index].stepTitles.contains(step.title) {
                             requests[index].stepTitles.append(step.title)
                         }
@@ -75,10 +152,43 @@ enum PlanHoldSubstitutions {
                         indices[id] = requests.count
                         requests.append(PlanHoldSubstitutionRequest(id: id,
                             requiredHoldLabel: label(for: unit), stepTitles: [step.title],
-                            options: options(for: unit, step: step, board: board)))
+                            options: alternatives))
                     }
                 }
             }
+        }
+        // Validate the union of candidate predicates against every cue, including
+        // originally supported ones. Resolver deduplication on a single side
+        // must not discard a predicate needed by the other side.
+        var contexts: [PlanHoldSubstitutionRequest.ID: [(WorkoutSegmentTarget, WorkoutStep)]] = [:]
+        for step in plan.steps {
+            for segment in step.segments where segment.kind == .work {
+                guard let target = segment.target else { continue }
+                for unit in units(in: target) {
+                    let id = requestID(for: unit, step: step, plan: plan, board: board)
+                    guard indices[id] != nil else { continue }
+                    contexts[id, default: []].append((unit, step))
+                }
+            }
+        }
+        // Rank kinds after finding choices shared by every hand assignment.
+        // A same-kind hold usable by only one hand cannot hide a shared fallback.
+        for index in requests.indices {
+            var seen: Set<[ResolutionFingerprint]> = []
+            requests[index].options = requests[index].options.filter { option in
+                var fingerprint: [ResolutionFingerprint] = []
+                for (unit, step) in contexts[requests[index].id] ?? [] {
+                    let alternative = replacement(option.target, in: unit)
+                    guard let resolved = resolution(of: alternative, step: step, board: board),
+                          preservesFingerRoom(of: unit, alternative: alternative, resolved: resolved,
+                            step: step, board: board) else { return false }
+                    fingerprint.append(.init(positionIDs: resolved.positionIDs, contactIDs: resolved.contacts.map(\.id)))
+                }
+                return seen.insert(fingerprint).inserted
+            }.sorted { $0.label == $1.label ? $0.id < $1.id : $0.label.localizedStandardCompare($1.label) == .orderedAscending }
+            guard let kind = matchingPredicate(in: requests[index].id.target)?.kind else { continue }
+            let preferred = requests[index].options.filter { matchingPredicate(in: $0.target)?.kind == kind }
+            if !preferred.isEmpty { requests[index].options = preferred }
         }
         return requests
     }
@@ -113,7 +223,7 @@ enum PlanHoldSubstitutions {
                     replacement = .tasks(tasks.map { task in
                         let unit = WorkoutSegmentTarget.tasks([task])
                         let id = requestID(for: unit, step: step, plan: plan, board: board)
-                        guard let option = chosen[id], case .tasks(let alternatives) = option.target,
+                        guard let option = chosen[id], case .tasks(let alternatives) = Self.replacement(option.target, in: unit),
                               let substitute = alternatives.first else { return task }
                         return substitute
                     })
@@ -138,13 +248,36 @@ enum PlanHoldSubstitutions {
 
     private static func requestID(for target: WorkoutSegmentTarget, step: WorkoutStep,
                                   plan: TrainingPlan, board: BoardRevision) -> PlanHoldSubstitutionRequest.ID {
+        if let predicate = matchingPredicate(in: target) {
+            return .init(planID: plan.id, boardID: board.id, revisionID: board.revisionID,
+                target: .tasks([[.init(target: predicate)]]), gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration, handUse: .double, side: .both)
+        }
+        return rawRequestID(for: target, step: step, plan: plan, board: board)
+    }
+
+    private static func rawRequestID(for target: WorkoutSegmentTarget, step: WorkoutStep,
+                                     plan: TrainingPlan, board: BoardRevision) -> PlanHoldSubstitutionRequest.ID {
         .init(planID: plan.id, boardID: board.id, revisionID: board.revisionID,
               target: target, gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
               handUse: step.handUse, side: step.side)
     }
 
-    /// Successive tasks remain separate; an athlete chooses once for identical
-    /// missing simultaneous tasks repeated throughout the source plan.
+    private static func matchingPredicate(in target: WorkoutSegmentTarget) -> PlanContactPredicate? {
+        guard case .tasks(let tasks) = target, tasks.count == 1, let task = tasks.first,
+              (1...2).contains(task.count), let predicate = task.first?.target,
+              task.allSatisfy({ $0.target == predicate }) else { return nil }
+        return predicate
+    }
+
+    private static func replacement(_ selected: WorkoutSegmentTarget,
+                                    in original: WorkoutSegmentTarget) -> WorkoutSegmentTarget {
+        guard matchingPredicate(in: original) != nil, let predicate = matchingPredicate(in: selected),
+              case .tasks(let tasks) = original else { return selected }
+        return .tasks(tasks.map { task in task.map { .init(target: predicate, side: $0.side) } })
+    }
+
+    /// Retain ordered task boundaries while grouping matching hold choices.
     private static func units(in target: WorkoutSegmentTarget) -> [WorkoutSegmentTarget] {
         switch target {
         case .selfSelected: []
@@ -156,6 +289,11 @@ enum PlanHoldSubstitutions {
     private struct Resolution {
         let contacts: [PhysicalContact]
         let positionIDs: [String]
+    }
+
+    private struct ResolutionFingerprint: Hashable {
+        let positionIDs: [String]
+        let contactIDs: [String]
     }
 
     /// Follow the same start-of-session hand alternatives used by AppStore.
@@ -190,7 +328,7 @@ enum PlanHoldSubstitutions {
     }
 
     private static func options(for target: WorkoutSegmentTarget, step: WorkoutStep,
-                                board: BoardRevision) -> [PlanHoldSubstitutionOption] {
+                                board: BoardRevision, filterPreferences: Bool = true) -> [PlanHoldSubstitutionOption] {
         // Include the factual effective depths of authored positions, rather
         // than deriving a training prescription from their visual geometry.
         let contacts = board.contacts + board.positions.flatMap { board.contacts(inPosition: $0.id) }
@@ -244,20 +382,22 @@ enum PlanHoldSubstitutions {
                   !resolved.contacts.isEmpty,
                   preservesFingerRoom(of: target, alternative: alternative, resolved: resolved,
                     step: step, board: board) else { continue }
-            let preservesKinds = preservesRequiredKinds(in: alternative, from: target)
-            guard !hasKindPreservingOption || preservesKinds else { continue }
-            if preservesKinds && !hasKindPreservingOption {
-                hasKindPreservingOption = true
-                mostUnchangedHands = -1
-                options.removeAll()
-                seen.removeAll()
-            }
-            let unchangedHands = unchangedHandCount(in: alternative, from: target)
-            guard unchangedHands >= mostUnchangedHands else { continue }
-            if unchangedHands > mostUnchangedHands {
-                mostUnchangedHands = unchangedHands
-                options.removeAll()
-                seen.removeAll()
+            if filterPreferences {
+                let preservesKinds = preservesRequiredKinds(in: alternative, from: target)
+                guard !hasKindPreservingOption || preservesKinds else { continue }
+                if preservesKinds && !hasKindPreservingOption {
+                    hasKindPreservingOption = true
+                    mostUnchangedHands = -1
+                    options.removeAll()
+                    seen.removeAll()
+                }
+                let unchangedHands = unchangedHandCount(in: alternative, from: target)
+                guard unchangedHands >= mostUnchangedHands else { continue }
+                if unchangedHands > mostUnchangedHands {
+                    mostUnchangedHands = unchangedHands
+                    options.removeAll()
+                    seen.removeAll()
+                }
             }
             let components = unique(resolved.positionIDs).sorted() + ["contacts"] + unique(resolved.contacts.map(\.id)).sorted()
             let id = components.map { "\($0.utf8.count):\($0)" }.joined(separator: "|")
