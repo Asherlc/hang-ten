@@ -255,6 +255,7 @@ if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
     yy-verticalboard-one \
     yy-verticalboard-evo \
     tension-honestone \
+    tension-grindstone \
     tension-grindstone-original \
     trango-rock-prodigy-forge \
     trango-rock-prodigy-natural \
