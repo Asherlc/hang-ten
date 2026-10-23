@@ -22,7 +22,11 @@ EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADAT
 def asc(*args):
     command = ["asc", *args, "--output", "json"]
     print("+ " + " ".join(command), flush=True)
-    result = subprocess.run(command, check=False, text=True, stdout=subprocess.PIPE)
+    # Keep the executable fixed and pass all values as literal arguments.
+    result = subprocess.run(
+        ["asc", *args, "--output", "json"],
+        shell=False, check=False, text=True, stdout=subprocess.PIPE,
+    )
     if result.returncode:
         print(result.stdout, flush=True)
         result.check_returncode()

@@ -4,7 +4,7 @@ import importlib.util
 from pathlib import Path
 import subprocess
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 
 spec = importlib.util.spec_from_file_location(
@@ -19,6 +19,16 @@ def version(number="1.0.474", status="READY_FOR_DISTRIBUTION"):
 
 
 class PublishTests(unittest.TestCase):
+    def test_asc_passes_metacharacters_as_literal_arguments_without_a_shell(self):
+        value = 'release notes; $(touch unexpected) `echo unexpected`'
+        completed = Mock(returncode=0, stdout='{"data": []}')
+        with patch.object(publisher.subprocess, "run", return_value=completed) as run, patch("builtins.print"):
+            self.assertEqual(publisher.asc("localizations", "update", "--whats-new", value), {"data": []})
+        run.assert_called_once_with(
+            ["asc", "localizations", "update", "--whats-new", value, "--output", "json"],
+            shell=False, check=False, text=True, stdout=subprocess.PIPE,
+        )
+
     def run_publish(self, versions=None, confirm=True, fail=None, builds=None):
         self.calls = []
 
