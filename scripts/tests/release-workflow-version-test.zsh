@@ -65,4 +65,12 @@ require_contract(
   'archived marketing version mismatch failure',
   /\[\[ "\$archived_marketing_version" == "\$MARKETING_VERSION" \]\] \|\| \{\s*\n(?:\s*[^#\n].*\n)*?\s*exit 1\s*\n\s*\}/m
 )
+
+publish_index, publish_run = step(steps, 'Submit production release with automatic publication after approval')
+upload_index = steps.index { |entry| entry['name'] == 'Upload to App Store Connect' }
+abort 'production submission must follow the processed upload' unless upload_index && upload_index < publish_index
+abort 'upload must wait for processing' unless steps[upload_index].dig('with', 'wait-for-processing') == 'true'
+require_contract(publish_run, 'submission uses the workflow tooling revision', /scripts\/publish-app-store\.py\?ref=\$WORKFLOW_REVISION/)
+require_contract(publish_run, 'submission of the archived version and build', /--app "\$ASC_APP_ID" --version "\$MARKETING_VERSION"\s+\\\n\s*--build-number "\$BUILD_NUMBER" --ipa "\$PWD\/build\/export\/HangTen\.ipa" --confirm/)
+require_contract(publish_run, 'downloaded release tool checksum verification', /shasum -a 256 --check/)
 RUBY

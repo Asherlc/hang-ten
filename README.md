@@ -143,8 +143,9 @@ compiler workflow.
 Running main CI jobs finish when newer commits arrive; only the pending run is
 replaced by the newest commit. Superseded revisions cancel their own PR checks
 in a separate concurrency group. A successful `main` run automatically archives
-the exact tested commit, signs it, and uploads the IPA to App Store
-Connect/TestFlight.
+the exact tested commit, signs it, uploads the IPA to App Store Connect, and
+submits it to App Review. Approved versions publish automatically to the public
+App Store (`AFTER_APPROVAL`). Apple still reviews every production release.
 
 The release workflow uses a GitHub environment named `app-store-connect`.
 Configure that environment with no required reviewers for zero-touch delivery,
@@ -164,12 +165,36 @@ Add these environment variables:
 - `SENTRY_ORG`: the Sentry organization slug.
 - `SENTRY_IOS_PROJECT`: the Sentry iOS project slug.
 
-The App Store Connect API key needs provisioning-profile access. App Store
-Connect must contain an app record for `com.hangten.training` and an App Store
+The App Store Connect API key needs provisioning-profile and App Manager access.
+App Store Connect must contain an app record for `com.hangten.training` and an App Store
 provisioning profile for that bundle ID. The workflow generates the marketing
 version as `1.0.<workflow run number>` and a build number unique to each run and
-retry. It uploads the tested archive and its debug symbols; Apple controls
-App Review and the final public App Store release.
+retry. It uploads the tested archive and its debug symbols, then uses the
+checksum-pinned `asc` 5.16.0 CLI to select that exact processed build, preview
+staging, copy the newest live iOS listing's localized text (including What's
+New), attach the build, validate readiness, and preview and submit App Review.
+Maintain the listing and release notes in App Store Connect; automation reuses
+the latest approved text. Existing screenshots and review details must carry
+forward successfully; validation, including iPad screenshots checked against
+the IPA, blocks submission if required information is missing. IAP and
+subscription validation also gate submission; new digital goods require their
+own preparation and review attachment.
+
+When a version is already in review or awaiting release, uploads continue and
+the Actions summary reports that production submission was deferred. CI leaves
+that review untouched. The next successful main release after approval submits
+its own build; deferred builds are not queued for later production submission.
+An unrelated editable/rejected version blocks submission until it is resolved
+in App Store Connect. Readiness or submission failures fail the workflow while
+preserving the uploaded build. Inspect App Store Connect before retrying;
+reruns use a new build number in the same marketing-version train. The helper
+reuses an editable version for that train and never replaces an active review.
+
+Running `python3 scripts/publish-app-store.py` with `--app 6797141761`,
+`--version VERSION`, `--build-number BUILD`, and `--ipa PATH` previews staging
+without modifying App Store Connect. CI adds
+`--confirm` to stage and submit. Monitor submissions with
+`asc review submissions-list --app 6797141761 --platform IOS`.
 
 ## Analytics CI configuration
 

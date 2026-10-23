@@ -24,7 +24,6 @@ jobs:
   compile-manual-assets:
     if: github.event_name == 'workflow_dispatch'
     name: Compile manually selected runtime assets
-    cache-mode: read
     uses: ./.github/workflows/runtime-assets.yml
     with:
       source-ref: ${{ github.sha }}
@@ -164,9 +163,9 @@ jobs:
         github.event.workflow_run.event == 'push' &&
         github.event.workflow_run.head_branch == 'main'
       ))
-    name: Archive, sign, and upload
+    name: Archive, sign, upload, and submit to App Review
     runs-on: macos-26
-    timeout-minutes: 60
+    timeout-minutes: 90
     environment:
       name: app-store-connect
       url: https://appstoreconnect.apple.com/
@@ -378,3 +377,53 @@ jobs:
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           backend: appstore-api
           wait-for-processing: 'true'
+
+      - name: Submit production release with automatic publication after approval
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WORKFLOW_REVISION: ${{ github.workflow_sha }}
+          ASC_APP_ID: '6797141761'
+          ASC_KEY_ID: ${{ vars.APPSTORE_API_KEY_ID }}
+          ASC_ISSUER_ID: ${{ vars.APPSTORE_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+          ASC_BYPASS_KEYCHAIN: '1'
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          tool_root="$PWD/.context/$owner-app-store-publish"
+          test ! -e "$tool_root"
+          mkdir -p "$tool_root"
+          printf '%s\n' "$tool_root" > "$tool_root/owned-resources"
+          cleanup_publish() {
+            local result=$?
+            trap - EXIT
+            rm -rf "$tool_root"
+            test ! -e "$tool_root" || exit 1
+            return "$result"
+          }
+          trap cleanup_publish EXIT
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+          case "$(uname -m)" in
+            arm64)
+              arch=arm64
+              checksum=99bcbf5a7bba3aac59e8d9e36a06bcb8dc15cd7a92db8ecacb42da464dce44c3
+              ;;
+            x86_64)
+              arch=amd64
+              checksum=e6c7ff486fff6e52bede69d6a197221c8b765d03c070775d2ae1c38a9a7924f8
+              ;;
+            *) echo "Unsupported runner architecture" >&2; exit 1 ;;
+          esac
+          curl --fail --silent --show-error --location --retry 3 \
+            "https://github.com/rorkai/App-Store-Connect-CLI/releases/download/5.16.0/asc_5.16.0_macOS_$arch" \
+            -o "$tool_root/asc"
+          echo "$checksum  $tool_root/asc" | shasum -a 256 --check
+          chmod +x "$tool_root/asc"
+          export PATH="$tool_root:$PATH"
+          # Use the workflow's tooling even if the completed CI tested an older commit.
+          gh api "repos/$GITHUB_REPOSITORY/contents/scripts/publish-app-store.py?ref=$WORKFLOW_REVISION" \
+            -H 'Accept: application/vnd.github.raw+json' > "$tool_root/publish-app-store.py"
+          python3 "$tool_root/publish-app-store.py" \
+            --app "$ASC_APP_ID" --version "$MARKETING_VERSION" \
+            --build-number "$BUILD_NUMBER" --ipa "$PWD/build/export/HangTen.ipa" --confirm
