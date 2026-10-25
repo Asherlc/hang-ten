@@ -386,7 +386,7 @@ jobs:
 
       # reviewdog/action-actionlint v1.73.2
       - name: Validate workflow syntax
-        uses: reviewdog/action-actionlint@a8ac3eea598697a830f7d8e701fc9fcbfde88974
+        uses: reviewdog/action-actionlint@48e36f54d8da326b83ab061aee2cc5e01b5ca46f
         with:
           reporter: github-check
           filter_mode: nofilter
