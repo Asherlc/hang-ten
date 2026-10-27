@@ -5,6 +5,37 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    func testSensorOnlyManualAttemptRetainsWorkWithoutConfirmingDefaultReps() throws {
+        let step = WorkoutStep(id: "manual", number: 1, title: "Hang", instruction: "", accessory: "",
+            duration: 0, phase: .hang,
+            segments: [.init(kind: .work, target: .selfSelected, timing: .undefined, duration: nil)],
+            repTargets: [.init(id: "pull-ups", title: "Pull-ups", minimum: 10)])
+        let plan = TrainingPlan(id: "custom.manual", title: "Manual", subtitle: "", level: "",
+            sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: board.id, steps: [step])
+        let measurement = WorkoutStepMeasurement(stepID: step.id, plannedActiveDuration: 0,
+            intervals: [.init(start: 0, end: 30)], peakLoadKGF: 10, sampleCount: 30, status: .measured)
+        let metadata = try WorkoutActivityRecorder().metadata(for: plan, on: board,
+            stepMeasurements: [measurement], elapsed: 0, activityIntervals: [])
+        XCTAssertEqual(metadata.segments.map(\.kind), [.work])
+        XCTAssertNil(metadata.segments.first?.durationSeconds)
+        XCTAssertTrue(measurement.repResults.isEmpty)
+    }
+    func testSourceCycleRecordsOnlyTheActualRemainingTimeRest() throws {
+        let step = WorkoutStep(id: "cycle", number: 1, title: "Minute", instruction: "", accessory: "",
+            duration: 60, phase: .hang,
+            segments: [.init(kind: .work, target: .selfSelected, timing: .undefined, duration: nil)],
+            restsAfterCompletion: true)
+        let plan = TrainingPlan(id: "custom.cycle", title: "Cycle", subtitle: "", level: "",
+            sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: board.id, steps: [step])
+        let records = try WorkoutActivityRecorder().segments(for: plan, on: board,
+            activityIntervals: [0..<35], cycleRestDurations: [step.id: 15])
+        XCTAssertEqual(records.map(\.kind), [.work, .rest])
+        XCTAssertNil(records[0].durationSeconds)
+        XCTAssertEqual(records[1].durationSeconds, 15)
+        let unfinished = try WorkoutActivityRecorder().segments(for: plan, on: board,
+            activityIntervals: [0..<35], cycleRestDurations: [step.id: 0])
+        XCTAssertEqual(unfinished.map(\.kind), [.work])
+    }
     func testGeneralWarmUpDoesNotRequireAHandChoiceOnAOneHandedBoard() throws {
         let oneHanded = try XCTUnwrap(BoardCatalog.all.first(where: \.isOneHanded))
         let warmUp = try XCTUnwrap(PlanCatalog.all.first { $0.id == "warmup.lattice.progressive" })

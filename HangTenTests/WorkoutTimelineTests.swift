@@ -63,6 +63,79 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testRepEntryPrefillsTargetWithoutRecordingUnperformedWork() {
+        let target = WorkoutRepTarget(id: "pull-ups", title: "Pull-ups", minimum: 10)
+        let step = WorkoutStep(id: "reps", number: 1, title: "Pull-ups", instruction: "", accessory: "",
+            duration: 0, phase: .conditioning, repTargets: [target])
+        var progress = WorkoutRepProgress()
+        XCTAssertEqual(progress.value(for: target, in: step), 10)
+        XCTAssertTrue(progress.results(for: step).isEmpty)
+        progress.confirm(step)
+        XCTAssertEqual(progress.results(for: step).map(\.completed), [10])
+        progress.setValue(0, target: target, in: step)
+        XCTAssertEqual(progress.results(for: step).map(\.completed), [0])
+        progress.setValue(14, target: target, in: step)
+        XCTAssertEqual(progress.results(for: step).map(\.completed), [14], "Actual reps can exceed the source target.")
+        progress.setValue(-1, target: target, in: step)
+        XCTAssertFalse(progress.canConfirm(step))
+        XCTAssertTrue(progress.results(for: step).isEmpty)
+        progress.setValue(nil, target: target, in: step)
+        XCTAssertFalse(progress.canConfirm(step))
+    }
+
+    func testRepRangesUnknownCountsAndAlternativesHaveHonestDefaults() {
+        let range = WorkoutRepTarget(id: "push-ups", title: "Push-ups", minimum: 10, maximum: 20)
+        let unknown = WorkoutRepTarget(id: "wide-pulls", title: "Wide pull-ups")
+        let optional = WorkoutRepTarget(id: "curls", title: "Knee curls", minimum: 20, isOptional: true)
+        let step = WorkoutStep(id: "reps", number: 1, title: "Tasks", instruction: "", accessory: "",
+            duration: 0, phase: .conditioning, repTargets: [range, unknown, optional])
+        var progress = WorkoutRepProgress()
+        XCTAssertEqual(progress.value(for: range, in: step), 10)
+        XCTAssertEqual(range.targetLabel, "10–20")
+        XCTAssertNil(progress.value(for: unknown, in: step))
+        XCTAssertFalse(progress.canConfirm(step))
+        XCTAssertFalse(progress.isSelected(optional, in: step))
+        progress.setValue(7, target: unknown, in: step)
+        progress.confirm(step)
+        XCTAssertEqual(progress.results(for: step).map(\.completed), [10, 7])
+        progress.select(true, target: optional, in: step)
+        XCTAssertEqual(progress.value(for: optional, in: step), 20)
+        progress.confirm(step)
+        XCTAssertEqual(progress.results(for: step).map(\.completed), [10, 7, 20])
+    }
+
+    func testCompletingCycleWorkStartsRestWithoutMovingTheMinuteDeadline() {
+        let step = WorkoutStep(id: "cycle", number: 1, title: "Minute", instruction: "", accessory: "",
+            duration: 60, phase: .conditioning, restsAfterCompletion: true)
+        let timeline = WorkoutTimeline(steps: [step])
+        var session = WorkoutSessionState(activeStartUptime: 0, routineStartedAt: Date())
+        var cycles = WorkoutCycleCompletion()
+        var ledger = WorkoutActivityProgress()
+        ledger.capture(session, planDuration: 60, at: 20)
+        cycles.complete(step, at: 20)
+        session.cycleRestWindows[step.id] = 20..<60
+        XCTAssertTrue(cycles.isResting(step, at: 20))
+        XCTAssertEqual(session.currentElapsed(planDuration: 60, at: 35), 35)
+        ledger.capture(session, planDuration: 60, at: 35)
+        XCTAssertEqual(ledger.cycleRestDurations[step.id], 15)
+        session.pauseForInterruption(at: 35)
+        XCTAssertEqual(session.currentElapsed(planDuration: 60, at: 100), 35)
+        cycles.restart(from: 0, in: timeline)
+        XCTAssertFalse(cycles.isResting(step, at: 0))
+        XCTAssertEqual(ledger.cycleRestDurations[step.id], 15, "Returning to work must not erase previous actual rest.")
+    }
+
+    func testRepMetadataSurvivesRuntimeClonesAndStorageConversion() throws {
+        let targets = [WorkoutRepTarget(id: "pulls", title: "Pull-ups", minimum: 3)]
+        let step = WorkoutStep(id: "cycle", number: 1, title: "Minute", instruction: "", accessory: "",
+            duration: 60, phase: .conditioning, repTargets: targets, restsAfterCompletion: true)
+        XCTAssertEqual(step.withNumber(2).repTargets, targets)
+        XCTAssertTrue(step.withNumber(2).restsAfterCompletion)
+        let definition = WorkoutStepDefinition.from(step)
+        let restored = try JSONDecoder().decode(WorkoutStepDefinition.self, from: JSONEncoder().encode(definition)).resolvedStep()
+        XCTAssertEqual(restored.repTargets, targets)
+        XCTAssertTrue(restored.restsAfterCompletion)
+    }
     func testUntimedStepHasANavigationBoundaryWithoutAPrescribedDuration() {
         let manual = WorkoutStep(id: "manual", number: 1, title: "Prepare", instruction: "",
             accessory: "", duration: 0, phase: .conditioning)

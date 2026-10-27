@@ -872,6 +872,7 @@ struct WorkoutActivityProgress {
     private var runStartUptime: TimeInterval?
     private var runStartElapsed: TimeInterval?
     private var capturedThrough: TimeInterval = 0
+    private(set) var cycleRestDurations: [String: TimeInterval] = [:]
 
     init(intervals: [Range<TimeInterval>] = []) {
         self.intervals = intervals
@@ -898,6 +899,10 @@ struct WorkoutActivityProgress {
         guard uptime >= startUptime else { return }
         let end = state.currentElapsed(planDuration: planDuration, at: uptime)
         guard end > capturedThrough else { return }
+        for (id, window) in state.cycleRestWindows {
+            let rest = max(0, min(end, window.upperBound) - max(capturedThrough, window.lowerBound))
+            cycleRestDurations[id, default: 0] += rest
+        }
         if let last = intervals.last, last.upperBound == capturedThrough {
             intervals[intervals.count - 1] = last.lowerBound..<end
         } else {
@@ -942,7 +947,9 @@ struct WorkoutActivityRecorder {
         selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
         elapsed: TimeInterval? = nil,
         activityIntervals: [Range<TimeInterval>]? = nil,
-        performedWorkStepIDs: Set<String> = []
+        performedWorkStepIDs: Set<String> = [],
+        cycleWorkEnds: [String: TimeInterval] = [:],
+        cycleRestDurations: [String: TimeInterval] = [:]
     ) throws -> [RecordedActivitySegment] {
         let recordingSteps = try resolvedRecordingSteps(
             for: plan,
@@ -975,12 +982,14 @@ struct WorkoutActivityRecorder {
                 }
                 let performedDuration: TimeInterval?
                 if let activityIntervals, let segmentStart {
-                    let end = followingSegmentStart(after: index, in: recordedStep,
-                        stepStart: stepStart, currentStart: segmentStart) ?? (stepStart + recordedStep.timelineDuration)
-                    guard end > segmentStart else { continue }
-                    let performed = WorkoutActivityProgress.duration(
+                    let declaredWorkEnd = cycleRestDurations[recordedStep.id] == nil
+                        ? cycleWorkEnds[recordedStep.id].map { stepStart + min(recordedStep.duration, max(0, $0)) } : nil
+                    let end = declaredWorkEnd ?? followingSegmentStart(after: index, in: recordedStep,
+                            stepStart: stepStart, currentStart: segmentStart) ?? (stepStart + recordedStep.timelineDuration)
+                    guard end >= segmentStart else { continue }
+                    let performed = max(0, WorkoutActivityProgress.duration(
                         in: segmentStart..<end, intervals: activityIntervals
-                    )
+                    ) - (recordedStep.restsAfterCompletion ? cycleRestDurations[recordedStep.id, default: 0] : 0))
                     guard performed > 0 || hasObservedWork || hasCompletedWork else { continue }
                     performedDuration = performed
                 } else {
@@ -1194,6 +1203,25 @@ struct WorkoutActivityRecorder {
                     }
                 }
             }
+            if recordedStep.restsAfterCompletion, let observedRest = cycleRestDurations[recordedStep.id] {
+                if observedRest.isFinite && observedRest > 0 {
+                    result.append(.init(stepID: recordedStep.id, stepNumber: recordedStep.number,
+                        kind: .rest, target: nil, durationSeconds: observedRest))
+                }
+            } else if recordedStep.restsAfterCompletion, let workEnd = cycleWorkEnds[recordedStep.id], workEnd.isFinite {
+                let start = stepStart + min(recordedStep.duration, max(0, workEnd))
+                let end = stepStart + recordedStep.duration
+                let rest: TimeInterval
+                if let activityIntervals {
+                    rest = WorkoutActivityProgress.duration(in: start..<end, intervals: activityIntervals)
+                } else {
+                    rest = max(0, min(end, elapsed ?? end) - start)
+                }
+                if rest > 0 {
+                    result.append(.init(stepID: recordedStep.id, stepNumber: recordedStep.number,
+                        kind: .rest, target: nil, durationSeconds: rest))
+                }
+            }
         }
         return result
     }
@@ -1325,8 +1353,16 @@ struct WorkoutActivityRecorder {
                 elapsed: elapsed,
                 activityIntervals: activityIntervals,
                 performedWorkStepIDs: Set(stepMeasurements.filter {
-                    $0.action == .loadedLift && ($0.completedRepetitions ?? 0) > 0
-                }.map(\.stepID))
+                    ($0.action == .loadedLift && ($0.completedRepetitions ?? 0) > 0)
+                        || $0.repResults.contains { $0.completed > 0 }
+                        || $0.actualLoadedDuration > 0
+                }.map(\.stepID)),
+                cycleWorkEnds: Dictionary(uniqueKeysWithValues: stepMeasurements.compactMap { row in
+                    row.cycleWorkEnd.map { (row.stepID, $0) }
+                }),
+                cycleRestDurations: Dictionary(uniqueKeysWithValues: stepMeasurements.compactMap { row in
+                    row.cycleRestDuration.map { (row.stepID, $0) }
+                })
             ),
             measurements: measuredSteps(from: stepMeasurements)
         )

@@ -325,6 +325,11 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     let externalLoadKGF: Double?
     let isRest: Bool
     let isGeneralActivity: Bool
+    let repResults: [WorkoutRepResult]
+    /// Actual work/rest boundary inside a source-defined timed cycle.
+    let cycleWorkEnd: TimeInterval?
+    let cycleRestDuration: TimeInterval?
+    let cycleDuration: TimeInterval?
 
     enum Status: String, Codable {
         case measured
@@ -336,6 +341,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         case stepID, plannedActiveDuration, intervals, peakLoadKGF, sampleCount, status
         case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF, isRest
         case isGeneralActivity
+        case repResults, cycleWorkEnd, cycleRestDuration, cycleDuration
     }
 
     init(
@@ -352,7 +358,11 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         completedRepetitions: Int? = nil,
         externalLoadKGF: Double? = nil,
         isRest: Bool = false,
-        isGeneralActivity: Bool = false
+        isGeneralActivity: Bool = false,
+        repResults: [WorkoutRepResult] = [],
+        cycleWorkEnd: TimeInterval? = nil,
+        cycleRestDuration: TimeInterval? = nil,
+        cycleDuration: TimeInterval? = nil
     ) {
         self.stepID = stepID
         self.plannedActiveDuration = plannedActiveDuration
@@ -368,6 +378,10 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         self.externalLoadKGF = externalLoadKGF
         self.isRest = isRest
         self.isGeneralActivity = isGeneralActivity
+        self.repResults = repResults
+        self.cycleWorkEnd = cycleWorkEnd
+        self.cycleRestDuration = cycleRestDuration
+        self.cycleDuration = cycleDuration
     }
 
     init(from decoder: Decoder) throws {
@@ -386,6 +400,10 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
         isRest = try container.decodeIfPresent(Bool.self, forKey: .isRest) ?? false
         isGeneralActivity = try container.decodeIfPresent(Bool.self, forKey: .isGeneralActivity) ?? false
+        repResults = try container.decodeIfPresent([WorkoutRepResult].self, forKey: .repResults) ?? []
+        cycleWorkEnd = try container.decodeIfPresent(TimeInterval.self, forKey: .cycleWorkEnd)
+        cycleRestDuration = try container.decodeIfPresent(TimeInterval.self, forKey: .cycleRestDuration)
+        cycleDuration = try container.decodeIfPresent(TimeInterval.self, forKey: .cycleDuration)
     }
 
     var actualLoadedDuration: TimeInterval {

@@ -54,15 +54,14 @@ current manufacturer article, named workout sections.
 | 6 and 10 | 6s/10s ×5; 4–6 sets; 2–3m between sets | Four sets, each five full 6/10 cycles including final 10s; 120s recovery |
 | 6:6×6+ | 6s/6s ×6+ to form failure; 4–6 sets; 2m recovery | Four sets; manual continuation preserves failure endpoint |
 | Single Hangs | Main recipe 6s, explicitly flexible 4–8s; 4–8 hangs; 2–4m recovery | Four 4s hangs, 120s recovery; disclose selected range |
-| Long Hangs | 3–5 hangs; 15–30s to failure; 2–4m recovery | Three stopwatch hangs, nominal 15s estimate, 120s recovery |
+| Long Hangs | 3–5 hangs; 15–30s to failure; 2–4m recovery | Three uncapped stopwatch hangs, 120s recovery |
 
-Failure means inability to maintain grip/shoulder form. For these manual
-tasks, pause the routine, start its independent stopwatch, then stop the
-stopwatch at form failure, skip to recovery, and resume the routine.
-Leaving the routine running instead auto-advances after the nominal 15s
-long hang or 72s repeater set estimate; those are not failure-based
-endpoints. A repeater set's stopwatch includes its 6s intra-set rests, not
-only active hanging. The source normally divides sets/hangs between half
+Failure means inability to maintain grip/shoulder form. These tasks now
+use uncapped stopwatch work and Done to begin recovery. The October 27
+[self-paced legacy mapping](source-audits/2026-10-27-self-paced-legacy-routines.md)
+supersedes the former 15s/72s outer estimates and pause/skip workflow. A
+repeater set's stopwatch includes its 6s intra-set rests, not only active hanging.
+The source normally divides sets/hangs between half
 and open crimp, optionally substituting special grips. Disclose any chosen
 allocation; keep alternatives in guidance. Load for 6 and 10 approaches
 failure on rep five without failing. Single-hang loading varies with
@@ -231,11 +230,11 @@ for the same program. Retain existing generic
 `metolius.generic-ten-minute.intermediate`,
 `metolius.generic-ten-minute.advanced`, and Contact-specific IDs.
 
-The generic guide is already expanded as adapted task steps, documented in
-`ADDING_A_ROUTINE.md`: source hangs, counted exercises, stay-on
-transitions, switches, alternatives, and maximum efforts remain present;
-counted movement timing is expressly app supplied. The Contact entries
-retain source minute structure and numbered product compatibility. Current
+The generic guide now retains one source-minute step containing every
+ordered task and source hang instruction, with athlete-paced counted work and
+remaining-time rest after Done. See `ADDING_A_ROUTINE.md` and the October 27
+mapping for exact count fields. The Contact entries likewise retain source
+minute structure and numbered product compatibility. Current
 Contact HTML has inconsistent hold labels/numbers (e.g. round sloper versus
 outer jug at 2, pinch versus pocket at 11). The existing catalog preserves
 diagram-based hold identities. This unresolved text/diagram inconsistency

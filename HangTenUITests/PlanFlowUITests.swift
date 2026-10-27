@@ -31,6 +31,61 @@ final class WorkoutEndUITests: XCTestCase {
         attachScreenshot(named: "Explicitly completed self-paced warm-up")
     }
 
+    func testActualRepsPrefillCanBeEditedAndPersistWithoutRecordingTheNextDefault() {
+        let title = "Hooper's Beta · Introductory Home Hangboard"
+        let app = openWorkout(URL(string: "hangten://plan/hoopers-beta.introductory-home-hangboard/workout")!,
+            historyTitle: title, reviewStep: 2, chooseSubstitutes: true)
+        let reps = app.textFields["workout.actualReps.pull-ups"]
+        XCTAssertTrue(reps.waitForExistence(timeout: 10))
+        XCTAssertEqual(reps.value as? String, "10")
+        reps.tap()
+        reps.doubleTap()
+        reps.typeText("8")
+        app.buttons["workout.dismissRepKeyboard"].tap()
+        XCTAssertEqual(reps.value as? String, "8")
+        attachScreenshot(named: "Actual pull-up reps edited below target")
+        XCUIDevice.shared.orientation = .landscapeLeft
+        defer { XCUIDevice.shared.orientation = .portrait }
+        XCTAssertTrue(reps.waitForExistence(timeout: 5))
+        XCTAssertEqual(reps.value as? String, "8")
+        attachScreenshot(named: "Actual reps retained in landscape")
+        XCUIDevice.shared.orientation = .portrait
+        app.buttons["workout.skipStep"].tap()
+        let next = app.textFields["workout.actualReps.push-ups"]
+        XCTAssertTrue(next.waitForExistence(timeout: 5))
+        XCTAssertEqual(next.value as? String, "10")
+        app.buttons["workout.end"].tap()
+        let save = app.alerts.buttons["workout.end.save"].firstMatch
+        XCTAssertTrue(save.waitForExistence(timeout: 5))
+        save.tap()
+        app.tabBars.buttons["History"].tap()
+        let session = historySessions(in: app).firstMatch
+        XCTAssertTrue(session.waitForExistence(timeout: 10))
+        session.tap()
+        let actual = app.staticTexts["summary.actualReps.pull-ups"]
+        XCTAssertTrue(actual.waitForExistence(timeout: 5))
+        XCTAssertTrue(actual.label.contains("8 reps"))
+        XCTAssertTrue(actual.label.contains("target 10"))
+        XCTAssertFalse(app.staticTexts["summary.actualReps.push-ups"].exists)
+        attachScreenshot(named: "Actual reps persisted and unperformed default omitted")
+    }
+
+    func testCountedMinuteWorkBecomesRemainingTimeRestWithoutRestartingClock() {
+        let app = openWorkout(URL(string: "hangten://plan/method.intermediate-hangboarding.emom/workout")!,
+            historyTitle: "Method Climbing · Intermediate 10-minute EMOM", reviewStep: 3, chooseSubstitutes: true)
+        let reps = app.textFields["workout.actualReps.pull-ups"]
+        XCTAssertTrue(reps.waitForExistence(timeout: 10))
+        XCTAssertEqual(reps.value as? String, "3")
+        let before = app.staticTexts["workout.timer"].label
+        app.buttons["workout.skipStep"].tap()
+        XCTAssertTrue(app.staticTexts["Rest"].waitForExistence(timeout: 5))
+        let after = app.staticTexts["workout.timer"].label
+        XCTAssertLessThanOrEqual(after, before)
+        XCTAssertNotEqual(after, "01:00")
+        XCTAssertFalse(reps.exists)
+        attachScreenshot(named: "Rep completion keeps the minute deadline and enters rest")
+    }
+
     func testEndOffersSaveDiscardAndKeepTraining() {
         let app = openWorkout()
         app.buttons["workout.end"].tap()
@@ -183,7 +238,9 @@ final class WorkoutEndUITests: XCTestCase {
 
     private func openWorkout(
         _ url: URL = URL(string: "hangten://plan/research.max-hangs/workout")!,
-        historyTitle: String = "Max Hangs"
+        historyTitle: String = "Max Hangs",
+        reviewStep: Int? = nil,
+        chooseSubstitutes: Bool = false
     ) -> XCUIApplication {
         activeHistoryTitle = historyTitle
         let app = XCUIApplication()
@@ -193,6 +250,7 @@ final class WorkoutEndUITests: XCTestCase {
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_PORTRAIT": "1"
         ]
+        if let reviewStep { app.launchEnvironment["HANGTEN_REVIEW_STEP"] = String(reviewStep) }
         app.terminate()
         app.launch()
         XCTAssertTrue(app.tabBars.buttons["History"].waitForExistence(timeout: 20))
@@ -201,8 +259,30 @@ final class WorkoutEndUITests: XCTestCase {
         initialSessionCount = historySessions(in: app).count
         app.tabBars.buttons["Train"].tap()
         app.open(url)
+        if chooseSubstitutes, app.buttons["plan.startRoutine"].waitForExistence(timeout: 10) {
+            let count = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "plan.substitution.picker.")).count
+            for index in 0..<count {
+                let picker = app.buttons["plan.substitution.picker.\(index)"]
+                for _ in 0..<12 where !picker.isHittable { scrollPlanUp(in: app) }
+                picker.tap()
+                let option = app.buttons["plan.substitution.option.\(index).0"]
+                XCTAssertTrue(option.waitForExistence(timeout: 5))
+                option.tap()
+            }
+            let start = app.buttons["plan.startRoutine"]
+            for _ in 0..<12 where !start.isHittable { scrollPlanUp(in: app) }
+            XCTAssertTrue(start.isEnabled)
+            start.tap()
+        }
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 60))
         return app
+    }
+
+    private func scrollPlanUp(in app: XCUIApplication) {
+        let scrollView = app.scrollViews.firstMatch
+        let start = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.75))
+        let end = scrollView.coordinate(withNormalizedOffset: CGVector(dx: 0.02, dy: 0.25))
+        start.press(forDuration: 0.1, thenDragTo: end)
     }
 
     private func historySessions(in app: XCUIApplication) -> XCUIElementQuery {

@@ -3,6 +3,15 @@ import XCTest
 @testable import HangTen
 
 final class PlanFiltersTests: XCTestCase {
+    func testUnknownRepTimingDoesNotMakePublishedMinuteCyclesApproximate() throws {
+        let store = try PlanLibraryStore(definition: canonicalPlanDefinition())
+        for id in ["metolius.generic-ten-minute.entry", "method.intermediate-hangboarding.emom"] {
+            let plan = try XCTUnwrap(store.plan(id: id))
+            XCTAssertEqual(plan.duration, 600)
+            XCTAssertFalse(plan.hasEstimatedDuration)
+            XCTAssertEqual(plan.browserDurationLabel, "10 min")
+        }
+    }
     func testWarmUpsHaveSearchableLabelsAndHonestSelfPacedDurations() throws {
         let library = try canonicalPlanDefinition()
         let store = try PlanLibraryStore(definition: library)

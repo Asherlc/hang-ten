@@ -362,6 +362,9 @@ struct WorkoutSessionState: Equatable {
     var pausedElapsed: TimeInterval
     var routineStartedAt: Date?
     var manualStepStartOffsets: [TimeInterval] = []
+    /// Rest windows for this pass through source cycles. The execution ledger
+    /// captures their actual intersections before navigation rebases the clock.
+    var cycleRestWindows: [String: Range<TimeInterval>] = [:]
 
     init(
         activeStartUptime: TimeInterval? = nil,

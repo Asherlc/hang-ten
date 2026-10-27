@@ -2,6 +2,37 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testRepTargetsAndSourceCycleModeSurviveCustomEditingAndResolution() throws {
+        let target = WorkoutRepTarget(id: "pulls", title: "Pull-ups", minimum: 3)
+        let step = WorkoutStepDefinition(id: "cycle", title: "Minute", instruction: "Complete 3 pull-ups.",
+            accessory: "", duration: 60, phase: .pull,
+            segments: [.init(kind: .work, target: .requirements([.kind(.jug)]), timing: .undefined, duration: nil)],
+            repTargets: [target], restsAfterCompletion: true)
+        let definition = CustomRoutineDefinition(id: "custom.rep-cycle", title: "Rep cycle", subtitle: "",
+            difficulty: nil, category: nil, tags: [], targetMode: .generic, steps: [step])
+        let edited = CustomRoutineDraft(editing: definition).definition()
+        XCTAssertEqual(edited.steps[0].repTargets, [target])
+        XCTAssertTrue(edited.steps[0].restsAfterCompletion)
+        let owner = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().lastPathComponent
+        let suite = "RepCycle-\(owner)-\(UUID().uuidString)"
+        defer { UserDefaults.standard.removePersistentDomain(forName: suite) }
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        let store = CustomRoutineStore(defaults: defaults)
+        let plan = try store.plan(for: edited)
+        XCTAssertEqual(plan.steps[0].repTargets, [target])
+        XCTAssertTrue(plan.steps[0].restsAfterCompletion)
+    }
+
+    func testEnablingRemainingTimeRestClearsAnOldFixedWorkBoundary() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Cycle"
+        var step = makeStep(id: "cycle", title: "Work", duration: 60)
+        step.activeDuration = 10
+        draft.steps = [step]
+        draft.steps[0].setRestsAfterCompletion(true)
+        XCTAssertNil(draft.definition().steps[0].activeDuration)
+        XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
+    }
     func testDepthEntryParsesSingleValuesAndOrderedRangesInMillimeters() {
         let locale = Locale(identifier: "en_US")
         XCTAssertEqual(CustomRoutineDepthEntry.parse(" 18 ", locale: locale),

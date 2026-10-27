@@ -600,6 +600,13 @@ private struct CustomRoutineStepEditor: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                if step.duration > 0 && !step.isRest {
+                    Toggle("Rest until the timer ends after finishing work", isOn: Binding(
+                        get: { step.restsAfterCompletion },
+                        set: { step.setRestsAfterCompletion($0) }
+                    ))
+                        .font(.subheadline)
+                }
 
                 if !step.isRest && step.exercise != .conditioning {
                     editorGroup("Hands & holds") {

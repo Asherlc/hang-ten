@@ -111,7 +111,8 @@ enum WorkoutSessionHandResolver {
             action: step.action,
             repetitions: step.repetitions,
             externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
+            timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -157,7 +158,8 @@ enum WorkoutSessionHandResolver {
             action: step.action,
             repetitions: step.repetitions,
             externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
+            timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -522,7 +524,8 @@ struct WorkoutTimeline {
         currentStep: WorkoutStep?,
         stepElapsed: TimeInterval,
         countdown: Int,
-        isComplete: Bool
+        isComplete: Bool,
+        isRestingOverride: Bool? = nil
     ) -> WorkoutBoardCue {
         guard !isComplete,
               let currentStep else {
@@ -534,7 +537,7 @@ struct WorkoutTimeline {
             )
         }
 
-        let resolvedStep = holdPreviewStep(
+        let resolvedStep = isRestingOverride == true ? nextWorkStep(after: currentStep.id) : holdPreviewStep(
             currentStep: currentStep,
             stepElapsed: stepElapsed
         )
@@ -548,8 +551,8 @@ struct WorkoutTimeline {
             )
         }
 
-        let isResting = currentStep.phase == .rest
-            || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
+        let isResting = isRestingOverride ?? (currentStep.phase == .rest
+            || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration))
 
         return WorkoutBoardCue(
             step: resolvedStep,
@@ -598,7 +601,8 @@ struct WorkoutTimeline {
             gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
             handUse: step.handUse, side: step.side, action: step.action,
             repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
+            timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -648,6 +652,81 @@ struct WorkoutLiftCompletion: Equatable {
 
     func externalLoadKGF(for step: WorkoutStep) -> Double? {
         externalLoadKGFByStepID[step.id] ?? step.externalLoadKGF
+    }
+}
+
+/// Displaying a target is not evidence of activity. Only explicit edits or
+/// completing the step turn the prefilled value into an actual result.
+struct WorkoutRepProgress: Equatable {
+    private struct Entry: Equatable {
+        var value: Int?
+        var isSelected: Bool
+        var isRecorded: Bool
+    }
+    private var entries: [String: [String: Entry]] = [:]
+
+    func value(for target: WorkoutRepTarget, in step: WorkoutStep) -> Int? {
+        if let entry = entries[step.id]?[target.id] { return entry.value }
+        return target.isOptional ? nil : target.minimum
+    }
+
+    func isSelected(_ target: WorkoutRepTarget, in step: WorkoutStep) -> Bool {
+        entries[step.id]?[target.id]?.isSelected ?? !target.isOptional
+    }
+
+    mutating func select(_ selected: Bool, target: WorkoutRepTarget, in step: WorkoutStep) {
+        entries[step.id, default: [:]][target.id] = Entry(
+            value: selected ? target.minimum : nil, isSelected: selected, isRecorded: false
+        )
+    }
+
+    mutating func setValue(_ value: Int?, target: WorkoutRepTarget, in step: WorkoutStep) {
+        entries[step.id, default: [:]][target.id] = Entry(
+            value: value, isSelected: true, isRecorded: value.map { $0 >= 0 } ?? false
+        )
+    }
+
+    func canConfirm(_ step: WorkoutStep) -> Bool {
+        step.displayedRepTargets.allSatisfy { target in
+            !isSelected(target, in: step) || value(for: target, in: step).map { $0 >= 0 } == true
+        }
+    }
+
+    mutating func confirm(_ step: WorkoutStep) {
+        guard canConfirm(step) else { return }
+        for target in step.displayedRepTargets where isSelected(target, in: step) {
+            entries[step.id, default: [:]][target.id] = Entry(
+                value: value(for: target, in: step), isSelected: true, isRecorded: true
+            )
+        }
+    }
+
+    func results(for step: WorkoutStep) -> [WorkoutRepResult] {
+        step.displayedRepTargets.compactMap { target in
+            guard let entry = entries[step.id]?[target.id], entry.isSelected, entry.isRecorded,
+                  let value = entry.value, value >= 0 else { return nil }
+            return WorkoutRepResult(target: target, completed: value)
+        }
+    }
+}
+
+struct WorkoutCycleCompletion: Equatable {
+    private(set) var workEndByStepID: [String: TimeInterval] = [:]
+
+    mutating func complete(_ step: WorkoutStep, at elapsed: TimeInterval) {
+        guard step.restsAfterCompletion, elapsed.isFinite else { return }
+        workEndByStepID[step.id] = min(step.duration, max(0, elapsed))
+    }
+
+    func isResting(_ step: WorkoutStep, at elapsed: TimeInterval) -> Bool {
+        guard step.restsAfterCompletion, let end = workEndByStepID[step.id] else { return false }
+        return elapsed >= end
+    }
+
+    mutating func restart(from offset: TimeInterval, in timeline: WorkoutTimeline) {
+        workEndByStepID = workEndByStepID.filter { id, _ in
+            (timeline.startOffset(for: id) ?? offset) < offset
+        }
     }
 }
 

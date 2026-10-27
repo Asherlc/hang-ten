@@ -81,7 +81,7 @@ extension TrainingPlan {
     /// whether the displayed session duration is an estimate.
     var hasEstimatedDuration: Bool {
         steps.contains { step in
-            step.duration <= 0 || step.segments.contains { $0.timing != .fixed }
+            step.duration <= 0 || (!step.restsAfterCompletion && step.segments.contains { $0.timing != .fixed })
                 || step.instruction.localizedCaseInsensitiveContains("optional")
         }
     }

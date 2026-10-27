@@ -374,6 +374,10 @@ private struct WorkoutSummaryContent: View {
 
             HStack {
                 summaryValue(title: "Planned", value: step.plannedActiveDuration == 0 ? "Unspecified" : step.plannedActiveDuration.durationText)
+                if let cycle = step.cycleDuration {
+                    Spacer()
+                    summaryValue(title: "Cycle", value: cycle.durationText)
+                }
                 if showsMeasuredLoad {
                     Spacer()
                     summaryValue(title: "Loaded", value: step.actualLoadedDuration.durationText)
@@ -387,6 +391,13 @@ private struct WorkoutSummaryContent: View {
                 Text(semanticText)
                     .font(.system(.caption, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
+            }
+            ForEach(step.repResults) { result in
+                Text("\(result.target.title): \(result.completed) reps" +
+                    (result.target.targetLabel.map { " · target \($0)" } ?? ""))
+                    .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                    .foregroundStyle(Color.hangInk)
+                    .accessibilityIdentifier("summary.actualReps.\(result.id)")
             }
 
             if step.intervals.count > 1 {

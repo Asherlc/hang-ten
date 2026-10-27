@@ -653,6 +653,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let action: WorkoutAction
     let repetitions: Int?
     let externalLoadKGF: Double?
+    let repTargets: [WorkoutRepTarget]
+    let restsAfterCompletion: Bool
 
     init(
         id: String,
@@ -669,7 +671,9 @@ struct WorkoutStepDefinition: Codable, Hashable {
         side: WorkoutSide = .both,
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
-        externalLoadKGF: Double? = nil
+        externalLoadKGF: Double? = nil,
+        repTargets: [WorkoutRepTarget] = [],
+        restsAfterCompletion: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -686,6 +690,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.action = action
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
+        self.repTargets = repTargets
+        self.restsAfterCompletion = restsAfterCompletion
     }
 
     /// Contact requirements prescribed by work segments.
@@ -710,6 +716,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case action
         case repetitions
         case externalLoadKGF
+        case repTargets, restsAfterCompletion
     }
 
     private static func derivedHandUse(
@@ -782,6 +789,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
+        repTargets = try container.decodeIfPresent([WorkoutRepTarget].self, forKey: .repTargets) ?? []
+        restsAfterCompletion = try container.decodeIfPresent(Bool.self, forKey: .restsAfterCompletion) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -804,6 +813,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encode(action, forKey: .action)
         try container.encodeIfPresent(repetitions, forKey: .repetitions)
         try container.encodeIfPresent(externalLoadKGF, forKey: .externalLoadKGF)
+        if !repTargets.isEmpty { try container.encode(repTargets, forKey: .repTargets) }
+        if restsAfterCompletion { try container.encode(true, forKey: .restsAfterCompletion) }
     }
 }
 
@@ -837,7 +848,8 @@ extension WorkoutStepDefinition {
             side: step.side,
             action: step.action,
             repetitions: step.repetitions,
-            externalLoadKGF: step.externalLoadKGF
+            externalLoadKGF: step.externalLoadKGF,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -877,7 +889,8 @@ extension WorkoutStepDefinition {
             side: side,
             action: action,
             repetitions: repetitions,
-            externalLoadKGF: externalLoadKGF
+            externalLoadKGF: externalLoadKGF,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 }
@@ -1146,6 +1159,13 @@ enum PlanLibraryValidator {
     ) {
         if step.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).id", message: "Step ID cannot be empty."))
+        }
+        if !step.repTargets.allSatisfy(\.isValid) ||
+            Set(step.repTargets.map(\.id)).count != step.repTargets.count {
+            issues.append(PlanValidationIssue(path: "\(path).repTargets", message: "Repetition targets must have unique IDs and valid positive source counts."))
+        }
+        if step.restsAfterCompletion && (step.duration <= 0 || step.phase == .rest || step.segments.count > 1 || step.activeDuration != nil) {
+            issues.append(PlanValidationIssue(path: "\(path).restsAfterCompletion", message: "Remaining-time recovery requires one source work cycle with a positive duration."))
         }
         if !step.duration.isFinite || step.duration < 0 ||
             (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
@@ -1777,7 +1797,8 @@ extension WorkoutStepDefinition {
             action: action,
             repetitions: repetitions,
             externalLoadKGF: externalLoadKGF,
-            timedWorkDuration: activeDuration
+            timedWorkDuration: activeDuration,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 }

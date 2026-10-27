@@ -80,6 +80,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var targets: [ContactRequirement]
     var timing: WorkoutSegmentTiming
     var activeDuration: TimeInterval?
+    var repTargets: [WorkoutRepTarget] = []
+    var restsAfterCompletion = false
     var handUse: WorkoutHandUse
     var side: WorkoutSide
     var action: WorkoutAction
@@ -139,6 +141,10 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
             let wasRest = isRest
             let wasGeneralActivity = phase == .conditioning && targets.isEmpty
             let usesExerciseName = displayTitle == exercise.label
+            if newValue != exercise {
+                repTargets = []
+                restsAfterCompletion = false
+            }
             switch newValue {
             case .conditioning:
                 phase = .conditioning
@@ -196,6 +202,15 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         } else if duration == 0 {
             if timing == .fixed { timing = .undefined }
             activeDuration = nil
+            restsAfterCompletion = false
+        }
+    }
+
+    mutating func setRestsAfterCompletion(_ enabled: Bool) {
+        restsAfterCompletion = enabled
+        if enabled {
+            activeDuration = nil
+            timing = .undefined
         }
     }
 
@@ -253,7 +268,9 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         side: WorkoutSide = .both,
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
-        externalLoadKGF: Double? = nil
+        externalLoadKGF: Double? = nil,
+        repTargets: [WorkoutRepTarget] = [],
+        restsAfterCompletion: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -271,6 +288,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         self.action = action
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
+        self.repTargets = repTargets
+        self.restsAfterCompletion = restsAfterCompletion
     }
 
     var isRest: Bool {
@@ -353,7 +372,8 @@ enum CustomRoutineBoardPreview {
             side: draft.side,
             action: draft.action,
             repetitions: draft.repetitions,
-            externalLoadKGF: draft.externalLoadKGF
+            externalLoadKGF: draft.externalLoadKGF,
+            repTargets: draft.repTargets, restsAfterCompletion: draft.restsAfterCompletion
         )
         guard WorkoutSessionHandResolver.stepNeedsHandResolution(
             step,
@@ -858,7 +878,8 @@ struct CustomRoutineDraft: Equatable {
             side: isRest ? .both : definition.side,
             action: isRest ? .hang : definition.action,
             repetitions: isRest ? nil : definition.repetitions,
-            externalLoadKGF: isRest ? nil : definition.externalLoadKGF
+            externalLoadKGF: isRest ? nil : definition.externalLoadKGF,
+            repTargets: definition.repTargets, restsAfterCompletion: definition.restsAfterCompletion
         )
     }
 
@@ -892,7 +913,8 @@ struct CustomRoutineDraft: Equatable {
             side: side,
             action: action,
             repetitions: step.isRest ? nil : step.repetitions,
-            externalLoadKGF: step.isRest ? nil : step.externalLoadKGF
+            externalLoadKGF: step.isRest ? nil : step.externalLoadKGF,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 

@@ -252,6 +252,8 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case invalidCircuitSets(circuitIndex: Int)
     case overlappingCircuitSets(circuitIndex: Int)
     case invalidDuration(stepIndex: Int)
+    case invalidRepTargets(stepIndex: Int)
+    case invalidCycleCompletion(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
     case invalidHandUseSide(stepIndex: Int)
     case invalidActionRepetitions(stepIndex: Int)
@@ -313,6 +315,12 @@ enum CustomRoutineValidator {
             if !step.duration.isFinite || step.duration < 0 ||
                 (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
                 issues.append(.invalidDuration(stepIndex: stepIndex))
+            }
+            if !step.repTargets.allSatisfy(\.isValid) || Set(step.repTargets.map(\.id)).count != step.repTargets.count {
+                issues.append(.invalidRepTargets(stepIndex: stepIndex))
+            }
+            if step.restsAfterCompletion && (step.duration <= 0 || step.phase == .rest || step.segments.count > 1 || step.activeDuration != nil) {
+                issues.append(.invalidCycleCompletion(stepIndex: stepIndex))
             }
             if let activeDuration = step.activeDuration,
                !activeDuration.isFinite || activeDuration <= 0 || activeDuration > step.duration {
@@ -879,7 +887,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 duration: step.duration, phase: step.phase, segments: segments, gripType: step.gripType,
                 fingerConfiguration: step.fingerConfiguration, activeDuration: step.activeDuration,
                 handUse: step.handUse, side: step.side, action: step.action, repetitions: step.repetitions,
-                externalLoadKGF: step.externalLoadKGF
+                externalLoadKGF: step.externalLoadKGF,
+                repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
             )
         }
         return CustomRoutineDefinition(
@@ -1096,7 +1105,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
             side: step.side,
             action: step.action,
             repetitions: step.repetitions,
-            externalLoadKGF: step.externalLoadKGF
+            externalLoadKGF: step.externalLoadKGF,
+                repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
