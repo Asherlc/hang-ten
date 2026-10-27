@@ -81,6 +81,14 @@ manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
+When no enclosing step duration is supplied, omit `duration` and use a single
+`undefined` or `stopwatch` segment. The user advances that step explicitly;
+do not invent a timer estimate merely to make a source executable. General
+conditioning instructions may omit both duration and board-work segments.
+An untimed rest uses one `rest` segment with `timing: "undefined"` and no
+duration. Positive enclosing source cycles retain their automatic boundary.
+See the [warm-up mapping](source-audits/2026-10-27-warmups.md) for examples.
+
 Both apps read the checked-in canonical `HangTen/Resources/PlanLibrary.json`.
 Add the audited plan directly to its reusable block definitions and plan
 references, retaining source metadata and provenance. Build board resources

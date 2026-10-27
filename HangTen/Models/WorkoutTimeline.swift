@@ -27,7 +27,7 @@ enum WorkoutSessionHandResolver {
     /// True when a non-rest step must resolve to a concrete hand side for this board.
     /// Rest steps default to `.double` and must never force a hand choice.
     static func stepNeedsHandResolution(_ step: WorkoutStep, boardIsOneHanded: Bool) -> Bool {
-        guard !step.isRestStep else { return false }
+        guard !step.isRestStep, !step.isGeneralActivity else { return false }
         if step.segments.contains(where: { segment in
             guard let tasks = segment.target?.planTasks else { return false }
             return !tasks.isEmpty
@@ -392,7 +392,7 @@ struct WorkoutTimeline {
 
         var cursor: TimeInterval = 0
         self.startOffsets = steps.map { step in
-            defer { cursor += step.duration }
+            defer { cursor += step.timelineDuration }
             return cursor
         }
         self.duration = cursor
@@ -404,12 +404,17 @@ struct WorkoutTimeline {
         steps
     }
 
+    var manualStepStartOffsets: [TimeInterval] {
+        steps.indices.compactMap { steps[$0].requiresManualAdvance ? startOffsets[$0] : nil }
+    }
+
     static func labels(
         for step: WorkoutStep,
         taskIndex: Int = 0,
         selectedHandSide: WorkoutSide? = nil
     ) -> [String] {
         guard !step.isRestStep else { return ["Rest"] }
+        if step.isGeneralActivity { return ["Conditioning"] }
         let actionLabel: String
         switch step.action {
         case .hang: actionLabel = "Hang"
@@ -477,7 +482,7 @@ struct WorkoutTimeline {
             return nil
         }
 
-        let stepEnd = location.start + steps[location.index].duration
+        let stepEnd = location.start + steps[location.index].timelineDuration
         return min(stepEnd, duration)
     }
 
@@ -609,7 +614,7 @@ struct WorkoutTimeline {
         let clamped = clampedElapsed(elapsed)
         for index in steps.indices {
             let start = startOffsets[index]
-            let end = start + steps[index].duration
+            let end = start + steps[index].timelineDuration
             if clamped < end {
                 return (index, start)
             }

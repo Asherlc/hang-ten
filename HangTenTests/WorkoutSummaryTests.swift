@@ -2,6 +2,18 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testGeneralActivityRetainsItsIdentityWithoutInventedHangCues() throws {
+        let step = WorkoutStepMeasurement(stepID: "warmup", plannedActiveDuration: 0,
+            intervals: [], peakLoadKGF: nil, sampleCount: 0, status: .unmeasured,
+            isGeneralActivity: true)
+        let restored = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: JSONEncoder().encode(step))
+        XCTAssertTrue(restored.isGeneralActivity)
+        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: restored, unit: .kgf), "General activity")
+        var legacy = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(step)) as? [String: Any])
+        legacy.removeValue(forKey: "isGeneralActivity")
+        XCTAssertFalse(try JSONDecoder().decode(WorkoutStepMeasurement.self,
+            from: JSONSerialization.data(withJSONObject: legacy)).isGeneralActivity)
+    }
     func testInitialWeightTextClearlyDescribesManualStandaloneAndBodyweightModes() {
         XCTAssertNil(
             WorkoutSummaryFormatting.initialWeightText(for: .untracked, unit: .kilograms)

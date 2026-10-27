@@ -63,6 +63,64 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testUntimedStepHasANavigationBoundaryWithoutAPrescribedDuration() {
+        let manual = WorkoutStep(id: "manual", number: 1, title: "Prepare", instruction: "",
+            accessory: "", duration: 0, phase: .conditioning)
+        let timed = WorkoutStep(id: "timed", number: 2, title: "Move", instruction: "",
+            accessory: "", duration: 10, phase: .conditioning)
+        let timeline = WorkoutTimeline(steps: [manual, manual.withNumber(2), timed])
+        XCTAssertEqual(timeline.step(at: 0)?.title, "Prepare")
+        XCTAssertEqual(timeline.skipTarget(from: 0), 1)
+        XCTAssertEqual(manual.durationLabel, "Self-paced")
+    }
+
+    func testManualBoundarySurvivesPauseResumeAndOnlyExplicitNavigationAdvances() throws {
+        let manual = WorkoutStep(id: "manual", number: 1, title: "Prepare", instruction: "",
+            accessory: "", duration: 0, phase: .conditioning)
+        let timed = WorkoutStep(id: "timed", number: 2, title: "Move", instruction: "",
+            accessory: "", duration: 10, phase: .conditioning)
+        let timeline = WorkoutTimeline(steps: [manual, timed])
+        var state = WorkoutSessionState(activeStartUptime: 100, routineStartedAt: Date())
+        state.manualStepStartOffsets = timeline.manualStepStartOffsets
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 10_000), 0)
+        state.pauseForInterruption(at: 10_000)
+        XCTAssertEqual(state.pausedElapsed, 0)
+        state.toggleRunning(uptime: 20_000)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 30_000), 0)
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: 30_000))
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 30_004), 2)
+        state.seek(to: 0, planDuration: timeline.duration, at: 40_000)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 50_000), 0)
+    }
+
+    func testConsecutiveAndFinalManualStepsWaitForEachUserAdvance() {
+        let steps = (1...2).map { index in
+            WorkoutStep(id: "manual-\(index)", number: index, title: "Prepare", instruction: "",
+                accessory: "", duration: 0, phase: .conditioning)
+        }
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(activeStartUptime: 0, routineStartedAt: Date())
+        state.manualStepStartOffsets = timeline.manualStepStartOffsets
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: 100))
+        XCTAssertNil(state.countdownKind)
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 1000), 1)
+        XCTAssertEqual(timeline.step(at: 1)?.id, "manual-2")
+        XCTAssertTrue(state.skipCurrentStep(timeline: timeline, planDuration: timeline.duration, at: 1000))
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 2000), timeline.duration)
+    }
+
+    func testTimedStepCannotRunPastAnUntimedStepAfterALongFrameGap() {
+        let steps = [
+            WorkoutStep(id: "timed", number: 1, title: "Move", instruction: "", accessory: "", duration: 10, phase: .conditioning),
+            WorkoutStep(id: "manual", number: 2, title: "Prepare", instruction: "", accessory: "", duration: 0, phase: .conditioning)
+        ]
+        let timeline = WorkoutTimeline(steps: steps)
+        var state = WorkoutSessionState(activeStartUptime: 0, routineStartedAt: Date())
+        state.manualStepStartOffsets = timeline.manualStepStartOffsets
+        XCTAssertEqual(state.currentElapsed(planDuration: timeline.duration, at: 10000), 10)
+        XCTAssertEqual(timeline.step(at: 10)?.id, "manual")
+    }
+
     func testSelfSelectedWorkDoesNotRequestAConfiguredPresentation() {
         let contact = PhysicalContact(id: "edge", name: "Fixture edge", kind: .edge,
             handCapacity: 1, depth: .range(.init(minimum: 18, maximum: 18)))

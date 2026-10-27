@@ -310,7 +310,8 @@ enum CustomRoutineValidator {
             if !stepIDs.insert(step.id).inserted {
                 issues.append(.duplicateStepID(stepIndex: stepIndex))
             }
-            if !step.duration.isFinite || step.duration <= 0 {
+            if !step.duration.isFinite || step.duration < 0 ||
+                (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
                 issues.append(.invalidDuration(stepIndex: stepIndex))
             }
             if let activeDuration = step.activeDuration,
@@ -336,7 +337,7 @@ enum CustomRoutineValidator {
                 if step.segments.contains(where: { $0.target != nil }) {
                     issues.append(.restStepHasTargets(stepIndex: stepIndex))
                 }
-            } else {
+            } else if !step.resolvedStep().isGeneralActivity {
                 let workSegments = step.segments.filter { $0.kind == .work }
                 if workSegments.isEmpty {
                     issues.append(.missingTargets(stepIndex: stepIndex))
@@ -371,7 +372,8 @@ enum CustomRoutineValidator {
                     issues.append(.restSegmentHasTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 }
 
-                if segment.kind == .rest && segment.timing != .fixed {
+                if segment.kind == .rest && segment.timing != .fixed
+                    && !(step.duration == 0 && segment.timing == .undefined) {
                     issues.append(.invalidRestSegmentTiming(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 }
                 switch segment.timing {
@@ -485,7 +487,8 @@ enum CustomRoutineValidator {
     ) -> [BoardRevision] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
-                (step.phase == .rest || targetsResolve(
+                if step.resolvedStep().isGeneralActivity { return true }
+                return (step.phase == .rest || targetsResolve(
                     step.workRequirements,
                     handUse: step.handUse,
                     side: step.side,

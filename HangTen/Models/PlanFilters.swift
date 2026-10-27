@@ -44,7 +44,7 @@ struct WorkoutBrowserFilters: Equatable {
     var isEmpty: Bool { activeFacetCount == 0 }
 
     func matches(_ plan: TrainingPlan, metadata: PlanMetadata?) -> Bool {
-        duration.matches(plan.duration)
+        (duration == .any || (!plan.steps.contains(where: \.requiresManualAdvance) && duration.matches(plan.duration)))
             && (exercises.isEmpty || !exercises.isDisjoint(with: plan.workoutExercises))
             && (levels.isEmpty || levels.contains(metadata?.level ?? plan.level))
     }
@@ -87,15 +87,20 @@ extension TrainingPlan {
     }
 
     var browserDurationLabel: String {
-        hasEstimatedDuration ? "Approx. \(durationLabel)" : durationLabel
+        if steps.contains(where: \.requiresManualAdvance) {
+            return durationLabel
+        }
+        return hasEstimatedDuration ? "Approx. \(durationLabel)" : durationLabel
     }
 
     func matchesWorkoutSearch(_ query: String, metadata: PlanMetadata?) -> Bool {
-        let words = query.split(whereSeparator: \.isWhitespace)
+        let words = query.replacingOccurrences(of: "warm-up", with: "warmup", options: .caseInsensitive)
+            .split(whereSeparator: \.isWhitespace)
         guard !words.isEmpty else { return true }
         let labels = metadata?.athleteFacingLabels ?? []
         let haystack = ([title, subtitle, level, metadata?.focus?.title ?? ""]
             + labels + workoutExercises.map(\.title)).joined(separator: " ")
+            .replacingOccurrences(of: "warm-up", with: "warmup", options: .caseInsensitive)
         return words.allSatisfy {
             haystack.range(of: String($0), options: [.caseInsensitive, .diacriticInsensitive]) != nil
         }

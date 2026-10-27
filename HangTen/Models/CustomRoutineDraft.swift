@@ -128,6 +128,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var exercise: CustomRoutineExercise {
         get {
             if isRest { return .rest }
+            if phase == .conditioning && targets.isEmpty { return .conditioning }
             switch action {
             case .hang: return .hang
             case .isometricPull: return .isometricPull
@@ -136,8 +137,20 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         }
         set {
             let wasRest = isRest
+            let wasGeneralActivity = phase == .conditioning && targets.isEmpty
             let usesExerciseName = displayTitle == exercise.label
             switch newValue {
+            case .conditioning:
+                phase = .conditioning
+                targets = []
+                enteredDepthText = nil
+                handUse = .double
+                side = .both
+                action = .hang
+                repetitions = nil
+                externalLoadKGF = nil
+                gripType = nil
+                fingerConfiguration = nil
             case .rest:
                 phase = .rest
                 targets = []
@@ -152,11 +165,11 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
                 fingerConfiguration = nil
             case .hang, .isometricPull, .loadedLift:
                 action = switch newValue {
-                case .hang, .rest: .hang
+                case .hang, .rest, .conditioning: .hang
                 case .isometricPull: .isometricPull
                 case .loadedLift: .loadedLift
                 }
-                if wasRest || phase == .hang || phase == .pull {
+                if wasRest || wasGeneralActivity || phase == .hang || phase == .pull {
                     phase = newValue == .hang ? .hang : .pull
                 }
                 repetitions = newValue == .loadedLift ? max(repetitions ?? 1, 1) : nil
@@ -179,6 +192,9 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
         duration = value ?? 0
         if duration.isFinite && duration > 0 {
             timing = .fixed
+            activeDuration = nil
+        } else if duration == 0 {
+            if timing == .fixed { timing = .undefined }
             activeDuration = nil
         }
     }
@@ -327,8 +343,9 @@ enum CustomRoutineBoardPreview {
             accessory: draft.accessory,
             duration: draft.duration,
             phase: draft.phase,
-            segments: draft.phase == .rest
-                ? [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: draft.duration)]
+            segments: draft.exercise == .conditioning ? [] : draft.phase == .rest
+                ? [WorkoutSegment(kind: .rest, target: nil, timing: draft.duration == 0 ? .undefined : .fixed,
+                    duration: draft.duration == 0 ? nil : draft.duration)]
                 : [WorkoutSegment(kind: .work, target: workTarget, timing: draft.timing, duration: draft.timing == .fixed ? draft.duration : nil)],
             gripType: draft.gripType,
             fingerConfiguration: draft.fingerConfiguration,
@@ -521,7 +538,7 @@ struct CustomRoutineDraft: Equatable {
         return grouped
     }
 
-    /// Leaves duration unauthored until the athlete supplies it.
+    /// A new step is self-paced until the athlete supplies a timer.
     private static func newStep() -> CustomRoutineStepDraft {
         CustomRoutineStepDraft(
             id: UUID().uuidString,
@@ -531,7 +548,7 @@ struct CustomRoutineDraft: Equatable {
             duration: 0,
             phase: .hang,
             targets: [],
-            timing: .fixed,
+            timing: .undefined,
             activeDuration: nil
         )
     }
@@ -833,7 +850,7 @@ struct CustomRoutineDraft: Equatable {
             duration: definition.duration,
             phase: definition.phase,
             targets: targets,
-            timing: definition.segments.first?.timing ?? .fixed,
+            timing: definition.segments.first?.timing ?? (definition.duration == 0 ? .undefined : .fixed),
             gripType: isRest ? nil : definition.gripType,
             fingerConfiguration: isRest ? nil : definition.fingerConfiguration,
             activeDuration: definition.activeDuration,
@@ -846,7 +863,7 @@ struct CustomRoutineDraft: Equatable {
     }
 
     private static func stepDefinition(from step: CustomRoutineStepDraft) -> WorkoutStepDefinition {
-        let timing: WorkoutSegmentTiming = step.isRest ? .fixed : step.timing
+        let timing: WorkoutSegmentTiming = step.isRest ? (step.duration == 0 ? .undefined : .fixed) : step.timing
         let handUse: WorkoutHandUse = step.isRest ? .double : step.handUse
         let side: WorkoutSide = step.isRest ? .both : step.side
         let action: WorkoutAction = step.isRest ? .hang : step.action
@@ -867,7 +884,7 @@ struct CustomRoutineDraft: Equatable {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            segments: [segment],
+            segments: step.exercise == .conditioning ? [] : [segment],
             gripType: step.isRest ? nil : step.gripType,
             fingerConfiguration: step.isRest ? nil : step.fingerConfiguration,
             activeDuration: step.activeDuration,
@@ -953,7 +970,7 @@ struct CustomRoutineMetadataOptions: Equatable {
 
 /// Editor choices; persistence continues to use the existing phase and action fields.
 enum CustomRoutineExercise: CaseIterable, Hashable {
-    case hang, isometricPull, loadedLift, rest
+    case hang, isometricPull, loadedLift, rest, conditioning
 
     var label: String {
         switch self {
@@ -961,6 +978,7 @@ enum CustomRoutineExercise: CaseIterable, Hashable {
         case .isometricPull: "Isometric pull"
         case .loadedLift: "Loaded lift"
         case .rest: "Rest"
+        case .conditioning: "General activity"
         }
     }
 }

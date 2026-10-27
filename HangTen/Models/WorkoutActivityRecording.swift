@@ -879,6 +879,12 @@ struct WorkoutActivityProgress {
 
     var hasActivity: Bool { !intervals.isEmpty }
 
+    /// Marks explicit completion of an untimed navigation slot. The recorder
+    /// retains its unknown duration, rather than interpreting this as seconds.
+    mutating func completeManualStep(at offset: TimeInterval) {
+        intervals.append(offset..<(offset + 1))
+    }
+
     /// Capture before changing the clock. Repeated checkpoints of one run are idempotent.
     mutating func capture(_ state: WorkoutSessionState, planDuration: TimeInterval, at uptime: TimeInterval) {
         guard let startUptime = state.activeStartUptime,
@@ -948,7 +954,7 @@ struct WorkoutActivityRecorder {
         var result: [RecordedActivitySegment] = []
         var stepStart: TimeInterval = 0
         for recordedStep in recordingSteps {
-            defer { stepStart += recordedStep.duration }
+            defer { stepStart += recordedStep.timelineDuration }
             if activityIntervals == nil, let elapsed, stepStart >= elapsed { break }
             var segmentStart: TimeInterval? = stepStart
             for (index, segment) in recordedStep.segments.enumerated() {
@@ -970,7 +976,7 @@ struct WorkoutActivityRecorder {
                 let performedDuration: TimeInterval?
                 if let activityIntervals, let segmentStart {
                     let end = followingSegmentStart(after: index, in: recordedStep,
-                        stepStart: stepStart, currentStart: segmentStart) ?? (stepStart + recordedStep.duration)
+                        stepStart: stepStart, currentStart: segmentStart) ?? (stepStart + recordedStep.timelineDuration)
                     guard end > segmentStart else { continue }
                     let performed = WorkoutActivityProgress.duration(
                         in: segmentStart..<end, intervals: activityIntervals
@@ -1248,7 +1254,7 @@ struct WorkoutActivityRecorder {
         guard !step.isRestStep else { return step }
         let boardIsOneHanded = board.isOneHanded
         if step.segments.contains(where: { $0.target?.planTasks != nil }) { return step }
-        guard step.handUse == .either || (step.handUse == .double && boardIsOneHanded) else { return step }
+        guard WorkoutSessionHandResolver.stepNeedsHandResolution(step, boardIsOneHanded: boardIsOneHanded) else { return step }
         guard selectedHandSide == .left || selectedHandSide == .right else {
             throw WorkoutActivityRecordingError.handSideRequired(stepID: step.id)
         }

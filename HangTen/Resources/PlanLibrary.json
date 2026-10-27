@@ -19978,6 +19978,176 @@
         }
       ],
       "title": "Orientation 3 · Sloper · 5/5"
+    },
+    {
+      "id": "warmup.lattice.progressive.guide",
+      "title": "Lattice · Progressive warm-up",
+      "steps": [
+        {
+          "id": "warmup.lattice.build",
+          "title": "Progressive sets",
+          "instruction": "Gradually build to your working load over 3–4 sets. Do not start at your working load.",
+          "accessory": "3–4 sets · self-paced",
+          "phase": "conditioning"
+        }
+      ]
+    },
+    {
+      "id": "warmup.beastmaker.general.guide",
+      "title": "Beastmaker · General warm-up",
+      "steps": [
+        {
+          "id": "warmup.beastmaker.minimum",
+          "title": "Wall or fingerboard warm-up",
+          "instruction": "Warm up on the climbing wall or fingerboard for at least 15 minutes. Take your time.",
+          "accessory": "At least 15 min",
+          "phase": "conditioning",
+          "duration": 900
+        },
+        {
+          "id": "warmup.beastmaker.ready",
+          "title": "Finish warming up",
+          "instruction": "Continue warming up if needed before beginning intense finger training.",
+          "accessory": "Advance when warmed up",
+          "phase": "conditioning"
+        }
+      ]
+    },
+    {
+      "id": "warmup.climbing.bouldering.guide",
+      "title": "Climbing · Boulder pyramid warm-up",
+      "steps": [
+        {
+          "id": "warmup.climbing.cardio",
+          "title": "Light cardio",
+          "instruction": "Walk, cycle or jog for 10 minutes.",
+          "accessory": "10 min",
+          "phase": "conditioning",
+          "duration": 600
+        },
+        {
+          "id": "warmup.climbing.neck",
+          "title": "Head rolls",
+          "instruction": "Relax your head forward; slowly circle five times each way.",
+          "accessory": "5 each direction",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.shoulders",
+          "title": "Windmills",
+          "instruction": "Make five controlled arm circles each way, one arm at a time, then smaller circles forward and backward with both arms.",
+          "accessory": "Controlled circles",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.twists",
+          "title": "Side twists",
+          "instruction": "With knees bent and feet grounded, lift your upper body slightly. Twist at least five times each side, rest one minute and repeat.",
+          "accessory": "Two rounds · 1 min between",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.lunges",
+          "title": "Walking lunges",
+          "instruction": "Alternate walking lunges, about 10 on each leg.",
+          "accessory": "About 10 per leg",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.easy",
+          "title": "Easy boulders",
+          "instruction": "Climb several problems well below your limit. Drop a grade if they feel pumpy or strenuous.",
+          "accessory": "",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.rest-1",
+          "title": "Rest",
+          "instruction": "Rest about five minutes.",
+          "accessory": "About 5 min",
+          "phase": "rest",
+          "duration": 300,
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 300
+            }
+          ]
+        },
+        {
+          "id": "warmup.climbing.moderate",
+          "title": "Moderate boulders",
+          "instruction": "Climb a few problems two to three grades below your limit.",
+          "accessory": "",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.depump",
+          "title": "Recover",
+          "instruction": "Rest a few minutes until the pump has cleared.",
+          "accessory": "Advance when recovered",
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "undefined"
+            }
+          ]
+        },
+        {
+          "id": "warmup.climbing.final",
+          "title": "Project-style boulder",
+          "instruction": "Climb just below your limit in the style of today’s project.",
+          "accessory": "",
+          "phase": "conditioning"
+        },
+        {
+          "id": "warmup.climbing.rest-final",
+          "title": "Final rest",
+          "instruction": "Rest 10 minutes before your bouldering session.",
+          "accessory": "10 min",
+          "phase": "rest",
+          "duration": 600,
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 600
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.ccc.rope-practice.guide",
+      "title": "California Climbing Collective · Rope warm-up",
+      "steps": [
+        {
+          "id": "warmup.ccc.phase-1",
+          "title": "General preparation and easy climbing",
+          "instruction": "Split this phase between cardio/mobility and easy climbing. Cardio checklist: 100 jump-rope reps; burpees, 3 sets of 7; 50 high knees; jump squats, 3 sets of 10. Spend five minutes on hips, shoulders and legs: gates, skaters, scapular push-ups, band pull-aparts, overhead band rolls and arm circles. Climb easily for 10 minutes on large holds, using 10–15-move sequences, precise footwork and steady breathing. Introduce a light pump and recover.",
+          "accessory": "Practice · 20 min",
+          "phase": "conditioning",
+          "duration": 1200
+        },
+        {
+          "id": "warmup.ccc.phase-2",
+          "title": "Holds and movement variety",
+          "instruction": "Use 5–7-move sequences across hold types. Deliberately place hands and thumbs; explore movement styles at moderate intensity. Include a 2–4-minute circuit or four up-down-ups. Build an appropriate pump without exhausting yourself.",
+          "accessory": "Practice · 15 min",
+          "phase": "conditioning",
+          "duration": 900
+        },
+        {
+          "id": "warmup.ccc.phase-3",
+          "title": "Harder sequences and commitment",
+          "instruction": "Use 5–10-move crux sequences, including simple hard moves and complex movement. Rest generously and avoid fatigue. Include both pushing and pulling.",
+          "accessory": "Practice · 15 min",
+          "phase": "conditioning",
+          "duration": 900
+        }
+      ]
     }
   ],
   "metadata": {
@@ -25649,6 +25819,118 @@
           "repeaters"
         ]
       }
+    },
+    {
+      "id": "warmup.lattice.progressive",
+      "metadata": {
+        "title": "Lattice · Progressive warm-up",
+        "subtitle": "Build to your finger-training load over 3–4 sets.",
+        "level": "Warm-up",
+        "sourceLabel": "Lattice · Finger Strength Training for Climbers",
+        "sourceURL": "https://www.latticetraining.com/blog/how-to-manage-finger-strength-for-climbers",
+        "provenance": "adapted",
+        "category": "warmup",
+        "focus": "warmUp",
+        "workoutLabels": [
+          "warm-up"
+        ],
+        "tags": [
+          "built-in"
+        ],
+        "notes": [
+          "A standalone extract of the warm-up guidance, not the article’s strength-training protocol. The source supplies no hang times, rests, grip, hold, or load increments for these sets.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ]
+      },
+      "blocks": [
+        {
+          "blockID": "warmup.lattice.progressive.guide"
+        }
+      ]
+    },
+    {
+      "id": "warmup.beastmaker.general",
+      "metadata": {
+        "title": "Beastmaker · General warm-up",
+        "subtitle": "At least 15 minutes on a wall or fingerboard.",
+        "level": "Warm-up",
+        "sourceLabel": "Ned Feehally · Finger Board Training, p. 3",
+        "sourceURL": "https://www.beaconclimbing.com/wp-content/uploads/Beastmaker-Beacon-Training-Manual.pdf",
+        "provenance": "adapted",
+        "category": "warmup",
+        "focus": "warmUp",
+        "workoutLabels": [
+          "warm-up"
+        ],
+        "tags": [
+          "built-in"
+        ],
+        "notes": [
+          "The minimum 15-minute period is timed; the final self-paced step preserves the source’s requirement to warm up fully. The source prescribes no particular warm-up holds or exercises.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ]
+      },
+      "blocks": [
+        {
+          "blockID": "warmup.beastmaker.general.guide"
+        }
+      ]
+    },
+    {
+      "id": "warmup.climbing.bouldering",
+      "metadata": {
+        "title": "Climbing · Boulder pyramid warm-up",
+        "subtitle": "Cardio, mobility and progressively harder boulders · requires a climbing wall.",
+        "level": "Warm-up",
+        "sourceLabel": "Climbing · Warm-up Pyramid",
+        "sourceURL": "https://www.climbing.com/skills/warm-up-pyramid/",
+        "provenance": "adapted",
+        "category": "warmup",
+        "focus": "warmUp",
+        "workoutLabels": [
+          "warm-up"
+        ],
+        "tags": [
+          "built-in"
+        ],
+        "notes": [
+          "Bouldering branch only. The roughly five-minute recovery uses a five-minute timer; mobility, climbing and recovery without an exact duration remain self-paced. Requires a wall, not just a hangboard.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ]
+      },
+      "blocks": [
+        {
+          "blockID": "warmup.climbing.bouldering.guide"
+        }
+      ]
+    },
+    {
+      "id": "warmup.ccc.rope-practice",
+      "metadata": {
+        "title": "California Climbing Collective · Rope warm-up",
+        "subtitle": "Three practice phases · requires a climbing wall.",
+        "level": "Warm-up",
+        "sourceLabel": "California Climbing Collective · ISO Warm-up Checklist",
+        "sourceURL": "https://www.californiaclimbingcollective.com/ropewarmup",
+        "provenance": "adapted",
+        "category": "warmup",
+        "focus": "warmUp",
+        "workoutLabels": [
+          "warm-up"
+        ],
+        "tags": [
+          "built-in"
+        ],
+        "notes": [
+          "Uses the source’s practice phase windows of 20, 15 and 15 minutes. The longer competition windows are not used. Tasks remain a checklist inside each phase; no individual exercise timing is invented. Requires a wall.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ]
+      },
+      "blocks": [
+        {
+          "blockID": "warmup.ccc.rope-practice.guide"
+        }
+      ]
     }
   ]
 }

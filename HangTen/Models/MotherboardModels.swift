@@ -324,6 +324,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     let completedRepetitions: Int?
     let externalLoadKGF: Double?
     let isRest: Bool
+    let isGeneralActivity: Bool
 
     enum Status: String, Codable {
         case measured
@@ -334,6 +335,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
     private enum CodingKeys: String, CodingKey {
         case stepID, plannedActiveDuration, intervals, peakLoadKGF, sampleCount, status
         case handUse, side, action, repetitions, completedRepetitions, externalLoadKGF, isRest
+        case isGeneralActivity
     }
 
     init(
@@ -349,7 +351,8 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         repetitions: Int? = nil,
         completedRepetitions: Int? = nil,
         externalLoadKGF: Double? = nil,
-        isRest: Bool = false
+        isRest: Bool = false,
+        isGeneralActivity: Bool = false
     ) {
         self.stepID = stepID
         self.plannedActiveDuration = plannedActiveDuration
@@ -364,6 +367,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         self.completedRepetitions = completedRepetitions
         self.externalLoadKGF = externalLoadKGF
         self.isRest = isRest
+        self.isGeneralActivity = isGeneralActivity
     }
 
     init(from decoder: Decoder) throws {
@@ -381,6 +385,7 @@ struct WorkoutStepMeasurement: Codable, Equatable {
         completedRepetitions = try container.decodeIfPresent(Int.self, forKey: .completedRepetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
         isRest = try container.decodeIfPresent(Bool.self, forKey: .isRest) ?? false
+        isGeneralActivity = try container.decodeIfPresent(Bool.self, forKey: .isGeneralActivity) ?? false
     }
 
     var actualLoadedDuration: TimeInterval {

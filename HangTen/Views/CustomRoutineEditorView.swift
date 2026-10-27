@@ -488,10 +488,13 @@ struct CustomRoutineEditorView: View {
         } else if CustomRoutineValidator.terminalRestIssue(for: definition) == .terminalRestStep {
             issues.append("End the routine with a work step.")
         }
-        for (index, step) in definition.steps.enumerated() where !step.duration.isFinite || step.duration <= 0 {
+        for (index, step) in definition.steps.enumerated()
+        where !step.duration.isFinite || step.duration < 0 ||
+            (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
             issues.append("Step \(index + 1) needs a positive duration.")
         }
-        for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.workRequirements.isEmpty {
+        for (index, step) in definition.steps.enumerated()
+        where step.phase != .rest && step.phase != .conditioning && step.workRequirements.isEmpty {
             issues.append("Step \(index + 1) needs a hold target.")
         }
         for (index, step) in definition.steps.enumerated()
@@ -584,7 +587,7 @@ private struct CustomRoutineStepEditor: View {
 
                 CustomRoutineField("Time") {
                     HStack(spacing: 6) {
-                        TextField("", value: durationBinding, format: .number)
+                        TextField("Self-paced", value: durationBinding, format: .number)
                             .keyboardType(.decimalPad)
                             .accessibilityLabel("Time in seconds")
                             .accessibilityIdentifier("customRoutine.stepDuration")
@@ -598,7 +601,7 @@ private struct CustomRoutineStepEditor: View {
                         .foregroundStyle(.secondary)
                 }
 
-                if !step.isRest {
+                if !step.isRest && step.exercise != .conditioning {
                     editorGroup("Hands & holds") {
                         Picker("Hands", selection: $step.handChoice) {
                             ForEach(CustomRoutineHandChoice.allCases, id: \.self) { choice in
@@ -712,9 +715,9 @@ private struct CustomRoutineStepEditor: View {
     private var stepSummary: String {
         var parts = [
             step.exercise.label,
-            step.duration > 0 ? "\(step.duration.formatted()) sec" : "Set duration",
+            step.duration > 0 ? "\(step.duration.formatted()) sec" : "Self-paced",
         ]
-        if !step.isRest {
+        if !step.isRest && step.exercise != .conditioning {
             parts.append(step.handChoice.label)
             if let kind = step.targets.first?.kind { parts.append(kind.label) }
             if let count = step.fingerCount { parts.append(count == 1 ? "1 finger" : "\(count) fingers") }
@@ -727,7 +730,7 @@ private struct CustomRoutineStepEditor: View {
         switch step.exercise {
         case .hang: "e.g. Jug hang"
         case .rest: "e.g. Rest"
-        case .isometricPull, .loadedLift: ""
+        case .isometricPull, .loadedLift, .conditioning: ""
         }
     }
 
@@ -735,7 +738,7 @@ private struct CustomRoutineStepEditor: View {
         switch step.exercise {
         case .hang: "e.g. Hang from the jugs for 15 seconds."
         case .rest: "e.g. Rest before the next hang."
-        case .isometricPull, .loadedLift: ""
+        case .isometricPull, .loadedLift, .conditioning: ""
         }
     }
 

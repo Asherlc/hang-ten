@@ -112,7 +112,7 @@ struct WorkoutView: View {
 	}
 
 	private var sessionDuration: TimeInterval {
-		activeSteps.reduce(0) { $0 + $1.duration }
+		timeline.duration
 	}
 
 	private var timeline: WorkoutTimeline {
@@ -415,6 +415,7 @@ struct WorkoutView: View {
 			)
 		}
 		.onAppear {
+			sessionState.manualStepStartOffsets = timeline.manualStepStartOffsets
 			UIApplication.shared.isIdleTimerDisabled = true
 			configureRecorder()
 			if planNeedsHandChoice {
@@ -433,7 +434,7 @@ struct WorkoutView: View {
 				   requestedStep > 1 {
 						sessionState.pausedElapsed = activeSteps
 							.prefix(min(requestedStep - 1, activeSteps.count))
-							.reduce(0) { $0 + $1.duration }
+							.reduce(0) { $0 + $1.timelineDuration }
                     // The completion fixture represents a fully performed workout.
                     // Ordinary step previews do not simulate earlier activity.
                     if requestedStep > activeSteps.count, sessionDuration > 0 {
@@ -873,7 +874,8 @@ struct WorkoutView: View {
                 phaseIndicator(step: step, countdown: countdown, isResting: isResting)
                 WorkoutTimerView(
                     remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: false),
-                    compact: true
+                    compact: true,
+                    isUntimed: step.requiresManualAdvance && countdown == 0
                 )
                 if planNeedsHandChoice {
                     handPreferenceMenu()
@@ -1034,7 +1036,8 @@ struct WorkoutView: View {
         countdown: Int,
         isComplete: Bool
     ) -> some View {
-        WorkoutTimerView(remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete))
+        WorkoutTimerView(remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete),
+            isUntimed: step.requiresManualAdvance && countdown == 0 && !isComplete)
     }
 
     private func timerRemaining(step: WorkoutStep, stepElapsed: TimeInterval, countdown: Int, isComplete: Bool) -> TimeInterval {
@@ -1151,6 +1154,8 @@ struct WorkoutView: View {
             stepLabel: "\(step.number): \(step.title)",
             isEnabled: canNavigate,
             compact: compact,
+            title: step.requiresManualAdvance
+                ? (step.id == activeSteps.last?.id ? "Finish" : "Next step") : "Skip step",
             action: skipCurrentStep
         )
     }
@@ -1573,9 +1578,9 @@ struct WorkoutView: View {
         let recordingElapsed = elapsed ?? currentElapsed(at: monotonicTime)
         var stepStart: TimeInterval = 0
         let recordingSteps = activeSteps.filter { step in
-            defer { stepStart += step.duration }
+            defer { stepStart += step.timelineDuration }
             return WorkoutActivityProgress.duration(
-                in: stepStart..<(stepStart + step.duration), intervals: activityProgress.intervals
+                in: stepStart..<(stepStart + step.timelineDuration), intervals: activityProgress.intervals
             ) > 0 || completedStopwatchDurations.contains { key, duration in
                 key.stepID == step.id && duration > 0
             } || liftCompletion.completedRepetitions(for: step) > 0
@@ -1612,7 +1617,8 @@ struct WorkoutView: View {
 				externalLoadKGF: step.action == .loadedLift
 					? liftCompletion.externalLoadKGF(for: step)
 					: step.externalLoadKGF,
-				isRest: step.isRestStep
+				isRest: step.isRestStep,
+				isGeneralActivity: step.isGeneralActivity
 			)
 		}
 		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-recordingElapsed)
@@ -1785,6 +1791,12 @@ struct WorkoutView: View {
         guard let decision = sessionState.skipDecision(
             timeline: timeline, planDuration: sessionDuration, at: monotonicTime
         ) else { return }
+        let elapsed = currentElapsed(at: monotonicTime)
+        let current = step(at: elapsed)
+        if current.requiresManualAdvance,
+           let offset = timeline.startOffset(for: current.id) {
+            activityProgress.completeManualStep(at: offset)
+        }
         finalizeCurrentStopwatch(at: monotonicTime)
         audioCoach.stop()
         switch decision {
@@ -1798,14 +1810,15 @@ struct WorkoutView: View {
 	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
 		var cursor: TimeInterval = 0
         for step in activeSteps {
-            if elapsed < cursor + step.duration {
+            if elapsed < cursor + step.timelineDuration {
                 return cursor
             }
-            cursor += step.duration
+            cursor += step.timelineDuration
 		}
-		return max(0, cursor - (activeSteps.last?.duration ?? 0))
+		return max(0, cursor - (activeSteps.last?.timelineDuration ?? 0))
 	}
 	private func initializeStopwatches() {
+		sessionState.manualStepStartOffsets = timeline.manualStepStartOffsets
 		for step in activeSteps {
 			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
 				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
@@ -1869,6 +1882,8 @@ struct WorkoutView: View {
     }
 
     private func intervalLabel(for step: WorkoutStep) -> String {
+        if step.requiresManualAdvance { return "Self-paced" }
+        if step.phase == .conditioning { return "Conditioning" }
         if step.phase == .rest {
             return step.phase.label
         }
@@ -1908,6 +1923,7 @@ struct WorkoutView: View {
 				countdownKind: sessionState.countdownKind
 			)
 		}
+		guard !step.requiresManualAdvance else { return nil }
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)

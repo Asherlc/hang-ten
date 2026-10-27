@@ -40,6 +40,7 @@ struct WorkoutSkipControl: View {
     let stepLabel: String
     let isEnabled: Bool
     var compact = false
+    var title = "Skip step"
     let action: () -> Void
 
     var body: some View {
@@ -48,7 +49,7 @@ struct WorkoutSkipControl: View {
                 if compact {
                     Image(systemName: "forward.fill")
                 } else {
-                    Label("Skip step", systemImage: "forward.fill")
+                    Label(title, systemImage: "forward.fill")
                 }
             }
             .frame(maxWidth: .infinity)
@@ -60,7 +61,7 @@ struct WorkoutSkipControl: View {
         }
         .buttonStyle(.plain)
         .disabled(!isEnabled)
-        .accessibilityLabel("Skip step \(stepLabel)")
+        .accessibilityLabel("\(title) \(stepLabel)")
         .accessibilityIdentifier("workout.skipStep")
     }
 }

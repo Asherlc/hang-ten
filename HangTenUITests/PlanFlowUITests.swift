@@ -13,6 +13,24 @@ final class WorkoutEndUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
+    func testSelfPacedWarmupWaitsThroughPauseResumeUntilFinish() {
+        let app = openWorkout(URL(string: "hangten://plan/warmup.lattice.progressive/workout")!,
+            historyTitle: "Lattice · Progressive warm-up")
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "Self-paced")
+        Thread.sleep(forTimeInterval: 2)
+        XCTAssertFalse(app.navigationBars["Summary"].exists)
+        app.buttons["Pause"].tap()
+        XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+        app.buttons["Resume"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "Self-paced")
+        attachScreenshot(named: "Warm-up waits for explicit Finish")
+        app.buttons["workout.skipStep"].tap()
+        XCTAssertTrue(app.navigationBars["Summary"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Progressive sets"].exists)
+        attachScreenshot(named: "Explicitly completed self-paced warm-up")
+    }
+
     func testEndOffersSaveDiscardAndKeepTraining() {
         let app = openWorkout()
         app.buttons["workout.end"].tap()

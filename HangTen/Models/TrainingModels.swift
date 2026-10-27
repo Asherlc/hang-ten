@@ -1809,6 +1809,22 @@ struct WorkoutStep: Identifiable, Hashable {
         return min(timedWorkDuration ?? duration, duration)
     }
 
+    /// Zero means there is no enclosing timer. A positive source cycle may
+    /// still contain unspecified work (for example, tasks within a minute).
+    var requiresManualAdvance: Bool {
+        duration == 0 && ((phase == .conditioning && segments.isEmpty) ||
+            (segments.count == 1 && segments[0].timing != .fixed))
+    }
+
+    var isGeneralActivity: Bool {
+        phase == .conditioning && workRequirements.isEmpty
+            && segments.allSatisfy { $0.target == nil || $0.target?.isSelfSelected == true }
+    }
+
+    /// A navigation coordinate, never a prescribed or recorded duration.
+    /// Untimed steps need distinct locations so seeking and mixed plans work.
+    var timelineDuration: TimeInterval { requiresManualAdvance ? 1 : duration }
+
     var isRestStep: Bool {
         phase == .rest
     }
@@ -1818,6 +1834,7 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 
     var durationLabel: String {
+        if requiresManualAdvance { return "Self-paced" }
         let seconds = Int(duration)
         let minutes = seconds / 60
         let remainder = seconds % 60
@@ -1930,6 +1947,13 @@ struct TrainingPlan: Identifiable, Hashable {
     }
 
     var durationLabel: String {
+        if steps.contains(where: \.requiresManualAdvance) {
+            if duration == 0 { return "Self-paced" }
+            let minutes = Int(duration) / 60
+            let seconds = Int(duration) % 60
+            let timed = seconds == 0 ? "\(minutes) min" : "\(minutes)m \(seconds)s"
+            return "\(timed) + self-paced"
+        }
         let minutes = Int(duration) / 60
         let seconds = Int(duration) % 60
         if seconds == 0 {

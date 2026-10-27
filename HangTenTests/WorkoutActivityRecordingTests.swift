@@ -5,6 +5,32 @@ import Combine
 
 @MainActor
 final class WorkoutActivityRecordingTests: XCTestCase {
+    func testGeneralWarmUpDoesNotRequireAHandChoiceOnAOneHandedBoard() throws {
+        let oneHanded = try XCTUnwrap(BoardCatalog.all.first(where: \.isOneHanded))
+        let warmUp = try XCTUnwrap(PlanCatalog.all.first { $0.id == "warmup.lattice.progressive" })
+        XCTAssertFalse(WorkoutSessionHandResolver.needsHandChoice(plan: warmUp, board: oneHanded))
+        XCTAssertNoThrow(try WorkoutActivityRecorder().segments(for: warmUp, on: oneHanded,
+            activityIntervals: [0..<1]))
+    }
+    func testManualCompletionRecordsUnknownDurationAndKeepsFollowingTimedOffsets() throws {
+        let untimed = WorkoutStep(id: "untimed", number: 1, title: "Task", instruction: "",
+            accessory: "", duration: 0, phase: .hang,
+            segments: [.init(kind: .work, target: .selfSelected, timing: .undefined, duration: nil)])
+        let timed = WorkoutStep(id: "timed", number: 2, title: "Task", instruction: "",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [.init(kind: .work, target: .selfSelected, timing: .fixed, duration: 10)])
+        let plan = TrainingPlan(id: "manual-test", title: "Manual", subtitle: "", level: "",
+            sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: board.id, steps: [untimed, timed])
+        var progress = WorkoutActivityProgress()
+        progress.completeManualStep(at: 0)
+        let records = try WorkoutActivityRecorder().segments(for: plan, on: board,
+            activityIntervals: progress.intervals + [1..<6])
+        XCTAssertEqual(records.map(\.stepID), ["untimed", "timed"])
+        XCTAssertNil(records[0].durationSeconds)
+        XCTAssertEqual(records[1].durationSeconds, 5)
+        XCTAssertTrue(try WorkoutActivityRecorder().segments(for: plan, on: board,
+            activityIntervals: []).isEmpty, "Unperformed manual work is omitted.")
+    }
     func testRecordingKeepsOnlyPerformedTaskAssignmentsInOrder() throws {
         let step = WorkoutStep(
             id: "two-tasks", number: 1, title: "Two tasks", instruction: "Move holds.",

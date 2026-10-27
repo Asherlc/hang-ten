@@ -3,6 +3,18 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testUntimedDefinitionsOmitDurationWithoutInventingATimer() throws {
+        let json = #"{"id":"manual","title":"Task","instruction":"Follow the source.","accessory":"","phase":"hang","segments":[{"kind":"work","target":{"tasks":[[{"target":"any"}]]},"timing":"undefined"}]}"#
+        let definition = try JSONDecoder().decode(WorkoutStepDefinition.self, from: Data(json.utf8))
+        XCTAssertEqual(definition.duration, 0)
+        XCTAssertTrue(definition.resolvedStep().requiresManualAdvance)
+        let library = makeLibrary(steps: [definition], provenance: .custom, sourceURL: nil)
+        XCTAssertTrue(library.validationIssues(availableBoards: []).isEmpty)
+        let fixed = json.replacingOccurrences(of: "undefined", with: "fixed")
+        let invalid = try JSONDecoder().decode(WorkoutStepDefinition.self, from: Data(fixed.utf8))
+        XCTAssertFalse(makeLibrary(steps: [invalid], provenance: .custom, sourceURL: nil)
+            .validationIssues(availableBoards: []).isEmpty)
+    }
 
     func testRepeatedBlockPreservesExactPerRunIDsAndTitles() throws {
         let step = WorkoutStepDefinition(
@@ -42,6 +54,10 @@ final class PlanStorageTests: XCTestCase {
         // original ID/title, metadata field, ordered target, cue and duration.
         // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
+            "warmup.lattice.progressive": "d4af54884cc1006beee3aac6ace98f38358b95dd22a3e9c4092fdb19c786a557",
+            "warmup.beastmaker.general": "9b1db8570270e23021cf00db9a60949a5ac677c8e136676a0d33caf77cd382ad",
+            "warmup.climbing.bouldering": "a38d18e81815c39b5004a1967fc58218ff1333f6cf864550d7b5bd1e25ba98a8",
+            "warmup.ccc.rope-practice": "6a2d2b0740d8f093e3f97d2ddc1f90de5acb26c05880b660de3622121c417dc8",
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
             "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
@@ -2656,7 +2672,8 @@ final class PlanStorageTests: XCTestCase {
                 $0.id != "rptc.seven-three-repeaters" &&
                     $0.id != "research.megos-one-arm-7-3" &&
                     !["beastmaker-repeaters", "tension-6-and-10", "rock-prodigy.pivot-introductory", "rock-prodigy.pivot-intermediate"].contains($0.id) &&
-                    $0.id != "research.abrahangs"
+                    $0.id != "research.abrahangs" &&
+                    $0.id != "warmup.climbing.bouldering"
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)

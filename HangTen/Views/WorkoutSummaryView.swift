@@ -78,6 +78,7 @@ enum WorkoutSummaryFormatting {
         unit: MotherboardForceUnit
     ) -> String {
         guard !step.isRest else { return "Rest" }
+        if step.isGeneralActivity { return "General activity" }
         let side: String
         switch step.side {
         case .left: side = "Left hand"
@@ -372,7 +373,7 @@ private struct WorkoutSummaryContent: View {
             }
 
             HStack {
-                summaryValue(title: "Planned", value: step.plannedActiveDuration.durationText)
+                summaryValue(title: "Planned", value: step.plannedActiveDuration == 0 ? "Unspecified" : step.plannedActiveDuration.durationText)
                 if showsMeasuredLoad {
                     Spacer()
                     summaryValue(title: "Loaded", value: step.actualLoadedDuration.durationText)

@@ -58,7 +58,7 @@ enum PlanSourcePresentationContent {
 
 enum WorkoutLabelPresentationContent {
     static func displayLabels(for labels: [String]) -> [String] {
-        labels.map { $0.replacingOccurrences(of: "-", with: " ").capitalized }
+        labels.map { $0 == "warm-up" ? "Warm-up" : $0.replacingOccurrences(of: "-", with: " ").capitalized }
     }
 }
 
