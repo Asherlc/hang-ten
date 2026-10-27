@@ -1155,7 +1155,7 @@ struct WorkoutView: View {
 
     private func repetitionControls(for step: WorkoutStep, canNavigate: Bool) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Actual reps").font(.footnote.bold()).foregroundStyle(.secondary)
+            Text("Reps").font(.footnote.bold()).foregroundStyle(.secondary)
             ForEach(step.displayedRepTargets) { target in
                 if target.isOptional {
                     Toggle(target.title, isOn: Binding(
@@ -1182,7 +1182,7 @@ struct WorkoutView: View {
                         .multilineTextAlignment(.center)
                         .textFieldStyle(.roundedBorder)
                         .frame(width: 82)
-                        .accessibilityLabel("Actual reps, \(target.title)")
+                        .accessibilityLabel("Reps, \(target.title)")
                         .accessibilityIdentifier("workout.actualReps.\(target.id)")
                     }
                 }

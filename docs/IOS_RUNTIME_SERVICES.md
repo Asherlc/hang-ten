@@ -48,7 +48,7 @@ was authored; older session records retain their previous defaults.
 The four source-linked warm-up guides appear under Warm-ups and retain their
 audited [source mapping](source-audits/2026-10-27-warmups.md).
 
-Rep-based work exposes Actual reps with the published target prefilled. Ranges
+Rep-based work exposes Reps with the published target prefilled. Ranges
 retain both bounds and prefill the lower bound; an unspecified count starts
 blank. Optional alternatives start unselected. Zero and above-target counts
 are accepted. Editing a count, recording it, or explicitly completing the work
