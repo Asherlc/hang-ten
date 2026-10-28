@@ -104,6 +104,20 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(progress.results(for: step).map(\.completed), [10, 7, 20])
     }
 
+    func testCycleCompletionRejectsStaleStepsAtAndAfterTheMinuteBoundary() {
+        let cycle = WorkoutStep(id: "cycle", number: 1, title: "Minute", instruction: "", accessory: "",
+            duration: 60, phase: .conditioning, restsAfterCompletion: true)
+        let next = WorkoutStep(id: "next", number: 2, title: "Next", instruction: "", accessory: "",
+            duration: 60, phase: .conditioning, restsAfterCompletion: true)
+        let timeline = WorkoutTimeline(steps: [cycle, next])
+        XCTAssertEqual(WorkoutCycleCompletion.restWindow(for: cycle, in: timeline, at: 59), 59..<60)
+        XCTAssertNil(WorkoutCycleCompletion.restWindow(for: cycle, in: timeline, at: 60))
+        XCTAssertNil(WorkoutCycleCompletion.restWindow(for: cycle, in: timeline, at: 62))
+        XCTAssertNil(WorkoutCycleCompletion.restWindow(for: next, in: timeline, at: 59))
+        XCTAssertEqual(WorkoutCycleCompletion.restWindow(for: next, in: timeline, at: 62), 62..<120)
+        XCTAssertNil(WorkoutCycleCompletion.restWindow(for: next, in: timeline, at: 120))
+    }
+
     func testCompletingCycleWorkStartsRestWithoutMovingTheMinuteDeadline() {
         let step = WorkoutStep(id: "cycle", number: 1, title: "Minute", instruction: "", accessory: "",
             duration: 60, phase: .conditioning, restsAfterCompletion: true)

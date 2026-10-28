@@ -1892,16 +1892,17 @@ struct WorkoutView: View {
 
     private func completeCycleWork(_ step: WorkoutStep) {
         let uptime = WorkoutClock.monotonicTime
-        guard canNavigate(at: uptime), repProgress.canConfirm(step) else { return }
+        let elapsed = currentElapsed(at: uptime)
+        guard canNavigate(at: uptime), repProgress.canConfirm(step),
+              let restWindow = WorkoutCycleCompletion.restWindow(for: step, in: timeline, at: elapsed)
+        else { return }
         activityProgress.capture(sessionState, planDuration: sessionDuration, at: uptime)
         repProgress.confirm(step)
         focusedRepField = nil
-        cycleCompletion.complete(step, at: elapsedInStep(at: currentElapsed(at: uptime)))
-        if let start = timeline.startOffset(for: step.id) {
-            sessionState.cycleRestWindows[step.id] = currentElapsed(at: uptime)..<(start + step.duration)
-        }
+        cycleCompletion.complete(step, at: elapsedInStep(at: elapsed))
+        sessionState.cycleRestWindows[step.id] = restWindow
         finalizeCurrentStopwatch(at: uptime)
-        recorder.pause(at: currentElapsed(at: uptime))
+        recorder.pause(at: elapsed)
         audioCoach.stop()
     }
 

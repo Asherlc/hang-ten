@@ -713,6 +713,15 @@ struct WorkoutRepProgress: Equatable {
 struct WorkoutCycleCompletion: Equatable {
     private(set) var workEndByStepID: [String: TimeInterval] = [:]
 
+    static func restWindow(for step: WorkoutStep, in timeline: WorkoutTimeline,
+                           at elapsed: TimeInterval) -> Range<TimeInterval>? {
+        guard step.restsAfterCompletion, elapsed.isFinite,
+              timeline.step(at: elapsed)?.id == step.id,
+              let start = timeline.startOffset(for: step.id),
+              elapsed >= start, elapsed < start + step.duration else { return nil }
+        return elapsed..<(start + step.duration)
+    }
+
     mutating func complete(_ step: WorkoutStep, at elapsed: TimeInterval) {
         guard step.restsAfterCompletion, elapsed.isFinite else { return }
         workEndByStepID[step.id] = min(step.duration, max(0, elapsed))
