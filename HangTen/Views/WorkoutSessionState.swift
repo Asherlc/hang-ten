@@ -196,6 +196,11 @@ enum WorkoutCountdownIntervalPolicy {
 		var reachedStart = false
 
 		for step in steps {
+			if step.requiresManualAdvance {
+				if reachedStart || cursor >= startElapsed { return result }
+				cursor += step.timelineDuration
+				continue
+			}
 			let durations: [TimeInterval]
 			if step.phase == .rest || !step.hasRestInterval {
 				durations = [step.duration]
@@ -356,6 +361,10 @@ struct WorkoutSessionState: Equatable {
     var countdownKind: WorkoutCountdownKind?
     var pausedElapsed: TimeInterval
     var routineStartedAt: Date?
+    var manualStepStartOffsets: [TimeInterval] = []
+    /// Rest windows for this pass through source cycles. The execution ledger
+    /// captures their actual intersections before navigation rebases the clock.
+    var cycleRestWindows: [String: Range<TimeInterval>] = [:]
 
     init(
         activeStartUptime: TimeInterval? = nil,
@@ -371,7 +380,11 @@ struct WorkoutSessionState: Equatable {
 
     func currentElapsed(planDuration: TimeInterval, at uptime: TimeInterval) -> TimeInterval {
         let activeElapsed = activeStartUptime.map { max(0, uptime - $0) } ?? 0
-        return min(planDuration, pausedElapsed + max(0, activeElapsed))
+        let proposed = min(planDuration, pausedElapsed + max(0, activeElapsed))
+        // A manual step is a barrier, including after a long suspension or a
+        // delayed UI update. Only explicit navigation rebases past it.
+        let boundary = manualStepStartOffsets.first { $0 >= pausedElapsed }
+        return min(proposed, boundary ?? planDuration)
     }
 
     func countdownRemaining(at uptime: TimeInterval) -> Int {
@@ -403,7 +416,7 @@ struct WorkoutSessionState: Equatable {
                 cancelCountdown(at: uptime)
                 return
             }
-            pausedElapsed += max(0, uptime - activeStartUptime)
+            pausedElapsed = currentElapsed(planDuration: .greatestFiniteMagnitude, at: uptime)
             self.activeStartUptime = nil
             countdownKind = nil
         } else {
@@ -443,7 +456,7 @@ struct WorkoutSessionState: Equatable {
             return
         }
 
-        pausedElapsed += max(0, uptime - activeStartUptime)
+        pausedElapsed = currentElapsed(planDuration: .greatestFiniteMagnitude, at: uptime)
         self.activeStartUptime = nil
         countdownKind = nil
     }
@@ -467,7 +480,8 @@ struct WorkoutSessionState: Equatable {
         guard canNavigate(planDuration: planDuration, at: uptime) else { return nil }
         let elapsed = currentElapsed(planDuration: planDuration, at: uptime)
         guard let target = timeline.skipTarget(from: elapsed) else { return nil }
-        if target >= planDuration || timeline.step(at: target)?.phase == .rest {
+        if target >= planDuration || timeline.step(at: target)?.phase == .rest
+            || timeline.step(at: target)?.requiresManualAdvance == true {
             return .seek(target)
         }
         return .countdown(target)

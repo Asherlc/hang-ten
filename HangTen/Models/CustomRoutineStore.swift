@@ -252,6 +252,8 @@ enum CustomRoutineValidationIssue: Error, Equatable {
     case invalidCircuitSets(circuitIndex: Int)
     case overlappingCircuitSets(circuitIndex: Int)
     case invalidDuration(stepIndex: Int)
+    case invalidRepTargets(stepIndex: Int)
+    case invalidCycleCompletion(stepIndex: Int)
     case invalidActiveDuration(stepIndex: Int)
     case invalidHandUseSide(stepIndex: Int)
     case invalidActionRepetitions(stepIndex: Int)
@@ -310,8 +312,15 @@ enum CustomRoutineValidator {
             if !stepIDs.insert(step.id).inserted {
                 issues.append(.duplicateStepID(stepIndex: stepIndex))
             }
-            if !step.duration.isFinite || step.duration <= 0 {
+            if !step.duration.isFinite || step.duration < 0 ||
+                (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
                 issues.append(.invalidDuration(stepIndex: stepIndex))
+            }
+            if !step.repTargets.allSatisfy(\.isValid) || Set(step.repTargets.map(\.id)).count != step.repTargets.count {
+                issues.append(.invalidRepTargets(stepIndex: stepIndex))
+            }
+            if step.restsAfterCompletion && (step.duration <= 0 || step.phase == .rest || step.segments.count > 1 || step.activeDuration != nil) {
+                issues.append(.invalidCycleCompletion(stepIndex: stepIndex))
             }
             if let activeDuration = step.activeDuration,
                !activeDuration.isFinite || activeDuration <= 0 || activeDuration > step.duration {
@@ -336,7 +345,7 @@ enum CustomRoutineValidator {
                 if step.segments.contains(where: { $0.target != nil }) {
                     issues.append(.restStepHasTargets(stepIndex: stepIndex))
                 }
-            } else {
+            } else if !step.resolvedStep().isGeneralActivity {
                 let workSegments = step.segments.filter { $0.kind == .work }
                 if workSegments.isEmpty {
                     issues.append(.missingTargets(stepIndex: stepIndex))
@@ -371,7 +380,8 @@ enum CustomRoutineValidator {
                     issues.append(.restSegmentHasTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 }
 
-                if segment.kind == .rest && segment.timing != .fixed {
+                if segment.kind == .rest && segment.timing != .fixed
+                    && !(step.duration == 0 && segment.timing == .undefined) {
                     issues.append(.invalidRestSegmentTiming(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 }
                 switch segment.timing {
@@ -485,7 +495,8 @@ enum CustomRoutineValidator {
     ) -> [BoardRevision] {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
-                (step.phase == .rest || targetsResolve(
+                if step.resolvedStep().isGeneralActivity { return true }
+                return (step.phase == .rest || targetsResolve(
                     step.workRequirements,
                     handUse: step.handUse,
                     side: step.side,
@@ -876,7 +887,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
                 duration: step.duration, phase: step.phase, segments: segments, gripType: step.gripType,
                 fingerConfiguration: step.fingerConfiguration, activeDuration: step.activeDuration,
                 handUse: step.handUse, side: step.side, action: step.action, repetitions: step.repetitions,
-                externalLoadKGF: step.externalLoadKGF
+                externalLoadKGF: step.externalLoadKGF,
+                repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
             )
         }
         return CustomRoutineDefinition(
@@ -1093,7 +1105,8 @@ final class CustomRoutineStore: CustomRoutineStoring {
             side: step.side,
             action: step.action,
             repetitions: step.repetitions,
-            externalLoadKGF: step.externalLoadKGF
+            externalLoadKGF: step.externalLoadKGF,
+                repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 

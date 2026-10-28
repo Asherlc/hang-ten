@@ -3,7 +3,7 @@ import Foundation
 /// A routine's training goal is authored from retained source evidence, not
 /// inferred from its title or the presence of a particular exercise.
 enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
-    case fingerStrength, fingerEndurance, pullingStrength, mixed
+    case fingerStrength, fingerEndurance, pullingStrength, mixed, warmUp
 
     var id: String { rawValue }
     var title: String {
@@ -12,6 +12,7 @@ enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
         case .fingerEndurance: "Finger endurance"
         case .pullingStrength: "Pulling strength"
         case .mixed: "Mixed workouts"
+        case .warmUp: "Warm-ups"
         }
     }
     var subtitle: String {
@@ -20,6 +21,7 @@ enum WorkoutFocus: String, Codable, CaseIterable, Hashable, Identifiable {
         case .fingerEndurance: "Workouts focused on finger endurance"
         case .pullingStrength: "Workouts focused on pulling strength"
         case .mixed: "Workouts that combine different exercises"
+        case .warmUp: "Prepare for climbing or hangboard training"
         }
     }
 }
@@ -651,6 +653,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let action: WorkoutAction
     let repetitions: Int?
     let externalLoadKGF: Double?
+    let repTargets: [WorkoutRepTarget]
+    let restsAfterCompletion: Bool
 
     init(
         id: String,
@@ -667,7 +671,9 @@ struct WorkoutStepDefinition: Codable, Hashable {
         side: WorkoutSide = .both,
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
-        externalLoadKGF: Double? = nil
+        externalLoadKGF: Double? = nil,
+        repTargets: [WorkoutRepTarget] = [],
+        restsAfterCompletion: Bool = false
     ) {
         self.id = id
         self.title = title
@@ -684,6 +690,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.action = action
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
+        self.repTargets = repTargets
+        self.restsAfterCompletion = restsAfterCompletion
     }
 
     /// Contact requirements prescribed by work segments.
@@ -708,6 +716,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case action
         case repetitions
         case externalLoadKGF
+        case repTargets, restsAfterCompletion
     }
 
     private static func derivedHandUse(
@@ -728,7 +737,7 @@ struct WorkoutStepDefinition: Codable, Hashable {
         title = try container.decode(String.self, forKey: .title)
         instruction = try container.decode(String.self, forKey: .instruction)
         accessory = try container.decode(String.self, forKey: .accessory)
-        duration = try container.decode(TimeInterval.self, forKey: .duration)
+        duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration) ?? 0
         phase = try container.decode(WorkoutPhase.self, forKey: .phase)
         let legacyTargets = try container.decodeIfPresent(
             [ContactRequirement].self,
@@ -780,6 +789,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
+        repTargets = try container.decodeIfPresent([WorkoutRepTarget].self, forKey: .repTargets) ?? []
+        restsAfterCompletion = try container.decodeIfPresent(Bool.self, forKey: .restsAfterCompletion) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -802,6 +813,8 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encode(action, forKey: .action)
         try container.encodeIfPresent(repetitions, forKey: .repetitions)
         try container.encodeIfPresent(externalLoadKGF, forKey: .externalLoadKGF)
+        if !repTargets.isEmpty { try container.encode(repTargets, forKey: .repTargets) }
+        if restsAfterCompletion { try container.encode(true, forKey: .restsAfterCompletion) }
     }
 }
 
@@ -835,7 +848,8 @@ extension WorkoutStepDefinition {
             side: step.side,
             action: step.action,
             repetitions: step.repetitions,
-            externalLoadKGF: step.externalLoadKGF
+            externalLoadKGF: step.externalLoadKGF,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -875,7 +889,8 @@ extension WorkoutStepDefinition {
             side: side,
             action: action,
             repetitions: repetitions,
-            externalLoadKGF: externalLoadKGF
+            externalLoadKGF: externalLoadKGF,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 }
@@ -1145,7 +1160,15 @@ enum PlanLibraryValidator {
         if step.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             issues.append(PlanValidationIssue(path: "\(path).id", message: "Step ID cannot be empty."))
         }
-        if !step.duration.isFinite || step.duration <= 0 {
+        if !step.repTargets.allSatisfy(\.isValid) ||
+            Set(step.repTargets.map(\.id)).count != step.repTargets.count {
+            issues.append(PlanValidationIssue(path: "\(path).repTargets", message: "Repetition targets must have unique IDs and valid positive source counts."))
+        }
+        if step.restsAfterCompletion && (step.duration <= 0 || step.phase == .rest || step.segments.count > 1 || step.activeDuration != nil) {
+            issues.append(PlanValidationIssue(path: "\(path).restsAfterCompletion", message: "Remaining-time recovery requires one source work cycle with a positive duration."))
+        }
+        if !step.duration.isFinite || step.duration < 0 ||
+            (step.duration == 0 && !step.resolvedStep().requiresManualAdvance) {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
         if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) ||
@@ -1243,7 +1266,8 @@ enum PlanLibraryValidator {
                     )
                 )
             }
-            if segment.kind == .rest && segment.timing != .fixed {
+            if segment.kind == .rest && segment.timing != .fixed
+                && !(step.duration == 0 && segment.timing == .undefined) {
                 issues.append(
                     PlanValidationIssue(
                         path: timingPath,
@@ -1262,7 +1286,7 @@ enum PlanLibraryValidator {
                     )
                 }
             case .stopwatch, .undefined:
-                if segment.kind == .rest && segment.duration == nil {
+                if segment.kind == .rest && segment.duration == nil && step.duration > 0 {
                     issues.append(
                         PlanValidationIssue(
                             path: durationPath,
@@ -1509,6 +1533,11 @@ enum PlanLibraryValidator {
         terminalStep: WorkoutStepDefinition,
         resolvedID: String
     ) -> Bool {
+        if plan.id == "warmup.climbing.bouldering",
+           resolvedID == "warmup.climbing.rest-final",
+           terminalStep.phase == .rest, terminalStep.duration == 600 {
+            return true
+        }
         // These source tables explicitly retain recovery on their final cycle.
         // Limit the exception to the audited terminal identity and duration.
         let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
@@ -1768,7 +1797,8 @@ extension WorkoutStepDefinition {
             action: action,
             repetitions: repetitions,
             externalLoadKGF: externalLoadKGF,
-            timedWorkDuration: activeDuration
+            timedWorkDuration: activeDuration,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 }

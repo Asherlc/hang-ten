@@ -1703,6 +1703,52 @@ enum WorkoutAction: String, Codable, CaseIterable, Hashable {
     case loadedLift
 }
 
+/// A counted task's source prescription. Missing bounds mean that the source
+/// specifies the movement but leaves its repetition count to the athlete.
+struct WorkoutRepTarget: Codable, Hashable, Identifiable {
+    let id: String
+    let title: String
+    let minimum: Int?
+    let maximum: Int?
+    var isOptional: Bool = false
+
+    init(id: String, title: String, minimum: Int? = nil, maximum: Int? = nil, isOptional: Bool = false) {
+        self.id = id
+        self.title = title
+        self.minimum = minimum
+        self.maximum = maximum
+        self.isOptional = isOptional
+    }
+
+    private enum CodingKeys: String, CodingKey { case id, title, minimum, maximum, isOptional }
+
+    init(from decoder: Decoder) throws {
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        id = try values.decode(String.self, forKey: .id)
+        title = try values.decode(String.self, forKey: .title)
+        minimum = try values.decodeIfPresent(Int.self, forKey: .minimum)
+        maximum = try values.decodeIfPresent(Int.self, forKey: .maximum)
+        isOptional = try values.decodeIfPresent(Bool.self, forKey: .isOptional) ?? false
+    }
+
+    var isValid: Bool {
+        !id.isEmpty && !title.isEmpty && (minimum.map { $0 > 0 } ?? (maximum == nil))
+            && (maximum.map { $0 >= (minimum ?? 1) } ?? true)
+    }
+
+    var targetLabel: String? {
+        guard let minimum else { return nil }
+        if let maximum, maximum != minimum { return "\(minimum)–\(maximum)" }
+        return "\(minimum)"
+    }
+}
+
+struct WorkoutRepResult: Codable, Hashable, Identifiable {
+    let target: WorkoutRepTarget
+    let completed: Int
+    var id: String { target.id }
+}
+
 enum WorkoutStepSemantics {
     static func hasValidHandUseAndSide(_ handUse: WorkoutHandUse, _ side: WorkoutSide) -> Bool {
         switch handUse {
@@ -1762,6 +1808,9 @@ struct WorkoutStep: Identifiable, Hashable {
     /// Manufacturer task cycles leave this nil because the athlete completes
     /// the listed reps/hangs, then rests for whatever remains in the minute.
     let timedWorkDuration: TimeInterval?
+    let repTargets: [WorkoutRepTarget]
+    /// Complete the source work manually, then rest until this cycle expires.
+    let restsAfterCompletion: Bool
 
     init(
         id: String,
@@ -1779,7 +1828,9 @@ struct WorkoutStep: Identifiable, Hashable {
         action: WorkoutAction = .hang,
         repetitions: Int? = nil,
         externalLoadKGF: Double? = nil,
-        timedWorkDuration: TimeInterval? = nil
+        timedWorkDuration: TimeInterval? = nil,
+        repTargets: [WorkoutRepTarget] = [],
+        restsAfterCompletion: Bool = false
     ) {
         self.id = id
         self.number = number
@@ -1797,6 +1848,8 @@ struct WorkoutStep: Identifiable, Hashable {
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
         self.timedWorkDuration = timedWorkDuration
+        self.repTargets = repTargets
+        self.restsAfterCompletion = restsAfterCompletion
     }
 
     /// Contact requirements prescribed by work segments. Self-selected work
@@ -1809,6 +1862,28 @@ struct WorkoutStep: Identifiable, Hashable {
         return min(timedWorkDuration ?? duration, duration)
     }
 
+    /// Zero means there is no enclosing timer. A positive source cycle may
+    /// still contain unspecified work (for example, tasks within a minute).
+    var requiresManualAdvance: Bool {
+        duration == 0 && ((phase == .conditioning && segments.isEmpty) ||
+            (segments.count == 1 && segments[0].timing != .fixed))
+    }
+
+    var isGeneralActivity: Bool {
+        phase == .conditioning && workRequirements.isEmpty
+            && segments.allSatisfy { $0.target == nil || $0.target?.isSelfSelected == true }
+    }
+
+    /// A navigation coordinate, never a prescribed or recorded duration.
+    /// Untimed steps need distinct locations so seeking and mixed plans work.
+    var timelineDuration: TimeInterval { requiresManualAdvance ? 1 : duration }
+
+    var displayedRepTargets: [WorkoutRepTarget] {
+        if !repTargets.isEmpty { return repTargets }
+        guard action == .loadedLift, let repetitions else { return [] }
+        return [.init(id: "lifts", title: "Lifts", minimum: repetitions)]
+    }
+
     var isRestStep: Bool {
         phase == .rest
     }
@@ -1818,6 +1893,7 @@ struct WorkoutStep: Identifiable, Hashable {
     }
 
     var durationLabel: String {
+        if requiresManualAdvance { return "Self-paced" }
         let seconds = Int(duration)
         let minutes = seconds / 60
         let remainder = seconds % 60
@@ -1852,7 +1928,8 @@ struct WorkoutStep: Identifiable, Hashable {
             action: action,
             repetitions: repetitions,
             externalLoadKGF: externalLoadKGF,
-            timedWorkDuration: timedWorkDuration
+            timedWorkDuration: timedWorkDuration,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 
@@ -1877,7 +1954,8 @@ struct WorkoutStep: Identifiable, Hashable {
             segments: singleHandedSegments, gripType: gripType,
             fingerConfiguration: fingerConfiguration, handUse: .single,
             side: side, action: action, repetitions: repetitions,
-            externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration
+            externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration,
+            repTargets: repTargets, restsAfterCompletion: restsAfterCompletion
         )
     }
 }
@@ -1930,6 +2008,13 @@ struct TrainingPlan: Identifiable, Hashable {
     }
 
     var durationLabel: String {
+        if steps.contains(where: \.requiresManualAdvance) {
+            if duration == 0 { return "Self-paced" }
+            let minutes = Int(duration) / 60
+            let seconds = Int(duration) % 60
+            let timed = seconds == 0 ? "\(minutes) min" : "\(minutes)m \(seconds)s"
+            return "\(timed) + self-paced"
+        }
         let minutes = Int(duration) / 60
         let seconds = Int(duration) % 60
         if seconds == 0 {
@@ -1978,7 +2063,8 @@ enum MaxHangsEdgeSelection {
                 gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
                 handUse: step.handUse, side: step.side, action: step.action,
                 repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-                timedWorkDuration: step.timedWorkDuration
+                timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
             )
         }
         // Offer a size only when its resolved physical contacts have that

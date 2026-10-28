@@ -184,7 +184,8 @@ final class CustomRoutineSetUITests: XCTestCase {
         tap("customRoutine.addSet", in: app)
         let duration = app.textFields["customRoutine.stepDuration"]
         reveal(duration, in: app)
-        XCTAssertEqual(duration.value as? String, "")
+        XCTAssertEqual(duration.placeholderValue, "Self-paced")
+        XCTAssertEqual(duration.value as? String, "Self-paced")
         XCTAssertTrue(app.staticTexts["Time"].exists)
         XCTAssertFalse(app.buttons["customRoutine.editStepSet"].exists)
         XCTAssertFalse(app.buttons["customRoutine.stepTiming"].exists)

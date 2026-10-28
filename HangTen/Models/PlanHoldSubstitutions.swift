@@ -592,6 +592,7 @@ enum PlanHoldSubstitutions {
             gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
             handUse: step.handUse, side: step.side, action: step.action,
             repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration)
+            timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion)
     }
 }

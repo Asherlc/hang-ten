@@ -85,6 +85,9 @@ struct WorkoutView: View {
 	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
 	    @State private var liftCompletion = WorkoutLiftCompletion()
+        @State private var repProgress = WorkoutRepProgress()
+        @State private var cycleCompletion = WorkoutCycleCompletion()
+        @FocusState private var focusedRepField: String?
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
         @State private var rendererStartGate = WorkoutRendererStartGate()
@@ -112,7 +115,7 @@ struct WorkoutView: View {
 	}
 
 	private var sessionDuration: TimeInterval {
-		activeSteps.reduce(0) { $0 + $1.duration }
+		timeline.duration
 	}
 
 	private var timeline: WorkoutTimeline {
@@ -136,7 +139,8 @@ struct WorkoutView: View {
 					currentStep: step,
 					stepElapsed: stepElapsed,
 					countdown: countdown,
-					isComplete: isComplete
+					isComplete: isComplete,
+                    isRestingOverride: isTimedResting
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
@@ -179,7 +183,10 @@ struct WorkoutView: View {
                         selectedHandSide: highlightedSelectedHandSide),
                     activeHoldID: holdCue?.hold?.id,
                     highlightedHoldIDs: highlightedHoldIDs)
-				let isLandscape = geometry.size.width > geometry.size.height && !dynamicTypeSize.isAccessibilitySize
+                // Keyboard avoidance shortens the content without rotating the window.
+                // Include its safe area so editing reps keeps the same view identity.
+                let windowHeight = geometry.size.height + geometry.safeAreaInsets.top + geometry.safeAreaInsets.bottom
+				let isLandscape = geometry.size.width > windowHeight && !dynamicTypeSize.isAccessibilitySize
                 let requiresPreparedHands = holdCue != nil && (
                     (!isLandscape && holdCue?.hold != nil)
                     || WorkoutHoldCueVisibilityPolicy.showsCue(
@@ -328,6 +335,11 @@ struct WorkoutView: View {
         .navigationBarBackButtonHidden(true)
 		.toolbar(.hidden, for: .tabBar)
         .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") { focusedRepField = nil }
+                    .accessibilityIdentifier("workout.dismissRepKeyboard")
+            }
             ToolbarItem(placement: .topBarLeading) {
                 Button("End") {
                     requestEndConfirmation()
@@ -415,6 +427,7 @@ struct WorkoutView: View {
 			)
 		}
 		.onAppear {
+			sessionState.manualStepStartOffsets = timeline.manualStepStartOffsets
 			UIApplication.shared.isIdleTimerDisabled = true
 			configureRecorder()
 			if planNeedsHandChoice {
@@ -433,7 +446,7 @@ struct WorkoutView: View {
 				   requestedStep > 1 {
 						sessionState.pausedElapsed = activeSteps
 							.prefix(min(requestedStep - 1, activeSteps.count))
-							.reduce(0) { $0 + $1.duration }
+							.reduce(0) { $0 + $1.timelineDuration }
                     // The completion fixture represents a fully performed workout.
                     // Ordinary step previews do not simulate earlier activity.
                     if requestedStep > activeSteps.count, sessionDuration > 0 {
@@ -873,7 +886,8 @@ struct WorkoutView: View {
                 phaseIndicator(step: step, countdown: countdown, isResting: isResting)
                 WorkoutTimerView(
                     remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: false),
-                    compact: true
+                    compact: true,
+                    isUntimed: step.requiresManualAdvance && countdown == 0
                 )
                 if planNeedsHandChoice {
                     handPreferenceMenu()
@@ -926,6 +940,9 @@ struct WorkoutView: View {
 				if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
 					liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
 				}
+                if countdown == 0, !isResting, !isComplete, !step.displayedRepTargets.isEmpty {
+                    repetitionControls(for: step, canNavigate: canNavigate)
+                }
 			}
 			.frame(maxWidth: 400)
 			.layoutPriority(1)
@@ -1034,7 +1051,8 @@ struct WorkoutView: View {
         countdown: Int,
         isComplete: Bool
     ) -> some View {
-        WorkoutTimerView(remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete))
+        WorkoutTimerView(remaining: timerRemaining(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete),
+            isUntimed: step.requiresManualAdvance && countdown == 0 && !isComplete)
     }
 
     private func timerRemaining(step: WorkoutStep, stepElapsed: TimeInterval, countdown: Int, isComplete: Bool) -> TimeInterval {
@@ -1070,6 +1088,9 @@ struct WorkoutView: View {
 			if countdown == 0, !isResting, !isComplete, step.action == .loadedLift {
 				liftCompletionControl(for: step, sessionCanNavigate: canNavigate)
 			}
+            if countdown == 0, !isResting, !isComplete, !step.displayedRepTargets.isEmpty {
+                repetitionControls(for: step, canNavigate: canNavigate)
+            }
 
             if countdown == 0, !isResting, !isComplete, let key = currentStopwatchKey(for: step) {
                 stopwatchControl(for: key, at: monotonicTime)
@@ -1086,7 +1107,7 @@ struct WorkoutView: View {
 		sessionCanNavigate: Bool
 	) -> some View {
 		let prescribed = step.repetitions ?? 0
-		let completed = liftCompletion.completedRepetitions(for: step)
+		let completed = repProgress.results(for: step).first?.completed ?? liftCompletion.completedRepetitions(for: step)
 		let unit = motherboardSettingsStore.forceUnit
 		return VStack(spacing: 6) {
 			HStack(spacing: 8) {
@@ -1112,6 +1133,9 @@ struct WorkoutView: View {
 				.foregroundStyle(Color.hangMuted)
 			Button("Complete lift") {
 				liftCompletion.completeLift(for: step)
+                if let target = step.displayedRepTargets.first {
+                    repProgress.setValue(completed + 1, target: target, in: step)
+                }
 			}
 			.frame(maxWidth: .infinity)
 			.font(.system(.subheadline, design: .rounded, weight: .bold))
@@ -1128,6 +1152,55 @@ struct WorkoutView: View {
 			.accessibilityIdentifier("workout.completeLift")
 		}
 	}
+
+    private func repetitionControls(for step: WorkoutStep, canNavigate: Bool) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Reps").font(.footnote.bold()).foregroundStyle(.secondary)
+            ForEach(step.displayedRepTargets) { target in
+                if target.isOptional {
+                    Toggle(target.title, isOn: Binding(
+                        get: { repProgress.isSelected(target, in: step) },
+                        set: { repProgress.select($0, target: target, in: step) }
+                    ))
+                    .font(.subheadline)
+                    .accessibilityIdentifier("workout.repOption.\(target.id)")
+                }
+                if repProgress.isSelected(target, in: step) {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(target.title).font(.subheadline.bold())
+                            Text(target.targetLabel.map { "Target: \($0)" } ?? "No prescribed count")
+                                .font(.caption).foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        TextField("Reps", value: Binding<Int?>(
+                            get: { repProgress.value(for: target, in: step) },
+                            set: { repProgress.setValue($0, target: target, in: step) }
+                        ), format: .number)
+                        .keyboardType(.numberPad)
+                        .focused($focusedRepField, equals: "\(step.id).\(target.id)")
+                        .multilineTextAlignment(.center)
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 82)
+                        .accessibilityLabel("Reps, \(target.title)")
+                        .accessibilityIdentifier("workout.actualReps.\(target.id)")
+                    }
+                }
+            }
+            if !step.requiresManualAdvance && !step.restsAfterCompletion {
+                Button("Record reps") { repProgress.confirm(step) }
+                    .disabled(!canNavigate || !repProgress.canConfirm(step))
+                    .accessibilityIdentifier("workout.recordReps")
+            }
+            if !repProgress.canConfirm(step) {
+                Text("Enter zero or more completed reps to continue.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+        }
+        .disabled(!canNavigate)
+        .padding(12)
+        .background(Color.hangGreen.opacity(0.10), in: RoundedRectangle(cornerRadius: 12))
+    }
 
 	private func loadedLiftExternalLoadBinding(
 		for step: WorkoutStep,
@@ -1147,11 +1220,15 @@ struct WorkoutView: View {
 	}
 
     private func skipStepButton(step: WorkoutStep, canNavigate: Bool, compact: Bool = false) -> some View {
-        WorkoutSkipControl(
+        let isCycleWork = step.restsAfterCompletion && !cycleCompletion.isResting(step,
+            at: elapsedInStep(at: currentElapsed(at: WorkoutClock.monotonicTime)))
+        return WorkoutSkipControl(
             stepLabel: "\(step.number): \(step.title)",
-            isEnabled: canNavigate,
+            isEnabled: canNavigate && (step.isRestStep || repProgress.canConfirm(step)),
             compact: compact,
-            action: skipCurrentStep
+            title: isCycleWork ? "Done — rest" : step.requiresManualAdvance
+                ? (step.id == activeSteps.last?.id ? "Finish" : "Next step") : "Skip step",
+            action: { isCycleWork ? completeCycleWork(step) : skipCurrentStep() }
         )
     }
 
@@ -1529,7 +1606,7 @@ struct WorkoutView: View {
 		let elapsed = currentElapsed(at: monotonicTime)
 		guard elapsed < sessionDuration else { return }
 		let currentStep = step(at: elapsed)
-		guard !currentStep.isRestStep,
+		guard !currentStep.isRestStep, !currentStep.isGeneralActivity,
 			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
 
 		recorder.consume(
@@ -1573,12 +1650,13 @@ struct WorkoutView: View {
         let recordingElapsed = elapsed ?? currentElapsed(at: monotonicTime)
         var stepStart: TimeInterval = 0
         let recordingSteps = activeSteps.filter { step in
-            defer { stepStart += step.duration }
+            defer { stepStart += step.timelineDuration }
             return WorkoutActivityProgress.duration(
-                in: stepStart..<(stepStart + step.duration), intervals: activityProgress.intervals
+                in: stepStart..<(stepStart + step.timelineDuration), intervals: activityProgress.intervals
             ) > 0 || completedStopwatchDurations.contains { key, duration in
                 key.stepID == step.id && duration > 0
-            } || liftCompletion.completedRepetitions(for: step) > 0
+            } || liftCompletion.completedRepetitions(for: step) > 0 || !repProgress.results(for: step).isEmpty
+                || recorder.recordedWorkStepIDs.contains(step.id)
         }
 		recorder.pause(at: recordingElapsed)
 
@@ -1597,7 +1675,7 @@ struct WorkoutView: View {
 			)
 			return WorkoutStepMeasurement(
 				stepID: measurement.stepID,
-				plannedActiveDuration: measurement.plannedActiveDuration,
+				plannedActiveDuration: step.restsAfterCompletion ? 0 : measurement.plannedActiveDuration,
 				intervals: measurement.intervals,
 				peakLoadKGF: measurement.peakLoadKGF,
 				sampleCount: measurement.sampleCount,
@@ -1607,12 +1685,17 @@ struct WorkoutView: View {
 				action: step.action,
 				repetitions: step.repetitions,
 				completedRepetitions: step.action == .loadedLift
-					? liftCompletion.completedRepetitions(for: step)
+					? (repProgress.results(for: step).first?.completed ?? liftCompletion.completedRepetitions(for: step))
 					: nil,
 				externalLoadKGF: step.action == .loadedLift
 					? liftCompletion.externalLoadKGF(for: step)
 					: step.externalLoadKGF,
-				isRest: step.isRestStep
+				isRest: step.isRestStep,
+				isGeneralActivity: step.isGeneralActivity,
+                repResults: repProgress.results(for: step),
+                cycleWorkEnd: cycleCompletion.workEndByStepID[step.id],
+                cycleRestDuration: step.restsAfterCompletion ? activityProgress.cycleRestDurations[step.id, default: 0] : nil,
+                cycleDuration: step.restsAfterCompletion ? step.duration : nil
 			)
 		}
 		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-recordingElapsed)
@@ -1739,9 +1822,9 @@ struct WorkoutView: View {
 
     private var hasRecordedActivity: Bool {
         let uptime = WorkoutClock.monotonicTime
-        return activityProgress.hasActivity || stopwatches.values.contains {
+        return activityProgress.hasActivity || !recorder.recordedWorkStepIDs.isEmpty || stopwatches.values.contains {
             ($0.elapsed(at: uptime) ?? 0) > 0
-        } || activeSteps.contains { liftCompletion.completedRepetitions(for: $0) > 0 }
+        } || activeSteps.contains { liftCompletion.completedRepetitions(for: $0) > 0 || !repProgress.results(for: $0).isEmpty }
     }
 
     private func countdownRemaining(at uptime: TimeInterval) -> Int {
@@ -1765,6 +1848,10 @@ struct WorkoutView: View {
 
     private func seek(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
         activityProgress.capture(sessionState, planDuration: sessionDuration, at: uptime)
+        cycleCompletion.restart(from: targetElapsed, in: timeline)
+        sessionState.cycleRestWindows = sessionState.cycleRestWindows.filter { id, _ in
+            (timeline.startOffset(for: id) ?? targetElapsed) < targetElapsed
+        }
         recorder.pause(at: currentElapsed(at: uptime))
         sessionState.seek(to: targetElapsed, planDuration: sessionDuration, at: uptime)
         audioCoach.stop()
@@ -1785,6 +1872,14 @@ struct WorkoutView: View {
         guard let decision = sessionState.skipDecision(
             timeline: timeline, planDuration: sessionDuration, at: monotonicTime
         ) else { return }
+        let elapsed = currentElapsed(at: monotonicTime)
+        let current = step(at: elapsed)
+        if current.requiresManualAdvance { repProgress.confirm(current) }
+        focusedRepField = nil
+        if current.requiresManualAdvance,
+           let offset = timeline.startOffset(for: current.id) {
+            activityProgress.completeManualStep(at: offset)
+        }
         finalizeCurrentStopwatch(at: monotonicTime)
         audioCoach.stop()
         switch decision {
@@ -1795,17 +1890,34 @@ struct WorkoutView: View {
         }
     }
 
+    private func completeCycleWork(_ step: WorkoutStep) {
+        let uptime = WorkoutClock.monotonicTime
+        let elapsed = currentElapsed(at: uptime)
+        guard canNavigate(at: uptime), repProgress.canConfirm(step),
+              let restWindow = WorkoutCycleCompletion.restWindow(for: step, in: timeline, at: elapsed)
+        else { return }
+        activityProgress.capture(sessionState, planDuration: sessionDuration, at: uptime)
+        repProgress.confirm(step)
+        focusedRepField = nil
+        cycleCompletion.complete(step, at: elapsedInStep(at: elapsed))
+        sessionState.cycleRestWindows[step.id] = restWindow
+        finalizeCurrentStopwatch(at: uptime)
+        recorder.pause(at: elapsed)
+        audioCoach.stop()
+    }
+
 	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
 		var cursor: TimeInterval = 0
         for step in activeSteps {
-            if elapsed < cursor + step.duration {
+            if elapsed < cursor + step.timelineDuration {
                 return cursor
             }
-            cursor += step.duration
+            cursor += step.timelineDuration
 		}
-		return max(0, cursor - (activeSteps.last?.duration ?? 0))
+		return max(0, cursor - (activeSteps.last?.timelineDuration ?? 0))
 	}
 	private func initializeStopwatches() {
+		sessionState.manualStepStartOffsets = timeline.manualStepStartOffsets
 		for step in activeSteps {
 			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
 				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
@@ -1859,6 +1971,7 @@ struct WorkoutView: View {
 
     private func isRestInterval(step: WorkoutStep, stepElapsed: TimeInterval) -> Bool {
         step.phase == .rest || (step.hasRestInterval && stepElapsed >= step.activeDuration)
+            || cycleCompletion.isResting(step, at: stepElapsed)
     }
 
     private func intervalRemaining(step: WorkoutStep, stepElapsed: TimeInterval) -> TimeInterval {
@@ -1869,6 +1982,8 @@ struct WorkoutView: View {
     }
 
     private func intervalLabel(for step: WorkoutStep) -> String {
+        if step.requiresManualAdvance { return "Self-paced" }
+        if step.phase == .conditioning { return "Conditioning" }
         if step.phase == .rest {
             return step.phase.label
         }
@@ -1908,13 +2023,13 @@ struct WorkoutView: View {
 				countdownKind: sessionState.countdownKind
 			)
 		}
+		guard !step.requiresManualAdvance else { return nil }
 		let secondsRemaining = Int(
 			ceil(intervalRemaining(step: step, stepElapsed: stepElapsed))
 		)
-		let intervalDuration = WorkoutCountdownIntervalPolicy.duration(
-			for: step,
-			isTimedResting: isTimedResting
-		)
+		let intervalDuration = isTimedResting && step.restsAfterCompletion
+            ? step.duration - (cycleCompletion.workEndByStepID[step.id] ?? step.duration)
+            : WorkoutCountdownIntervalPolicy.duration(for: step, isTimedResting: isTimedResting)
 		let intervalEndElapsed = stepStartElapsed(at: elapsed)
 			+ (isTimedResting ? step.duration : step.activeDuration)
 

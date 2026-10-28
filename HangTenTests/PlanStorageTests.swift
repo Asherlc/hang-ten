@@ -3,6 +3,18 @@ import XCTest
 @testable import HangTen
 
 final class PlanStorageTests: XCTestCase {
+    func testUntimedDefinitionsOmitDurationWithoutInventingATimer() throws {
+        let json = #"{"id":"manual","title":"Task","instruction":"Follow the source.","accessory":"","phase":"hang","segments":[{"kind":"work","target":{"tasks":[[{"target":"any"}]]},"timing":"undefined"}]}"#
+        let definition = try JSONDecoder().decode(WorkoutStepDefinition.self, from: Data(json.utf8))
+        XCTAssertEqual(definition.duration, 0)
+        XCTAssertTrue(definition.resolvedStep().requiresManualAdvance)
+        let library = makeLibrary(steps: [definition], provenance: .custom, sourceURL: nil)
+        XCTAssertTrue(library.validationIssues(availableBoards: []).isEmpty)
+        let fixed = json.replacingOccurrences(of: "undefined", with: "fixed")
+        let invalid = try JSONDecoder().decode(WorkoutStepDefinition.self, from: Data(fixed.utf8))
+        XCTAssertFalse(makeLibrary(steps: [invalid], provenance: .custom, sourceURL: nil)
+            .validationIssues(availableBoards: []).isEmpty)
+    }
 
     func testRepeatedBlockPreservesExactPerRunIDsAndTitles() throws {
         let step = WorkoutStepDefinition(
@@ -42,32 +54,36 @@ final class PlanStorageTests: XCTestCase {
         // original ID/title, metadata field, ordered target, cue and duration.
         // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
+            "warmup.lattice.progressive": "d4af54884cc1006beee3aac6ace98f38358b95dd22a3e9c4092fdb19c786a557",
+            "warmup.beastmaker.general": "9b1db8570270e23021cf00db9a60949a5ac677c8e136676a0d33caf77cd382ad",
+            "warmup.climbing.bouldering": "a38d18e81815c39b5004a1967fc58218ff1333f6cf864550d7b5bd1e25ba98a8",
+            "warmup.ccc.rope-practice": "6a2d2b0740d8f093e3f97d2ddc1f90de5acb26c05880b660de3622121c417dc8",
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
             "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
             "cameron-horst-two-handed-7-53": "e5ca641aa9a5724a85566cd8ea56e8e789c7830d3bd527d4483f85035d839e38",
-            "coach.bechtel-three-six-nine": "4ff3403811ccfb835dcf0929839af591296cd365c10613c59662af4ebff2adc7",
-            "coach.density-hangs": "f080de85b989211942e260e2c7809bd80bd9c49ae8525973b0a4bb87d3dc9bcf",
+            "coach.bechtel-three-six-nine": "8885ecbf75a6206bfa2ee148f39a8998528bb759b84d722cfa05571243988d99",
+            "coach.density-hangs": "28492b0fa89e2cf65e83d8851f800c4ab11daae976af2d8ef3f69b79ede2c667",
             "coach.horst-seven-fifty-three": "b351983dc8bd900680967c191dfc1c3b4ada7e9e9a0008c677fe62f7b4b6b87e",
-            "coach.nelson-density-hangs.expert": "fcf17ad7e5614d8a2a2ec9cc03abf8e8437d52388a41569294e25e233dfa25e6",
+            "coach.nelson-density-hangs.expert": "ee1418baeb2064c826004ad5f43c32ddc2cd77a55cdb3a5a0fca386ae1971251",
             "coach.nelson-recruitment-pulls.beginner": "4c251749aa7ce0e206c136737c0bb7d60b3942a250d45a1f1099f2cb6a50937b",
             "coach.nelson-recruitment-pulls.expert": "25f752f28ef109633b45df3e3ada5660e11409872c4c4c6addb8dda746c3f65d",
             "coach.nelson-velocity-pulls.beginner": "bc9249693745a8d0e5de9cfa72f53b5762d30576bb9d9be3851094039890a868",
             "coach.nelson-velocity-pulls.expert": "4f9621797f2eb70c13c7510089cb421ad183aef790d0aca91d944c132bee7a24",
             "device.zlagboard-sixty-sixty": "d8871c8cd3daee20f23971cd66dcb84e1f659c35c62a8a9ddfd4cda9f36c711e",
-            "hoopers-beta.introductory-home-hangboard": "026dee2d886fc512058fc9da60f67b0f6ed5c17a747b375554c02bf4d65948b8",
-            "method.intermediate-hangboarding.emom": "c3c7e62acada655428406089987a82133adf257aefddd92d4209ee0ae68e5d65",
+            "hoopers-beta.introductory-home-hangboard": "f27464cec3c3997bf2327bdf928a8b9f7401db8b07b223934759b35b99056eb6",
+            "method.intermediate-hangboarding.emom": "8f292431f3363fd9d9e43b36d15030632d4120d7cc420172ef8309f1fcf3af0e",
             "method.intermediate-hangboarding.repeaters": "c73ed40bf148696078eec86abc58c1d49b4a62b9da48b5ab922501f45ab8b909",
-            "metolius.contact.advanced": "0da2a63e7fd843ec412e605ada037d224ca3ffbeecc141b8c7d0345d5afdd04d",
-            "metolius.contact.entry": "a5ebd0328577f58c127e15cf222934ba89d29895762c1b7a3a5cde3abd3b078c",
-            "metolius.contact.intermediate": "1297a76f9eefb94b967e5b1929ee96a63edc82c18389066f9a2c9fd069f28121",
-            "metolius.generic-ten-minute.advanced": "f3ec308e3f128b9ef43e4f5b37124cebd966f5292e5332075e3a46d2282c65b6",
-            "metolius.generic-ten-minute.entry": "bd9f18db936973141f29cd2dee2d1be6ee04bcef0f26c723216cf9b1a268f356",
-            "metolius.generic-ten-minute.intermediate": "39df6e8c21a0905b87a31192eea262b9b56b09dbab50ef37eb99979b224b8140",
-            "metolius.rock-rings.ten-minute": "af137d7aeed7706bb79174cf298a853be0559acd69bdcd3b11df3a0cc1a9a003",
-            "metolius.simulator-3d.advanced": "fae59a3a6afd418a465af41a99283ad18c1ca867feb846cb0b88b3f8b331a542",
-            "metolius.simulator-3d.entry": "a8529c7ca3daa0d5928795477dc5511367252d83540d228f26e7d494a705b8a7",
-            "metolius.simulator-3d.intermediate": "793f860f0212e55c71cf743da65ec19f3d5459c74fc59ea41bf55e2c51bd068e",
+            "metolius.contact.advanced": "d8b3b0863ca1906360575c6f482a1da4785f8c3a7eb7b09d6b9be5ff3cbccd4b",
+            "metolius.contact.entry": "e55235ca48a5002aad918203e7a6999139818294ca3cfa858769aaf906d3a033",
+            "metolius.contact.intermediate": "3ce6743ee62823fb27e2abb42a8e9b18c8b436213100ddde395cac9927ccd7c7",
+            "metolius.generic-ten-minute.advanced": "d910a4d0c0de672dfe80ce77ff94da6ec27cfe53a7ac8bcfc21161e0607cd9c3",
+            "metolius.generic-ten-minute.entry": "9c962149c469100958a6c091ffe55a1b5bc1b524c7ce33b101372558910f49f2",
+            "metolius.generic-ten-minute.intermediate": "fcfa6b88a754bf882e3995ede6544d48b067646b8566b428bd1743af06a7fb1a",
+            "metolius.rock-rings.ten-minute": "f6c1355a79dc42ddf27179e92fcd699357af9f4eeab312ab3ccb78da21c19aa4",
+            "metolius.simulator-3d.advanced": "40d037396d9bbaedd1237d2663de51ca6a295f34264bc28de457f8c088100294",
+            "metolius.simulator-3d.entry": "0c1ebe18356ed3cafaf8510c74f9293b698e9561823a0daa926a9d07b2c152b4",
+            "metolius.simulator-3d.intermediate": "6db5519b82f422d4e6cf127485448ab6ff1279a62babfab3173cbc39412a894f",
             "rei-hangboard-training-101": "f7f505a1e1c96673ede1c74f3fab2ba761f63917131414d4252d214ffc8e5902",
             "rei.hangboard-sample-workout": "a9dba5b4b5d7d3ecb2afce4ae286aabc6e4da9da698d99a47d4e675ef1408c6c",
             "research.abrahangs": "fbc3f6b6c5dbce69fcdaecd072e4f6d8e9206db051ff6fb97501d3fc84eebfd9",
@@ -83,9 +99,9 @@ final class PlanStorageTests: XCTestCase {
             "rock-prodigy.pivot-introductory": "329429e47a09b10dfef40ff01f11b49a93f81d65ed3b322c1f46408bdffef163",
             "rock-prodigy.rptc-intermediate": "3b8654fb3e13c1ba66821ed397491c7e8365adaf1e60e1f89cd307c91834eab9",
             "rptc.seven-three-repeaters": "24ad51f906cb766a6d72aa7530c4d665a64a3e9e9aa568eac01907f995efc819",
-            "tension-6-6-6-plus": "6c532322e23274b389769dc275af35161fa7f5e93446e2163622af8309f53463",
+            "tension-6-6-6-plus": "92339747eb98566604d14dff8324a562ba7609a39e42e388e21624b41440bc79",
             "tension-6-and-10": "1b395c05eb721a15177477b27269f18279e4a01d5cd8c5c176b74848a28b264d",
-            "tension-long-hangs": "0d8b02ccf1200ef454fc1f6259d694f9a512f3bc2cc79bafb455055ab0a314af",
+            "tension-long-hangs": "fdd974db4ad0ebcaab2b6806099ab47e7cd368c5230e7d93bea79246ea56b4a0",
             "tension-single-hangs": "44c57d1915789b9198242d1df26ee77878fbb4184c65685a05741c33fa800abc",
         ]
         let library = try XCTUnwrap(JSONSerialization.jsonObject(with: bundledPlanLibraryData()) as? [String: Any])
@@ -176,7 +192,7 @@ final class PlanStorageTests: XCTestCase {
             let work = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
             XCTAssertEqual(work.count, count)
             XCTAssertTrue(work.allSatisfy { $0.timing == .stopwatch && $0.duration == nil })
-            XCTAssertTrue(plan.steps.filter { $0.phase == .hang }.allSatisfy { $0.instruction.contains("Pause") })
+            XCTAssertTrue(plan.steps.filter { $0.phase == .hang }.allSatisfy { $0.duration == 0 && $0.instruction.contains("Done") })
         }
     }
 
@@ -279,8 +295,12 @@ final class PlanStorageTests: XCTestCase {
         let task = try XCTUnwrap(work.first?.target?.planTasks?.only)
         XCTAssertEqual(task.count, 2)
         XCTAssertEqual(task.map { $0.target?.kind }, [.jug, .edge])
-        XCTAssertEqual(work.first?.duration, 15)
-        XCTAssertEqual(step.segments.first { $0.kind == .rest }?.duration, 45)
+        XCTAssertEqual(step.duration, 60)
+        XCTAssertEqual(work.first?.timing, .undefined)
+        XCTAssertNil(work.first?.duration)
+        XCTAssertFalse(step.segments.contains { $0.kind == .rest })
+        XCTAssertTrue(step.restsAfterCompletion)
+        XCTAssertEqual(step.repTargets.first?.minimum, 3)
     }
 
     private func semanticTargets(_ step: WorkoutStep) -> [ContactRequirement] {
@@ -926,7 +946,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(
             Set(eitherStepIDs),
             [
-                "advanced.minute-5.task-1", "advanced.minute-5.task-2",
+                "advanced.minute-5.task-1",
                 "metolius.contact.advanced.minute-6",
                 "metolius.simulator-3d.intermediate.minute-9",
                 "metolius.simulator-3d.advanced.minute-6"
@@ -1802,59 +1822,27 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testCanonicalPlanSourceClassifiesTimedUntimedAndStopwatchActivities() throws {
-        let entrySteps = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry").steps
-        let entryMinuteSixTaskOne = try XCTUnwrap(
-            entrySteps.first { $0.id == "entry.minute-6.task-1" }
-        )
-        let entryMinuteSixTaskTwo = try XCTUnwrap(
-            entrySteps.first { $0.id == "entry.minute-6.task-2" }
-        )
-        let entryMinuteTenTaskOne = try XCTUnwrap(
-            entrySteps.first { $0.id == "entry.minute-10.task-1" }
-        )
-
-        XCTAssertEqual(
-            entryMinuteSixTaskOne.segments,
-            [
-                WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .sloper, shape: .round)),
-                        PlanHandTarget(target: .init(kind: .sloper, shape: .round))
-                    ]]),
-                    timing: .fixed,
-                    duration: 10
-                )
-            ]
-        )
-        XCTAssertEqual(
-            entryMinuteSixTaskTwo.segments,
-            [
-                WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .pocket)),
-                        PlanHandTarget(target: .init(kind: .pocket))
-                    ]]),
-                    timing: .fixed,
-                    duration: 5
-                )
-            ]
-        )
-        XCTAssertEqual(
-            entryMinuteTenTaskOne.segments,
-            [
-                WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .sloper, shape: .round)),
-                        PlanHandTarget(target: .init(kind: .sloper, shape: .round))
-                    ]]),
-                    timing: .stopwatch,
-                    duration: nil
-                )
-            ]
-        )
+        let entry = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry")
+        XCTAssertEqual(entry.steps.count, 10)
+        XCTAssertEqual(entry.duration, 600)
+        let minuteSix = try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-6.task-1" })
+        XCTAssertEqual(minuteSix.duration, 60)
+        XCTAssertTrue(minuteSix.restsAfterCompletion)
+        let work = try XCTUnwrap(minuteSix.segments.only)
+        XCTAssertEqual(work.timing, .undefined)
+        XCTAssertNil(work.duration)
+        XCTAssertEqual(work.target, .tasks([
+            [PlanHandTarget(target: .init(kind: .sloper, shape: .round)),
+             PlanHandTarget(target: .init(kind: .sloper, shape: .round))],
+            [PlanHandTarget(target: .init(kind: .pocket)),
+             PlanHandTarget(target: .init(kind: .pocket))]
+        ]))
+        XCTAssertEqual(minuteSix.repTargets.first?.minimum, 5)
+        XCTAssertTrue(minuteSix.instruction.contains("10 seconds"))
+        let final = try XCTUnwrap(entry.steps.last)
+        XCTAssertEqual(final.duration, 60)
+        XCTAssertEqual(final.segments.first?.timing, .stopwatch)
+        XCTAssertNil(final.segments.first?.duration)
     }
 
     func testUnsupportedSharedWarmUpsAndCooldownsAreAbsent() {
@@ -2397,23 +2385,22 @@ final class PlanStorageTests: XCTestCase {
         let entry = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.entry")
         let intermediate = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.intermediate")
         let advanced = CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced")
-        let cases: [(plan: TrainingPlan, stepID: String, target: PlanContactPredicate)] = [
-            (entry, "entry.minute-1.task-1", .init(kind: .jug)),
-            (entry, "entry.minute-2.task-1", .init(kind: .sloper, shape: .round)),
-            (entry, "entry.minute-3.task-1", .init(kind: .edge, depth: .category(.medium))),
-            (entry, "entry.minute-4.task-1", .init(kind: .pocket)),
-            (intermediate, "intermediate.minute-3.task-1", .init(kind: .edge, depth: .category(.small))),
-            (advanced, "advanced.minute-1.task-1", .init(kind: .sloper, depth: .category(.large))),
-            (advanced, "advanced.minute-1.task-2", .init(kind: .edge, shape: .flat, fingerCapacity: 4))
+        let cases: [(plan: TrainingPlan, stepID: String, taskIndex: Int, target: PlanContactPredicate)] = [
+            (entry, "entry.minute-1.task-1", 0, .init(kind: .jug)),
+            (entry, "entry.minute-2.task-1", 0, .init(kind: .sloper, shape: .round)),
+            (entry, "entry.minute-3.task-1", 0, .init(kind: .edge, depth: .category(.medium))),
+            (entry, "entry.minute-4.task-1", 0, .init(kind: .pocket)),
+            (intermediate, "intermediate.minute-3.task-1", 0, .init(kind: .edge, depth: .category(.small))),
+            (advanced, "advanced.minute-1.task-1", 0, .init(kind: .sloper, depth: .category(.large))),
+            (advanced, "advanced.minute-1.task-1", 1, .init(kind: .edge, shape: .flat, fingerCapacity: 4))
         ]
         for testCase in cases {
             let step = try XCTUnwrap(testCase.plan.steps.first { $0.id == testCase.stepID })
             let work = try XCTUnwrap(step.segments.filter { $0.kind == .work }.only)
-            XCTAssertEqual(
-                work.target,
-                .tasks([[PlanHandTarget(target: testCase.target), PlanHandTarget(target: testCase.target)]]),
-                testCase.stepID
-            )
+            let tasks = try XCTUnwrap(work.target?.planTasks)
+            XCTAssertEqual(tasks[testCase.taskIndex],
+                           [PlanHandTarget(target: testCase.target), PlanHandTarget(target: testCase.target)],
+                           testCase.stepID)
             XCTAssertEqual(step.handUse, .double, testCase.stepID)
             XCTAssertEqual(step.side, .both, testCase.stepID)
         }
@@ -2476,11 +2463,16 @@ final class PlanStorageTests: XCTestCase {
                 $0.id == "intermediate.minute-9.task-1"
             }
         )
-
-        let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
-
+        let work = try XCTUnwrap(step.segments.only)
+        let tasks = try XCTUnwrap(work.target?.planTasks)
+        XCTAssertEqual(tasks.map { $0.first?.target?.kind }, [.sloper, .jug])
+        XCTAssertEqual(tasks.first?.first?.target, .init(kind: .sloper))
+        let sloper = try XCTUnwrap(step.workRequirements.first { $0.kind == .sloper })
+        let contacts = try ContactResolver.resolve(sloper, step: step, board: board)
         XCTAssertEqual(contacts.count, 1)
         XCTAssertEqual(contacts.first?.kind, .sloper)
+        let jug = try XCTUnwrap(step.workRequirements.first { $0.kind == .jug })
+        XCTAssertFalse(try ContactResolver.resolve(jug, step: step, board: board).isEmpty)
     }
 
     func testSimulator3DPlansUseSemanticFlatAndRoundSloperTargets() throws {
@@ -2656,7 +2648,8 @@ final class PlanStorageTests: XCTestCase {
                 $0.id != "rptc.seven-three-repeaters" &&
                     $0.id != "research.megos-one-arm-7-3" &&
                     !["beastmaker-repeaters", "tension-6-and-10", "rock-prodigy.pivot-introductory", "rock-prodigy.pivot-intermediate"].contains($0.id) &&
-                    $0.id != "research.abrahangs"
+                    $0.id != "research.abrahangs" &&
+                    $0.id != "warmup.climbing.bouldering"
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)
@@ -2780,45 +2773,20 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testMetoliusAdvancedMinuteEightKeepsAlternativeDurationUndefined() throws {
-        let minuteEightTaskOne = try XCTUnwrap(
+        let minute = try XCTUnwrap(
             CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced").steps.first {
                 $0.id == "advanced.minute-8.task-1"
             }
         )
-        let minuteEightTaskTwo = try XCTUnwrap(
-            CanonicalPlanSourceFixture.plan("metolius.generic-ten-minute.advanced").steps.first {
-                $0.id == "advanced.minute-8.task-2"
-            }
-        )
-
-        XCTAssertEqual(
-            minuteEightTaskOne.segments,
-            [
-                WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large))),
-                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large)))
-                    ]]),
-                    timing: .fixed,
-                    duration: 15
-                )
-            ]
-        )
-        XCTAssertEqual(
-            minuteEightTaskTwo.segments,
-            [
-                WorkoutSegment(
-                    kind: .work,
-                    target: .tasks([[
-                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large))),
-                        PlanHandTarget(target: .init(kind: .sloper, depth: .category(.large)))
-                    ]]),
-                    timing: .undefined,
-                    duration: nil
-                )
-            ]
-        )
+        XCTAssertEqual(minute.duration, 60)
+        XCTAssertTrue(minute.restsAfterCompletion)
+        let work = try XCTUnwrap(minute.segments.only)
+        XCTAssertEqual(work.timing, .undefined)
+        XCTAssertNil(work.duration)
+        XCTAssertEqual(work.target?.planTasks?.count, 2)
+        XCTAssertEqual(minute.repTargets.first?.minimum, 3)
+        XCTAssertTrue(minute.instruction.contains("5-second front lever or 15-second straight-arm hang"))
+        XCTAssertTrue(minute.instruction.contains("do not perform both"))
     }
 
     @MainActor
@@ -2858,6 +2826,7 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertEqual(plan.steps.count, 10)
             XCTAssertEqual(plan.duration, 600)
             XCTAssertTrue(plan.steps.allSatisfy { $0.duration == 60 })
+            XCTAssertTrue(plan.steps.allSatisfy { $0.restsAfterCompletion })
             XCTAssertTrue(plan.steps.allSatisfy { $0.timedWorkDuration == nil })
             let numberedTargets = plan.steps.flatMap(\.workRequirements)
             XCTAssertFalse(numberedTargets.isEmpty)
@@ -4107,7 +4076,9 @@ enum CanonicalPlanSourceFixture {
                             fingerConfiguration: step.fingerConfiguration,
                             handUse: step.handUse, side: step.side, action: step.action,
                             repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
-                            timedWorkDuration: step.activeDuration
+                            timedWorkDuration: step.activeDuration,
+                            repTargets: step.repTargets,
+                            restsAfterCompletion: step.restsAfterCompletion
                         ))
                     }
                 }

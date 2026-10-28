@@ -2,6 +2,26 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardWorkoutRecorderTests: XCTestCase {
+    func testSelfPacedForceUsesObservedSampleTimeWhileNavigationClockWaits() {
+        var recorder = MotherboardWorkoutRecorder(configuration: .init(thresholdKGF: 2.5, releaseRatio: 0.8, debounceDuration: 0, mergeGapDuration: 0))
+        recorder.consume(measurement(load: 3, at: 0), stepID: "manual", plannedActiveDuration: 0,
+            workoutElapsed: 0, stepStartElapsed: 0, isActive: true)
+        recorder.consume(measurement(load: 3, at: 30), stepID: "manual", plannedActiveDuration: 0,
+            workoutElapsed: 0, stepStartElapsed: 0, isActive: true)
+        XCTAssertEqual(recorder.recordedWorkStepIDs, ["manual"])
+        recorder.pause(at: 0)
+        XCTAssertEqual(recorder.recordedWorkStepIDs, ["manual"])
+        recorder.consume(measurement(load: 3, at: 100), stepID: "manual", plannedActiveDuration: 0,
+            workoutElapsed: 0, stepStartElapsed: 0, isActive: true)
+        recorder.consume(measurement(load: 3, at: 105), stepID: "manual", plannedActiveDuration: 0,
+            workoutElapsed: 0, stepStartElapsed: 0, isActive: true)
+        recorder.consume(measurement(load: 0, at: 106), stepID: "manual", plannedActiveDuration: 0,
+            workoutElapsed: 0, stepStartElapsed: 0, isActive: true)
+        let result = recorder.finish(at: 0)
+        XCTAssertEqual(result[0].plannedActiveDuration, 0)
+        XCTAssertEqual(result[0].intervals.map(\.duration), [30, 6])
+        XCTAssertEqual(result[0].actualLoadedDuration, 36)
+    }
     private func measurement(load: Double, at time: TimeInterval) -> MotherboardMeasurement {
         MotherboardMeasurement(
             timestamp: Date(timeIntervalSince1970: time),

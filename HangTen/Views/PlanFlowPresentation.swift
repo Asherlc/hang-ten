@@ -13,6 +13,9 @@ struct PlanFlowGroup: Identifiable {
     var duration: TimeInterval { sourceSteps.reduce(0) { $0 + $1.duration } }
 
     var durationLabel: String {
+        if sourceSteps.contains(where: \.requiresManualAdvance) {
+            return duration == 0 ? "Self-paced" : "\(Int(duration))s + self-paced"
+        }
         let seconds = Int(duration)
         let minutes = seconds / 60
         let remainder = seconds % 60

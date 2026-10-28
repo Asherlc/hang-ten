@@ -1,19 +1,18 @@
 {
   "blocks": [
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-1",
+      "id": "metolius.generic-ten-minute.entry.minute-1",
       "steps": [
         {
-          "accessory": "15s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "entry.minute-1.task-1",
-          "instruction": "Hang from the jugs for 15 seconds.",
+          "instruction": "Hang from the jugs for 15 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -31,52 +30,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Jug hang"
+          "title": "Minute 1"
         }
       ],
-      "title": "Jug hang"
+      "title": "Minute 1"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-2",
+      "id": "metolius.generic-ten-minute.entry.minute-2",
       "steps": [
         {
-          "accessory": "45s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 45,
-          "handUse": "double",
-          "id": "entry.minute-1.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 45,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.entry.sequence-3",
-      "steps": [
-        {
-          "accessory": "1 pull-up",
-          "action": "hang",
-          "activeDuration": 5,
-          "duration": 5,
+          "duration": 60,
           "id": "entry.minute-2.task-1",
-          "instruction": "Do 1 pull-up on a round sloper.",
+          "instruction": "Do 1 pull-up on a round sloper. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 1,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 5,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -96,52 +77,27 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Round sloper pull-up"
+          "title": "Minute 2"
         }
       ],
-      "title": "Round sloper pull-up"
+      "title": "Minute 2"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-4",
+      "id": "metolius.generic-ten-minute.entry.minute-3",
       "steps": [
         {
-          "accessory": "55s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 55,
-          "handUse": "double",
-          "id": "entry.minute-2.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 55,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.entry.sequence-5",
-      "steps": [
-        {
-          "accessory": "10s hang",
-          "action": "hang",
-          "activeDuration": 10,
-          "duration": 10,
+          "duration": 60,
           "id": "entry.minute-3.task-1",
-          "instruction": "Hang from a medium edge for 10 seconds.",
+          "instruction": "Hang from a medium edge for 10 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 10,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -165,52 +121,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Medium-edge hang"
+          "title": "Minute 3"
         }
       ],
-      "title": "Medium-edge hang"
+      "title": "Minute 3"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-6",
+      "id": "metolius.generic-ten-minute.entry.minute-4",
       "steps": [
         {
-          "accessory": "50s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 50,
-          "handUse": "double",
-          "id": "entry.minute-3.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 50,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.entry.sequence-7",
-      "steps": [
-        {
-          "accessory": "15s hang",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "entry.minute-4.task-1",
-          "instruction": "Hang from a pocket for 15 seconds and include 3 shrugs.",
+          "instruction": "Hang from a pocket for 15 seconds and include 3 shrugs. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "shrugs",
+              "minimum": 3,
+              "title": "Shrugs"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -228,28 +166,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Pocket hang + shrugs"
+          "title": "Minute 4"
         }
       ],
-      "title": "Pocket hang + shrugs"
+      "title": "Minute 4"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-9",
+      "id": "metolius.generic-ten-minute.entry.minute-5",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
           "id": "entry.minute-5.task-1",
-          "instruction": "Hang from a large edge for 20 seconds and include 2 pull-ups.",
+          "instruction": "Hang from a large edge for 20 seconds and include 2 pull-ups. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 2,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -273,52 +217,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Large edge + pull-ups"
+          "title": "Minute 5"
         }
       ],
-      "title": "Large edge + pull-ups"
+      "title": "Minute 5"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-10",
+      "id": "metolius.generic-ten-minute.entry.minute-6",
       "steps": [
         {
-          "accessory": "40s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 40,
-          "handUse": "double",
-          "id": "entry.minute-5.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 40,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.entry.sequence-11",
-      "steps": [
-        {
-          "accessory": "10s hang",
-          "action": "hang",
-          "activeDuration": 10,
-          "duration": 10,
+          "duration": 60,
           "id": "entry.minute-6.task-1",
-          "instruction": "Hang from a round sloper for 10 seconds.",
+          "instruction": "Hang from a round sloper for 10 seconds. Do 5 knee raises on a pocket. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 5,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 10,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -335,34 +261,7 @@
                         "shape": "round"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Round-sloper hang"
-        }
-      ],
-      "title": "Round-sloper hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.entry.sequence-12",
-      "steps": [
-        {
-          "accessory": "5 reps",
-          "action": "hang",
-          "activeDuration": 5,
-          "duration": 5,
-          "id": "entry.minute-6.task-2",
-          "instruction": "Do 5 knee raises on a pocket.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 5,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -377,28 +276,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Pocket knee raises"
+          "title": "Minute 6"
         }
       ],
-      "title": "Pocket knee raises"
+      "title": "Minute 6"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-14",
+      "id": "metolius.generic-ten-minute.entry.minute-7",
       "steps": [
         {
-          "accessory": "4 pull-ups",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
           "id": "entry.minute-7.task-1",
-          "instruction": "Do 4 pull-ups on a large edge.",
+          "instruction": "Do 4 pull-ups on a large edge. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -422,28 +327,78 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Large-edge pull-ups"
+          "title": "Minute 7"
         }
       ],
-      "title": "Large-edge pull-ups"
+      "title": "Minute 7"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-18",
+      "id": "metolius.generic-ten-minute.entry.minute-8",
       "steps": [
         {
-          "accessory": "3 pull-ups",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "entry.minute-9.task-1",
-          "instruction": "Do 3 pull-ups on the jugs.",
-          "phase": "pull",
+          "duration": 60,
+          "id": "entry.minute-8.task-1",
+          "instruction": "Hang from a medium edge for 10 seconds. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "medium"
+                        },
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "medium"
+                        },
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 8"
+        }
+      ],
+      "title": "Minute 8"
+    },
+    {
+      "id": "metolius.generic-ten-minute.entry.minute-9",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "entry.minute-9.task-1",
+          "instruction": "Do 3 pull-ups on the jugs. Use the remaining time to rest until the next minute.",
+          "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
+          "segments": [
+            {
               "kind": "work",
               "target": {
                 "tasks": [
@@ -461,24 +416,25 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Jug pull-ups"
+          "title": "Minute 9"
         }
       ],
-      "title": "Jug pull-ups"
+      "title": "Minute 9"
     },
     {
-      "id": "metolius.generic-ten-minute.entry.sequence-20",
+      "id": "metolius.generic-ten-minute.entry.minute-10",
       "steps": [
         {
-          "accessory": "Maximum effort",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
           "duration": 60,
           "id": "entry.minute-10.task-1",
-          "instruction": "Hang from a round sloper for as long as you can.",
+          "instruction": "Hang from a round sloper for as long as you can. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -503,25 +459,31 @@
               "timing": "stopwatch"
             }
           ],
-          "title": "Maximum sloper hang"
+          "title": "Minute 10"
         }
       ],
-      "title": "Maximum sloper hang"
+      "title": "Minute 10"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-1",
+      "id": "metolius.generic-ten-minute.intermediate.minute-1",
       "steps": [
         {
-          "accessory": "15s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "intermediate.minute-1.task-1",
-          "instruction": "Hang from a large edge for 15 seconds.",
+          "instruction": "Hang from a large edge for 15 seconds. Do 3 pull-ups on the large edge. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -542,34 +504,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Large-edge hang"
-        }
-      ],
-      "title": "Large-edge hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-2",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "intermediate.minute-1.task-2",
-          "instruction": "Do 3 pull-ups on the large edge.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -590,52 +525,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Large-edge pull-ups"
+          "title": "Minute 1"
         }
       ],
-      "title": "Large-edge pull-ups"
+      "title": "Minute 1"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-3",
+      "id": "metolius.generic-ten-minute.intermediate.minute-2",
       "steps": [
         {
-          "accessory": "30s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 30,
-          "handUse": "double",
-          "id": "intermediate.minute-1.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 30,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-4",
-      "steps": [
-        {
-          "accessory": "2 pull-ups",
-          "action": "hang",
-          "activeDuration": 10,
-          "duration": 10,
+          "duration": 60,
           "id": "intermediate.minute-2.task-1",
-          "instruction": "Do 2 pull-ups on a round sloper.",
+          "instruction": "Do 2 pull-ups on a round sloper. Hang from a medium edge for 20 seconds. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 2,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 10,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -652,34 +569,7 @@
                         "shape": "round"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Round sloper pull-ups"
-        }
-      ],
-      "title": "Round sloper pull-ups"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-5",
-      "steps": [
-        {
-          "accessory": "20s hang",
-          "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "intermediate.minute-2.task-2",
-          "instruction": "Hang from a medium edge for 20 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -700,28 +590,27 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Medium-edge hang"
+          "title": "Minute 2"
         }
       ],
-      "title": "Medium-edge hang"
+      "title": "Minute 2"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-7",
+      "id": "metolius.generic-ten-minute.intermediate.minute-3",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
           "id": "intermediate.minute-3.task-1",
-          "instruction": "Hang from a small edge for 20 seconds.",
+          "instruction": "Hang from a small edge for 20 seconds. Hold a pocket at a 90° bent arm for 15 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -742,34 +631,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Small-edge hang"
-        }
-      ],
-      "title": "Small-edge hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-8",
-      "steps": [
-        {
-          "accessory": "15s hang",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "intermediate.minute-3.task-2",
-          "instruction": "Hold a pocket at a 90° bent arm for 15 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -784,52 +646,27 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Bent-arm pocket hang"
+          "title": "Minute 3"
         }
       ],
-      "title": "Bent-arm pocket hang"
+      "title": "Minute 3"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-9",
+      "id": "metolius.generic-ten-minute.intermediate.minute-4",
       "steps": [
         {
-          "accessory": "25s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 25,
-          "handUse": "double",
-          "id": "intermediate.minute-3.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 25,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-10",
-      "steps": [
-        {
-          "accessory": "30s hang",
-          "action": "hang",
-          "activeDuration": 30,
-          "duration": 30,
+          "duration": 60,
           "id": "intermediate.minute-4.task-1",
-          "instruction": "Hang from a round sloper for 30 seconds.",
+          "instruction": "Hang from a round sloper for 30 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 30,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -849,28 +686,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Round-sloper hang"
+          "title": "Minute 4"
         }
       ],
-      "title": "Round-sloper hang"
+      "title": "Minute 4"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-12",
+      "id": "metolius.generic-ten-minute.intermediate.minute-5",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
           "id": "intermediate.minute-5.task-1",
-          "instruction": "Hang from a large edge for 20 seconds.",
+          "instruction": "Hang from a large edge for 20 seconds. Do 4 pull-ups on a pocket. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -891,34 +734,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Large-edge hang"
-        }
-      ],
-      "title": "Large-edge hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-13",
-      "steps": [
-        {
-          "accessory": "4 pull-ups",
-          "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "intermediate.minute-5.task-2",
-          "instruction": "Do 4 pull-ups on a pocket.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -933,52 +749,39 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Pocket pull-ups"
+          "title": "Minute 5"
         }
       ],
-      "title": "Pocket pull-ups"
+      "title": "Minute 5"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-14",
+      "id": "metolius.generic-ten-minute.intermediate.minute-6",
       "steps": [
         {
-          "accessory": "20s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 20,
-          "handUse": "double",
-          "id": "intermediate.minute-5.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-15",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "intermediate.minute-6.task-1",
-          "instruction": "Do 3 offset pulls with the high hand on a jug and low hand on a small edge.",
+          "instruction": "Do 3 offset pulls with the high hand on a jug and low hand on a small edge. Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pulls-first-arm",
+              "minimum": 3,
+              "title": "Offset pulls · first arm"
+            },
+            {
+              "id": "offset-pulls-other-arm",
+              "minimum": 3,
+              "title": "Offset pulls · other arm"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -996,34 +799,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Offset pulls"
-        }
-      ],
-      "title": "Offset pulls"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-16",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "intermediate.minute-6.task-2",
-          "instruction": "Change hands and repeat 3 offset pulls with the high hand on a jug and low hand on a small edge.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -1041,28 +817,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Offset pulls · other side"
+          "title": "Minute 6"
         }
       ],
-      "title": "Offset pulls · other side"
+      "title": "Minute 6"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-18",
+      "id": "metolius.generic-ten-minute.intermediate.minute-7",
       "steps": [
         {
-          "accessory": "15 reps",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "intermediate.minute-7.task-1",
-          "instruction": "Do 15 knee raises on the jugs.",
+          "instruction": "Do 15 knee raises on the jugs. Hang from a medium edge for 15 seconds. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 15,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -1077,34 +859,7 @@
                         "kind": "jug"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Jug knee raises"
-        }
-      ],
-      "title": "Jug knee raises"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-19",
-      "steps": [
-        {
-          "accessory": "15s hang",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "intermediate.minute-7.task-2",
-          "instruction": "Hang from a medium edge for 15 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -1125,28 +880,27 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Medium-edge hang"
+          "title": "Minute 7"
         }
       ],
-      "title": "Medium-edge hang"
+      "title": "Minute 7"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-21",
+      "id": "metolius.generic-ten-minute.intermediate.minute-8",
       "steps": [
         {
-          "accessory": "25s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 25,
-          "duration": 25,
+          "duration": 60,
           "id": "intermediate.minute-8.task-1",
-          "instruction": "Hang from a medium edge for 25 seconds.",
+          "instruction": "Hang from a medium edge for 25 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 25,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -1170,52 +924,34 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Medium-edge hang"
+          "title": "Minute 8"
         }
       ],
-      "title": "Medium-edge hang"
+      "title": "Minute 8"
     },
     {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-22",
+      "id": "metolius.generic-ten-minute.intermediate.minute-9",
       "steps": [
         {
-          "accessory": "35s rest",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "duration": 35,
-          "handUse": "double",
-          "id": "intermediate.minute-8.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 35,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.intermediate.sequence-23",
-      "steps": [
-        {
-          "accessory": "15s hang",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
+          "duration": 60,
           "id": "intermediate.minute-9.task-1",
-          "instruction": "Hang from a slope for 15 seconds.",
+          "instruction": "Hang from a slope for 15 seconds. Do 3 pull-ups on the jugs. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -1230,31 +966,89 @@
                         "kind": "sloper"
                       }
                     }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "kind": "jug"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "jug"
+                      }
+                    }
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Slope hang"
+          "title": "Minute 9"
         }
       ],
-      "title": "Slope hang"
+      "title": "Minute 9"
     },
     {
-      "id": "metolius.generic-ten-minute.advanced.sequence-1",
+      "id": "metolius.generic-ten-minute.intermediate.minute-10",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
+          "id": "intermediate.minute-10.task-1",
+          "instruction": "Hang from a round sloper for as long as you can. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "kind": "sloper",
+                        "shape": "round"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "sloper",
+                        "shape": "round"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "stopwatch"
+            }
+          ],
+          "title": "Minute 10"
+        }
+      ],
+      "title": "Minute 10"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-1",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
           "id": "advanced.minute-1.task-1",
-          "instruction": "Hold a straight-arm hang on a large slope for 20 seconds.",
+          "instruction": "Hold a straight-arm hang on a large slope for 20 seconds. Do 3 pull-ups on a four-finger flat edge. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -1275,34 +1069,7 @@
                         "kind": "sloper"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Large-slope hang"
-        }
-      ],
-      "title": "Large-slope hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-2",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "advanced.minute-1.task-2",
-          "instruction": "Do 3 pull-ups on a four-finger flat edge.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -1321,28 +1088,35 @@
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Four-finger flat-edge pull-ups"
+          "title": "Minute 1"
         }
       ],
-      "title": "Four-finger flat-edge pull-ups"
+      "title": "Minute 1"
     },
     {
-      "id": "metolius.generic-ten-minute.advanced.sequence-4",
+      "id": "metolius.generic-ten-minute.advanced.minute-2",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
+          "duration": 60,
           "id": "advanced.minute-2.task-1",
-          "instruction": "Hold a slightly bent-arm hang on a large slope for 20 seconds.",
+          "instruction": "Hold a slightly bent-arm hang on a large slope for 20 seconds. Stay on for a 20-second L-sit or 20 hanging knee curls. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-curls-if-chosen",
+              "isOptional": true,
+              "minimum": 20,
+              "title": "Knee curls · if chosen"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -1360,572 +1134,10 @@
                         "depth": {
                           "category": "large"
                         },
-                        "kind": "sloper"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Bent-arm large-slope hang"
-        }
-      ],
-      "title": "Bent-arm large-slope hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-5",
-      "steps": [
-        {
-          "accessory": "20s hang",
-          "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "advanced.minute-2.task-2",
-          "instruction": "Stay on for a 20-second L-sit or 20 hanging knee curls.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    },
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "L-sit or hanging knee curls"
-        }
-      ],
-      "title": "L-sit or hanging knee curls"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-7",
-      "steps": [
-        {
-          "accessory": "5 pull-ups",
-          "action": "hang",
-          "activeDuration": 25,
-          "duration": 25,
-          "id": "advanced.minute-3.task-1",
-          "instruction": "Do 5 pull-ups on a three-finger pocket.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 25,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Three-finger-pocket pull-ups"
-        }
-      ],
-      "title": "Three-finger-pocket pull-ups"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-8",
-      "steps": [
-        {
-          "accessory": "25s hang",
-          "action": "hang",
-          "activeDuration": 25,
-          "duration": 25,
-          "id": "advanced.minute-3.task-2",
-          "instruction": "Stay on for a 25-second straight-arm hang on the same three-finger pocket.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 25,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Straight-arm three-finger-pocket hang"
-        }
-      ],
-      "title": "Straight-arm three-finger-pocket hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-9",
-      "steps": [
-        {
-          "accessory": "10s rest",
-          "action": "hang",
-          "duration": 10,
-          "handUse": "double",
-          "id": "advanced.minute-3.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 10,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-10",
-      "steps": [
-        {
-          "accessory": "40s hang",
-          "action": "hang",
-          "activeDuration": 40,
-          "duration": 40,
-          "id": "advanced.minute-4.task-1",
-          "instruction": "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 40,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "kind": "pocket"
-                      }
-                    },
-                    {
-                      "target": {
-                        "kind": "pocket"
-                      }
-                    }
-                  ],
-                  [
-                    {
-                      "target": {
-                        "kind": "edge"
-                      }
-                    },
-                    {
-                      "target": {
-                        "kind": "edge"
-                      }
-                    }
-                  ],
-                  [
-                    {
-                      "target": {
-                        "kind": "sloper"
-                      }
-                    },
-                    {
-                      "target": {
                         "kind": "sloper"
                       }
                     }
                   ],
-                  [
-                    {
-                      "target": {
-                        "kind": "jug"
-                      }
-                    },
-                    {
-                      "target": {
-                        "kind": "jug"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Hold ladder"
-        }
-      ],
-      "title": "Hold ladder"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-12",
-      "steps": [
-        {
-          "accessory": "20s hang",
-          "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "advanced.minute-5.task-1",
-          "instruction": "Hang one-armed from a four-finger flat edge for 20 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 4,
-                        "kind": "edge",
-                        "shape": "flat"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Single-arm flat-edge hang"
-        }
-      ],
-      "title": "Single-arm flat-edge hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-13",
-      "steps": [
-        {
-          "accessory": "20s hang",
-          "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "advanced.minute-5.task-2",
-          "instruction": "Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 4,
-                        "kind": "edge",
-                        "shape": "flat"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Single-arm flat-edge hang · other hand"
-        }
-      ],
-      "title": "Single-arm flat-edge hang · other hand"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-15",
-      "steps": [
-        {
-          "accessory": "5 pull-ups",
-          "action": "hang",
-          "activeDuration": 25,
-          "duration": 25,
-          "id": "advanced.minute-6.task-1",
-          "instruction": "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 25,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Offset pull-ups"
-        }
-      ],
-      "title": "Offset pull-ups"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-16",
-      "steps": [
-        {
-          "accessory": "5 pull-ups",
-          "action": "hang",
-          "activeDuration": 25,
-          "duration": 25,
-          "id": "advanced.minute-6.task-2",
-          "instruction": "Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 25,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Offset pull-ups · other side"
-        }
-      ],
-      "title": "Offset pull-ups · other side"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-18",
-      "steps": [
-        {
-          "accessory": "30s hang",
-          "action": "hang",
-          "activeDuration": 30,
-          "duration": 30,
-          "id": "advanced.minute-7.task-1",
-          "instruction": "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 30,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 4,
-                        "kind": "edge",
-                        "shape": "incut"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 4,
-                        "kind": "edge",
-                        "shape": "incut"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Incut-edge bent-arm hang"
-        }
-      ],
-      "title": "Incut-edge bent-arm hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-19",
-      "steps": [
-        {
-          "accessory": "15s hang",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "advanced.minute-7.task-2",
-          "instruction": "Then hold a straight-arm three-finger-pocket hang for 15 seconds.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Straight-arm three-finger-pocket hang"
-        }
-      ],
-      "title": "Straight-arm three-finger-pocket hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-20",
-      "steps": [
-        {
-          "accessory": "15s rest",
-          "action": "hang",
-          "duration": 15,
-          "handUse": "double",
-          "id": "advanced.minute-7.rest",
-          "instruction": "Rest for the remainder of the minute.",
-          "phase": "rest",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "rest",
-              "timing": "fixed"
-            }
-          ],
-          "side": "both",
-          "title": "Minute rest"
-        }
-      ],
-      "title": "Minute rest"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-21",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "advanced.minute-8.task-1",
-          "instruction": "Do 3 L-sit pull-ups, bending your knees if needed.",
-          "phase": "pull",
-          "segments": [
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    },
-                    {
-                      "target": {
-                        "depth": {
-                          "category": "large"
-                        },
-                        "kind": "sloper"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "L-sit pull-ups"
-        }
-      ],
-      "title": "L-sit pull-ups"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-22",
-      "steps": [
-        {
-          "accessory": "Choose one · 5 seconds front lever OR 15 seconds straight-arm large-slope hang",
-          "action": "hang",
-          "duration": 15,
-          "id": "advanced.minute-8.task-2",
-          "instruction": "Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both.",
-          "phase": "hang",
-          "segments": [
-            {
-              "kind": "work",
-              "target": {
-                "tasks": [
                   [
                     {
                       "target": {
@@ -1949,66 +1161,31 @@
               "timing": "undefined"
             }
           ],
-          "title": "Choose one: front lever or straight-arm hang"
+          "title": "Minute 2"
         }
       ],
-      "title": "Choose one: front lever or straight-arm hang"
+      "title": "Minute 2"
     },
     {
-      "id": "metolius.generic-ten-minute.advanced.sequence-24",
+      "id": "metolius.generic-ten-minute.advanced.minute-3",
       "steps": [
         {
-          "accessory": "20s hang",
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
-          "activeDuration": 20,
-          "duration": 20,
-          "id": "advanced.minute-9.task-1",
-          "instruction": "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets.",
-          "phase": "hang",
-          "segments": [
-            {
-              "duration": 20,
-              "kind": "work",
-              "target": {
-                "tasks": [
-                  [
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    },
-                    {
-                      "target": {
-                        "fingerCapacity": 3,
-                        "kind": "pocket"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            }
-          ],
-          "title": "Two-finger three-finger-pocket hang"
-        }
-      ],
-      "title": "Two-finger three-finger-pocket hang"
-    },
-    {
-      "id": "metolius.generic-ten-minute.advanced.sequence-25",
-      "steps": [
-        {
-          "accessory": "3 pull-ups",
-          "action": "hang",
-          "activeDuration": 15,
-          "duration": 15,
-          "id": "advanced.minute-9.task-2",
-          "instruction": "Then do 3 power pull-ups with weight or helper resistance.",
+          "duration": 60,
+          "id": "advanced.minute-3.task-1",
+          "instruction": "Do 5 pull-ups on a three-finger pocket. Stay on for a 25-second straight-arm hang on the same three-finger pocket. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 5,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -2025,27 +1202,416 @@
                         "kind": "pocket"
                       }
                     }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
                   ]
                 ]
               },
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
-          "title": "Power pull-ups"
+          "title": "Minute 3"
         }
       ],
-      "title": "Power pull-ups"
+      "title": "Minute 3"
     },
     {
-      "id": "metolius.generic-ten-minute.advanced.sequence-27",
+      "id": "metolius.generic-ten-minute.advanced.minute-4",
       "steps": [
         {
-          "accessory": "Maximum effort",
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-4.task-1",
+          "instruction": "Start at a three-finger pocket and move through every hold upward, staying on each for 5 seconds; finish with a 20-second large-slope hang. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "kind": "pocket"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "pocket"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "kind": "sloper"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "sloper"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "kind": "jug"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "jug"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 4"
+        }
+      ],
+      "title": "Minute 4"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-5",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-5.task-1",
+          "instruction": "Hang one-armed from a four-finger flat edge for 20 seconds. Switch hands and repeat the 20-second one-armed hang from a four-finger flat edge. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 4,
+                        "kind": "edge",
+                        "shape": "flat"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 4,
+                        "kind": "edge",
+                        "shape": "flat"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 5"
+        }
+      ],
+      "title": "Minute 5"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-6",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-6.task-1",
+          "instruction": "Do 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket. Change hands and repeat 5 offset pull-ups with the top hand on a large slope and bottom hand on a three-finger pocket. Use the remaining time to rest until the next minute.",
+          "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · first side"
+            },
+            {
+              "id": "offset-pull-ups-other-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · other side"
+            }
+          ],
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 6"
+        }
+      ],
+      "title": "Minute 6"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-7",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-7.task-1",
+          "instruction": "Hold a 90° bent-arm hang on a four-finger incut edge for 30 seconds. Then hold a straight-arm three-finger-pocket hang for 15 seconds. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 4,
+                        "kind": "edge",
+                        "shape": "incut"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 4,
+                        "kind": "edge",
+                        "shape": "incut"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 7"
+        }
+      ],
+      "title": "Minute 7"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-8",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-8.task-1",
+          "instruction": "Do 3 L-sit pull-ups, bending your knees if needed. Choose one: hold a 5-second front lever or 15-second straight-arm hang on a large slope. If choosing the front lever, finish at 5 seconds; do not perform both. Use the remaining time to rest until the next minute.",
+          "phase": "pull",
+          "repTargets": [
+            {
+              "id": "l-sit-pull-ups",
+              "minimum": 3,
+              "title": "L-sit pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    },
+                    {
+                      "target": {
+                        "depth": {
+                          "category": "large"
+                        },
+                        "kind": "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 8"
+        }
+      ],
+      "title": "Minute 8"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-9",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
+          "action": "hang",
+          "duration": 60,
+          "id": "advanced.minute-9.task-1",
+          "instruction": "Hang straight-armed for 20 seconds using only 2 fingers in three-finger pockets. Then do 3 power pull-ups with weight or helper resistance. Use the remaining time to rest until the next minute.",
+          "phase": "hang",
+          "repTargets": [
+            {
+              "id": "power-pull-ups",
+              "minimum": 3,
+              "title": "Power pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
+                  ],
+                  [
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    },
+                    {
+                      "target": {
+                        "fingerCapacity": 3,
+                        "kind": "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "undefined"
+            }
+          ],
+          "title": "Minute 9"
+        }
+      ],
+      "title": "Minute 9"
+    },
+    {
+      "id": "metolius.generic-ten-minute.advanced.minute-10",
+      "steps": [
+        {
+          "accessory": "60-second source cycle · remaining time rest",
           "action": "hang",
           "duration": 60,
           "id": "advanced.minute-10.task-1",
-          "instruction": "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope.",
+          "instruction": "Do a maximum slightly bent-arm hang on a large slope to failure with no rest, then a maximum straight-arm hang on the large slope. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2074,10 +1640,10 @@
               "timing": "stopwatch"
             }
           ],
-          "title": "Maximum slope hangs"
+          "title": "Minute 10"
         }
       ],
-      "title": "Maximum slope hangs"
+      "title": "Minute 10"
     },
     {
       "id": "metolius.contact.entry.sequence-1",
@@ -2089,6 +1655,14 @@
           "id": "metolius.contact.entry.minute-1",
           "instruction": "1 pull-up outer jugs (2); 10 second hang center edge (17). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 1,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2146,6 +1720,19 @@
           "id": "metolius.contact.entry.minute-2",
           "instruction": "1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-up-before-hang",
+              "minimum": 1,
+              "title": "Pull-up before hang"
+            },
+            {
+              "id": "pull-up-after-hang",
+              "minimum": 1,
+              "title": "Pull-up after hang"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2193,6 +1780,19 @@
           "id": "metolius.contact.entry.minute-3",
           "instruction": "2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-arm",
+              "minimum": 1,
+              "title": "Offset pull-ups · first arm"
+            },
+            {
+              "id": "offset-pull-ups-other-arm",
+              "minimum": 1,
+              "title": "Offset pull-ups · other arm"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2252,6 +1852,7 @@
           "id": "metolius.contact.entry.minute-4",
           "instruction": "6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2307,6 +1908,14 @@
           "id": "metolius.contact.entry.minute-5",
           "instruction": "10 s. dead hang flat sloper (15); 5 knee raises outer jug (2). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 5,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2358,6 +1967,7 @@
           "id": "metolius.contact.entry.minute-6",
           "instruction": "16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2425,6 +2035,14 @@
           "id": "metolius.contact.entry.minute-7",
           "instruction": "3 pull-ups any hold. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2458,6 +2076,7 @@
           "id": "metolius.contact.entry.minute-8",
           "instruction": "10 s. bent arm hang (elbows 90°) round sloper (3). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2497,6 +2116,19 @@
           "id": "metolius.contact.entry.minute-9",
           "instruction": "1 offset pull-up, pinch & pocket (1 & 11), change hands & repeat; 10 s. dead hang round sloper (3). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-side",
+              "minimum": 1,
+              "title": "Offset pull-ups · first side"
+            },
+            {
+              "id": "offset-pull-ups-other-side",
+              "minimum": 1,
+              "title": "Offset pull-ups · other side"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2570,6 +2202,14 @@
           "id": "metolius.contact.entry.minute-10",
           "instruction": "2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!! Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 2,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2623,6 +2263,14 @@
           "id": "metolius.contact.intermediate.minute-1",
           "instruction": "3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2682,6 +2330,14 @@
           "id": "metolius.contact.intermediate.minute-2",
           "instruction": "10 s. bent arm (elbows at 90°) hang outer jug (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 2,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2719,6 +2375,19 @@
           "id": "metolius.contact.intermediate.minute-3",
           "instruction": "4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-arm",
+              "minimum": 4,
+              "title": "Offset pull-ups · first arm"
+            },
+            {
+              "id": "offset-pull-ups-other-arm",
+              "minimum": 4,
+              "title": "Offset pull-ups · other arm"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2778,6 +2447,7 @@
           "id": "metolius.contact.intermediate.minute-4",
           "instruction": "10 s. L-hang on any holds; 10 s. dead hang on two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2833,6 +2503,7 @@
           "id": "metolius.contact.intermediate.minute-5",
           "instruction": "10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2900,6 +2571,7 @@
           "id": "metolius.contact.intermediate.minute-6",
           "instruction": "15 s. offset hang pockets (4) & (13), reverse holds — repeat. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -2969,6 +2641,19 @@
           "id": "metolius.contact.intermediate.minute-7",
           "instruction": "4 pull-ups deep center edge (17); 10 knee raises any holds. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            },
+            {
+              "id": "knee-raises",
+              "minimum": 10,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3022,6 +2707,7 @@
           "id": "metolius.contact.intermediate.minute-8",
           "instruction": "15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3091,6 +2777,14 @@
           "id": "metolius.contact.intermediate.minute-9",
           "instruction": "10 s. one arm hang round sloper (3), repeat other arm; 4 pull-ups center edge (17). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3152,6 +2846,14 @@
           "id": "metolius.contact.intermediate.minute-10",
           "instruction": "4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!! Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3205,6 +2907,14 @@
           "id": "metolius.contact.advanced.minute-1",
           "instruction": "6 pull-ups outer jugs (2); 20 s. dead hang deep four finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 6,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3264,6 +2974,14 @@
           "id": "metolius.contact.advanced.minute-2",
           "instruction": "15 s. bent arm hang (elbows at 90°) outer jug (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3301,6 +3019,19 @@
           "id": "metolius.contact.advanced.minute-3",
           "instruction": "6 offset pull-ups (3 each arm) outer jug (2) & deep four finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-arm",
+              "minimum": 3,
+              "title": "Offset pull-ups · first arm"
+            },
+            {
+              "id": "offset-pull-ups-other-arm",
+              "minimum": 3,
+              "title": "Offset pull-ups · other arm"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3380,6 +3111,7 @@
           "id": "metolius.contact.advanced.minute-4",
           "instruction": "15 s. L-hang any holds (hold good form); 15 s. dead hang on two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3435,6 +3167,7 @@
           "id": "metolius.contact.advanced.minute-5",
           "instruction": "10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med four finger pocket (9), campus to round slopers (3), hold 15 s. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3518,6 +3251,7 @@
           "id": "metolius.contact.advanced.minute-6",
           "instruction": "15 s. one arm hang center edge (17); rest 20 s.; repeat other arm. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3565,6 +3299,14 @@
           "id": "metolius.contact.advanced.minute-7",
           "instruction": "5 L-sit pull-ups (bend knees if you have to), pinches (1); 20 s. bent arm hang (elbows at 90°), deep four finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "l-sit-pull-ups",
+              "minimum": 5,
+              "title": "L-sit pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3624,6 +3366,14 @@
           "id": "metolius.contact.advanced.minute-8",
           "instruction": "10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "power-pull-ups",
+              "minimum": 3,
+              "title": "Power pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3689,6 +3439,7 @@
           "id": "metolius.contact.advanced.minute-9",
           "instruction": "20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3750,6 +3501,14 @@
           "id": "metolius.contact.advanced.minute-10",
           "instruction": "8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!! Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 8,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3803,6 +3562,7 @@
           "id": "metolius.simulator-3d.entry.minute-1",
           "instruction": "10 second dead hang, deep flat edge (7). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3848,6 +3608,14 @@
           "id": "metolius.simulator-3d.entry.minute-2",
           "instruction": "15 second dead hang + one pull-up, outer jugs (1). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 1,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3885,6 +3653,19 @@
           "id": "metolius.simulator-3d.entry.minute-3",
           "instruction": "2 offset pull-up (1 each arm) center jug (14) & deep three finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-arm",
+              "minimum": 1,
+              "title": "Offset pull-ups · first arm"
+            },
+            {
+              "id": "offset-pull-ups-other-arm",
+              "minimum": 1,
+              "title": "Offset pull-ups · other arm"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3944,6 +3725,7 @@
           "id": "metolius.simulator-3d.entry.minute-4",
           "instruction": "15 second dead hang, extra deep 3 finger pockets (9). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -3991,6 +3773,14 @@
           "id": "metolius.simulator-3d.entry.minute-5",
           "instruction": "12 second dead hang flat slopers (2) & 5 knee raises outer jugs (1). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 5,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4042,6 +3832,7 @@
           "id": "metolius.simulator-3d.entry.minute-6",
           "instruction": "16 second offset hang / (8 sec per side), deep pocket (15) & shallow edge (5). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4109,6 +3900,14 @@
           "id": "metolius.simulator-3d.entry.minute-7",
           "instruction": "3 pull-ups outer jugs (1). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4146,6 +3945,7 @@
           "id": "metolius.simulator-3d.entry.minute-8",
           "instruction": "8 second bent arm hang (elbows @ 90), round slopers (3). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4185,6 +3985,14 @@
           "id": "metolius.simulator-3d.entry.minute-9",
           "instruction": "1 pull-up & then 10 second hang, ext-deep 3 finger pocket (9). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 1,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4232,6 +4040,7 @@
           "id": "metolius.simulator-3d.entry.minute-10",
           "instruction": "Dead hang to failure, any holds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4265,6 +4074,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-1",
           "instruction": "25 second dead hang, medium edge (5). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4310,6 +4120,14 @@
           "id": "metolius.simulator-3d.intermediate.minute-2",
           "instruction": "20 second dead hang, flat slopers (2), 3 pull-ups flat slopers. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4349,6 +4167,14 @@
           "id": "metolius.simulator-3d.intermediate.minute-3",
           "instruction": "15 second bent arm hang, shallow edge (6) & 10 knee raises, jugs (1). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 10,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4406,6 +4232,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-4",
           "instruction": "15 second dead hang flat slope (2), 15 second dead hang round slopers (3). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4459,6 +4286,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-5",
           "instruction": "20 second offset hang, jug (1) & shallow pocket (17), reverse holds — repeat. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4518,6 +4346,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-6",
           "instruction": "15 second offset hang, pockets (4 & 9), reverse holds and repeat. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4587,6 +4416,19 @@
           "id": "metolius.simulator-3d.intermediate.minute-7",
           "instruction": "4 pull-ups, medium edges, 10 knee raises any holds. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 4,
+              "title": "Pull-ups"
+            },
+            {
+              "id": "knee-raises",
+              "minimum": 10,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4640,6 +4482,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-8",
           "instruction": "30 second dead hang, deep pockets (7). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4685,6 +4528,7 @@
           "id": "metolius.simulator-3d.intermediate.minute-9",
           "instruction": "10 sec one arm hang jugs (1), repeat other arm. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4724,6 +4568,14 @@
           "id": "metolius.simulator-3d.intermediate.minute-10",
           "instruction": "5 pull-ups deep edges (7), without dropping off, bump up to round slopers (3) & dead hang till failure. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 5,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4783,6 +4635,14 @@
           "id": "metolius.simulator-3d.advanced.minute-1",
           "instruction": "25 second dead hang shallow edge (6), 5 pull-ups three finger pockets (9). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 5,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4850,6 +4710,19 @@
           "id": "metolius.simulator-3d.advanced.minute-2",
           "instruction": "5 offset pull-ups, pockets (15 & 12), reverse holds repeat. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · first side"
+            },
+            {
+              "id": "offset-pull-ups-other-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · other side"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4919,6 +4792,7 @@
           "id": "metolius.simulator-3d.advanced.minute-3",
           "instruction": "45 second dead hang, extra shallow edges (11). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -4964,6 +4838,19 @@
           "id": "metolius.simulator-3d.advanced.minute-4",
           "instruction": "5 offset pull-ups, round sloper (3) & deep pocket (4), reverse holds repeat. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · first side"
+            },
+            {
+              "id": "offset-pull-ups-other-side",
+              "minimum": 5,
+              "title": "Offset pull-ups · other side"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5025,6 +4912,7 @@
           "id": "metolius.simulator-3d.advanced.minute-5",
           "instruction": "10 second dead hang, x-shallow edges (11), staying on, campus to three finger pockets (9), campus to shallow edges (6), campus to flat slopers (2), hold for 15 seconds. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5126,6 +5014,7 @@
           "id": "metolius.simulator-3d.advanced.minute-6",
           "instruction": "15 second one arm hang, round sloper (3), rest 10 seconds, repeat other arm. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5167,6 +5056,14 @@
           "id": "metolius.simulator-3d.advanced.minute-7",
           "instruction": "5 L-sit pull-ups (bend knees if you have to), jugs (1), 20 second bent arm hang (elbows @ 90), deep two finger pockets (12). Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "l-sit-pull-ups",
+              "minimum": 5,
+              "title": "L-sit pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5226,6 +5123,7 @@
           "id": "metolius.simulator-3d.advanced.minute-8",
           "instruction": "20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5295,6 +5193,14 @@
           "id": "metolius.simulator-3d.advanced.minute-9",
           "instruction": "10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "power-pull-ups",
+              "minimum": 3,
+              "title": "Power pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5364,6 +5270,14 @@
           "id": "metolius.simulator-3d.advanced.minute-10",
           "instruction": "8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!). Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "fast-pull-ups",
+              "minimum": 8,
+              "title": "Fast pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5415,6 +5329,14 @@
           "id": "metolius.rock-rings.ten-minute.minute-1",
           "instruction": "3 pull-ups on jugs. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5452,6 +5374,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-2",
           "instruction": "10 second bent-arm hang on 3 finger pockets; 15 second dead hang on 2 finger pockets. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5505,6 +5428,19 @@
           "id": "metolius.rock-rings.ten-minute.minute-3",
           "instruction": "2 offset pull-ups on 4 finger edge & 2 finger pocket; 2 offset pull-ups other way. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups-first-side",
+              "minimum": 2,
+              "title": "Offset pull-ups · first side"
+            },
+            {
+              "id": "offset-pull-ups-other-side",
+              "minimum": 2,
+              "title": "Offset pull-ups · other side"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5558,6 +5494,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-4",
           "instruction": "20 second L-hang on 4 finger edges; 10 second dead hang on 3 finger pockets. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5611,6 +5548,14 @@
           "id": "metolius.rock-rings.ten-minute.minute-5",
           "instruction": "5 pull-ups on 4 finger edges. Use the remaining time to rest until the next minute.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 5,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5650,6 +5595,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-6",
           "instruction": "20 second bent-arm hang on 3 finger pockets; 10 second dead hang on 2 finger pockets. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5703,6 +5649,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-7",
           "instruction": "15 second L-hang on 4 finger edges; 15 second dead hang on 4 finger edges. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5742,6 +5689,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-8",
           "instruction": "10 second offset hang on 4 finger edge & 2 finger pocket; 10 second offset hang other way. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5795,6 +5743,7 @@
           "id": "metolius.rock-rings.ten-minute.minute-9",
           "instruction": "20 second L-hang on 4 finger edges. Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -5834,6 +5783,14 @@
           "id": "metolius.rock-rings.ten-minute.minute-10",
           "instruction": "5 pull-ups on 3 finger pockets; dead hang 3 finger pockets to failure. Fight hard!! Use the remaining time to rest until the next minute.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 5,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -8405,9 +8362,8 @@
         {
           "accessory": "3s · 6s · 9s · rest as needed · manual task",
           "action": "hang",
-          "duration": 60,
           "id": "ladders-round-1",
-          "instruction": "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Pause the session timer while completing this ladder, then skip to the next step when ready.",
+          "instruction": "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Select Done when ready for the next ladder.",
           "phase": "hang",
           "segments": [
             {
@@ -8438,10 +8394,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "openHand",
           "id": "density-grip-1-rep-1",
-          "instruction": "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -8494,10 +8449,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "halfCrimp",
           "id": "density-grip-2-rep-1",
-          "instruction": "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -8564,10 +8518,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "openHand",
           "id": "density-expert-grip-1-rep-1",
-          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -8620,10 +8573,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "halfCrimp",
           "id": "density-expert-grip-2-rep-1",
-          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -8684,10 +8636,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "fullCrimp",
           "id": "density-expert-grip-3-rep-1",
-          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -8748,10 +8699,9 @@
         {
           "accessory": "20–40s or failure · stopwatch · two arms",
           "action": "hang",
-          "duration": 60,
           "gripType": "fullCrimp",
           "id": "density-expert-grip-3-rep-3",
-          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "instruction": "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -9838,7 +9788,6 @@
         {
           "accessory": "",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-foam-roll",
           "instruction": "Foam roll before overhead work.",
@@ -9856,11 +9805,17 @@
         {
           "accessory": "10 reps or ~75% max",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-normal-pull-ups",
           "instruction": "Perform 10 normal pull-ups on a jug or pull-up bar, or about 75% of your maximum.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 10,
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · normal pull-ups"
@@ -9874,11 +9829,18 @@
         {
           "accessory": "10–20 reps or ~75% max",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-normal-push-ups",
           "instruction": "Perform 10–20 normal push-ups, or about 75% of your maximum.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "push-ups",
+              "maximum": 20,
+              "minimum": 10,
+              "title": "Push-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · normal push-ups"
@@ -9892,11 +9854,16 @@
         {
           "accessory": "",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-wide-pull-ups",
           "instruction": "Perform wide pull-ups on the widest large ledge available; do not use a jug.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · wide pull-ups"
@@ -9910,11 +9877,16 @@
         {
           "accessory": "",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-wide-push-ups",
           "instruction": "Perform wide push-ups with hands rotated outward as comfortable.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "push-ups",
+              "title": "Push-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · wide push-ups"
@@ -9928,11 +9900,16 @@
         {
           "accessory": "",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-narrow-pull-ups",
           "instruction": "Perform narrow pull-ups on a large edge.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · narrow pull-ups"
@@ -9946,11 +9923,16 @@
         {
           "accessory": "",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-narrow-push-ups",
           "instruction": "Perform narrow push-ups, preferably on fists or as diamond push-ups.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "push-ups",
+              "title": "Push-ups"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "Warm-up · narrow push-ups"
@@ -10017,6 +9999,15 @@
           "id": "hoopers-intro-round-1-set-1-taps",
           "instruction": "Perform 30–40 plank shoulder taps (or thigh taps). Stop if form breaks.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "shoulder-or-thigh-taps",
+              "maximum": 40,
+              "minimum": 30,
+              "title": "Shoulder or thigh taps"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "plank shoulder taps"
@@ -10083,6 +10074,15 @@
           "id": "hoopers-intro-round-1-set-2-taps",
           "instruction": "Perform 30–40 plank shoulder taps (or thigh taps) after the second hang.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "shoulder-or-thigh-taps",
+              "maximum": 40,
+              "minimum": 30,
+              "title": "Shoulder or thigh taps"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "plank shoulder taps"
@@ -10431,6 +10431,21 @@
           "id": "hoopers-intro-round-2-set-1-kicks",
           "instruction": "Perform 20–30 flutter kicks and 20–30 scissor kicks. Protect your lower back and neck.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "flutter-kicks",
+              "maximum": 30,
+              "minimum": 20,
+              "title": "Flutter kicks"
+            },
+            {
+              "id": "scissor-kicks",
+              "maximum": 30,
+              "minimum": 20,
+              "title": "Scissor kicks"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "flutter and scissor kicks"
@@ -10491,6 +10506,19 @@
           "id": "hoopers-intro-round-3-set-1-side-plank",
           "instruction": "Perform about 10 hip-abduction reps on each side.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "hip-abduction-left-side",
+              "minimum": 10,
+              "title": "Hip abduction · left side"
+            },
+            {
+              "id": "hip-abduction-right-side",
+              "minimum": 10,
+              "title": "Hip abduction · right side"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "side plank with hip abduction"
@@ -10555,6 +10583,7 @@
           "id": "hoopers-intro-round-4-set-1-recovery",
           "instruction": "Use the full 3-minute recovery: plank bird dog for approximately 45–60 seconds, then stretch.",
           "phase": "conditioning",
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "bird dog and stretches"
@@ -10711,6 +10740,7 @@
           "id": "hoopers-intro-round-4-set-4-recovery",
           "instruction": "Use the full 3-minute recovery: plank bird dog for approximately 45–60 seconds, then stretch. Skip this recovery with the optional fourth set.",
           "phase": "conditioning",
+          "restsAfterCompletion": true,
           "segments": [],
           "side": "both",
           "title": "bird dog and stretches (optional set 4)"
@@ -10724,10 +10754,15 @@
         {
           "accessory": "Optional · set 1 of 2–4 total",
           "action": "hang",
-          "duration": 60,
           "id": "hoopers-intro-round-5-set-1-pull-ups",
           "instruction": "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -10769,11 +10804,18 @@
         {
           "accessory": "Optional · 10–20 reps then hold",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-round-5-set-1-hollow",
-          "instruction": "Within the same optional set, perform 10–20 hollow rocks, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
+          "instruction": "Within the same optional set, perform 10–20 hollow rocks, rest for about 10 seconds, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "hollow-rocks",
+              "maximum": 20,
+              "minimum": 10,
+              "title": "Hollow rocks"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "hollow rock/hold (paired optional set 1)"
@@ -10787,10 +10829,15 @@
         {
           "accessory": "Optional · set 2 of 2–4 total",
           "action": "hang",
-          "duration": 60,
           "id": "hoopers-intro-round-5-set-2-pull-ups",
           "instruction": "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -10832,11 +10879,18 @@
         {
           "accessory": "Optional · 10–20 reps then hold",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-round-5-set-2-hollow",
-          "instruction": "Within the same optional set, perform 10–20 hollow rocks, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
+          "instruction": "Within the same optional set, perform 10–20 hollow rocks, rest for about 10 seconds, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "hollow-rocks",
+              "maximum": 20,
+              "minimum": 10,
+              "title": "Hollow rocks"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "hollow rock/hold (paired optional set 2)"
@@ -10850,10 +10904,15 @@
         {
           "accessory": "Optional · set 3 of 2–4 total",
           "action": "hang",
-          "duration": 60,
           "id": "hoopers-intro-round-5-set-3-pull-ups",
           "instruction": "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -10895,11 +10954,18 @@
         {
           "accessory": "Optional · 10–20 reps then hold",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-round-5-set-3-hollow",
-          "instruction": "Within the same optional set, perform 10–20 hollow rocks, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
+          "instruction": "Within the same optional set, perform 10–20 hollow rocks, rest for about 10 seconds, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "hollow-rocks",
+              "maximum": 20,
+              "minimum": 10,
+              "title": "Hollow rocks"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "hollow rock/hold (paired optional set 3)"
@@ -10913,10 +10979,15 @@
         {
           "accessory": "Optional · set 4 of 2–4 total",
           "action": "hang",
-          "duration": 60,
           "id": "hoopers-intro-round-5-set-4-pull-ups",
           "instruction": "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "title": "Pull-ups"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -10958,11 +11029,18 @@
         {
           "accessory": "Optional · 10–20 reps then hold",
           "action": "hang",
-          "duration": 60,
           "handUse": "double",
           "id": "hoopers-intro-round-5-set-4-hollow",
-          "instruction": "Within the same optional set, perform 10–20 hollow rocks, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
+          "instruction": "Within the same optional set, perform 10–20 hollow rocks, rest for about 10 seconds, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.",
           "phase": "conditioning",
+          "repTargets": [
+            {
+              "id": "hollow-rocks",
+              "maximum": 20,
+              "minimum": 10,
+              "title": "Hollow rocks"
+            }
+          ],
           "segments": [],
           "side": "both",
           "title": "hollow rock/hold (paired optional set 4)"
@@ -11388,9 +11466,16 @@
           "id": "method-emom-minute-2",
           "instruction": "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -11413,16 +11498,7 @@
                         "kind": "pocket"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            },
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -11437,12 +11513,7 @@
                   ]
                 ]
               },
-              "timing": "fixed"
-            },
-            {
-              "duration": 30,
-              "kind": "rest",
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
           "title": "Minute · deep three-finger pocket + jug pull-ups"
@@ -11461,9 +11532,16 @@
           "id": "method-emom-minute-3",
           "instruction": "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 5,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 10,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -11486,16 +11564,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            },
-            {
-              "duration": 5,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -11510,12 +11579,7 @@
                   ]
                 ]
               },
-              "timing": "fixed"
-            },
-            {
-              "duration": 45,
-              "kind": "rest",
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
           "title": "Minute · 20mm hang + jug knee raises"
@@ -11586,9 +11650,16 @@
           "id": "method-emom-minute-5",
           "instruction": "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "pull-ups",
+              "minimum": 3,
+              "title": "Pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 10,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -11603,16 +11674,7 @@
                         "kind": "sloper"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            },
-            {
-              "duration": 15,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -11627,12 +11689,7 @@
                   ]
                 ]
               },
-              "timing": "fixed"
-            },
-            {
-              "duration": 35,
-              "kind": "rest",
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
           "title": "Minute · sloper hang + jug pull-ups"
@@ -11702,9 +11759,16 @@
           "id": "method-emom-minute-7",
           "instruction": "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.",
           "phase": "pull",
+          "repTargets": [
+            {
+              "id": "offset-pull-ups",
+              "minimum": 3,
+              "title": "Offset pull-ups"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 15,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -11725,12 +11789,7 @@
                   ]
                 ]
               },
-              "timing": "fixed"
-            },
-            {
-              "duration": 45,
-              "kind": "rest",
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
           "title": "Minute · offset pull-ups"
@@ -11801,9 +11860,16 @@
           "id": "method-emom-minute-9",
           "instruction": "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "knee-raises",
+              "minimum": 10,
+              "title": "Knee raises"
+            }
+          ],
+          "restsAfterCompletion": true,
           "segments": [
             {
-              "duration": 20,
               "kind": "work",
               "target": {
                 "tasks": [
@@ -11826,16 +11892,7 @@
                         "kind": "edge"
                       }
                     }
-                  ]
-                ]
-              },
-              "timing": "fixed"
-            },
-            {
-              "duration": 10,
-              "kind": "work",
-              "target": {
-                "tasks": [
+                  ],
                   [
                     {
                       "target": {
@@ -11850,12 +11907,7 @@
                   ]
                 ]
               },
-              "timing": "fixed"
-            },
-            {
-              "duration": 30,
-              "kind": "rest",
-              "timing": "fixed"
+              "timing": "undefined"
             }
           ],
           "title": "Minute · 20mm hang + jug knee raises"
@@ -11874,6 +11926,7 @@
           "id": "method-emom-minute-10",
           "instruction": "Take a max hang on a sloper.",
           "phase": "hang",
+          "restsAfterCompletion": true,
           "segments": [
             {
               "kind": "work",
@@ -13016,11 +13069,17 @@
         {
           "accessory": "Until form failure · stopwatch",
           "action": "hang",
-          "duration": 72,
           "gripType": "halfCrimp",
           "id": "tension-6-6-6-plus.set-1",
-          "instruction": "Pause main timer; start stopwatch. Half Crimp: 6s hang / 6s rest, 6+ reps to form failure. Stop stopwatch, skip step, resume main timer.",
+          "instruction": "Half Crimp: 6s hang / 6s rest, 6+ reps to form failure. Select Done when finished to begin recovery.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "hang-repetitions",
+              "minimum": 6,
+              "title": "Hang repetitions"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -13074,11 +13133,17 @@
         {
           "accessory": "Until form failure · stopwatch",
           "action": "hang",
-          "duration": 72,
           "gripType": "openHand",
           "id": "tension-6-6-6-plus.set-3",
-          "instruction": "Pause main timer; start stopwatch. Open Crimp: 6s hang / 6s rest, 6+ reps to form failure. Stop stopwatch, skip step, resume main timer.",
+          "instruction": "Open Crimp: 6s hang / 6s rest, 6+ reps to form failure. Select Done when finished to begin recovery.",
           "phase": "hang",
+          "repTargets": [
+            {
+              "id": "hang-repetitions",
+              "minimum": 6,
+              "title": "Hang repetitions"
+            }
+          ],
           "segments": [
             {
               "kind": "work",
@@ -13282,9 +13347,8 @@
         {
           "accessory": "Until form failure · stopwatch",
           "action": "hang",
-          "duration": 15,
           "id": "tension-long-hangs.hang-1",
-          "instruction": "Pause main timer; start stopwatch. Open or half crimp to grip/shoulder form failure (aim 15–30s). Stop stopwatch, skip step, resume main timer.",
+          "instruction": "Open or half crimp to grip/shoulder form failure (aim 15–30s). Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -13321,9 +13385,8 @@
         {
           "accessory": "Until form failure · stopwatch",
           "action": "hang",
-          "duration": 15,
           "id": "tension-long-hangs.hang-2",
-          "instruction": "Pause main timer; start stopwatch. Open or half crimp to grip/shoulder form failure (aim 15–30s). Stop stopwatch, skip step, resume main timer.",
+          "instruction": "Open or half crimp to grip/shoulder form failure (aim 15–30s). Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -13360,9 +13423,8 @@
         {
           "accessory": "Until form failure · stopwatch",
           "action": "hang",
-          "duration": 15,
           "id": "tension-long-hangs.hang-3",
-          "instruction": "Pause main timer; start stopwatch. Open or half crimp to grip/shoulder form failure (aim 15–30s). Stop stopwatch, skip step, resume main timer.",
+          "instruction": "Open or half crimp to grip/shoulder form failure (aim 15–30s). Select Done when finished to begin recovery.",
           "phase": "hang",
           "segments": [
             {
@@ -19978,6 +20040,176 @@
         }
       ],
       "title": "Orientation 3 · Sloper · 5/5"
+    },
+    {
+      "id": "warmup.lattice.progressive.guide",
+      "steps": [
+        {
+          "accessory": "3–4 sets · self-paced",
+          "id": "warmup.lattice.build",
+          "instruction": "Gradually build to your working load over 3–4 sets. Do not start at your working load.",
+          "phase": "conditioning",
+          "title": "Progressive sets"
+        }
+      ],
+      "title": "Lattice · Progressive warm-up"
+    },
+    {
+      "id": "warmup.beastmaker.general.guide",
+      "steps": [
+        {
+          "accessory": "At least 15 min",
+          "duration": 900,
+          "id": "warmup.beastmaker.minimum",
+          "instruction": "Warm up on the climbing wall or fingerboard for at least 15 minutes. Take your time.",
+          "phase": "conditioning",
+          "title": "Wall or fingerboard warm-up"
+        },
+        {
+          "accessory": "Advance when warmed up",
+          "id": "warmup.beastmaker.ready",
+          "instruction": "Continue warming up if needed before beginning intense finger training.",
+          "phase": "conditioning",
+          "title": "Finish warming up"
+        }
+      ],
+      "title": "Beastmaker · General warm-up"
+    },
+    {
+      "id": "warmup.climbing.bouldering.guide",
+      "steps": [
+        {
+          "accessory": "10 min",
+          "duration": 600,
+          "id": "warmup.climbing.cardio",
+          "instruction": "Walk, cycle or jog for 10 minutes.",
+          "phase": "conditioning",
+          "title": "Light cardio"
+        },
+        {
+          "accessory": "5 each direction",
+          "id": "warmup.climbing.neck",
+          "instruction": "Relax your head forward; slowly circle five times each way.",
+          "phase": "conditioning",
+          "title": "Head rolls"
+        },
+        {
+          "accessory": "Controlled circles",
+          "id": "warmup.climbing.shoulders",
+          "instruction": "Make five controlled arm circles each way, one arm at a time, then smaller circles forward and backward with both arms.",
+          "phase": "conditioning",
+          "title": "Windmills"
+        },
+        {
+          "accessory": "Two rounds · 1 min between",
+          "id": "warmup.climbing.twists",
+          "instruction": "With knees bent and feet grounded, lift your upper body slightly. Twist at least five times each side, rest one minute and repeat.",
+          "phase": "conditioning",
+          "title": "Side twists"
+        },
+        {
+          "accessory": "About 10 per leg",
+          "id": "warmup.climbing.lunges",
+          "instruction": "Alternate walking lunges, about 10 on each leg.",
+          "phase": "conditioning",
+          "title": "Walking lunges"
+        },
+        {
+          "accessory": "",
+          "id": "warmup.climbing.easy",
+          "instruction": "Climb several problems well below your limit. Drop a grade if they feel pumpy or strenuous.",
+          "phase": "conditioning",
+          "title": "Easy boulders"
+        },
+        {
+          "accessory": "About 5 min",
+          "duration": 300,
+          "id": "warmup.climbing.rest-1",
+          "instruction": "Rest about five minutes.",
+          "phase": "rest",
+          "segments": [
+            {
+              "duration": 300,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Rest"
+        },
+        {
+          "accessory": "",
+          "id": "warmup.climbing.moderate",
+          "instruction": "Climb a few problems two to three grades below your limit.",
+          "phase": "conditioning",
+          "title": "Moderate boulders"
+        },
+        {
+          "accessory": "Advance when recovered",
+          "id": "warmup.climbing.depump",
+          "instruction": "Rest a few minutes until the pump has cleared.",
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "undefined"
+            }
+          ],
+          "title": "Recover"
+        },
+        {
+          "accessory": "",
+          "id": "warmup.climbing.final",
+          "instruction": "Climb just below your limit in the style of today’s project.",
+          "phase": "conditioning",
+          "title": "Project-style boulder"
+        },
+        {
+          "accessory": "10 min",
+          "duration": 600,
+          "id": "warmup.climbing.rest-final",
+          "instruction": "Rest 10 minutes before your bouldering session.",
+          "phase": "rest",
+          "segments": [
+            {
+              "duration": 600,
+              "kind": "rest",
+              "timing": "fixed"
+            }
+          ],
+          "title": "Final rest"
+        }
+      ],
+      "title": "Climbing · Boulder pyramid warm-up"
+    },
+    {
+      "id": "warmup.ccc.rope-practice.guide",
+      "steps": [
+        {
+          "accessory": "Practice · 20 min",
+          "duration": 1200,
+          "id": "warmup.ccc.phase-1",
+          "instruction": "Split this phase between cardio/mobility and easy climbing. Cardio checklist: 100 jump-rope reps; burpees, 3 sets of 7; 50 high knees; jump squats, 3 sets of 10. Spend five minutes on hips, shoulders and legs: gates, skaters, scapular push-ups, band pull-aparts, overhead band rolls and arm circles. Climb easily for 10 minutes on large holds, using 10–15-move sequences, precise footwork and steady breathing. Introduce a light pump and recover.",
+          "phase": "conditioning",
+          "title": "General preparation and easy climbing"
+        },
+        {
+          "accessory": "Practice · 15 min",
+          "duration": 900,
+          "id": "warmup.ccc.phase-2",
+          "instruction": "Use 5–7-move sequences across hold types. Deliberately place hands and thumbs; explore movement styles at moderate intensity. Include a 2–4-minute circuit or four up-down-ups. Build an appropriate pump without exhausting yourself.",
+          "phase": "conditioning",
+          "title": "Holds and movement variety"
+        },
+        {
+          "accessory": "Practice · 15 min",
+          "duration": 900,
+          "id": "warmup.ccc.phase-3",
+          "instruction": "Use 5–10-move crux sequences, including simple hard moves and complex movement. Rest generously and avoid fatigue. Include both pushing and pulling.",
+          "phase": "conditioning",
+          "title": "Harder sequences and commitment"
+        }
+      ],
+      "title": "California Climbing Collective · Rope warm-up"
     }
   ],
   "metadata": {
@@ -19996,109 +20228,34 @@
     {
       "blocks": [
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-1"
+          "blockID": "metolius.generic-ten-minute.entry.minute-1"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-2",
-          "stepTitles": [
-            "Minute 1 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.entry.minute-2"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-3"
+          "blockID": "metolius.generic-ten-minute.entry.minute-3"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-4",
-          "stepTitles": [
-            "Minute 2 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.entry.minute-4"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-5"
+          "blockID": "metolius.generic-ten-minute.entry.minute-5"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-6",
-          "stepTitles": [
-            "Minute 3 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.entry.minute-6"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-7"
+          "blockID": "metolius.generic-ten-minute.entry.minute-7"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-2",
-          "stepIDs": [
-            "entry.minute-4.rest"
-          ],
-          "stepTitles": [
-            "Minute 4 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.entry.minute-8"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-9"
+          "blockID": "metolius.generic-ten-minute.entry.minute-9"
         },
         {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-10",
-          "stepTitles": [
-            "Minute 5 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-11"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-12"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-2",
-          "stepIDs": [
-            "entry.minute-6.rest"
-          ],
-          "stepTitles": [
-            "Minute 6 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-14"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-10",
-          "stepIDs": [
-            "entry.minute-7.rest"
-          ],
-          "stepTitles": [
-            "Minute 7 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-5",
-          "stepIDs": [
-            "entry.minute-8.task-1"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-6",
-          "stepIDs": [
-            "entry.minute-8.rest"
-          ],
-          "stepTitles": [
-            "Minute 8 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-18"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-2",
-          "stepIDs": [
-            "entry.minute-9.rest"
-          ],
-          "stepTitles": [
-            "Minute 9 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-20"
+          "blockID": "metolius.generic-ten-minute.entry.minute-10"
         }
       ],
       "id": "metolius.generic-ten-minute.entry",
@@ -20107,8 +20264,8 @@
         "focus": "mixed",
         "level": "Entry",
         "notes": [
-          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
-          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+          "Ten source minutes; complete each ordered task within its minute and rest for the remaining time.",
+          "Counts and hang durations follow the linked guide. Complete counted movements at your own pace; no seconds per repetition are assumed."
         ],
         "provenance": "adapted",
         "sourceLabel": "Metolius 10 Minute Sequences — Hangboard Training Guide",
@@ -20129,130 +20286,34 @@
     {
       "blocks": [
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-1"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-1"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-2"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-2"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepTitles": [
-            "Minute 1 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-3"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-4"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-4"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-5"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-5"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "intermediate.minute-2.rest"
-          ],
-          "stepTitles": [
-            "Minute 2 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-6"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-7"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-7"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-8"
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-8"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-9",
-          "stepTitles": [
-            "Minute 3 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-9"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-10"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "intermediate.minute-4.rest"
-          ],
-          "stepTitles": [
-            "Minute 4 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-12"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-13"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-14",
-          "stepTitles": [
-            "Minute 5 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-15"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-16"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "intermediate.minute-6.rest"
-          ],
-          "stepTitles": [
-            "Minute 6 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-18"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-19"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "intermediate.minute-7.rest"
-          ],
-          "stepTitles": [
-            "Minute 7 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-21"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-22",
-          "stepTitles": [
-            "Minute 8 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-23"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-18",
-          "stepIDs": [
-            "intermediate.minute-9.task-2"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "intermediate.minute-9.rest"
-          ],
-          "stepTitles": [
-            "Minute 9 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.entry.sequence-20",
-          "stepIDs": [
-            "intermediate.minute-10.task-1"
-          ]
+          "blockID": "metolius.generic-ten-minute.intermediate.minute-10"
         }
       ],
       "id": "metolius.generic-ten-minute.intermediate",
@@ -20261,8 +20322,8 @@
         "focus": "mixed",
         "level": "Intermediate",
         "notes": [
-          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
-          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+          "Ten source minutes; complete each ordered task within its minute and rest for the remaining time.",
+          "Counts and hang durations follow the linked guide. Complete counted movements at your own pace; no seconds per repetition are assumed."
         ],
         "provenance": "adapted",
         "sourceLabel": "Metolius 10 Minute Sequences — Hangboard Training Guide",
@@ -20283,133 +20344,34 @@
     {
       "blocks": [
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-1"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-1"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-2"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-2"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-9",
-          "stepIDs": [
-            "advanced.minute-1.rest"
-          ],
-          "stepTitles": [
-            "Minute 1 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.advanced.minute-3"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-4"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-4"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-5"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-5"
         },
         {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-14",
-          "stepIDs": [
-            "advanced.minute-2.rest"
-          ],
-          "stepTitles": [
-            "Minute 2 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.advanced.minute-6"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-7"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-7"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-8"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-8"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-9",
-          "stepTitles": [
-            "Minute 3 rest"
-          ]
+          "blockID": "metolius.generic-ten-minute.advanced.minute-9"
         },
         {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-10"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-14",
-          "stepIDs": [
-            "advanced.minute-4.rest"
-          ],
-          "stepTitles": [
-            "Minute 4 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-12"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-13"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-14",
-          "stepIDs": [
-            "advanced.minute-5.rest"
-          ],
-          "stepTitles": [
-            "Minute 5 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-15"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-16"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-9",
-          "stepIDs": [
-            "advanced.minute-6.rest"
-          ],
-          "stepTitles": [
-            "Minute 6 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-18"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-19"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-20",
-          "stepTitles": [
-            "Minute 7 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-21"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-22"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-3",
-          "stepIDs": [
-            "advanced.minute-8.rest"
-          ],
-          "stepTitles": [
-            "Minute 8 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-24"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-25"
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.intermediate.sequence-9",
-          "stepIDs": [
-            "advanced.minute-9.rest"
-          ],
-          "stepTitles": [
-            "Minute 9 rest"
-          ]
-        },
-        {
-          "blockID": "metolius.generic-ten-minute.advanced.sequence-27"
+          "blockID": "metolius.generic-ten-minute.advanced.minute-10"
         }
       ],
       "id": "metolius.generic-ten-minute.advanced",
@@ -20418,8 +20380,8 @@
         "focus": "mixed",
         "level": "Advanced",
         "notes": [
-          "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
-          "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
+          "Ten source minutes; complete each ordered task within its minute and rest for the remaining time.",
+          "Counts and hang durations follow the linked guide. Complete counted movements at your own pace; no seconds per repetition are assumed."
         ],
         "provenance": "adapted",
         "sourceLabel": "Metolius 10 Minute Sequences — Hangboard Training Guide",
@@ -22187,7 +22149,7 @@
         "notes": [
           "Bechtel's own interview at 49:21–52:11 prescribes 3, 6, and 9-second hangs on the same hold and load, with rests as long as the athlete needs. The starting load permits a 15-second hang.",
           "Three ladders is an app session adaptation; the author progresses volume rather than prescribing three rounds in this interview.",
-          "Each ladder is a manual task with a 60-second app preview, not a prescribed work or rest duration. Pause the session clock to complete the task at your own pace."
+          "Each ladder is self-paced, with no enclosing timer. Complete the prescribed hangs and athlete-paced rests, then select Done when ready."
         ],
         "provenance": "adapted",
         "sourceLabel": "Steve Bechtel · Power Company interview, 49:21–52:11",
@@ -22246,7 +22208,7 @@
         "level": "Beginner",
         "notes": [
           "Workout 2, Table 2 beginner column: two two-arm grip positions, one set and two repetitions per position; easy open-hand sloper and the chart's 25–25 mm half-crimp edge.",
-          "Slow static hangs continue to muscular failure, approximately 20–40 seconds. Each work step uses a stopwatch; its 60-second app preview is not a prescribed hang duration.",
+          "Slow static hangs continue to muscular failure, approximately 20–40 seconds. Each work step uses an uncapped stopwatch.",
           "The app defaults the source's 3–5-minute recovery between efforts to 3 minutes. This session is adapted from the beginner density portion, not the author's full multi-workout training cycle."
         ],
         "provenance": "adapted",
@@ -23077,7 +23039,7 @@
         "level": "Intermediate",
         "notes": [
           "Exact round order, counts, hold durations, rest intervals, and optional Round 5 guidance are retained.",
-          "The app uses manual 60-second conditioning rows where Hooper's Beta gives a rep range or coach-guided movement rather than a standalone timer."
+          "Warm-up and optional Round 5 movements are self-paced. Perform conditioning within the source recovery windows of 60, 90, or 180 seconds where prescribed; the remaining window is rest."
         ],
         "provenance": "adapted",
         "sourceLabel": "Hooper's Beta · Jason Hooper PT, DPT, OCS, CAFS",
@@ -23743,7 +23705,7 @@
         "category": "coach",
         "level": "Strength endurance",
         "notes": [
-          "Guided adaptation: four sets, first two half crimp and last two open crimp. For each set, pause the main workout timer, then start the separate stopwatch. Repeat 6 seconds hanging and 6 seconds resting, six or more repetitions until proper grip or shoulder form fails. Stop the stopwatch, skip the step and resume the main timer. The stopwatch records the whole set including its short rests. If left running, the main timer advances after 72 seconds. Rest 2 minutes between sets. Increase load by the smallest useful amount after reaching the chosen upper repetition range.",
+          "Guided adaptation: four sets, first two half crimp and last two open crimp. Repeat 6 seconds hanging and 6 seconds resting, six or more repetitions until proper grip or shoulder form fails. The uncapped stopwatch records the whole set including its short rests. Select Done when finished. Rest 2 minutes between sets. Increase load by the smallest useful amount after reaching the chosen upper repetition range.",
           "Primary source checked 2026-10-05. Guided preset; see the linked source for the full protocol."
         ],
         "provenance": "adapted",
@@ -23845,7 +23807,7 @@
         "category": "coach",
         "level": "Strength endurance",
         "notes": [
-          "Guided adaptation: three stopwatch hangs, using an athlete-selected open crimp or half crimp, with 2-minute rests. Pause the main workout timer, then start the separate stopwatch; each hang ends at form failure. Stop the stopwatch, skip the step and resume the main timer. If left running, the main timer advances after 15 seconds. Choose load to reach form failure in 15–30 seconds. No fixed grip sequence is prescribed.",
+          "Guided adaptation: three uncapped stopwatch hangs, using an athlete-selected open crimp or half crimp, with 2-minute rests. Each hang ends at form failure; select Done when finished. Choose load to reach form failure in 15–30 seconds. No fixed grip sequence is prescribed.",
           "Primary source checked 2026-10-05. Guided preset; see the linked source for the full protocol."
         ],
         "provenance": "adapted",
@@ -25647,6 +25609,118 @@
         "title": "Rock Prodigy Pivot · Intermediate",
         "workoutLabels": [
           "repeaters"
+        ]
+      }
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "warmup.lattice.progressive.guide"
+        }
+      ],
+      "id": "warmup.lattice.progressive",
+      "metadata": {
+        "category": "warmup",
+        "focus": "warmUp",
+        "level": "Warm-up",
+        "notes": [
+          "A standalone extract of the warm-up guidance, not the article’s strength-training protocol. The source supplies no hang times, rests, grip, hold, or load increments for these sets.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Lattice · Finger Strength Training for Climbers",
+        "sourceURL": "https://www.latticetraining.com/blog/how-to-manage-finger-strength-for-climbers",
+        "subtitle": "Build to your finger-training load over 3–4 sets.",
+        "tags": [
+          "built-in"
+        ],
+        "title": "Lattice · Progressive warm-up",
+        "workoutLabels": [
+          "warm-up"
+        ]
+      }
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "warmup.beastmaker.general.guide"
+        }
+      ],
+      "id": "warmup.beastmaker.general",
+      "metadata": {
+        "category": "warmup",
+        "focus": "warmUp",
+        "level": "Warm-up",
+        "notes": [
+          "The minimum 15-minute period is timed; the final self-paced step preserves the source’s requirement to warm up fully. The source prescribes no particular warm-up holds or exercises.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Ned Feehally · Finger Board Training, p. 3",
+        "sourceURL": "https://www.beaconclimbing.com/wp-content/uploads/Beastmaker-Beacon-Training-Manual.pdf",
+        "subtitle": "At least 15 minutes on a wall or fingerboard.",
+        "tags": [
+          "built-in"
+        ],
+        "title": "Beastmaker · General warm-up",
+        "workoutLabels": [
+          "warm-up"
+        ]
+      }
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "warmup.climbing.bouldering.guide"
+        }
+      ],
+      "id": "warmup.climbing.bouldering",
+      "metadata": {
+        "category": "warmup",
+        "focus": "warmUp",
+        "level": "Warm-up",
+        "notes": [
+          "Bouldering branch only. The roughly five-minute recovery uses a five-minute timer; mobility, climbing and recovery without an exact duration remain self-paced. Requires a wall, not just a hangboard.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "Climbing · Warm-up Pyramid",
+        "sourceURL": "https://www.climbing.com/skills/warm-up-pyramid/",
+        "subtitle": "Cardio, mobility and progressively harder boulders · requires a climbing wall.",
+        "tags": [
+          "built-in"
+        ],
+        "title": "Climbing · Boulder pyramid warm-up",
+        "workoutLabels": [
+          "warm-up"
+        ]
+      }
+    },
+    {
+      "blocks": [
+        {
+          "blockID": "warmup.ccc.rope-practice.guide"
+        }
+      ],
+      "id": "warmup.ccc.rope-practice",
+      "metadata": {
+        "category": "warmup",
+        "focus": "warmUp",
+        "level": "Warm-up",
+        "notes": [
+          "Uses the source’s practice phase windows of 20, 15 and 15 minutes. The longer competition windows are not used. Tasks remain a checklist inside each phase; no individual exercise timing is invented. Requires a wall.",
+          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
+        ],
+        "provenance": "adapted",
+        "sourceLabel": "California Climbing Collective · ISO Warm-up Checklist",
+        "sourceURL": "https://www.californiaclimbingcollective.com/ropewarmup",
+        "subtitle": "Three practice phases · requires a climbing wall.",
+        "tags": [
+          "built-in"
+        ],
+        "title": "California Climbing Collective · Rope warm-up",
+        "workoutLabels": [
+          "warm-up"
         ]
       }
     }

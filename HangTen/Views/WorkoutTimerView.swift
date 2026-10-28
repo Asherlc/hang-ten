@@ -3,11 +3,12 @@ import SwiftUI
 struct WorkoutTimerView: View {
     let remaining: TimeInterval
     var compact = false
+    var isUntimed = false
     @ScaledMetric(relativeTo: .largeTitle) private var timerSize = 46.0
     @ScaledMetric(relativeTo: .largeTitle) private var compactTimerSize = 34.0
 
     var body: some View {
-        Text(WorkoutTimeText.countdown(remaining))
+        Text(isUntimed ? "Self-paced" : WorkoutTimeText.countdown(remaining))
             .font(.system(size: compact ? compactTimerSize : timerSize, weight: .heavy, design: .rounded).monospacedDigit())
             .foregroundStyle(Color.hangInk)
             .lineLimit(WorkoutPresentationContent.portraitTimerLineLimit)

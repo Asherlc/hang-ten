@@ -2,6 +2,33 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testActualRepCountsAndCycleRestSurviveHistoryRoundTrip() throws {
+        let target = WorkoutRepTarget(id: "pull-ups", title: "Pull-ups", minimum: 10)
+        let row = WorkoutStepMeasurement(stepID: "reps", plannedActiveDuration: 0, intervals: [],
+            peakLoadKGF: nil, sampleCount: 0, status: .unmeasured,
+            repResults: [.init(target: target, completed: 8)], cycleWorkEnd: 20, cycleRestDuration: 15)
+        let restored = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: JSONEncoder().encode(row))
+        XCTAssertEqual(restored.repResults.first?.completed, 8)
+        XCTAssertEqual(restored.repResults.first?.target.minimum, 10)
+        XCTAssertEqual(restored.cycleRestDuration, 15)
+        var legacy = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(row)) as? [String: Any])
+        for field in ["repResults", "cycleWorkEnd", "cycleRestDuration"] { legacy.removeValue(forKey: field) }
+        let old = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: JSONSerialization.data(withJSONObject: legacy))
+        XCTAssertTrue(old.repResults.isEmpty)
+        XCTAssertNil(old.cycleRestDuration)
+    }
+    func testGeneralActivityRetainsItsIdentityWithoutInventedHangCues() throws {
+        let step = WorkoutStepMeasurement(stepID: "warmup", plannedActiveDuration: 0,
+            intervals: [], peakLoadKGF: nil, sampleCount: 0, status: .unmeasured,
+            isGeneralActivity: true)
+        let restored = try JSONDecoder().decode(WorkoutStepMeasurement.self, from: JSONEncoder().encode(step))
+        XCTAssertTrue(restored.isGeneralActivity)
+        XCTAssertEqual(WorkoutSummaryFormatting.semanticText(for: restored, unit: .kgf), "General activity")
+        var legacy = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(step)) as? [String: Any])
+        legacy.removeValue(forKey: "isGeneralActivity")
+        XCTAssertFalse(try JSONDecoder().decode(WorkoutStepMeasurement.self,
+            from: JSONSerialization.data(withJSONObject: legacy)).isGeneralActivity)
+    }
     func testInitialWeightTextClearlyDescribesManualStandaloneAndBodyweightModes() {
         XCTAssertNil(
             WorkoutSummaryFormatting.initialWeightText(for: .untracked, unit: .kilograms)

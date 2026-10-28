@@ -38,7 +38,7 @@ Metolius demonstrates both cases:
 
 - The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
   contains Entry, Intermediate, and Advanced routines named by semantic hold
-  type. Hang Ten retains these three routines as adapted guided expansions.
+  type. Hang Ten retains these three routines as adapted source-minute cycles.
 - The [Contact guide](https://www.metoliusclimbing.com/pages/contact-training-guide)
   uses Contact-board hold numbers.
 - The [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
@@ -81,6 +81,14 @@ manufacturer's prescription.
 
 ## 4. Model intervals according to the source
 
+When no enclosing step duration is supplied, omit `duration` and use a single
+`undefined` or `stopwatch` segment. The user advances that step explicitly;
+do not invent a timer estimate merely to make a source executable. General
+conditioning instructions may omit both duration and board-work segments.
+An untimed rest uses one `rest` segment with `timing: "undefined"` and no
+duration. Positive enclosing source cycles retain their automatic boundary.
+See the [warm-up mapping](source-audits/2026-10-27-warmups.md) for examples.
+
 Both apps read the checked-in canonical `HangTen/Resources/PlanLibrary.json`.
 Add the audited plan directly to its reusable block definitions and plan
 references, retaining source metadata and provenance. Build board resources
@@ -113,18 +121,30 @@ For an unchanged task-cycle import, preserve the source's cycle structure and
 leave `timedWorkDuration` `nil` unless the source explicitly defines a continuous
 timed work segment. The official Metolius board-specific plans keep each
 manufacturer minute as one source-governed cycle with remaining-time rest. The
-adapted generic Metolius expansions:
+adapted generic Metolius cycles:
 
 - retain ten source cycles of 60 seconds each and preserve task order;
-- give each listed task its own guided step and add an explicit rest step for
-  the unused portion of that source minute;
-- keep generated task steps step-local: they may set `timedWorkDuration` to the
-  fixed task's own duration even when no rest follows, while unused minute time
-  is represented by a separate `.rest` step;
-- use five seconds per pull-up and one second per other counted repetition
-  only when Metolius gives no duration, and state that these are app defaults;
-- keep explicit source hang durations unchanged and preserve stay-on,
-  hand-switch, maximum, failure, and no-rest qualifiers.
+- keep every task in one ordered `undefined` work segment (or `stopwatch`
+  for the source's final maximum effort), with no guessed seconds per rep;
+- retain source hang durations and stay-on, hand-switch, maximum, failure,
+  and no-rest qualifiers in the instructions;
+- set `restsAfterCompletion: true` so Done ends the task while the cycle
+  clock continues through remaining-time rest;
+- use `repTargets` for source-prescribed counted movements. Exact counts use
+  `minimum` only; source ranges use `minimum` and `maximum`; unspecified counts
+  omit both. Separate distinct movements or independently performed sides. Mark a counted
+  source alternative `isOptional: true` so it begins unselected (for example,
+  knee curls when the athlete can instead choose an L-sit). Defaults are
+  editable targets, not evidence that repetitions occurred.
+
+The same completion behavior applies to board-specific source cycles and
+source recovery windows containing conditioning. Keep those positive durations:
+Done begins the remaining rest, and never restarts the window. For uncapped
+failure efforts omit enclosing `duration` and retain `stopwatch`; for self-paced
+manual tasks omit enclosing `duration` and retain `undefined` (general
+conditioning may omit board-work segments). Never instruct athletes to pause
+or skip around an invented outer timer. See the
+[self-paced legacy source mapping](source-audits/2026-10-27-self-paced-legacy-routines.md).
 
 Do not set `timedWorkDuration` to the first hang duration. A minute can contain
 multiple hangs, pull-ups, a hand switch, or a “stay on” transition, and the
@@ -214,8 +234,7 @@ calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. These
 board-specific measurements do not establish a conversion for the generic
 guide's size words. The generic guide's Intermediate minute 3 names Small Edge,
 and minute 6 names Jug/Small Edge. Their targets use `category: "small"` in
-`metolius.generic-ten-minute.intermediate.sequence-7`, `sequence-15`, and
-`sequence-16`. The previous inferred 8–19 mm mapping and its tolerance-adjusted
+the consolidated Intermediate minute 3 and minute 6 steps. The previous inferred 8–19 mm mapping and its tolerance-adjusted
 9–18 mm encoding are removed. Measured contacts require an explicit athlete
 choice when the source category cannot resolve. The Intermediate generic guide's
 minute 9 says only “Slope,” so its target is an unqualified sloper. Its
@@ -235,11 +254,11 @@ step, verify:
 6. resolved hold IDs on every compatible board.
 
 The three generic Metolius plans each retain ten 60-second source cycles and
-600 seconds total. Their guided step counts differ from the ten source cycles.
+600 seconds total. Each is represented by ten source-cycle steps.
 The source explicitly says to
 complete the task or tasks within each minute and use the remaining time to
 rest.
-Catalog tests validate the current adapted Metolius audit with assertions for
+Catalog tests validate the current adapted Metolius source mapping with assertions for
 step order, target mapping, timing, generated numbering, and the 60-second
 cycle structure.
 

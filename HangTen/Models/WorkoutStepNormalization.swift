@@ -66,7 +66,8 @@ enum WorkoutStepNormalizer {
             action: step.action,
             repetitions: step.repetitions,
             externalLoadKGF: step.externalLoadKGF,
-            timedWorkDuration: step.timedWorkDuration
+            timedWorkDuration: step.timedWorkDuration,
+            repTargets: step.repTargets, restsAfterCompletion: step.restsAfterCompletion
         )
     }
 
@@ -130,7 +131,8 @@ enum WorkoutStepNormalizer {
                     action: step.action,
                     repetitions: step.repetitions,
                     externalLoadKGF: step.externalLoadKGF,
-                    timedWorkDuration: duration
+                    timedWorkDuration: duration,
+                    repTargets: step.repTargets
                 )
             case .rest:
                 return WorkoutStep(

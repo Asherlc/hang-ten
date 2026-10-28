@@ -34,6 +34,28 @@ Search preserves catalog order and matches names, descriptions, and displayed
 labels. Results expose actual exercise content separately from training goals.
 Duration is marked approximate for variable or untimed routines.
 
+Steps without an enclosing duration wait for explicit Next step (Finish on
+the final step). They display Self-paced and never auto-advance, including
+after pause/resume, background interruption, or delayed frames. Mixed routines
+show the timed portion plus self-paced rather than estimating missing timings;
+numeric duration filters exclude these unknown totals. Source-defined positive
+cycles still advance at their stated boundary. Untimed steps suppress final
+countdown audio. Stopwatch measurement remains independent of advancement.
+In the custom editor, a blank Time field creates a self-paced step. General
+activity instructions do not require hangboard holds. Saved summary rows retain
+that activity identity and show an unspecified planned duration when no timer
+was authored; older session records retain their previous defaults.
+The four source-linked warm-up guides appear under Warm-ups and retain their
+audited [source mapping](source-audits/2026-10-27-warmups.md).
+
+Rep-based work exposes Reps with the published target prefilled. Ranges
+retain both bounds and prefill the lower bound; an unspecified count starts
+blank. Optional alternatives start unselected. Zero and above-target counts
+are accepted. Editing a count, recording it, or explicitly completing the work
+retains the result in local history. Merely visiting a prefilled field does not
+record an attempt. The [legacy routine audit](source-audits/2026-10-27-self-paced-legacy-routines.md)
+maps the corrected counts and removed estimated timers to their sources.
+
 The filter sheet stages duration, exercise, and difficulty choices until Show
 workouts is tapped; Cancel discards the draft. Filter groups combine with AND,
 and exercises/difficulties allow any selected value within their group. Duration
@@ -289,11 +311,15 @@ controls and hold/grip cues are inactive. Cancellation or scene interruption
 leaves the destination paused. Skipping the final step completes immediately.
 Every seek stops old speech and reanchors cues to the new elapsed position.
 
-Official Metolius source-cycle steps keep `timedWorkDuration == nil`: speech says
+Metolius source-cycle steps keep `timedWorkDuration == nil`: speech says
 “Begin minute …” and the athlete completes all listed tasks, then rests within
-that minute. The generic adapted expansions instead expose guided task and rest
-steps. Never derive a rest boundary from the first hang in a multi-task source
-cycle. See [routine authoring](ADDING_A_ROUTINE.md).
+that minute. Done — rest records the athlete's work boundary and shows the time
+remaining until the original deadline. It does not restart the minute. Method
+and Hooper's source-defined recovery windows use the same completion behavior.
+Only time actually spent after Done contributes rest; the preceding work keeps
+its unspecified duration unless independently measured. Never derive a rest
+boundary from the first hang in a multi-task source cycle. See
+[routine authoring](ADDING_A_ROUTINE.md).
 
 When `fingerConfiguration` is omitted, hand cues display index, middle, ring and
 pinky with `4 fingers (assumed)`. Explicit selections override this display
@@ -362,6 +388,9 @@ Ordered source segments remain ordered records. Rest has identity and duration
 but no target. In a running workout, fixed work and rest store the time actually
 spent in their timeline ranges; stopwatch work stores observed active seconds.
 Never-started stopwatch and genuinely untimed work omit duration.
+Force recording on untimed hangs uses active sensor timestamps rather than the
+waiting navigation clock, excluding pause gaps. General activities do not
+collect hangboard force intervals.
 
 Stopwatch controls begin at `00:00` and expose Start, Stop and Resume. They do
 not advance the enclosing workout clock. Workout pause or scene interruption

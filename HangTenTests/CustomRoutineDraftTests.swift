@@ -2,6 +2,37 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testRepTargetsAndSourceCycleModeSurviveCustomEditingAndResolution() throws {
+        let target = WorkoutRepTarget(id: "pulls", title: "Pull-ups", minimum: 3)
+        let step = WorkoutStepDefinition(id: "cycle", title: "Minute", instruction: "Complete 3 pull-ups.",
+            accessory: "", duration: 60, phase: .pull,
+            segments: [.init(kind: .work, target: .requirements([.kind(.jug)]), timing: .undefined, duration: nil)],
+            repTargets: [target], restsAfterCompletion: true)
+        let definition = CustomRoutineDefinition(id: "custom.rep-cycle", title: "Rep cycle", subtitle: "",
+            difficulty: nil, category: nil, tags: [], targetMode: .generic, steps: [step])
+        let edited = CustomRoutineDraft(editing: definition).definition()
+        XCTAssertEqual(edited.steps[0].repTargets, [target])
+        XCTAssertTrue(edited.steps[0].restsAfterCompletion)
+        let owner = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent().lastPathComponent
+        let suite = "RepCycle-\(owner)-\(UUID().uuidString)"
+        defer { UserDefaults.standard.removePersistentDomain(forName: suite) }
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        let store = CustomRoutineStore(defaults: defaults)
+        let plan = try store.plan(for: edited)
+        XCTAssertEqual(plan.steps[0].repTargets, [target])
+        XCTAssertTrue(plan.steps[0].restsAfterCompletion)
+    }
+
+    func testEnablingRemainingTimeRestClearsAnOldFixedWorkBoundary() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Cycle"
+        var step = makeStep(id: "cycle", title: "Work", duration: 60)
+        step.activeDuration = 10
+        draft.steps = [step]
+        draft.steps[0].setRestsAfterCompletion(true)
+        XCTAssertNil(draft.definition().steps[0].activeDuration)
+        XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
+    }
     func testDepthEntryParsesSingleValuesAndOrderedRangesInMillimeters() {
         let locale = Locale(identifier: "en_US")
         XCTAssertEqual(CustomRoutineDepthEntry.parse(" 18 ", locale: locale),
@@ -233,16 +264,17 @@ final class CustomRoutineDraftTests: XCTestCase {
         }
     }
 
-    func testNewStepRequiresAthleteAuthoredDuration() {
+    func testNewStepIsSelfPacedUntilTheAthleteAuthorsADuration() {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.title = "My routine"
         draft.addSet()
         XCTAssertEqual(draft.steps[0].duration, 0)
         XCTAssertEqual(draft.steps[0].title, "")
         XCTAssertEqual(draft.steps[0].displayTitle, "Hang")
-        XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: draft.definition())
+        XCTAssertFalse(CustomRoutineEditorView.localValidationIssues(for: draft.definition())
             .contains("Step 1 needs a positive duration."))
-        draft.steps[0].duration = 12
+        XCTAssertTrue(draft.definition().steps[0].resolvedStep().requiresManualAdvance)
+        draft.steps[0].setDuration(12)
         draft.steps[0].targets = [.kind(.jug)]
         XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: draft.definition()).isEmpty)
         XCTAssertEqual(draft.definition().steps[0].title, "Hang")
@@ -312,7 +344,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: BoardCatalog.all).isEmpty)
     }
 
-    func testClearingDurationPreservesStopwatchTimingAndRequiresDuration() {
+    func testClearingDurationPreservesStopwatchAndAllowsManualAdvancement() {
         var original = CustomRoutineDraft(createWith: .generic)
         original.title = "Saved stopwatch routine"
         var step = makeStep(id: "stopwatch", title: "Hang", duration: 60)
@@ -327,8 +359,32 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].duration, 0)
         XCTAssertEqual(definition.steps[0].segments.first?.timing, .stopwatch)
         XCTAssertNil(definition.steps[0].segments.first?.duration)
-        XCTAssertTrue(CustomRoutineEditorView.localValidationIssues(for: definition)
+        XCTAssertFalse(CustomRoutineEditorView.localValidationIssues(for: definition)
             .contains("Step 1 needs a positive duration."))
+        XCTAssertTrue(definition.steps[0].resolvedStep().requiresManualAdvance)
+    }
+
+    func testClearingAFixedDurationCreatesAValidSelfPacedStep() {
+        var draft = CustomRoutineDraft(createWith: .generic)
+        draft.title = "Self-paced routine"
+        draft.steps = [makeStep(id: "manual", title: "Hang", duration: 12)]
+        draft.steps[0].setDuration(nil)
+        let step = draft.definition().steps[0]
+        XCTAssertTrue(step.resolvedStep().requiresManualAdvance)
+        XCTAssertEqual(step.segments[0].timing, .undefined)
+        XCTAssertNil(step.segments[0].duration)
+        XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
+    }
+
+    func testWarmUpGuidesCanBeDuplicatedWithoutInventingHoldsOrDurations() throws {
+        for id in ["warmup.lattice.progressive", "warmup.beastmaker.general"] {
+            let source = try XCTUnwrap(PlanCatalog.all.first { $0.id == id })
+            let metadata = try XCTUnwrap(PlanCatalog.metadata(for: id))
+            let definition = try CustomRoutineStore.definition(from: source, metadata: metadata, id: "custom.duplicate-warmup")
+            let draft = CustomRoutineDraft(duplicate: definition)
+            XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
+            XCTAssertEqual(draft.steps.first?.exercise, .conditioning)
+        }
     }
 
     func testExerciseChoiceCanonicalizesRestAndLoadedLift() {

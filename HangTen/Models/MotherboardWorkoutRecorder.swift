@@ -12,9 +12,15 @@ struct MotherboardWorkoutRecorder {
         var sampleCount = 0
         var status: WorkoutStepMeasurement.Status = .unmeasured
         var permitsMergeWithPrevious = true
+        var lastMeasurementTimestamp: Date?
+        var observedElapsed: TimeInterval?
 
         func clippedTime(_ time: TimeInterval) -> TimeInterval {
-            min(time, plannedEnd)
+            plannedActiveDuration == 0 ? time : min(time, plannedEnd)
+        }
+
+        func closingTime(_ scheduledTime: TimeInterval) -> TimeInterval {
+            plannedActiveDuration == 0 ? (observedElapsed ?? scheduledTime) : scheduledTime
         }
 
         var plannedEnd: TimeInterval {
@@ -29,6 +35,14 @@ struct MotherboardWorkoutRecorder {
 
     private(set) var currentPeakLoadKGF: Double?
     private(set) var currentLoadedDuration: TimeInterval = 0
+
+    var recordedWorkStepIDs: Set<String> {
+        Set(states.compactMap { id, state in
+            let hasWork = state.intervals.contains { $0.duration > 0 }
+                || (id == currentStepID && currentLoadedDuration > 0)
+            return hasWork ? id : nil
+        })
+    }
 
     init(configuration: MotherboardDetectionConfiguration = .init()) {
         self.configuration = configuration
@@ -54,6 +68,7 @@ struct MotherboardWorkoutRecorder {
             stepStartElapsed: stepStartElapsed ?? workoutElapsed
         )
         guard isActive else {
+            if plannedActiveDuration == 0 { state.lastMeasurementTimestamp = nil }
             states[stepID] = state
             return
         }
@@ -62,7 +77,19 @@ struct MotherboardWorkoutRecorder {
         state.peakLoadKGF = max(state.peakLoadKGF ?? measurement.aggregateLoadKGF, measurement.aggregateLoadKGF)
         currentPeakLoadKGF = state.peakLoadKGF
 
-        let time = state.clippedTime(workoutElapsed)
+        let time: TimeInterval
+        if plannedActiveDuration == 0 {
+            // A self-paced step has no scheduled seconds. Observe sensor time
+            // without advancing the navigation clock or including paused gaps.
+            let delta = state.lastMeasurementTimestamp.map {
+                max(0, measurement.timestamp.timeIntervalSince($0))
+            } ?? 0
+            time = (state.observedElapsed ?? state.stepStartElapsed) + delta
+            state.observedElapsed = time
+            state.lastMeasurementTimestamp = measurement.timestamp
+        } else {
+            time = state.clippedTime(workoutElapsed)
+        }
         let isQualifying = measurement.aggregateLoadKGF >= configuration.thresholdKGF
         let isReleased = measurement.aggregateLoadKGF < configuration.thresholdKGF * configuration.releaseRatio
 
@@ -102,12 +129,14 @@ struct MotherboardWorkoutRecorder {
 
     mutating func pause(at workoutElapsed: TimeInterval) {
         guard let currentStepID, var state = states[currentStepID] else { return }
-        closeInterval(in: &state, at: workoutElapsed)
+        let time = state.closingTime(workoutElapsed)
+        closeInterval(in: &state, at: time)
+        state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
         state.permitsMergeWithPrevious = false
         states[currentStepID] = state
-        currentLoadedDuration = loadedDuration(in: state, at: workoutElapsed)
+        currentLoadedDuration = loadedDuration(in: state, at: time)
     }
 
     mutating func endStep(
@@ -116,13 +145,15 @@ struct MotherboardWorkoutRecorder {
         status: WorkoutStepMeasurement.Status = .measured
     ) {
         guard var state = states[stepID] else { return }
-        closeInterval(in: &state, at: workoutElapsed)
+        let time = state.closingTime(workoutElapsed)
+        closeInterval(in: &state, at: time)
+        state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
         state.status = status
         states[stepID] = state
         currentStepID = stepID
-        currentLoadedDuration = loadedDuration(in: state, at: workoutElapsed)
+        currentLoadedDuration = loadedDuration(in: state, at: time)
     }
 
     mutating func interrupt(at workoutElapsed: TimeInterval) {
@@ -146,20 +177,23 @@ struct MotherboardWorkoutRecorder {
             plannedActiveDuration: plannedActiveDuration,
             stepStartElapsed: stepStartElapsed
         )
-        closeInterval(in: &state, at: workoutElapsed)
+        let time = state.closingTime(workoutElapsed)
+        closeInterval(in: &state, at: time)
+        state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
         state.permitsMergeWithPrevious = false
         state.status = .interrupted
         states[stepID] = state
         currentStepID = stepID
-        currentLoadedDuration = loadedDuration(in: state, at: workoutElapsed)
+        currentLoadedDuration = loadedDuration(in: state, at: time)
     }
 
     mutating func finish(at workoutElapsed: TimeInterval) -> [WorkoutStepMeasurement] {
         for stepID in stepOrder {
             guard var state = states[stepID] else { continue }
-            closeInterval(in: &state, at: workoutElapsed)
+            let time = state.closingTime(workoutElapsed)
+            closeInterval(in: &state, at: time)
             state.pendingStart = nil
             state.pendingRelease = nil
             if state.sampleCount > 0, state.status == .unmeasured {
