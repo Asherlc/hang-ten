@@ -177,7 +177,7 @@ final class WorkoutEndUITests: XCTestCase {
         selectWorkoutStep(titled: "Long hang 2 of 3", in: app)
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         let pausedTimer = app.staticTexts["workout.timer"].label
-        XCTAssertEqual(pausedTimer, "00:15")
+        XCTAssertEqual(pausedTimer, "Self-paced")
 
         // SwiftUI propagates the containing stopwatch identifier to its button.
         let stopwatch = app.buttons["workout.stopwatch"]
@@ -210,10 +210,11 @@ final class WorkoutEndUITests: XCTestCase {
         XCTAssertEqual(sessions.count, initialSessionCount + 1)
         sessions.firstMatch.tap()
         XCTAssertTrue(app.navigationBars["Session summary"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Long hang 1 of 3"].exists)
+        XCTAssertFalse(app.staticTexts["Long hang 1 of 3"].exists,
+                       "Visiting an untimed hang without starting its stopwatch does not record work.")
         XCTAssertTrue(app.staticTexts["Long hang 2 of 3"].exists)
         XCTAssertFalse(app.staticTexts["Long hang 3 of 3"].exists)
-        attachScreenshot(named: "Saved paused stopwatch workout contains first and second long hangs")
+        attachScreenshot(named: "Saved paused stopwatch workout contains only the measured second hang")
     }
 
     func testKeepTrainingPreservesAnAlreadyPausedSession() {
@@ -561,11 +562,12 @@ final class PlanFlowUITests: XCTestCase {
 
         let preview = app.otherElements["plan.firstHoldCue"]
         XCTAssertTrue(preview.exists)
-        XCTAssertTrue(preview.staticTexts["Hang from the jugs for 15 seconds."].exists)
-        XCTAssertTrue(preview.staticTexts["15s hang"].exists)
-        reveal("Hang from the jugs for 15 seconds.", in: app)
+        let instruction = "Hang from the jugs for 15 seconds. Use the remaining time to rest until the next minute."
+        XCTAssertTrue(preview.staticTexts[instruction].exists)
+        XCTAssertTrue(preview.staticTexts["60-second source cycle · remaining time rest"].exists)
+        reveal(instruction, in: app)
         attachScreenshot(named: "First hold instructions before starting", app: app,
-                         centering: "Hang from the jugs for 15 seconds.")
+                         centering: instruction)
     }
 
     func testRestPreviewShowsNextHoldInstructionsAndKeepsRecoveryTiming() {
@@ -577,20 +579,25 @@ final class PlanFlowUITests: XCTestCase {
     }
 
     private func assertRestPreview(landscape: Bool) {
-        let app = launchPlan("metolius.generic-ten-minute.entry", landscape: landscape)
+        let app = launchPlan("beastmaker-max-hangs", landscape: landscape)
         defer { app.terminate() }
-        reveal("Minute 1 rest", in: app)
+        let recovery = "Rest at least 3 minutes. Pause longer until you feel fully recovered."
+        let upcoming = "Use a hold and grip you want to improve; hang for 10 seconds."
+        reveal(recovery, in: app)
 
-        let rest = app.otherElements.matching(
-            NSPredicate(format: "identifier BEGINSWITH %@", "plan.flow.step.")
-        ).containing(.staticText, identifier: "Minute 1 rest").firstMatch
+        let rest = app.otherElements["plan.flow.step.beastmaker-max-hangs.rest-1"]
         XCTAssertTrue(rest.exists)
-        XCTAssertTrue(rest.staticTexts["45s rest"].exists)
-        XCTAssertTrue(rest.staticTexts["Rest for the remainder of the minute."].exists)
-        XCTAssertTrue(rest.staticTexts["Do 1 pull-up on a round sloper."].exists)
-        reveal("Do 1 pull-up on a round sloper.", in: app)
+        XCTAssertTrue(rest.staticTexts["3m"].exists)
+        XCTAssertTrue(rest.staticTexts["180-second rest"].exists)
+        XCTAssertTrue(rest.staticTexts[recovery].exists)
+        XCTAssertTrue(rest.staticTexts[upcoming].exists)
+        // The first hang uses the same instruction; scroll the recovery row
+        // itself into view so the screenshot shows its upcoming-work cue.
+        if rest.frame.maxY > app.windows.firstMatch.frame.height * 0.85 {
+            scrollUp(in: app, distance: 0.25)
+        }
         attachScreenshot(named: "Rest preview with next hold instructions \(landscape ? "landscape" : "portrait")",
-                         app: app, centering: "Do 1 pull-up on a round sloper.")
+                         app: app)
     }
 
     private func launchPlan(_ id: String, landscape: Bool = false, boardID: String? = nil,
