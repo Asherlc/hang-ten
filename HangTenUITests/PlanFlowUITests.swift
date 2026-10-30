@@ -23,7 +23,9 @@ final class WorkoutEndUITests: XCTestCase {
             XCTAssertTrue(cue.waitForExistence(timeout: 10))
             XCTAssertTrue(cue.label.localizedCaseInsensitiveContains("half crimp"), cue.label)
             XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", contraction)).firstMatch.exists)
-            XCTAssertNotEqual(app.staticTexts["workout.timer"].label, "Self-paced")
+            let countdown = app.staticTexts["workout.timer"].label
+            // The deep link auto-starts; Pause may land after the first tick.
+            XCTAssertNotNil(countdown.range(of: #"^00:0[1-5]$"#, options: .regularExpression), countdown)
             attachScreenshot(named: "PitchSix \(contraction) \(side) five-second pull")
             if step == 37 {
                 XCUIDevice.shared.orientation = .landscapeLeft
@@ -46,7 +48,7 @@ final class WorkoutEndUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Rest"].waitForExistence(timeout: 10))
         if app.buttons["Pause"].exists { app.buttons["Pause"].tap() }
         XCTAssertTrue(app.staticTexts["Rest 1–2 minutes between hangs."].exists)
-        XCTAssertNotEqual(app.staticTexts["workout.timer"].label, "Self-paced")
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "01:00")
         attachScreenshot(named: "Entralpi sixty-second recovery")
     }
 

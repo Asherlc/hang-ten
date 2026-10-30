@@ -90,6 +90,7 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
         steps = self.steps("warmup.entralpi.max-hang-ramp")
         self.assertEqual([s["phase"] for s in steps], ["hang", "rest", "hang", "rest", "hang"])
         work = [s for s in steps if s["phase"] == "hang"]
+        self.assertTrue(work[0]["instruction"].startswith("Complete lighter preparation first."))
         for step, percent in zip(work, [50, 70, 85]):
             self.assertEqual(step["duration"], 5)
             self.assertEqual(step["action"], "hang")

@@ -55,7 +55,7 @@ final class PlanStorageTests: XCTestCase {
         // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
             "warmup.pitchsix.recruitment-prep": "7b84451131a408b8b6a719379edc0a4e91da3bc654a92a25f242dbddc3253adc",
-            "warmup.entralpi.max-hang-ramp": "7548e74076d2638c0a1ecf21cce5a5a8c8e59a35c1c779198d9412405da522cf",
+            "warmup.entralpi.max-hang-ramp": "b97ecf2cc2b593a1e843e057b32793b5fd1be8963d2b4411a10271929a8309e5",
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
             "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
@@ -175,6 +175,22 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(ramp.steps.filter { !$0.isRestStep }.allSatisfy {
             $0.action == .hang && $0.handUse == .double && $0.gripType == nil
         })
+    }
+
+    @MainActor
+    func testImportedHangboardWarmUpsAreIncompatibleWithoutEdges() throws {
+        let owner = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().lastPathComponent
+        let suiteName = "PlanStorageTests.\(owner).warmupCompatibility.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let board = handSideBoard(id: "fixture.jug-only",
+            contacts: [PhysicalContact(id: "jug", name: "Jug", kind: .jug)])
+        for id in ["warmup.pitchsix.recruitment-prep", "warmup.entralpi.max-hang-ramp"] {
+            let plan = try XCTUnwrap(PlanCatalog.plan(id: id))
+            XCTAssertTrue(store.isIncompatible(plan, on: board), id)
+        }
     }
 
     func testPublishedHangboardPresetsAreSourceLinkedAndDistinct() throws {

@@ -50,6 +50,7 @@ cardio, mobility and climbing pyramid are outside this requested excerpt.
 | --- | --- |
 | Title / subtitle / labels | Identify the pre-max-hang ramp and progressive hangboard preparation; no claim that this replaces a complete general warm-up. |
 | `hang-1`, `hang-2`, `hang-3` | About 50%, 70%, 85% maximum, in order. Select the source’s three-hang branch within its 2–3-hang allowance. |
+| First instruction | Makes the source’s lighter-preparation prerequisite visible on the plan’s first-hold card and during playback. No extra timed task is added. |
 | Work timing | Source permits 5–10 seconds; fixed timer selects five seconds. Instructions preserve the full range; notes disclose the selected value. |
 | Recovery timing | Source permits 1–2 minutes between efforts; timer selects 60 seconds twice. Recovery instructions preserve the range; no final rest. |
 | Hand / target / grip | Source says use the training edge and grip. Playback selects two hands, explicitly disclosed in notes; edge predicates have no inferred depth, shape, grip or finger identities. |
@@ -70,7 +71,8 @@ The source-prescription regressions in
 `scripts/tests/test_original_routine_sources.py` assert ordered efforts,
 percentages, contraction labels, side counts, rest boundaries and omissions.
 `PlanStorageTests` retains full prescription hashes and tests runtime loading,
-Warm-ups search, durations, hand/action cues and representative contact resolution.
+Warm-ups search, durations, hand/action cues, representative contact resolution,
+and incompatibility on an edge-less fixture board.
 
 ## Other source checked
 
