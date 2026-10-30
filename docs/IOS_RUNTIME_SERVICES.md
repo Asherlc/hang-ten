@@ -46,8 +46,9 @@ activity instructions do not require hangboard holds. Saved summary rows retain
 that activity identity and show an unspecified planned duration when no timer
 was authored; older session records retain their previous defaults.
 The general and wall-based warm-up guides have been removed from the catalog.
-Future warm-up entries must take place on a hangboard and prescribe concrete
-steps; see the [candidate source review](source-audits/2026-10-30-hangboard-warmups.md).
+Warm-ups now includes PitchSix Recruitment Prep and Entralpi’s pre-max-hang ramp,
+with concrete board steps and disclosed timer/side adaptations. See their
+[source mappings](source-audits/2026-10-30-hangboard-warmups.md).
 
 Rep-based work exposes Reps with the published target prefilled. Ranges
 retain both bounds and prefill the lower bound; an unspecified count starts

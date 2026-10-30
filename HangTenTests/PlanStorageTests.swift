@@ -54,6 +54,8 @@ final class PlanStorageTests: XCTestCase {
         // original ID/title, metadata field, ordered target, cue and duration.
         // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
+            "warmup.pitchsix.recruitment-prep": "7b84451131a408b8b6a719379edc0a4e91da3bc654a92a25f242dbddc3253adc",
+            "warmup.entralpi.max-hang-ramp": "7548e74076d2638c0a1ecf21cce5a5a8c8e59a35c1c779198d9412405da522cf",
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
             "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
@@ -136,6 +138,43 @@ final class PlanStorageTests: XCTestCase {
             let actual = SHA256.hash(data: canonical).map { String(format: "%02x", $0) }.joined()
             XCTAssertEqual(actual, expected[plan["id"] as! String], plan["id"] as! String)
         }
+    }
+
+    func testImportedHangboardWarmUpsResolveAndAppearInFocusSearch() throws {
+        let store = try PlanLibraryStore(builtInData: bundledPlanLibraryData(), packageStore: BoardCatalog.packageStore)
+        let expected = [
+            "warmup.pitchsix.recruitment-prep": (pulls: 24, duration: TimeInterval(570)),
+            "warmup.entralpi.max-hang-ramp": (pulls: 3, duration: TimeInterval(135))
+        ]
+        for (id, value) in expected {
+            let plan = try XCTUnwrap(store.plan(id: id))
+            let metadata = try XCTUnwrap(PlanCatalog.metadata(for: id))
+            XCTAssertEqual(metadata.focus, .warmUp)
+            XCTAssertEqual(metadata.provenance, .adapted)
+            XCTAssertTrue(plan.matchesWorkoutSearch("warmup", metadata: metadata))
+            XCTAssertEqual(plan.duration, value.duration)
+            let work = plan.steps.filter { !$0.isRestStep }
+            XCTAssertEqual(work.count, value.pulls)
+            XCTAssertTrue(work.allSatisfy { $0.duration == 5 && $0.segments.first?.timing == .fixed })
+            XCTAssertTrue(work.allSatisfy { $0.fingerConfiguration == nil && $0.externalLoadKGF == nil })
+            for boardID in ["beastmaker-1000", "metolius.wood-grips-compact-ii"] {
+                let board = try XCTUnwrap(BoardCatalog.board(for: boardID))
+                for step in work {
+                    let target = try XCTUnwrap(step.segments.first?.target)
+                    let resolved = try ContactResolver.resolve(target, step: step, board: board)
+                    XCTAssertEqual(resolved.count, 1, "\(id) on \(boardID)")
+                    XCTAssertEqual(resolved.first?.count, step.handUse == .single ? 1 : 2)
+                }
+            }
+        }
+        let pitchsix = try XCTUnwrap(store.plan(id: "warmup.pitchsix.recruitment-prep"))
+        XCTAssertTrue(pitchsix.steps.filter { !$0.isRestStep }.allSatisfy {
+            $0.action == .isometricPull && $0.handUse == .single && $0.gripType == .halfCrimp
+        })
+        let ramp = try XCTUnwrap(store.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertTrue(ramp.steps.filter { !$0.isRestStep }.allSatisfy {
+            $0.action == .hang && $0.handUse == .double && $0.gripType == nil
+        })
     }
 
     func testPublishedHangboardPresetsAreSourceLinkedAndDistinct() throws {

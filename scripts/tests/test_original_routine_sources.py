@@ -44,6 +44,72 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
         self.assertTrue(removed.isdisjoint(self.plans))
         self.assertFalse(any(block.startswith(tuple(removed)) for block in self.blocks))
 
+    def test_hangboard_warmups_are_source_linked_adaptations(self):
+        ids = {"warmup.pitchsix.recruitment-prep", "warmup.entralpi.max-hang-ramp"}
+        warmups = {key for key in self.plans if key.startswith("warmup.")}
+        self.assertEqual(warmups, ids)
+        for key in ids:
+            plan = self.plans[key]
+            self.assertNotIn("boardID", plan)
+            self.assertEqual(plan["metadata"]["focus"], "warmUp")
+            self.assertEqual(plan["metadata"]["category"], "warmup")
+            self.assertEqual(plan["metadata"]["workoutLabels"], ["warm-up"])
+            self.assertEqual(plan["metadata"]["provenance"], "adapted")
+            self.assertTrue(plan["metadata"]["sourceURL"].startswith("https://"))
+            self.assertNotEqual(self.steps(key)[-1]["phase"], "rest")
+
+    def test_pitchsix_recruitment_preserves_contraction_load_and_each_hand(self):
+        steps = self.steps("warmup.pitchsix.recruitment-prep")
+        work = [step for step in steps if step["phase"] == "hang"]
+        self.assertEqual(len(work), 24)
+        for index, (contraction, percent) in enumerate([
+                ("OISO", 50), ("OISO", 70), ("OISO", 80),
+                ("OISO", 90), ("YISO", 60), ("YISO", 80)]):
+            for offset, side in enumerate(["left", "right"]):
+                pair = work[index * 4 + offset * 2:index * 4 + offset * 2 + 2]
+                for step in pair:
+                    self.assertEqual(step["action"], "isometricPull")
+                    self.assertEqual(step["handUse"], "single")
+                    self.assertEqual(step["side"], side)
+                    self.assertEqual(step["gripType"], "halfCrimp")
+                    self.assertNotIn("fingerConfiguration", step)
+                    self.assertNotIn("externalLoadKGF", step)
+                    self.assertIn(f"{percent}%", step["instruction"])
+                    self.assertIn(contraction, step["instruction"])
+                    self.assertEqual(step["duration"], 5)
+                    self.assertEqual(step["segments"], [{
+                        "kind": "work", "timing": "fixed", "duration": 5,
+                        "target": {"tasks": [[{"side": side, "target": {"kind": "edge"}}]]},
+                    }])
+        rests = [step["duration"] for step in steps if step["phase"] == "rest"]
+        self.assertEqual(rests, [10, 30] * 11 + [10])
+        self.assertEqual(sum(s["duration"] for s in steps), 570)
+        self.assertEqual([s["phase"] for s in steps], ["hang", "rest", "hang", "rest"] * 11 + ["hang", "rest", "hang"])
+
+    def test_entralpi_ramp_discloses_timer_defaults_without_inventing_grips(self):
+        steps = self.steps("warmup.entralpi.max-hang-ramp")
+        self.assertEqual([s["phase"] for s in steps], ["hang", "rest", "hang", "rest", "hang"])
+        work = [s for s in steps if s["phase"] == "hang"]
+        for step, percent in zip(work, [50, 70, 85]):
+            self.assertEqual(step["duration"], 5)
+            self.assertEqual(step["action"], "hang")
+            self.assertEqual(step["handUse"], "double")
+            self.assertNotIn("gripType", step)
+            self.assertNotIn("fingerConfiguration", step)
+            self.assertNotIn("externalLoadKGF", step)
+            self.assertIn(f"{percent}%", step["instruction"])
+            self.assertIn("5–10", step["instruction"])
+            self.assertEqual(step["segments"][0]["target"], {
+                "tasks": [[{"target": {"kind": "edge"}}, {"target": {"kind": "edge"}}]],
+            })
+        rests = [s for s in steps if s["phase"] == "rest"]
+        self.assertEqual([s["duration"] for s in rests], [60, 60])
+        self.assertTrue(all("1–2 minutes" in s["instruction"] for s in rests))
+        notes = " ".join(self.plans["warmup.entralpi.max-hang-ramp"]["metadata"]["notes"])
+        self.assertIn("two hands", notes)
+        self.assertIn("lighter", notes)
+        self.assertIn("2–3", notes)
+
     def test_lopez_max_hangs_targets_preserve_the_prescribed_edge_range(self):
         work = [step for step in self.steps("research.max-hangs") if step["phase"] == "hang"]
         self.assertTrue(work)
