@@ -36,29 +36,13 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
             with self.subTest(plan_id=plan_id):
                 self.assertIn(count, [ref.get("repeatCount", 1) for ref in self.plans[plan_id]["blocks"]])
 
-    def test_warmups_preserve_source_timing_gaps_and_published_windows(self):
-        warmups = {key: plan for key, plan in self.plans.items() if key.startswith("warmup.")}
-        self.assertEqual(len(warmups), 4)
-        for key, plan in warmups.items():
-            self.assertEqual(plan["metadata"]["focus"], "warmUp")
-            self.assertIn("warm-up", plan["metadata"]["workoutLabels"])
-            self.assertEqual(plan["metadata"]["provenance"], "adapted")
-            self.assertTrue(plan["metadata"]["sourceURL"].startswith("https://"))
-            self.assertNotIn("boardID", plan)
-            self.assertTrue(all("gripType" not in step and "fingerConfiguration" not in step
-                                for step in self.steps(key)))
-        lattice = self.steps("warmup.lattice.progressive")
-        self.assertEqual(len(lattice), 1)
-        self.assertNotIn("duration", lattice[0])
-        self.assertIn("3–4", lattice[0]["instruction"])
-        beastmaker = self.steps("warmup.beastmaker.general")
-        self.assertEqual(beastmaker[0]["duration"], 900)
-        self.assertNotIn("duration", beastmaker[1])
-        pyramid = self.steps("warmup.climbing.bouldering")
-        self.assertEqual([s["duration"] for s in pyramid if "duration" in s], [600, 300, 600])
-        self.assertEqual(next(s for s in pyramid if s["id"].endswith("depump"))["segments"],
-                         [{"kind": "rest", "timing": "undefined"}])
-        self.assertEqual([s["duration"] for s in self.steps("warmup.ccc.rope-practice")], [1200, 900, 900])
+    def test_removed_general_and_wall_warmups_are_absent(self):
+        removed = {
+            "warmup.lattice.progressive", "warmup.beastmaker.general",
+            "warmup.climbing.bouldering", "warmup.ccc.rope-practice",
+        }
+        self.assertTrue(removed.isdisjoint(self.plans))
+        self.assertFalse(any(block.startswith(tuple(removed)) for block in self.blocks))
 
     def test_lopez_max_hangs_targets_preserve_the_prescribed_edge_range(self):
         work = [step for step in self.steps("research.max-hangs") if step["phase"] == "hang"]

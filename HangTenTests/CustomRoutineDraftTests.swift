@@ -376,14 +376,20 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
     }
 
-    func testWarmUpGuidesCanBeDuplicatedWithoutInventingHoldsOrDurations() throws {
-        for id in ["warmup.lattice.progressive", "warmup.beastmaker.general"] {
-            let source = try XCTUnwrap(PlanCatalog.all.first { $0.id == id })
-            let metadata = try XCTUnwrap(PlanCatalog.metadata(for: id))
-            let definition = try CustomRoutineStore.definition(from: source, metadata: metadata, id: "custom.duplicate-warmup")
+    func testConditioningCanBeDuplicatedWithoutInventingHoldsOrDurations() throws {
+        for duration in [TimeInterval(0), 900] {
+            let step = WorkoutStep(id: "conditioning", number: 1, title: "Conditioning",
+                instruction: "Test conditioning task.", accessory: "", duration: duration, phase: .conditioning)
+            let source = TrainingPlan(id: "custom.conditioning", title: "Conditioning", subtitle: "", level: "",
+                sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: nil, steps: [step])
+            let metadata = PlanMetadata(title: "Conditioning", subtitle: "", level: "",
+                sourceLabel: "", sourceURL: nil, provenance: .custom, category: "custom")
+            let definition = try CustomRoutineStore.definition(from: source, metadata: metadata, id: "custom.duplicate-conditioning")
             let draft = CustomRoutineDraft(duplicate: definition)
             XCTAssertTrue(CustomRoutineValidator.issues(for: draft.definition(), availableBoards: BoardCatalog.all).isEmpty)
             XCTAssertEqual(draft.steps.first?.exercise, .conditioning)
+            XCTAssertEqual(draft.steps.first?.duration, duration)
+            XCTAssertTrue(draft.definition().steps[0].segments.isEmpty)
         }
     }
 
