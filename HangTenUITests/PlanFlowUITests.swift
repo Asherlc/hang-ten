@@ -34,14 +34,13 @@ final class WorkoutEndUITests: XCTestCase {
         }
     }
 
-    func testImportedEntralpiRampKeepsTwoHandWorkAndMinuteRecovery() {
+    func testImportedEntralpiRampKeepsUnspecifiedGripAndMinuteRecovery() {
         let app = openWorkout(URL(string: "hangten://plan/warmup.entralpi.max-hang-ramp/workout")!,
             historyTitle: "Entralpi · Pre-max-hang ramp", reviewStep: 1)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
-        let cue = app.descendants(matching: .any).matching(identifier: "workout.gripCue.both").firstMatch
-        XCTAssertTrue(cue.waitForExistence(timeout: 10))
-        XCTAssertTrue(cue.label.contains("both hands"), cue.label)
+        let cues = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "workout.gripCue."))
+        XCTAssertEqual(cues.count, 0, "An unspecified grip must not create a sourced grip illustration.")
         attachScreenshot(named: "Entralpi two-hand ramp hang")
         app.buttons["workout.skipStep"].tap()
         XCTAssertTrue(app.staticTexts["Rest"].waitForExistence(timeout: 10))

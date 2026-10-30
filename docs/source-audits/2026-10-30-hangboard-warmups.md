@@ -77,3 +77,9 @@ Warm-ups search, durations, hand/action cues and representative contact resoluti
 [TrainingBeta’s guide](https://www.trainingbeta.com/warming-hangboard-session/)
 also supplies progressive twenty-second hangs but mixes in off-board activity
 and lacks a fixed repetition/rest sequence. It is not imported.
+
+Grip illustrations use the authored step hand use rather than the contact’s
+maximum physical hand capacity. This preserves PitchSix’s explicit side even
+when a wide hold is selected. Entralpi supplies no grip or finger cue, so its
+workout intentionally omits the grip illustration; two-hand execution remains
+in the step and semantic targets.

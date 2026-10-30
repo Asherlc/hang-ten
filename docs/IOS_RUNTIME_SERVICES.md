@@ -323,6 +323,11 @@ its unspecified duration unless independently measured. Never derive a rest
 boundary from the first hang in a multi-task source cycle. See
 [routine authoring](ADDING_A_ROUTINE.md).
 
+Routine grip illustrations follow the step’s single- or double-hand prescription.
+A one-hand pull on a hold that fits two hands still shows only the prescribed side;
+plan previews and active workouts use the same rule. Without a routine hand
+prescription, physical hold capacity retains its existing preview behavior.
+
 When `fingerConfiguration` is omitted, hand cues display index, middle, ring and
 pinky with `4 fingers (assumed)`. Explicit selections override this display
 default. The fallback is not a sourced prescription and does not populate the
