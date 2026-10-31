@@ -119,17 +119,20 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(keyboard.waitForExistence(timeout: 5),
                       "The duration field must show its keyboard before text entry")
         duration.typeText("120")
-        let enteredDuration = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "120"), object: duration
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [enteredDuration], timeout: 5), .completed,
-                       "The complete cancellation-test duration must reach the field")
         // CI can retain a keyboard accessibility element after the onscreen
         // keyboard has disappeared. Only tap the toolbar when its button exists.
         let keyboardDone = app.buttons["freeWorkout.keyboard.done"]
         if keyboardDone.exists {
             tapVisibleControl(keyboardDone, in: app, requireHittable: false)
         }
+        // Commit the formatted numeric field before querying its accessibility
+        // value. CI can display the complete draft while its focused snapshot
+        // still reports the previous value.
+        let enteredDuration = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "120"), object: duration
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [enteredDuration], timeout: 10), .completed,
+                       "The committed cancellation-test duration must be 120 seconds")
 
         let startSet = firstMatching(
             in: app,
