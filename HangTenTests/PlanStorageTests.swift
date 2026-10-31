@@ -54,10 +54,8 @@ final class PlanStorageTests: XCTestCase {
         // original ID/title, metadata field, ordered target, cue and duration.
         // The two depth-target corrections follow the October 11 source mappings.
         let expected: [String: String] = [
-            "warmup.lattice.progressive": "d4af54884cc1006beee3aac6ace98f38358b95dd22a3e9c4092fdb19c786a557",
-            "warmup.beastmaker.general": "9b1db8570270e23021cf00db9a60949a5ac677c8e136676a0d33caf77cd382ad",
-            "warmup.climbing.bouldering": "a38d18e81815c39b5004a1967fc58218ff1333f6cf864550d7b5bd1e25ba98a8",
-            "warmup.ccc.rope-practice": "6a2d2b0740d8f093e3f97d2ddc1f90de5acb26c05880b660de3622121c417dc8",
+            "warmup.pitchsix.recruitment-prep": "7b84451131a408b8b6a719379edc0a4e91da3bc654a92a25f242dbddc3253adc",
+            "warmup.entralpi.max-hang-ramp": "b97ecf2cc2b593a1e843e057b32793b5fd1be8963d2b4411a10271929a8309e5",
             "beastmaker-max-hangs": "7f4acb218324ccde1dc13aa07638dc29c0e3462281cabc0c1f90c6294918f026",
             "beastmaker-repeaters": "beacdd2227bab852a5b3825a53947df2ec305efcd926b5fe1743ba1cd6fd7a91",
             "cameron-horst-one-arm": "badd8f6d9abadf4a06592a8b7b2daef5ba8db5844149fc5d2fa8a3f4d8385818",
@@ -139,6 +137,59 @@ final class PlanStorageTests: XCTestCase {
             let canonical = try JSONSerialization.data(withJSONObject: body, options: [.sortedKeys, .withoutEscapingSlashes])
             let actual = SHA256.hash(data: canonical).map { String(format: "%02x", $0) }.joined()
             XCTAssertEqual(actual, expected[plan["id"] as! String], plan["id"] as! String)
+        }
+    }
+
+    func testImportedHangboardWarmUpsResolveAndAppearInFocusSearch() throws {
+        let store = try PlanLibraryStore(builtInData: bundledPlanLibraryData(), packageStore: BoardCatalog.packageStore)
+        let expected = [
+            "warmup.pitchsix.recruitment-prep": (pulls: 24, duration: TimeInterval(570)),
+            "warmup.entralpi.max-hang-ramp": (pulls: 3, duration: TimeInterval(135))
+        ]
+        for (id, value) in expected {
+            let plan = try XCTUnwrap(store.plan(id: id))
+            let metadata = try XCTUnwrap(PlanCatalog.metadata(for: id))
+            XCTAssertEqual(metadata.focus, .warmUp)
+            XCTAssertEqual(metadata.provenance, .adapted)
+            XCTAssertTrue(plan.matchesWorkoutSearch("warmup", metadata: metadata))
+            XCTAssertEqual(plan.duration, value.duration)
+            let work = plan.steps.filter { !$0.isRestStep }
+            XCTAssertEqual(work.count, value.pulls)
+            XCTAssertTrue(work.allSatisfy { $0.duration == 5 && $0.segments.first?.timing == .fixed })
+            XCTAssertTrue(work.allSatisfy { $0.fingerConfiguration == nil && $0.externalLoadKGF == nil })
+            for boardID in ["beastmaker-1000", "metolius.wood-grips-compact-ii"] {
+                let board = try XCTUnwrap(BoardCatalog.board(for: boardID))
+                for step in work {
+                    let target = try XCTUnwrap(step.segments.first?.target)
+                    let resolved = try ContactResolver.resolve(target, step: step, board: board)
+                    XCTAssertEqual(resolved.count, 1, "\(id) on \(boardID)")
+                    XCTAssertEqual(resolved.first?.count, step.handUse == .single ? 1 : 2)
+                }
+            }
+        }
+        let pitchsix = try XCTUnwrap(store.plan(id: "warmup.pitchsix.recruitment-prep"))
+        XCTAssertTrue(pitchsix.steps.filter { !$0.isRestStep }.allSatisfy {
+            $0.action == .isometricPull && $0.handUse == .single && $0.gripType == .halfCrimp
+        })
+        let ramp = try XCTUnwrap(store.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertTrue(ramp.steps.filter { !$0.isRestStep }.allSatisfy {
+            $0.action == .hang && $0.handUse == .double && $0.gripType == nil
+        })
+    }
+
+    @MainActor
+    func testImportedHangboardWarmUpsAreIncompatibleWithoutEdges() throws {
+        let owner = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().lastPathComponent
+        let suiteName = "PlanStorageTests.\(owner).warmupCompatibility.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        let store = AppStore(defaults: defaults)
+        let board = handSideBoard(id: "fixture.jug-only",
+            contacts: [PhysicalContact(id: "jug", name: "Jug", kind: .jug)])
+        for id in ["warmup.pitchsix.recruitment-prep", "warmup.entralpi.max-hang-ramp"] {
+            let plan = try XCTUnwrap(PlanCatalog.plan(id: id))
+            XCTAssertTrue(store.isIncompatible(plan, on: board), id)
         }
     }
 
@@ -2648,8 +2699,7 @@ final class PlanStorageTests: XCTestCase {
                 $0.id != "rptc.seven-three-repeaters" &&
                     $0.id != "research.megos-one-arm-7-3" &&
                     !["beastmaker-repeaters", "tension-6-and-10", "rock-prodigy.pivot-introductory", "rock-prodigy.pivot-intermediate"].contains($0.id) &&
-                    $0.id != "research.abrahangs" &&
-                    $0.id != "warmup.climbing.bouldering"
+                    $0.id != "research.abrahangs"
             }
             .map { plan in
                 try XCTUnwrap(plan.steps.flatMap(WorkoutStepNormalizer.expand).last)

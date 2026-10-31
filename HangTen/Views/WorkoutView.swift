@@ -572,7 +572,8 @@ struct WorkoutView: View {
 							hold: hold,
 							gripType: holdCue.gripType,
 							fingerConfiguration: holdCue.fingerConfiguration,
-							resolvedHandSide: resolvedHandSide(for: cueStep ?? step)
+							resolvedHandSide: resolvedHandSide(for: cueStep ?? step),
+                            handUse: (cueStep ?? step).handUse
 						)
 					} else {
 						portraitHandCueCards(

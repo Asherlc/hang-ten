@@ -20042,174 +20042,1315 @@
       "title": "Orientation 3 · Sloper · 5/5"
     },
     {
-      "id": "warmup.lattice.progressive.guide",
+      "id": "warmup.pitchsix.recruitment-prep.set-1-left",
+      "title": "Set 1 · OISO 50% · left",
       "steps": [
         {
-          "accessory": "3–4 sets · self-paced",
-          "id": "warmup.lattice.build",
-          "instruction": "Gradually build to your working load over 3–4 sets. Do not start at your working load.",
-          "phase": "conditioning",
-          "title": "Progressive sets"
-        }
-      ],
-      "title": "Lattice · Progressive warm-up"
-    },
-    {
-      "id": "warmup.beastmaker.general.guide",
-      "steps": [
-        {
-          "accessory": "At least 15 min",
-          "duration": 900,
-          "id": "warmup.beastmaker.minimum",
-          "instruction": "Warm up on the climbing wall or fingerboard for at least 15 minutes. Take your time.",
-          "phase": "conditioning",
-          "title": "Wall or fingerboard warm-up"
-        },
-        {
-          "accessory": "Advance when warmed up",
-          "id": "warmup.beastmaker.ready",
-          "instruction": "Continue warming up if needed before beginning intense finger training.",
-          "phase": "conditioning",
-          "title": "Finish warming up"
-        }
-      ],
-      "title": "Beastmaker · General warm-up"
-    },
-    {
-      "id": "warmup.climbing.bouldering.guide",
-      "steps": [
-        {
-          "accessory": "10 min",
-          "duration": 600,
-          "id": "warmup.climbing.cardio",
-          "instruction": "Walk, cycle or jog for 10 minutes.",
-          "phase": "conditioning",
-          "title": "Light cardio"
-        },
-        {
-          "accessory": "5 each direction",
-          "id": "warmup.climbing.neck",
-          "instruction": "Relax your head forward; slowly circle five times each way.",
-          "phase": "conditioning",
-          "title": "Head rolls"
-        },
-        {
-          "accessory": "Controlled circles",
-          "id": "warmup.climbing.shoulders",
-          "instruction": "Make five controlled arm circles each way, one arm at a time, then smaller circles forward and backward with both arms.",
-          "phase": "conditioning",
-          "title": "Windmills"
-        },
-        {
-          "accessory": "Two rounds · 1 min between",
-          "id": "warmup.climbing.twists",
-          "instruction": "With knees bent and feet grounded, lift your upper body slightly. Twist at least five times each side, rest one minute and repeat.",
-          "phase": "conditioning",
-          "title": "Side twists"
-        },
-        {
-          "accessory": "About 10 per leg",
-          "id": "warmup.climbing.lunges",
-          "instruction": "Alternate walking lunges, about 10 on each leg.",
-          "phase": "conditioning",
-          "title": "Walking lunges"
-        },
-        {
-          "accessory": "",
-          "id": "warmup.climbing.easy",
-          "instruction": "Climb several problems well below your limit. Drop a grade if they feel pumpy or strenuous.",
-          "phase": "conditioning",
-          "title": "Easy boulders"
-        },
-        {
-          "accessory": "About 5 min",
-          "duration": 300,
-          "id": "warmup.climbing.rest-1",
-          "instruction": "Rest about five minutes.",
-          "phase": "rest",
+          "id": "warmup.pitchsix.recruitment-prep.set-1-left.rep-1",
+          "title": "OISO 50% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 50% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 50% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
           "segments": [
             {
-              "duration": 300,
-              "kind": "rest",
-              "timing": "fixed"
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
             }
           ],
-          "title": "Rest"
+          "gripType": "halfCrimp"
         },
         {
-          "accessory": "",
-          "id": "warmup.climbing.moderate",
-          "instruction": "Climb a few problems two to three grades below your limit.",
-          "phase": "conditioning",
-          "title": "Moderate boulders"
-        },
-        {
-          "accessory": "Advance when recovered",
-          "id": "warmup.climbing.depump",
-          "instruction": "Rest a few minutes until the pump has cleared.",
+          "id": "warmup.pitchsix.recruitment-prep.set-1-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
           "phase": "rest",
           "segments": [
             {
               "kind": "rest",
-              "timing": "undefined"
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-1-left.rep-2",
+          "title": "OISO 50% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 50% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 50% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
             }
           ],
-          "title": "Recover"
+          "gripType": "halfCrimp"
         },
         {
-          "accessory": "",
-          "id": "warmup.climbing.final",
-          "instruction": "Climb just below your limit in the style of today’s project.",
-          "phase": "conditioning",
-          "title": "Project-style boulder"
-        },
-        {
-          "accessory": "10 min",
-          "duration": 600,
-          "id": "warmup.climbing.rest-final",
-          "instruction": "Rest 10 minutes before your bouldering session.",
+          "id": "warmup.pitchsix.recruitment-prep.set-1-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
           "phase": "rest",
           "segments": [
             {
-              "duration": 600,
               "kind": "rest",
-              "timing": "fixed"
+              "timing": "fixed",
+              "duration": 30
             }
-          ],
-          "title": "Final rest"
+          ]
         }
-      ],
-      "title": "Climbing · Boulder pyramid warm-up"
+      ]
     },
     {
-      "id": "warmup.ccc.rope-practice.guide",
+      "id": "warmup.pitchsix.recruitment-prep.set-1-right",
+      "title": "Set 1 · OISO 50% · right",
       "steps": [
         {
-          "accessory": "Practice · 20 min",
-          "duration": 1200,
-          "id": "warmup.ccc.phase-1",
-          "instruction": "Split this phase between cardio/mobility and easy climbing. Cardio checklist: 100 jump-rope reps; burpees, 3 sets of 7; 50 high knees; jump squats, 3 sets of 10. Spend five minutes on hips, shoulders and legs: gates, skaters, scapular push-ups, band pull-aparts, overhead band rolls and arm circles. Climb easily for 10 minutes on large holds, using 10–15-move sequences, precise footwork and steady breathing. Introduce a light pump and recover.",
-          "phase": "conditioning",
-          "title": "General preparation and easy climbing"
+          "id": "warmup.pitchsix.recruitment-prep.set-1-right.rep-1",
+          "title": "OISO 50% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 50% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 50% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
         },
         {
-          "accessory": "Practice · 15 min",
-          "duration": 900,
-          "id": "warmup.ccc.phase-2",
-          "instruction": "Use 5–7-move sequences across hold types. Deliberately place hands and thumbs; explore movement styles at moderate intensity. Include a 2–4-minute circuit or four up-down-ups. Build an appropriate pump without exhausting yourself.",
-          "phase": "conditioning",
-          "title": "Holds and movement variety"
+          "id": "warmup.pitchsix.recruitment-prep.set-1-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
         },
         {
-          "accessory": "Practice · 15 min",
-          "duration": 900,
-          "id": "warmup.ccc.phase-3",
-          "instruction": "Use 5–10-move crux sequences, including simple hard moves and complex movement. Rest generously and avoid fatigue. Include both pushing and pulling.",
-          "phase": "conditioning",
-          "title": "Harder sequences and commitment"
+          "id": "warmup.pitchsix.recruitment-prep.set-1-right.rep-2",
+          "title": "OISO 50% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 50% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 50% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-1-right.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
         }
-      ],
-      "title": "California Climbing Collective · Rope warm-up"
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-2-left",
+      "title": "Set 2 · OISO 70% · left",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-left.rep-1",
+          "title": "OISO 70% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 70% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 70% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-left.rep-2",
+          "title": "OISO 70% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 70% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 70% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-2-right",
+      "title": "Set 2 · OISO 70% · right",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-right.rep-1",
+          "title": "OISO 70% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 70% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 70% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-right.rep-2",
+          "title": "OISO 70% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 70% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 70% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-2-right.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-3-left",
+      "title": "Set 3 · OISO 80% · left",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-left.rep-1",
+          "title": "OISO 80% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 80% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-left.rep-2",
+          "title": "OISO 80% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 80% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-3-right",
+      "title": "Set 3 · OISO 80% · right",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-right.rep-1",
+          "title": "OISO 80% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 80% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-right.rep-2",
+          "title": "OISO 80% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 80% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-3-right.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-4-left",
+      "title": "Set 4 · OISO 90% · left",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-left.rep-1",
+          "title": "OISO 90% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 90% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 90% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-left.rep-2",
+          "title": "OISO 90% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 90% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 90% OISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-4-right",
+      "title": "Set 4 · OISO 90% · right",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-right.rep-1",
+          "title": "OISO 90% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 90% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 90% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-right.rep-2",
+          "title": "OISO 90% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Squeeze or curl into the edge using only your fingers, without movement, at about 90% of your maximum OISO effort. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 90% OISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-4-right.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-5-left",
+      "title": "Set 5 · YISO 60% · left",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-left.rep-1",
+          "title": "YISO 60% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 60% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 60% YISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-left.rep-2",
+          "title": "YISO 60% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 60% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 60% YISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-5-right",
+      "title": "Set 5 · YISO 60% · right",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-right.rep-1",
+          "title": "YISO 60% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 60% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 60% YISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-right.rep-2",
+          "title": "YISO 60% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 60% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 60% YISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-5-right.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-6-left",
+      "title": "Set 6 · YISO 80% · left",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-left.rep-1",
+          "title": "YISO 80% · left · pull 1 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 80% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% YISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-left.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-left.rep-2",
+          "title": "YISO 80% · left · pull 2 of 2",
+          "instruction": "Use your left hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 80% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% YISO · left",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "left",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "left",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-left.set-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "30s rest",
+          "duration": 30,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.pitchsix.recruitment-prep.set-6-right",
+      "title": "Set 6 · YISO 80% · right",
+      "steps": [
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-right.rep-1",
+          "title": "YISO 80% · right · pull 1 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 80% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% YISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-right.rep-rest",
+          "title": "Rest",
+          "instruction": "",
+          "accessory": "10s rest",
+          "duration": 10,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 10
+            }
+          ]
+        },
+        {
+          "id": "warmup.pitchsix.recruitment-prep.set-6-right.rep-2",
+          "title": "YISO 80% · right · pull 2 of 2",
+          "instruction": "Use your right hand on a chosen edge in a slightly open half crimp. Hold the half crimp while your larger muscle groups pull against the fingers at about 80% of your maximum YISO effort; resist the fingers opening. Pull for 5 seconds. Ideally use an uneven edge at least 25 mm deep. Perceived effort may stand in for a measured maximum.",
+          "accessory": "5s pull · 80% YISO · right",
+          "duration": 5,
+          "phase": "hang",
+          "action": "isometricPull",
+          "handUse": "single",
+          "side": "right",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "side": "right",
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ],
+          "gripType": "halfCrimp"
+        }
+      ]
+    },
+    {
+      "id": "warmup.entralpi.max-hang-ramp.hang-1",
+      "title": "Ramp hang 1 · 50%",
+      "steps": [
+        {
+          "id": "warmup.entralpi.max-hang-ramp.hang-1.work",
+          "title": "Ramp hang 1 of 3 · 50%",
+          "instruction": "Complete lighter preparation first. On the edge and grip you will train, hang at about 50% of your maximum for 5–10 seconds.",
+          "accessory": "5s hang · about 50% maximum",
+          "duration": 5,
+          "phase": "hang",
+          "action": "hang",
+          "handUse": "double",
+          "side": "both",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ]
+        },
+        {
+          "id": "warmup.entralpi.max-hang-ramp.hang-1.rest",
+          "title": "Rest",
+          "instruction": "Rest 1–2 minutes between hangs.",
+          "accessory": "60s rest",
+          "duration": 60,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.entralpi.max-hang-ramp.hang-2",
+      "title": "Ramp hang 2 · 70%",
+      "steps": [
+        {
+          "id": "warmup.entralpi.max-hang-ramp.hang-2.work",
+          "title": "Ramp hang 2 of 3 · 70%",
+          "instruction": "On the edge and grip you will train, hang at about 70% of your maximum for 5–10 seconds.",
+          "accessory": "5s hang · about 70% maximum",
+          "duration": 5,
+          "phase": "hang",
+          "action": "hang",
+          "handUse": "double",
+          "side": "both",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ]
+        },
+        {
+          "id": "warmup.entralpi.max-hang-ramp.hang-2.rest",
+          "title": "Rest",
+          "instruction": "Rest 1–2 minutes between hangs.",
+          "accessory": "60s rest",
+          "duration": 60,
+          "phase": "rest",
+          "segments": [
+            {
+              "kind": "rest",
+              "timing": "fixed",
+              "duration": 60
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "warmup.entralpi.max-hang-ramp.hang-3",
+      "title": "Ramp hang 3 · 85%",
+      "steps": [
+        {
+          "id": "warmup.entralpi.max-hang-ramp.hang-3.work",
+          "title": "Ramp hang 3 of 3 · 85%",
+          "instruction": "On the edge and grip you will train, hang at about 85% of your maximum for 5–10 seconds.",
+          "accessory": "5s hang · about 85% maximum",
+          "duration": 5,
+          "phase": "hang",
+          "action": "hang",
+          "handUse": "double",
+          "side": "both",
+          "segments": [
+            {
+              "kind": "work",
+              "target": {
+                "tasks": [
+                  [
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    },
+                    {
+                      "target": {
+                        "kind": "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing": "fixed",
+              "duration": 5
+            }
+          ]
+        }
+      ]
     }
   ],
   "metadata": {
@@ -25613,114 +26754,101 @@
       }
     },
     {
+      "id": "warmup.pitchsix.recruitment-prep",
       "blocks": [
         {
-          "blockID": "warmup.lattice.progressive.guide"
+          "blockID": "warmup.pitchsix.recruitment-prep.set-1-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-1-right"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-2-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-2-right"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-3-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-3-right"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-4-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-4-right"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-5-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-5-right"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-6-left"
+        },
+        {
+          "blockID": "warmup.pitchsix.recruitment-prep.set-6-right"
         }
       ],
-      "id": "warmup.lattice.progressive",
       "metadata": {
+        "title": "PitchSix · Recruitment warm-up",
+        "subtitle": "Six effort levels · two 5-second pulls per hand at each level.",
+        "level": "Warm-up",
         "category": "warmup",
         "focus": "warmUp",
-        "level": "Warm-up",
-        "notes": [
-          "A standalone extract of the warm-up guidance, not the article’s strength-training protocol. The source supplies no hang times, rests, grip, hold, or load increments for these sets.",
-          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
-        ],
         "provenance": "adapted",
-        "sourceLabel": "Lattice · Finger Strength Training for Climbers",
-        "sourceURL": "https://www.latticetraining.com/blog/how-to-manage-finger-strength-for-climbers",
-        "subtitle": "Build to your finger-training load over 3–4 sets.",
+        "sourceLabel": "PitchSix / Collin McGee · Recruitment Prep",
+        "sourceURL": "https://pitchsix.com/blogs/blog/the-best-hangboarding-warm-up",
         "tags": [
           "built-in"
         ],
-        "title": "Lattice · Progressive warm-up",
         "workoutLabels": [
           "warm-up"
+        ],
+        "notes": [
+          "Recruitment Prep only. Article supplies six effort levels and two 5-second repetitions; its protocol image supplies 10-second repetition rests and 30-second set rests. Figure 1 shows separate left- and right-hand sets.",
+          "Adapted playback: left hand then right at each level; 10 seconds between the two pulls and 30 seconds between hand sets, replacing the trailing repetition recovery rather than adding it. No recovery is appended after the final pull.",
+          "Ideally choose an uneven edge at least 25 mm deep. This is a source preference, not a mandatory target restriction. OISO squeezes use only the fingers; YISO pulls resist opening. Both use a slightly open half crimp. Percentages refer to each contraction type’s own maximum, not bodyweight. Perceived effort is allowed.",
+          "Primary article and linked protocol/app images checked 2026-10-30. Guided adaptation; optional additional grip preparation and Endurance Prep remain outside this routine."
         ]
       }
     },
     {
+      "id": "warmup.entralpi.max-hang-ramp",
       "blocks": [
         {
-          "blockID": "warmup.beastmaker.general.guide"
+          "blockID": "warmup.entralpi.max-hang-ramp.hang-1"
+        },
+        {
+          "blockID": "warmup.entralpi.max-hang-ramp.hang-2"
+        },
+        {
+          "blockID": "warmup.entralpi.max-hang-ramp.hang-3"
         }
       ],
-      "id": "warmup.beastmaker.general",
       "metadata": {
+        "title": "Entralpi · Pre-max-hang ramp",
+        "subtitle": "Three progressively harder hangs on your training edge and grip.",
+        "level": "Warm-up",
         "category": "warmup",
         "focus": "warmUp",
-        "level": "Warm-up",
-        "notes": [
-          "The minimum 15-minute period is timed; the final self-paced step preserves the source’s requirement to warm up fully. The source prescribes no particular warm-up holds or exercises.",
-          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
-        ],
         "provenance": "adapted",
-        "sourceLabel": "Ned Feehally · Finger Board Training, p. 3",
-        "sourceURL": "https://www.beaconclimbing.com/wp-content/uploads/Beastmaker-Beacon-Training-Manual.pdf",
-        "subtitle": "At least 15 minutes on a wall or fingerboard.",
+        "sourceLabel": "Entralpi / Félix Bourassa-Moreau · Ramp before max hangs",
+        "sourceURL": "https://entralpi.com/help/train/plan-your-training/warm-up-routine",
         "tags": [
           "built-in"
         ],
-        "title": "Beastmaker · General warm-up",
         "workoutLabels": [
           "warm-up"
-        ]
-      }
-    },
-    {
-      "blocks": [
-        {
-          "blockID": "warmup.climbing.bouldering.guide"
-        }
-      ],
-      "id": "warmup.climbing.bouldering",
-      "metadata": {
-        "category": "warmup",
-        "focus": "warmUp",
-        "level": "Warm-up",
+        ],
         "notes": [
-          "Bouldering branch only. The roughly five-minute recovery uses a five-minute timer; mobility, climbing and recovery without an exact duration remain self-paced. Requires a wall, not just a hangboard.",
-          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
-        ],
-        "provenance": "adapted",
-        "sourceLabel": "Climbing · Warm-up Pyramid",
-        "sourceURL": "https://www.climbing.com/skills/warm-up-pyramid/",
-        "subtitle": "Cardio, mobility and progressively harder boulders · requires a climbing wall.",
-        "tags": [
-          "built-in"
-        ],
-        "title": "Climbing · Boulder pyramid warm-up",
-        "workoutLabels": [
-          "warm-up"
-        ]
-      }
-    },
-    {
-      "blocks": [
-        {
-          "blockID": "warmup.ccc.rope-practice.guide"
-        }
-      ],
-      "id": "warmup.ccc.rope-practice",
-      "metadata": {
-        "category": "warmup",
-        "focus": "warmUp",
-        "level": "Warm-up",
-        "notes": [
-          "Uses the source’s practice phase windows of 20, 15 and 15 minutes. The longer competition windows are not used. Tasks remain a checklist inside each phase; no individual exercise timing is invented. Requires a wall.",
-          "Source checked 2026-10-27. Standalone guided adaptation; see the linked source. Unspecified timings require you to advance."
-        ],
-        "provenance": "adapted",
-        "sourceLabel": "California Climbing Collective · ISO Warm-up Checklist",
-        "sourceURL": "https://www.californiaclimbingcollective.com/ropewarmup",
-        "subtitle": "Three practice phases · requires a climbing wall.",
-        "tags": [
-          "built-in"
-        ],
-        "title": "California Climbing Collective · Rope warm-up",
-        "workoutLabels": [
-          "warm-up"
+          "Use after lighter preparation, before max hangs or hard repeaters. This is the hangboard ramp excerpt, not the page’s full general warm-up or climbing pyramid.",
+          "The source allows 2–3 hangs of 5–10 seconds, about 50%, 70%, then 85% maximum, with 1–2 minutes between efforts. Adapted playback selects three 5-second hangs, two hands and 60-second rests; no final rest is added.",
+          "Use the edge and grip intended for your work sets. No grip, finger identities or numeric edge depth is prescribed here. Percentages are relative to maximum effort, not added weight or bodyweight.",
+          "Primary source checked 2026-10-30. Author describes coaching practice, not a protocol tested in a climbing trial."
         ]
       }
     }

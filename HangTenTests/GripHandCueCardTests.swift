@@ -65,6 +65,14 @@ final class GripHandCueCardTests: XCTestCase {
         XCTAssertNil(GripDiagramView.singleSide(handCapacity: nil, resolvedSide: nil))
     }
 
+    func testPrescribedHandUseOverridesTheHoldCapacityForRoutineCues() {
+        for capacity in [Int?(1), 2, nil] {
+            XCTAssertEqual(GripDiagramView.singleSide(handCapacity: capacity, resolvedSide: .left, handUse: .single), .left)
+            XCTAssertEqual(GripDiagramView.singleSide(handCapacity: capacity, resolvedSide: .right, handUse: .single), .right)
+            XCTAssertNil(GripDiagramView.singleSide(handCapacity: capacity, resolvedSide: .left, handUse: .double))
+        }
+    }
+
     func testSingleSideUsesResolvedSideForOneHandedCapacity() {
         XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: .left), .left)
         XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: .right), .right)

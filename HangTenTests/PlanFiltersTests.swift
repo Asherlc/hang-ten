@@ -12,25 +12,25 @@ final class PlanFiltersTests: XCTestCase {
             XCTAssertEqual(plan.browserDurationLabel, "10 min")
         }
     }
-    func testWarmUpsHaveSearchableLabelsAndHonestSelfPacedDurations() throws {
-        let library = try canonicalPlanDefinition()
-        let store = try PlanLibraryStore(definition: library)
-        let warmUps = library.plans.filter { $0.metadata.focus == .warmUp }
-        XCTAssertEqual(warmUps.count, 4)
-        for definition in warmUps {
-            let plan = try XCTUnwrap(store.plan(id: definition.id))
-            XCTAssertTrue(plan.matchesWorkoutSearch("warm-up", metadata: definition.metadata))
-            XCTAssertTrue(plan.matchesWorkoutSearch("warmup", metadata: definition.metadata))
-            XCTAssertTrue(WorkoutBrowserFilters().matches(plan, metadata: definition.metadata))
+    func testSelfPacedConditioningHasHonestDurationLabels() {
+        let manual = WorkoutStep(id: "manual", number: 1, title: "Warm-up",
+            instruction: "Test conditioning task.", accessory: "", duration: 0, phase: .conditioning)
+        let timed = WorkoutStep(id: "timed", number: 1, title: "Timed task",
+            instruction: "Test conditioning task.", accessory: "", duration: 900, phase: .conditioning)
+        func plan(_ steps: [WorkoutStep]) -> TrainingPlan {
+            TrainingPlan(id: "custom.test-warmup", title: "Warm-up", subtitle: "", level: "",
+                sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: nil, steps: steps)
         }
-        let lattice = try XCTUnwrap(store.plan(id: "warmup.lattice.progressive"))
-        XCTAssertEqual(lattice.durationLabel, "Self-paced")
-        XCTAssertEqual(lattice.browserDurationLabel, "Self-paced")
+        let selfPaced = plan([manual])
+        XCTAssertTrue(selfPaced.matchesWorkoutSearch("warm-up", metadata: nil))
+        XCTAssertTrue(selfPaced.matchesWorkoutSearch("warmup", metadata: nil))
+        XCTAssertTrue(WorkoutBrowserFilters().matches(selfPaced, metadata: nil))
+        XCTAssertEqual(selfPaced.durationLabel, "Self-paced")
+        XCTAssertEqual(selfPaced.browserDurationLabel, "Self-paced")
         var filters = WorkoutBrowserFilters()
         filters.duration = .underTenMinutes
-        XCTAssertFalse(filters.matches(lattice, metadata: nil), "Unknown duration is not under ten minutes.")
-        let beastmaker = try XCTUnwrap(store.plan(id: "warmup.beastmaker.general"))
-        XCTAssertEqual(beastmaker.browserDurationLabel, "15 min + self-paced")
+        XCTAssertFalse(filters.matches(selfPaced, metadata: nil), "Unknown duration is not under ten minutes.")
+        XCTAssertEqual(plan([timed, manual]).browserDurationLabel, "15 min + self-paced")
     }
     private func canonicalPlanDefinition() throws -> PlanLibraryDefinition {
         let bundle = Bundle(for: PlanFiltersTests.self)

@@ -13,22 +13,43 @@ final class WorkoutEndUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
     }
 
-    func testSelfPacedWarmupWaitsThroughPauseResumeUntilFinish() {
-        let app = openWorkout(URL(string: "hangten://plan/warmup.lattice.progressive/workout")!,
-            historyTitle: "Lattice · Progressive warm-up")
-        XCTAssertEqual(app.staticTexts["workout.timer"].label, "Self-paced")
-        Thread.sleep(forTimeInterval: 2)
-        XCTAssertFalse(app.navigationBars["Summary"].exists)
+    func testImportedPitchSixWarmupShowsBothSidesAndContractionTypes() {
+        for (step, side, contraction) in [(1, "left", "OISO"), (5, "right", "OISO"), (33, "left", "YISO"), (37, "right", "YISO")] {
+            let app = openWorkout(URL(string: "hangten://plan/warmup.pitchsix.recruitment-prep/workout")!,
+                historyTitle: "PitchSix · Recruitment warm-up", reviewStep: step)
+            app.buttons["Pause"].tap()
+            XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+            let cue = app.descendants(matching: .any).matching(identifier: "workout.gripCue.\(side)").firstMatch
+            XCTAssertTrue(cue.waitForExistence(timeout: 10))
+            XCTAssertTrue(cue.label.localizedCaseInsensitiveContains("half crimp"), cue.label)
+            XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS %@", contraction)).firstMatch.exists)
+            let countdown = app.staticTexts["workout.timer"].label
+            // The deep link auto-starts; Pause may land after the first tick.
+            XCTAssertNotNil(countdown.range(of: #"^00:0[1-5]$"#, options: .regularExpression), countdown)
+            attachScreenshot(named: "PitchSix \(contraction) \(side) five-second pull")
+            if step == 37 {
+                XCUIDevice.shared.orientation = .landscapeLeft
+                XCTAssertTrue(cue.waitForExistence(timeout: 10))
+                attachScreenshot(named: "PitchSix right YISO landscape")
+            }
+            app.terminate()
+        }
+    }
+
+    func testImportedEntralpiRampKeepsUnspecifiedGripAndMinuteRecovery() {
+        let app = openWorkout(URL(string: "hangten://plan/warmup.entralpi.max-hang-ramp/workout")!,
+            historyTitle: "Entralpi · Pre-max-hang ramp", reviewStep: 1)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
-        app.buttons["Resume"].tap()
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 5))
-        XCTAssertEqual(app.staticTexts["workout.timer"].label, "Self-paced")
-        attachScreenshot(named: "Warm-up waits for explicit Finish")
+        let cues = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "workout.gripCue."))
+        XCTAssertEqual(cues.count, 0, "An unspecified grip must not create a sourced grip illustration.")
+        attachScreenshot(named: "Entralpi two-hand ramp hang")
         app.buttons["workout.skipStep"].tap()
-        XCTAssertTrue(app.navigationBars["Summary"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.staticTexts["Progressive sets"].exists)
-        attachScreenshot(named: "Explicitly completed self-paced warm-up")
+        XCTAssertTrue(app.staticTexts["Rest"].waitForExistence(timeout: 10))
+        if app.buttons["Pause"].exists { app.buttons["Pause"].tap() }
+        XCTAssertTrue(app.staticTexts["Rest 1–2 minutes between hangs."].exists)
+        XCTAssertEqual(app.staticTexts["workout.timer"].label, "01:00")
+        attachScreenshot(named: "Entralpi sixty-second recovery")
     }
 
     func testActualRepsPrefillCanBeEditedAndPersistWithoutRecordingTheNextDefault() {

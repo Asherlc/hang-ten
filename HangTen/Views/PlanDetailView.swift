@@ -567,7 +567,9 @@ struct PlanDetailView: View {
                 GripDiagramView(
                     hold: hold,
                     gripType: firstStepHoldCue.gripType,
-                    fingerConfiguration: firstStepHoldCue.fingerConfiguration
+                    fingerConfiguration: firstStepHoldCue.fingerConfiguration,
+                    resolvedHandSide: firstStep?.side,
+                    handUse: firstStep?.handUse
                 )
             }
             if let firstStep {

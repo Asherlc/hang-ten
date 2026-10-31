@@ -36,29 +36,80 @@ class OriginalRoutineSourcesTests(unittest.TestCase):
             with self.subTest(plan_id=plan_id):
                 self.assertIn(count, [ref.get("repeatCount", 1) for ref in self.plans[plan_id]["blocks"]])
 
-    def test_warmups_preserve_source_timing_gaps_and_published_windows(self):
-        warmups = {key: plan for key, plan in self.plans.items() if key.startswith("warmup.")}
-        self.assertEqual(len(warmups), 4)
-        for key, plan in warmups.items():
+    def test_removed_general_and_wall_warmups_are_absent(self):
+        removed = {
+            "warmup.lattice.progressive", "warmup.beastmaker.general",
+            "warmup.climbing.bouldering", "warmup.ccc.rope-practice",
+        }
+        self.assertTrue(removed.isdisjoint(self.plans))
+        self.assertFalse(any(block.startswith(tuple(removed)) for block in self.blocks))
+
+    def test_hangboard_warmups_are_source_linked_adaptations(self):
+        ids = {"warmup.pitchsix.recruitment-prep", "warmup.entralpi.max-hang-ramp"}
+        warmups = {key for key in self.plans if key.startswith("warmup.")}
+        self.assertEqual(warmups, ids)
+        for key in ids:
+            plan = self.plans[key]
+            self.assertNotIn("boardID", plan)
             self.assertEqual(plan["metadata"]["focus"], "warmUp")
-            self.assertIn("warm-up", plan["metadata"]["workoutLabels"])
+            self.assertEqual(plan["metadata"]["category"], "warmup")
+            self.assertEqual(plan["metadata"]["workoutLabels"], ["warm-up"])
             self.assertEqual(plan["metadata"]["provenance"], "adapted")
             self.assertTrue(plan["metadata"]["sourceURL"].startswith("https://"))
-            self.assertNotIn("boardID", plan)
-            self.assertTrue(all("gripType" not in step and "fingerConfiguration" not in step
-                                for step in self.steps(key)))
-        lattice = self.steps("warmup.lattice.progressive")
-        self.assertEqual(len(lattice), 1)
-        self.assertNotIn("duration", lattice[0])
-        self.assertIn("3–4", lattice[0]["instruction"])
-        beastmaker = self.steps("warmup.beastmaker.general")
-        self.assertEqual(beastmaker[0]["duration"], 900)
-        self.assertNotIn("duration", beastmaker[1])
-        pyramid = self.steps("warmup.climbing.bouldering")
-        self.assertEqual([s["duration"] for s in pyramid if "duration" in s], [600, 300, 600])
-        self.assertEqual(next(s for s in pyramid if s["id"].endswith("depump"))["segments"],
-                         [{"kind": "rest", "timing": "undefined"}])
-        self.assertEqual([s["duration"] for s in self.steps("warmup.ccc.rope-practice")], [1200, 900, 900])
+            self.assertNotEqual(self.steps(key)[-1]["phase"], "rest")
+
+    def test_pitchsix_recruitment_preserves_contraction_load_and_each_hand(self):
+        steps = self.steps("warmup.pitchsix.recruitment-prep")
+        work = [step for step in steps if step["phase"] == "hang"]
+        self.assertEqual(len(work), 24)
+        for index, (contraction, percent) in enumerate([
+                ("OISO", 50), ("OISO", 70), ("OISO", 80),
+                ("OISO", 90), ("YISO", 60), ("YISO", 80)]):
+            for offset, side in enumerate(["left", "right"]):
+                pair = work[index * 4 + offset * 2:index * 4 + offset * 2 + 2]
+                for step in pair:
+                    self.assertEqual(step["action"], "isometricPull")
+                    self.assertEqual(step["handUse"], "single")
+                    self.assertEqual(step["side"], side)
+                    self.assertEqual(step["gripType"], "halfCrimp")
+                    self.assertNotIn("fingerConfiguration", step)
+                    self.assertNotIn("externalLoadKGF", step)
+                    self.assertIn(f"{percent}%", step["instruction"])
+                    self.assertIn(contraction, step["instruction"])
+                    self.assertEqual(step["duration"], 5)
+                    self.assertEqual(step["segments"], [{
+                        "kind": "work", "timing": "fixed", "duration": 5,
+                        "target": {"tasks": [[{"side": side, "target": {"kind": "edge"}}]]},
+                    }])
+        rests = [step["duration"] for step in steps if step["phase"] == "rest"]
+        self.assertEqual(rests, [10, 30] * 11 + [10])
+        self.assertEqual(sum(s["duration"] for s in steps), 570)
+        self.assertEqual([s["phase"] for s in steps], ["hang", "rest", "hang", "rest"] * 11 + ["hang", "rest", "hang"])
+
+    def test_entralpi_ramp_discloses_timer_defaults_without_inventing_grips(self):
+        steps = self.steps("warmup.entralpi.max-hang-ramp")
+        self.assertEqual([s["phase"] for s in steps], ["hang", "rest", "hang", "rest", "hang"])
+        work = [s for s in steps if s["phase"] == "hang"]
+        self.assertTrue(work[0]["instruction"].startswith("Complete lighter preparation first."))
+        for step, percent in zip(work, [50, 70, 85]):
+            self.assertEqual(step["duration"], 5)
+            self.assertEqual(step["action"], "hang")
+            self.assertEqual(step["handUse"], "double")
+            self.assertNotIn("gripType", step)
+            self.assertNotIn("fingerConfiguration", step)
+            self.assertNotIn("externalLoadKGF", step)
+            self.assertIn(f"{percent}%", step["instruction"])
+            self.assertIn("5–10", step["instruction"])
+            self.assertEqual(step["segments"][0]["target"], {
+                "tasks": [[{"target": {"kind": "edge"}}, {"target": {"kind": "edge"}}]],
+            })
+        rests = [s for s in steps if s["phase"] == "rest"]
+        self.assertEqual([s["duration"] for s in rests], [60, 60])
+        self.assertTrue(all("1–2 minutes" in s["instruction"] for s in rests))
+        notes = " ".join(self.plans["warmup.entralpi.max-hang-ramp"]["metadata"]["notes"])
+        self.assertIn("two hands", notes)
+        self.assertIn("lighter", notes)
+        self.assertIn("2–3", notes)
 
     def test_lopez_max_hangs_targets_preserve_the_prescribed_edge_range(self):
         work = [step for step in self.steps("research.max-hangs") if step["phase"] == "hang"]

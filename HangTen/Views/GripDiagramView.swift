@@ -10,17 +10,20 @@ struct GripDiagramView: View {
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
     let resolvedHandSide: WorkoutSide?
+    let handUse: WorkoutHandUse?
 
     init(
         hold: PhysicalContact,
         gripType: GripType?,
         fingerConfiguration: FingerConfiguration? = nil,
-        resolvedHandSide: WorkoutSide? = nil
+        resolvedHandSide: WorkoutSide? = nil,
+        handUse: WorkoutHandUse? = nil
     ) {
         self.hold = hold
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
         self.resolvedHandSide = resolvedHandSide
+        self.handUse = handUse
     }
 
     var body: some View {
@@ -43,7 +46,8 @@ struct GripDiagramView: View {
             HStack(spacing: 10) {
                 if let singleSide = Self.singleSide(
                     handCapacity: hold.handCapacity,
-                    resolvedSide: resolvedHandSide
+                    resolvedSide: resolvedHandSide,
+                    handUse: handUse
                 ) {
                     GripHandCueCard(
                         posture: gripType,
@@ -73,16 +77,19 @@ struct GripDiagramView: View {
     private var accessibilityCueIdentifier: String {
         let side = Self.singleSide(
             handCapacity: hold.handCapacity,
-            resolvedSide: resolvedHandSide
+            resolvedSide: resolvedHandSide,
+            handUse: handUse
         )?.accessibilityIdentifier ?? "both"
         return "workout.gripCue.\(side)"
     }
 
-    /// Resolves which hand an illustration should render for a hold that only
-    /// physically fits one hand. Returns `nil` for two-handed or unspecified
-    /// capacity so the caller renders both hands.
-    static func singleSide(handCapacity: Int?, resolvedSide: WorkoutSide?) -> GripCueSide? {
-        guard handCapacity == 1 else { return nil }
+    /// Routine hand use governs the illustration even when the hold can fit
+    /// more hands. Without a prescription, retain the physical-capacity cue.
+    static func singleSide(
+        handCapacity: Int?, resolvedSide: WorkoutSide?, handUse: WorkoutHandUse? = nil
+    ) -> GripCueSide? {
+        if handUse == .double { return nil }
+        guard handUse == .single || handCapacity == 1 else { return nil }
         switch resolvedSide {
         case .left: return .left
         case .right: return .right
@@ -93,7 +100,8 @@ struct GripDiagramView: View {
     private var accessibilitySummary: String {
         if let singleSide = Self.singleSide(
             handCapacity: hold.handCapacity,
-            resolvedSide: resolvedHandSide
+            resolvedSide: resolvedHandSide,
+            handUse: handUse
         ) {
             return "\(cueLabel), \(accessibilityCueLabel), \(singleSide.accessibilityIdentifier) hand"
         }

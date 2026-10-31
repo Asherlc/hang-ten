@@ -38,7 +38,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
     func testGeneralWarmUpDoesNotRequireAHandChoiceOnAOneHandedBoard() throws {
         let oneHanded = try XCTUnwrap(BoardCatalog.all.first(where: \.isOneHanded))
-        let warmUp = try XCTUnwrap(PlanCatalog.all.first { $0.id == "warmup.lattice.progressive" })
+        let step = WorkoutStep(id: "conditioning", number: 1, title: "Warm-up",
+            instruction: "Test conditioning task.", accessory: "", duration: 0, phase: .conditioning)
+        let warmUp = TrainingPlan(id: "custom.test-warmup", title: "Warm-up", subtitle: "", level: "",
+            sourceLabel: "", sourceURL: nil, provenance: .custom, boardID: nil, steps: [step])
         XCTAssertFalse(WorkoutSessionHandResolver.needsHandChoice(plan: warmUp, board: oneHanded))
         XCTAssertNoThrow(try WorkoutActivityRecorder().segments(for: warmUp, on: oneHanded,
             activityIntervals: [0..<1]))

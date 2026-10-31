@@ -1533,11 +1533,6 @@ enum PlanLibraryValidator {
         terminalStep: WorkoutStepDefinition,
         resolvedID: String
     ) -> Bool {
-        if plan.id == "warmup.climbing.bouldering",
-           resolvedID == "warmup.climbing.rest-final",
-           terminalStep.phase == .rest, terminalStep.duration == 600 {
-            return true
-        }
         // These source tables explicitly retain recovery on their final cycle.
         // Limit the exception to the audited terminal identity and duration.
         let publishedTerminalRests: [String: (id: String, duration: TimeInterval)] = [
