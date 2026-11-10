@@ -176,7 +176,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         ]
         openWorkout(URL(string: "hangten://plan/tension-long-hangs/workout")!)
         let pause = app.buttons["Pause"]
-        XCTAssertTrue(pause.waitForExistence(timeout: 20))
+        // Cold model preparation can exceed a minute on CI; the stopwatch
+        // assertions begin only after preparation and the countdown finish.
+        XCTAssertTrue(pause.waitForExistence(timeout: 120))
         pause.tap()
         // SwiftUI propagates the containing stopwatch identifier to the button.
         let stopwatch = app.buttons["workout.stopwatch"]
