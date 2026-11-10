@@ -1388,7 +1388,9 @@ struct WorkoutView: View {
 		}
 		if sessionState.activeStartUptime != nil {
 			if countdownRemaining(at: monotonicTime) > 0 {
-				cancelCountdown()
+				rendererStartGate.cancel()
+				sessionState.cancelCountdown(at: monotonicTime)
+				audioCoach.stop()
 				return
 			}
 			recorder.pause(at: currentElapsed(at: monotonicTime))
@@ -1487,14 +1489,6 @@ struct WorkoutView: View {
 			sessionState.startSkipCountdown(to: targetElapsed, at: armUptime)
 		}
 	}
-
-    private func cancelCountdown() {
-        rendererStartGate.cancel()
-		let monotonicTime = WorkoutClock.monotonicTime
-		activityProgress.capture(sessionState, planDuration: sessionDuration, at: monotonicTime)
-		sessionState.cancelCountdown(at: monotonicTime)
-		audioCoach.stop()
-    }
 
     private func requestEndConfirmation() {
         let monotonicTime = WorkoutClock.monotonicTime
