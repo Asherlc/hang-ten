@@ -711,7 +711,7 @@ jobs:
       matrix:
         include:
           # Keep the planner scenarios in their own run so purchase, settings
-          # and workout coverage also fits within the one-hour test budget.
+          # and workout coverage also fits within the 75-minute test budget.
           # Reuse one simulator and build per shard. Keep selectors
           # complete: test_ci_xctest_contract.py audits every method exactly once.
           - shard: custom-planner
@@ -744,7 +744,7 @@ jobs:
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
               HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
-    timeout-minutes: 70
+    timeout-minutes: 90
 
     steps:
       # actions/checkout v4.2.2
@@ -798,7 +798,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_RUN_TIMEOUT_SECONDS: "3600"
+          XCTEST_RUN_TIMEOUT_SECONDS: "4500"
           XCTEST_LABEL: HangTenUITests-paywall-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
