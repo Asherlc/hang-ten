@@ -1258,9 +1258,9 @@ struct WorkoutView: View {
         ) {
             if isComplete {
                 completeSession()
-            } else if countdown > 0 {
-                cancelCountdown()
             } else {
+                // Resolve countdown cancellation or pause at tap time: the
+                // rendered countdown may have expired since this frame.
                 toggleRunning()
             }
         }
