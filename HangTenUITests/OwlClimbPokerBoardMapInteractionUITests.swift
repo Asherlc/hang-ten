@@ -498,7 +498,13 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
 
         let search = app.searchFields["Search boards"]
         XCTAssertTrue(search.waitForExistence(timeout: 45), "Board picker Search boards must appear.")
-        search.tap()
+        tapVisibleControl(search, in: app)
+        let keyboard = app.keyboards.firstMatch
+        if !keyboard.waitForExistence(timeout: 5) {
+            tapVisibleControl(search, in: app)
+        }
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5),
+                      "Board search must show its keyboard before typing")
         search.typeText("Beastmaker 1000")
 
         let picker = app.navigationBars["Choose board"]
