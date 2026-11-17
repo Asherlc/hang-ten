@@ -520,6 +520,7 @@ enum ContactResolver {
             $0.presentationID == board.defaultPresentation.id && Set($0.contactIDs) == Set(pair.map(\.id))
         }
         guard positions.count == 1, let position = positions.first,
+              position.effectiveDepths.isEmpty,
               media.descriptor.modelBounds.minimum.count == 3,
               media.descriptor.modelBounds.maximum.count == 3 else { return nil }
         let center = (SIMD3<Double>(media.descriptor.modelBounds.minimum)

@@ -109,6 +109,32 @@ final class ContactResolverTests: XCTestCase {
         XCTAssertTrue(selection.contacts.allSatisfy { $0.depth == .range(.init(minimum: 30, maximum: 30)) })
     }
 
+    func testReusableCADPairHonorsPositionDepthOverrides() throws {
+        let base = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let hand = PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 25, maximum: 25))))
+        let step = fixtureStep(target: hand.target!.legacyRequirement)
+        let original = try ContactResolver.resolveSelection([hand, hand], step: step, board: base)
+        let positionID = try XCTUnwrap(original.positionID)
+        XCTAssertEqual(original.contacts.count, 2)
+        XCTAssertTrue(original.contacts.allSatisfy { $0.depth == .range(.init(minimum: 25, maximum: 25)) })
+        let board = BoardRevision(id: base.id, revisionID: base.revisionID,
+            manufacturer: base.manufacturer, name: base.name, subtitle: base.subtitle,
+            dimensions: base.dimensions, aspectRatio: base.aspectRatio,
+            handCapacity: base.handCapacity, equipmentObjects: base.equipmentObjects,
+            contacts: base.contacts, productURL: base.productURL, photoAssetName: base.photoAssetName,
+            presentations: base.presentations, positions: base.positions.map { position in
+                guard position.id == positionID else { return position }
+                return BoardPosition(id: position.id, presentationID: position.presentationID,
+                    contactIDs: position.contactIDs,
+                    effectiveDepths: Dictionary(uniqueKeysWithValues: original.contacts.map {
+                        ($0.id, .range(.init(minimum: 20, maximum: 20)))
+                    }))
+            })
+        XCTAssertThrowsError(try ContactResolver.resolveSelection([hand, hand], step: step, board: board))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertNil(TrainingEdgeSelection.selecting(25, in: plan, on: board))
+    }
+
     func testEntralpiOffersMeasuredDepthsFromAdjustableBoardPositions() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
