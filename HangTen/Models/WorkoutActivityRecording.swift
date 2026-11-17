@@ -562,7 +562,10 @@ enum ContactResolver {
 
         let firstCandidates = candidates[0].filter { contact($0, fits: firstSide, in: presentation) }
         let secondCandidates = candidates[1].filter { contact($0, fits: secondSide, in: presentation) }
-        let needsMatchingHolds = task[0].target?.depth != nil && task[0].target == task[1].target
+        // Identical prescribed targets use matching depth metadata even when
+        // the source leaves the training depth open. Explicit athlete choice
+        // (nil targets) and distinct per-hand targets remain independent.
+        let needsMatchingHolds = task[0].target != nil && task[0].target == task[1].target
         let pairs = firstCandidates.flatMap { first in
             secondCandidates.compactMap { second -> (PhysicalContact, PhysicalContact, CGFloat)? in
                 guard first.id != second.id,

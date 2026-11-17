@@ -365,9 +365,12 @@ Repeated matching hold predicates with the same grip and finger context share
 one choice across left-hand, right-hand, and two-hand cues. The picker offers
 only factual replacements that resolve every affected hand assignment; applying
 the choice preserves each task's original hand count, side, and order. Mixed
-per-hand prescriptions remain distinct. Matching two-hand tasks that prescribe
-depth resolve contacts with equal factual depth even when the source predicate
-covers a range. Kind and shape constrain candidates only when prescribed;
+per-hand prescriptions remain distinct. Matching non-`any` two-hand tasks
+require identical recorded depth values, including when neither hold records a
+depth. This applies when the source leaves depth unspecified or covers a range.
+Among eligible pairs the resolver prefers the widest horizontal separation,
+breaking exact ties by contact ID; this is a stable board-layout choice, not a
+training-depth recommendation. Kind and shape constrain candidates only when prescribed;
 omitted fields and athlete-selected holds add no inferred restrictions.
 Start waits until every missing
 target has a valid selection. Picker edits, including partial selections and
