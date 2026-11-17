@@ -358,16 +358,22 @@ Every choice passes the same grip, finger-capacity, hand, and position checks us
 for work resolution. Shared contacts must fit both sides and support two hands.
 Named depth categories match only the same authored category; they do not imply
 a millimeter range. Measured depths match only overlapping authored intervals,
-without a numeric tolerance. Missing exact facts go through the picker.
+without a numeric tolerance. Point-depth plan tasks first try a complete match
+using exact measured contacts across board positions, then fall back to interval
+overlap when no exact resolution is available. Training-edge choices still
+require exact point measurements. Missing exact facts go through the picker.
 Canonical two-hand choices on a one-hand board retain “two boards” as equipment
 context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated matching hold predicates with the same grip and finger context share
 one choice across left-hand, right-hand, and two-hand cues. The picker offers
 only factual replacements that resolve every affected hand assignment; applying
 the choice preserves each task's original hand count, side, and order. Mixed
-per-hand prescriptions remain distinct. Matching two-hand tasks that prescribe
-depth resolve contacts with equal factual depth even when the source predicate
-covers a range. Kind and shape constrain candidates only when prescribed;
+per-hand prescriptions remain distinct. Matching non-`any` two-hand tasks
+require identical recorded depth values, including when neither hold records a
+depth. This applies when the source leaves depth unspecified or covers a range.
+Among eligible pairs the resolver prefers the widest horizontal separation,
+breaking exact ties by contact ID; this is a stable board-layout choice, not a
+training-depth recommendation. Kind and shape constrain candidates only when prescribed;
 omitted fields and athlete-selected holds add no inferred restrictions.
 Start waits until every missing
 target has a valid selection. Picker edits, including partial selections and
@@ -378,8 +384,16 @@ require a new selection. The picker remains available after restoration.
 Saved choices from the previous contact-based ID format restore only when their
 source cue, contact IDs, and factual replacement still validate. Conflicting
 old per-hand choices require one new shared choice; clearing removes their aliases.
-The max-hang training-edge picker also remembers the athlete's chosen depth for
-each plan and board revision, restoring it only while that size remains eligible.
+The training-edge picker remembers the athlete's chosen depth for each plan and
+board revision, restoring it only while that size remains eligible. The Entralpi
+pre-max-hang ramp requires an explicit choice on first use: “Choose depth” has no
+automatic selection, first-hold highlights stay empty, and Start stays disabled.
+The athlete chooses from measured depths that resolve the two-hand targets on
+that board; every ramp hang and recorded contact uses the chosen depth. Clearing
+the choice removes its saved default. Workout deep links enter plan detail for
+this routine so they cannot bypass the training-edge setup. A board without a
+resolvable measured depth leaves Start unavailable. The existing López MAW
+session retains its source-backed 8–20 mm range and existing default behavior.
 The resulting session retains the source link and original
 instructions without adding substitution descriptions, preserves interval and
 task structure, and records the actual chosen holds. It does not edit the
@@ -387,7 +401,8 @@ canonical library or claim manufacturer endorsement of the athlete's choices.
 Plans remain visible
 in focus browsing when substitutions are needed. Workout deep links enter plan
 detail when holds are missing, so they require the same explicit choices before
-launching; compatible deep links retain their direct workout launch.
+launching; other compatible deep links retain their direct workout launch,
+except routines that require the training-edge choice described above.
 
 Resolved work retains board/revision identity, optional model hash, the factual
 requirement or per-hand targets, resolved contact IDs and applicable position.

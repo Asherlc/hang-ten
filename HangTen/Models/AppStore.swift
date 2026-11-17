@@ -8,7 +8,7 @@ final class AppStore: ObservableObject {
     private static let favoritePlanIDsKey = "favoritePlanIDs"
     private static let favoriteBoardIDsKey = "favoriteBoardIDs"
     private static let planHoldSelectionsKey = "HangTen.planHoldSelections.v1"
-    private static let maxHangsDepthsKey = "HangTen.maxHangsDepths.v1"
+    private static let trainingEdgeDepthsKey = "HangTen.maxHangsDepths.v1"
 
     private struct RememberedHoldSubstitution: Codable {
         let requestID: PlanHoldSubstitutionRequest.ID
@@ -16,7 +16,7 @@ final class AppStore: ObservableObject {
         let target: WorkoutSegmentTarget
     }
 
-    private struct RememberedMaxHangsDepth: Codable {
+    private struct RememberedTrainingEdgeDepth: Codable {
         let planID: String
         let boardID: String
         let revisionID: String
@@ -266,31 +266,35 @@ final class AppStore: ObservableObject {
         return (try? JSONDecoder().decode([RememberedHoldSubstitution].self, from: data)) ?? []
     }
 
-    func rememberedMaxHangsDepth(
+    func rememberedTrainingEdgeDepth(
         for plan: TrainingPlan, on board: BoardRevision, availableDepths: [Double]
     ) -> Double? {
-        loadRememberedMaxHangsDepths().last {
+        loadRememberedTrainingEdgeDepths().last {
             $0.planID == plan.id && $0.boardID == board.id && $0.revisionID == board.revisionID
                 && $0.depth.isFinite && availableDepths.contains($0.depth)
         }?.depth
     }
 
-    func rememberMaxHangsDepth(
-        _ depth: Double, for plan: TrainingPlan, on board: BoardRevision, availableDepths: [Double]
+    func rememberTrainingEdgeDepth(
+        _ depth: Double?, for plan: TrainingPlan, on board: BoardRevision, availableDepths: [Double]
     ) {
-        guard depth.isFinite, availableDepths.contains(depth) else { return }
-        var records = loadRememberedMaxHangsDepths().filter {
+        if let depth {
+            guard depth.isFinite, availableDepths.contains(depth) else { return }
+        }
+        var records = loadRememberedTrainingEdgeDepths().filter {
             $0.planID != plan.id || $0.boardID != board.id || $0.revisionID != board.revisionID
         }
-        records.append(RememberedMaxHangsDepth(planID: plan.id, boardID: board.id,
-                                             revisionID: board.revisionID, depth: depth))
+        if let depth {
+            records.append(RememberedTrainingEdgeDepth(planID: plan.id, boardID: board.id,
+                                                       revisionID: board.revisionID, depth: depth))
+        }
         guard let data = try? JSONEncoder().encode(records) else { return }
-        defaults.set(data, forKey: Self.maxHangsDepthsKey)
+        defaults.set(data, forKey: Self.trainingEdgeDepthsKey)
     }
 
-    private func loadRememberedMaxHangsDepths() -> [RememberedMaxHangsDepth] {
-        guard let data = defaults.data(forKey: Self.maxHangsDepthsKey) else { return [] }
-        return (try? JSONDecoder().decode([RememberedMaxHangsDepth].self, from: data)) ?? []
+    private func loadRememberedTrainingEdgeDepths() -> [RememberedTrainingEdgeDepth] {
+        guard let data = defaults.data(forKey: Self.trainingEdgeDepthsKey) else { return [] }
+        return (try? JSONDecoder().decode([RememberedTrainingEdgeDepth].self, from: data)) ?? []
     }
 
     func submitUserReport(_ report: HangTenUserReport) {

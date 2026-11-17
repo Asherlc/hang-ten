@@ -1,12 +1,13 @@
 import SwiftUI
 
 enum PlanDetailPlanResolver {
-    static func maxHangsVariant(
+    static func trainingEdgeVariant(
         from plans: [Double: TrainingPlan],
-        selectedDepth: Double?
+        selectedDepth: Double?,
+        requiresSelection: Bool = false
     ) -> TrainingPlan? {
         let depth = selectedDepth.flatMap { plans[$0] != nil ? $0 : nil }
-            ?? plans.keys.max()
+            ?? (requiresSelection ? nil : plans.keys.max())
         return depth.flatMap { plans[$0] }
     }
 
@@ -51,7 +52,7 @@ private enum PlanDetailResolutionError: LocalizedError {
     }
 }
 
-private struct MaxHangsEdgeResolutionInput: Hashable {
+private struct TrainingEdgeResolutionInput: Hashable {
     let plan: TrainingPlan
     let board: BoardRevision
 }
@@ -80,9 +81,9 @@ struct PlanDetailView: View {
     @State private var manualWeight = 0.0
     @State private var manualWeightIncludesBodyweight = false
 
-    @State private var selectedMaxHangsDepth: Double?
-    @State private var resolvedMaxHangsInput: MaxHangsEdgeResolutionInput?
-    @State private var resolvedMaxHangsPlans: [Double: TrainingPlan] = [:]
+    @State private var selectedTrainingDepth: Double?
+    @State private var resolvedTrainingEdgeInput: TrainingEdgeResolutionInput?
+    @State private var resolvedTrainingEdgePlans: [Double: TrainingPlan] = [:]
     @State private var resolvedSubstitutionInput: PlanHoldSubstitutionInput?
     @State private var preparedSubstitutions: PlanHoldSubstitutions.PreparedRequests?
     @State private var substitutionSelections: [PlanHoldSubstitutionRequest.ID: String] = [:]
@@ -95,28 +96,35 @@ struct PlanDetailView: View {
         )
     }
 
-    private var maxHangsResolutionInput: MaxHangsEdgeResolutionInput? {
-        guard let basePlan, basePlan.id == "research.max-hangs" else { return nil }
-        return MaxHangsEdgeResolutionInput(plan: basePlan, board: store.board(for: basePlan))
+    private var trainingEdgeResolutionInput: TrainingEdgeResolutionInput? {
+        guard let basePlan, TrainingEdgeSelection.supports(basePlan) else { return nil }
+        return TrainingEdgeResolutionInput(plan: basePlan, board: store.board(for: basePlan))
     }
 
-    private var maxHangsDepths: [Double] {
-        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return [] }
-        return resolvedMaxHangsPlans.keys.sorted(by: >)
+    private var trainingEdgeDepths: [Double] {
+        guard resolvedTrainingEdgeInput == trainingEdgeResolutionInput else { return [] }
+        return resolvedTrainingEdgePlans.keys.sorted(by: >)
+    }
+
+    private var needsTrainingDepthChoice: Bool {
+        guard let basePlan, TrainingEdgeSelection.requiresDepthChoice(for: basePlan) else { return false }
+        return selectedTrainingDepth.map { !trainingEdgeDepths.contains($0) } ?? true
     }
 
     private var prescribedPlan: TrainingPlan? {
         guard let basePlan else { return nil }
-        guard basePlan.id == "research.max-hangs" else { return basePlan }
-        guard resolvedMaxHangsInput == maxHangsResolutionInput else { return nil }
-        return PlanDetailPlanResolver.maxHangsVariant(
-            from: resolvedMaxHangsPlans,
-            selectedDepth: selectedMaxHangsDepth
+        guard TrainingEdgeSelection.supports(basePlan) else { return basePlan }
+        guard resolvedTrainingEdgeInput == trainingEdgeResolutionInput else { return nil }
+        return PlanDetailPlanResolver.trainingEdgeVariant(
+            from: resolvedTrainingEdgePlans,
+            selectedDepth: selectedTrainingDepth,
+            requiresSelection: TrainingEdgeSelection.requiresDepthChoice(for: basePlan)
         ) ?? basePlan
     }
 
     private var substitutionInput: PlanHoldSubstitutionInput? {
-        prescribedPlan.map { PlanHoldSubstitutionInput(plan: $0, board: store.board(for: $0)) }
+        guard !needsTrainingDepthChoice else { return nil }
+        return prescribedPlan.map { PlanHoldSubstitutionInput(plan: $0, board: store.board(for: $0)) }
     }
 
     private var substitutionRequests: [PlanHoldSubstitutionRequest] {
@@ -163,27 +171,27 @@ struct PlanDetailView: View {
                     .padding(.top, 18)
                     .padding(.bottom, 116)
                 }
-            } else if maxHangsResolutionInput != resolvedMaxHangsInput {
+            } else if trainingEdgeResolutionInput != resolvedTrainingEdgeInput {
                 ProgressView()
             } else {
                 unavailableContent
             }
         }
-        .onChange(of: maxHangsResolutionInput, initial: true) { _, input in
-            resolvedMaxHangsPlans = input.map {
-                MaxHangsEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
+        .onChange(of: trainingEdgeResolutionInput, initial: true) { _, input in
+            resolvedTrainingEdgePlans = input.map {
+                TrainingEdgeSelection.resolvedPlans(for: $0.plan, on: $0.board)
             } ?? [:]
-            selectedMaxHangsDepth = input.flatMap {
-                store.rememberedMaxHangsDepth(for: $0.plan, on: $0.board,
-                    availableDepths: Array(resolvedMaxHangsPlans.keys))
+            selectedTrainingDepth = input.flatMap {
+                store.rememberedTrainingEdgeDepth(for: $0.plan, on: $0.board,
+                    availableDepths: Array(resolvedTrainingEdgePlans.keys))
             }
-            resolvedMaxHangsInput = input
+            resolvedTrainingEdgeInput = input
         }
-        .onChange(of: selectedMaxHangsDepth) { _, depth in
-            guard let depth, let input = maxHangsResolutionInput,
-                  resolvedMaxHangsInput == input else { return }
-            store.rememberMaxHangsDepth(depth, for: input.plan, on: input.board,
-                availableDepths: Array(resolvedMaxHangsPlans.keys))
+        .onChange(of: selectedTrainingDepth) { _, depth in
+            guard let input = trainingEdgeResolutionInput,
+                  resolvedTrainingEdgeInput == input else { return }
+            store.rememberTrainingEdgeDepth(depth, for: input.plan, on: input.board,
+                availableDepths: Array(resolvedTrainingEdgePlans.keys))
         }
         .onChange(of: substitutionInput, initial: true) { _, input in
             preparedSubstitutions = input.map {
@@ -277,20 +285,33 @@ struct PlanDetailView: View {
                     .accessibilityLabel("Workout labels: \(labels.joined(separator: ", "))")
             }
 
-            if currentPlan.id == "research.max-hangs", !maxHangsDepths.isEmpty {
+            if TrainingEdgeSelection.supports(currentPlan),
+               !trainingEdgeDepths.isEmpty || TrainingEdgeSelection.requiresDepthChoice(for: currentPlan) {
                 VStack(alignment: .leading, spacing: 8) {
                     SectionLabel(title: "Training edge")
                     Picker("Edge depth", selection: Binding(
-                        get: { selectedMaxHangsDepth.flatMap { maxHangsDepths.contains($0) ? $0 : nil } ?? maxHangsDepths.first ?? 20 },
-                        set: { selectedMaxHangsDepth = $0 }
+                        get: {
+                            selectedTrainingDepth.flatMap { trainingEdgeDepths.contains($0) ? $0 : nil }
+                                ?? (TrainingEdgeSelection.requiresDepthChoice(for: currentPlan) ? nil : trainingEdgeDepths.first)
+                        },
+                        set: { selectedTrainingDepth = $0 }
                     )) {
-                        ForEach(maxHangsDepths, id: \.self) { depth in
-                            Text("\(depth, format: .number) mm").tag(depth)
+                        if TrainingEdgeSelection.requiresDepthChoice(for: currentPlan) {
+                            Text("Choose depth").tag(nil as Double?)
+                        }
+                        ForEach(trainingEdgeDepths, id: \.self) { depth in
+                            Text("\(depth, format: .number) mm").tag(Optional(depth))
                         }
                     }
                     .pickerStyle(.menu)
-                    .accessibilityIdentifier("plan.maxHangs.edgePicker")
-                    Text("Choose one edge size for this session. Adjust added weight to keep 3 seconds in reserve. Warm up progressively before starting.")
+                    .disabled(trainingEdgeDepths.isEmpty)
+                    .accessibilityIdentifier(currentPlan.id == "research.max-hangs"
+                        ? "plan.maxHangs.edgePicker" : "plan.trainingEdge.edgePicker")
+                    Text(TrainingEdgeSelection.requiresDepthChoice(for: currentPlan)
+                         ? (trainingEdgeDepths.isEmpty
+                            ? "No measured training-edge depth is available on this board."
+                            : "Use the edge and grip you will train.")
+                         : "Choose one edge size for this session. Adjust added weight to keep 3 seconds in reserve. Warm up progressively before starting.")
                         .font(.system(.footnote, design: .rounded, weight: .medium))
                         .foregroundStyle(Color.hangMuted)
                         .fixedSize(horizontal: false, vertical: true)
@@ -322,7 +343,7 @@ struct PlanDetailView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
                 .tint(.hangGreenDark)
-                .disabled(resolvedSubstitutionInput != substitutionInput || resolvedSessionPlan == nil)
+                .disabled(needsTrainingDepthChoice || resolvedSubstitutionInput != substitutionInput || resolvedSessionPlan == nil)
                 .accessibilityIdentifier("plan.startRoutine")
             case .unavailable(let requirement):
                 VStack(alignment: .leading, spacing: 8) {
@@ -520,7 +541,8 @@ struct PlanDetailView: View {
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first { !$0.isRestStep }
-        let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
+        let resolvedHoldIDs: Set<String> = needsTrainingDepthChoice
+            ? [] : firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
         let firstTask = firstStep?.segments.lazy.compactMap { $0.target?.planTasks }.first?.first
         let previewHandSide: WorkoutSide? = firstTask?.count == 1 && firstTask?.first?.side == nil ? .left : nil
         let presentationID = WorkoutHighlightResolver.presentationID(

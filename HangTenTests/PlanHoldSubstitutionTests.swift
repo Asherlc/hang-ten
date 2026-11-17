@@ -47,6 +47,44 @@ final class PlanHoldSubstitutionTests: XCTestCase {
         XCTAssertEqual(PlanHoldSubstitutions.requests(for: fixturePlan(steps: [step]), on: board).count, 1)
     }
 
+    func testUnspecifiedEdgeDepthSelectsMatchingPairInsteadOfWidestMixedPair() throws {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right),
+            contact(id: "right-20", name: "20 mm right", depth: 20, side: .right)
+        ], frames: ["right-20": CGRect(x: 0.65, y: 0.2, width: 0.1, height: 0.1)])
+        let hand = PlanHandTarget(target: .init(kind: .edge))
+        let step = fixtureStep(target: .tasks([[hand, hand]]))
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), ["left-20", "right-20"])
+        let work = try XCTUnwrap(try WorkoutActivityRecorder().segments(
+            for: fixturePlan(steps: [step]), on: board).first { $0.kind == .work })
+        XCTAssertEqual(work.target?.resolvedContactSnapshot?.contactIDs, ["left-20", "right-20"])
+    }
+
+    func testUnspecifiedEdgeDepthWithOnlyDifferentDepthsRequiresSubstitution() {
+        let board = fixtureBoard(contacts: [
+            contact(id: "left-20", name: "20 mm left", depth: 20, side: .left),
+            contact(id: "right-30", name: "30 mm right", depth: 30, side: .right)
+        ])
+        let hand = PlanHandTarget(target: .init(kind: .edge))
+        let step = fixtureStep(target: .tasks([[hand, hand]]))
+        XCTAssertTrue(WorkoutHighlightResolver.contactIDs(for: step, on: board).isEmpty)
+        XCTAssertEqual(PlanHoldSubstitutions.requests(for: fixturePlan(steps: [step]), on: board).count, 1)
+    }
+
+    func testEntralpiRestPreviewUsesEqualDepthsOnGrindstoneOriginal() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone-original"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        let rest = try XCTUnwrap(plan.steps.first { $0.isRestStep })
+        let cue = WorkoutTimeline(steps: plan.steps).boardCue(
+            currentStep: rest, stepElapsed: 15, countdown: 0, isComplete: false)
+        XCTAssertEqual(cue.mode, .preview)
+        let nextHang = try XCTUnwrap(cue.step)
+        let contacts = WorkoutHighlightResolver.contacts(for: nextHang, on: board)
+        XCTAssertEqual(contacts.count, 2)
+        XCTAssertEqual(contacts.first?.depth, contacts.last?.depth)
+    }
+
     func testHoopersSmallEdgeChoiceAppliesToRecruitmentPullsAndMinimalEdgeHangs() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.grindstone"))
         let source = try XCTUnwrap(PlanCatalog.plan(id: "hoopers-beta.introductory-home-hangboard"))

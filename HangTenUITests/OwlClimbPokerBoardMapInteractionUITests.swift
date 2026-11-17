@@ -741,9 +741,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             previousFrame = frame
             return stableSamples >= 2
         }, object: nil)
-        // A cold CI accessibility snapshot can take several seconds per query.
-        // Allow three settled-frame samples without weakening the readiness gate.
-        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 30), .completed,
+        // Three settled samples read both diagnostics and frames. At 10–20
+        // seconds per CI query, allow 120 seconds plus polling margin.
+        XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 150), .completed,
                        "The selection animation must settle before physical picking or orbit assertions")
     }
 
