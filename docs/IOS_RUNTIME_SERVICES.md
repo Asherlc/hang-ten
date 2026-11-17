@@ -358,7 +358,10 @@ Every choice passes the same grip, finger-capacity, hand, and position checks us
 for work resolution. Shared contacts must fit both sides and support two hands.
 Named depth categories match only the same authored category; they do not imply
 a millimeter range. Measured depths match only overlapping authored intervals,
-without a numeric tolerance. Missing exact facts go through the picker.
+without a numeric tolerance. Point-depth plan tasks first try a complete match
+using exact measured contacts across board positions, then fall back to interval
+overlap when no exact resolution is available. Training-edge choices still
+require exact point measurements. Missing exact facts go through the picker.
 Canonical two-hand choices on a one-hand board retain “two boards” as equipment
 context; mixed simultaneous targets retain the distinct hand-to-hold assignments.
 Repeated matching hold predicates with the same grip and finger context share

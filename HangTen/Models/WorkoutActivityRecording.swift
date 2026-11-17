@@ -455,20 +455,38 @@ enum ContactResolver {
     static func resolveSelection(
         _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
     ) throws -> Selection {
-        if let selection = reusableCADPairSelection(task, step: step, board: board) {
+        // A point-depth target prefers factual point measurements, including
+        // those in later board positions. Keep overlap matching as a fallback
+        // for source prescriptions that only have interval-depth contacts.
+        if task.contains(where: { hand in
+            guard case .measured(let range) = hand.target?.depth else { return false }
+            return range.minimum == range.maximum
+        }), let exact = try? resolveSelection(task, step: step, board: board, exactPointDepthsOnly: true) {
+            return exact
+        }
+        return try resolveSelection(task, step: step, board: board, exactPointDepthsOnly: false)
+    }
+
+    private static func resolveSelection(
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision, exactPointDepthsOnly: Bool
+    ) throws -> Selection {
+        if let selection = reusableCADPairSelection(task, step: step, board: board,
+            exactPointDepthsOnly: exactPointDepthsOnly) {
             return selection
         }
         guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
             let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
             return Selection(contacts: try resolveTaskCandidates(task, step: step, board: board,
-                presentation: board.defaultPresentation, available: available), positionID: nil)
+                presentation: board.defaultPresentation, available: available,
+                exactPointDepthsOnly: exactPointDepthsOnly), positionID: nil)
         }
         let preferred = board.positions.filter { $0.presentationID == board.defaultPresentation.id }
             + board.positions.filter { $0.presentationID != board.defaultPresentation.id }
         for position in preferred {
             guard let presentation = board.presentation(id: position.presentationID),
                   let contacts = try? resolveTaskCandidates(task, step: step, board: board,
-                    presentation: presentation, available: board.contacts(inPosition: position.id)) else { continue }
+                    presentation: presentation, available: board.contacts(inPosition: position.id),
+                    exactPointDepthsOnly: exactPointDepthsOnly) else { continue }
             return Selection(contacts: contacts, positionID: position.id)
         }
         throw ContactResolutionError.noMatches
@@ -478,7 +496,7 @@ enum ContactResolver {
     /// only one matching slot pair with one authored common position. Ambiguous
     /// ranges and differing candidate sets follow the existing resolver.
     private static func reusableCADPairSelection(
-        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision
+        _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision, exactPointDepthsOnly: Bool
     ) -> Selection? {
         guard task.count == 2,
               case .model(let media) = board.defaultPresentation.media,
@@ -490,7 +508,8 @@ enum ContactResolver {
         let available = board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }
         let candidates = task.map { hand in
             available.filter {
-                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: $0)
+                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: $0,
+                    exactPointDepthsOnly: exactPointDepthsOnly)
                     && matches(stepGripType: step.gripType, contact: $0)
             }
         }
@@ -532,12 +551,13 @@ enum ContactResolver {
 
     private static func resolveTaskCandidates(
         _ task: [PlanHandTarget], step: WorkoutStep, board: BoardRevision,
-        presentation: BoardPresentation, available: [PhysicalContact]
+        presentation: BoardPresentation, available: [PhysicalContact], exactPointDepthsOnly: Bool
     ) throws -> [PhysicalContact] {
         guard (1...2).contains(task.count) else { throw ContactResolutionError.noMatches }
         let candidates = task.map { hand in
             available.filter { contact in
-                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: contact)
+                matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: contact,
+                    exactPointDepthsOnly: exactPointDepthsOnly)
                     && matches(stepGripType: step.gripType, contact: contact)
             }
         }
@@ -737,12 +757,15 @@ enum ContactResolver {
 
     private static func matches(
         _ requirement: ContactRequirement,
-        contact: PhysicalContact
+        contact: PhysicalContact,
+        exactPointDepthsOnly: Bool = false
     ) -> Bool {
         if let contactID = requirement.contactID, contact.id != contactID { return false }
         if let kind = requirement.kind, contact.kind != kind { return false }
         if let shape = requirement.shape, contact.shape != shape { return false }
         if let depth = requirement.depth, !depth.matches(contact.depth) { return false }
+        if exactPointDepthsOnly, case .range(let range) = requirement.depth,
+           range.minimum == range.maximum, contact.depth != requirement.depth { return false }
         if let fingerCapacity = requirement.fingerCapacity {
             // Edge grips require room for the engaged fingers. An omitted
             // edge capacity adds no restriction; named pocket sizes stay exact.

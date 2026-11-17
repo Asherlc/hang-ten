@@ -53,6 +53,62 @@ final class ContactResolverTests: XCTestCase {
         XCTAssertNil(TrainingEdgeSelection.selecting(.nan, in: plan, on: board))
     }
 
+    func testEntralpiUsesExactDepthPairInsteadOfWiderOverlappingRangePair() throws {
+        let board = jugBoard([
+            .init(id: "outer-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1), depth: 29...31),
+            .init(id: "inner-left", frame: CGRect(x: 0.3, y: 0.4, width: 0.1, height: 0.1), depth: 30...30),
+            .init(id: "inner-right", frame: CGRect(x: 0.6, y: 0.4, width: 0.1, height: 0.1), depth: 30...30),
+            .init(id: "outer-right", frame: CGRect(x: 0.8, y: 0.4, width: 0.1, height: 0.1), depth: 29...31)
+        ], kind: .edge)
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertEqual(TrainingEdgeSelection.availableDepths(for: plan, on: board), [30])
+        let selected = try XCTUnwrap(TrainingEdgeSelection.selecting(30, in: plan, on: board))
+        for step in selected.steps where !step.isRestStep {
+            XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), ["inner-left", "inner-right"])
+        }
+        let recorded = try WorkoutActivityRecorder().segments(for: selected, on: board)
+        for segment in recorded where segment.kind == .work {
+            XCTAssertEqual(segment.target?.resolvedContactSnapshot?.contactIDs, ["inner-left", "inner-right"])
+        }
+    }
+
+    func testPointDepthPlanTargetRetainsIntervalFallbackWithoutExactContacts() throws {
+        let board = jugBoard([
+            .init(id: "left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1), depth: 29...31),
+            .init(id: "right", frame: CGRect(x: 0.8, y: 0.4, width: 0.1, height: 0.1), depth: 29...31)
+        ], kind: .edge)
+        let hand = PlanHandTarget(target: .init(kind: .edge, depth: .measured(.init(minimum: 30, maximum: 30))))
+        XCTAssertEqual(try ContactResolver.resolve([hand, hand],
+            step: fixtureStep(target: hand.target!.legacyRequirement), board: board).map(\.id), ["left", "right"])
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertNil(TrainingEdgeSelection.selecting(30, in: plan, on: board))
+    }
+
+    func testEntralpiFindsExactPositionAfterAnOverlappingRangePosition() throws {
+        let base = fixtureBoard()
+        let depths: [(String, MillimeterRange)] = [
+            ("range", .init(minimum: 29, maximum: 31)),
+            ("exact", .init(minimum: 30, maximum: 30))
+        ]
+        let board = BoardRevision(id: base.id, revisionID: base.revisionID,
+            manufacturer: base.manufacturer, name: base.name, subtitle: base.subtitle,
+            dimensions: base.dimensions, aspectRatio: base.aspectRatio, contacts: base.contacts,
+            productURL: base.productURL, photoAssetName: nil, presentations: base.presentations,
+            positions: depths.map { id, depth in
+                BoardPosition(id: id, presentationID: base.defaultPresentation.id,
+                    contactIDs: base.contacts.map(\.id),
+                    effectiveDepths: Dictionary(uniqueKeysWithValues: base.contacts.map { ($0.id, .range(depth)) }))
+            })
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertEqual(TrainingEdgeSelection.availableDepths(for: plan, on: board), [30])
+        let selected = try XCTUnwrap(TrainingEdgeSelection.selecting(30, in: plan, on: board))
+        let step = try XCTUnwrap(selected.steps.first { !$0.isRestStep })
+        let task = try XCTUnwrap(step.segments.first?.target?.planTasks?.first)
+        let selection = try ContactResolver.resolveSelection(task, step: step, board: board)
+        XCTAssertEqual(selection.positionID, "exact")
+        XCTAssertTrue(selection.contacts.allSatisfy { $0.depth == .range(.init(minimum: 30, maximum: 30)) })
+    }
+
     func testEntralpiOffersMeasuredDepthsFromAdjustableBoardPositions() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
         let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
@@ -818,13 +874,14 @@ final class ContactResolverTests: XCTestCase {
 
     private func jugBoard(
         _ fixtures: [JugFixture],
+        kind: HoldKind = .jug,
         missingGeometryContactIDs: Set<String> = []
     ) -> BoardRevision {
         let contacts = fixtures.map {
             PhysicalContact(
                 id: $0.id,
                 name: $0.id,
-                kind: .jug,
+                kind: kind,
                 depth: $0.depth.map { .range(.init(minimum: $0.lowerBound, maximum: $0.upperBound)) }
             )
         }
