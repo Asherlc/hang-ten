@@ -381,8 +381,16 @@ require a new selection. The picker remains available after restoration.
 Saved choices from the previous contact-based ID format restore only when their
 source cue, contact IDs, and factual replacement still validate. Conflicting
 old per-hand choices require one new shared choice; clearing removes their aliases.
-The max-hang training-edge picker also remembers the athlete's chosen depth for
-each plan and board revision, restoring it only while that size remains eligible.
+The training-edge picker remembers the athlete's chosen depth for each plan and
+board revision, restoring it only while that size remains eligible. The Entralpi
+pre-max-hang ramp requires an explicit choice on first use: “Choose depth” has no
+automatic selection, first-hold highlights stay empty, and Start stays disabled.
+The athlete chooses from measured depths that resolve the two-hand targets on
+that board; every ramp hang and recorded contact uses the chosen depth. Clearing
+the choice removes its saved default. Workout deep links enter plan detail for
+this routine so they cannot bypass the training-edge setup. A board without a
+resolvable measured depth leaves Start unavailable. The existing López MAW
+session retains its source-backed 8–20 mm range and existing default behavior.
 The resulting session retains the source link and original
 instructions without adding substitution descriptions, preserves interval and
 task structure, and records the actual chosen holds. It does not edit the
@@ -390,7 +398,8 @@ canonical library or claim manufacturer endorsement of the athlete's choices.
 Plans remain visible
 in focus browsing when substitutions are needed. Workout deep links enter plan
 detail when holds are missing, so they require the same explicit choices before
-launching; compatible deep links retain their direct workout launch.
+launching; other compatible deep links retain their direct workout launch,
+except routines that require the training-edge choice described above.
 
 Resolved work retains board/revision identity, optional model hash, the factual
 requirement or per-hand targets, resolved contact IDs and applicable position.

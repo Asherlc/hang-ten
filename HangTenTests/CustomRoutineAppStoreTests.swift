@@ -222,8 +222,8 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
         store.selectBoard(board)
         let basePlan = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
-        let variants = MaxHangsEdgeSelection.resolvedPlans(for: basePlan, on: board)
-        let selected = try XCTUnwrap(PlanDetailPlanResolver.maxHangsVariant(from: variants, selectedDepth: 15))
+        let variants = TrainingEdgeSelection.resolvedPlans(for: basePlan, on: board)
+        let selected = try XCTUnwrap(PlanDetailPlanResolver.trainingEdgeVariant(from: variants, selectedDepth: 15))
 
         let duplicate = try PlanDetailView.duplicateDefinition(for: basePlan, in: store, resolvedPlan: selected)
         let expected = try store.duplicateRoutine(selected)
@@ -232,8 +232,20 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(duplicate.steps, expected.steps)
         XCTAssertNotEqual(duplicate.steps, baseCopy.steps)
         XCTAssertEqual(selected, variants[15])
-        XCTAssertEqual(PlanDetailPlanResolver.maxHangsVariant(from: variants, selectedDepth: 999), variants[20])
-        XCTAssertNil(PlanDetailPlanResolver.maxHangsVariant(from: [:], selectedDepth: 15))
+        XCTAssertEqual(PlanDetailPlanResolver.trainingEdgeVariant(from: variants, selectedDepth: 999), variants[20])
+        XCTAssertNil(PlanDetailPlanResolver.trainingEdgeVariant(from: [:], selectedDepth: 15))
+    }
+
+    func testEntralpiVariantRequiresAValidAthleteDepthInsteadOfAnAutomaticDefault() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        let variants = TrainingEdgeSelection.resolvedPlans(for: plan, on: board)
+        XCTAssertNil(PlanDetailPlanResolver.trainingEdgeVariant(
+            from: variants, selectedDepth: nil, requiresSelection: true))
+        XCTAssertNil(PlanDetailPlanResolver.trainingEdgeVariant(
+            from: variants, selectedDepth: 999, requiresSelection: true))
+        XCTAssertEqual(PlanDetailPlanResolver.trainingEdgeVariant(
+            from: variants, selectedDepth: 29, requiresSelection: true), variants[29])
     }
 
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {

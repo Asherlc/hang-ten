@@ -2024,18 +2024,27 @@ struct TrainingPlan: Identifiable, Hashable {
     }
 }
 
-/// Athlete-selected edge size for the adapted López MAW session. The bundled
-/// plan retains a semantic range; the session narrows it without changing the
+/// Athlete-selected edge size for source-backed training-edge sessions. The bundled
+/// plan retains its semantic target; the session narrows it without changing the
 /// catalog or recording a different hold from the one shown in the preview.
-enum MaxHangsEdgeSelection {
+enum TrainingEdgeSelection {
+    static func requiresDepthChoice(for plan: TrainingPlan) -> Bool {
+        plan.id == "warmup.entralpi.max-hang-ramp"
+    }
+
+    static func supports(_ plan: TrainingPlan) -> Bool {
+        plan.id == "research.max-hangs" || requiresDepthChoice(for: plan)
+    }
+
     /// Resolve each eligible edge once so plan views can retain these snapshots.
     static func resolvedPlans(for plan: TrainingPlan, on board: BoardRevision) -> [Double: TrainingPlan] {
-        guard plan.id == "research.max-hangs" else { return [:] }
-        let depths = Set(board.contacts.compactMap { contact -> Double? in
+        guard supports(plan) else { return [:] }
+        let contacts = board.contacts + board.positions.flatMap { board.contacts(inPosition: $0.id) }
+        let depths = Set(contacts.compactMap { contact -> Double? in
             guard contact.kind == .edge,
                   case .range(let depth) = contact.depth,
                   depth.minimum == depth.maximum,
-                  (8...20).contains(depth.minimum) else { return nil }
+                  depth.minimum > 0 else { return nil }
             return depth.minimum
         })
         return depths.reduce(into: [:]) { resolved, depth in
@@ -2048,7 +2057,8 @@ enum MaxHangsEdgeSelection {
     }
 
     static func selecting(_ depth: Double, in plan: TrainingPlan, on board: BoardRevision) -> TrainingPlan? {
-        guard plan.id == "research.max-hangs", depth.isFinite, (8...20).contains(depth) else { return nil }
+        guard supports(plan), depth.isFinite, depth > 0,
+              plan.id != "research.max-hangs" || (8...20).contains(depth) else { return nil }
         let predicate = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: depth, maximum: depth)))
         let target = WorkoutSegmentTarget.tasks([[PlanHandTarget(target: predicate), PlanHandTarget(target: predicate)]])
         let steps = plan.steps.map { step in
@@ -2078,7 +2088,7 @@ enum MaxHangsEdgeSelection {
             id: plan.id, title: plan.title, subtitle: plan.subtitle, level: plan.level,
             sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
             provenance: plan.provenance, boardID: plan.boardID, steps: steps,
-            stepRepeats: plan.stepRepeats
+            stepRepeats: plan.stepRepeats, isFreeWorkout: plan.isFreeWorkout
         )
     }
 }

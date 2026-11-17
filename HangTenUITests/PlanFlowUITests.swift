@@ -38,7 +38,7 @@ final class WorkoutEndUITests: XCTestCase {
 
     func testImportedEntralpiRampKeepsUnspecifiedGripAndMinuteRecovery() {
         let app = openWorkout(URL(string: "hangten://plan/warmup.entralpi.max-hang-ramp/workout")!,
-            historyTitle: "Entralpi · Pre-max-hang ramp", reviewStep: 1)
+            historyTitle: "Entralpi · Pre-max-hang ramp", reviewStep: 1, trainingDepth: 20)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
         let cues = app.descendants(matching: .any).matching(NSPredicate(format: "identifier BEGINSWITH %@", "workout.gripCue."))
@@ -262,7 +262,8 @@ final class WorkoutEndUITests: XCTestCase {
         _ url: URL = URL(string: "hangten://plan/research.max-hangs/workout")!,
         historyTitle: String = "Max Hangs",
         reviewStep: Int? = nil,
-        chooseSubstitutes: Bool = false
+        chooseSubstitutes: Bool = false,
+        trainingDepth: Int? = nil
     ) -> XCUIApplication {
         activeHistoryTitle = historyTitle
         let app = XCUIApplication()
@@ -281,7 +282,15 @@ final class WorkoutEndUITests: XCTestCase {
         initialSessionCount = historySessions(in: app).count
         app.tabBars.buttons["Train"].tap()
         app.open(url)
-        if chooseSubstitutes, app.buttons["plan.startRoutine"].waitForExistence(timeout: 10) {
+        if let trainingDepth {
+            let picker = app.buttons["plan.trainingEdge.edgePicker"]
+            XCTAssertTrue(picker.waitForExistence(timeout: 20))
+            picker.tap()
+            let depthOption = app.buttons["\(trainingDepth) mm"]
+            XCTAssertTrue(depthOption.waitForExistence(timeout: 5))
+            depthOption.tap()
+        }
+        if chooseSubstitutes || trainingDepth != nil, app.buttons["plan.startRoutine"].waitForExistence(timeout: 10) {
             let count = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "plan.substitution.picker.")).count
             for index in 0..<count {
                 let picker = app.buttons["plan.substitution.picker.\(index)"]
@@ -522,6 +531,64 @@ final class PlanFlowUITests: XCTestCase {
         XCTAssertTrue(app.buttons["plan.substitution.picker.0"].label.contains(selectedLabel))
         XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         attachScreenshot(named: "Remembered complete hold selection", app: app)
+    }
+
+    func testEntralpiDeepLinkRequiresTrainingDepthBeforeWorkout() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO", "-HangTen.maxHangsDepths.v1", ""]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "metolius.wood-grips-compact-ii",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_STEP": "2"
+        ]
+        app.terminate()
+        app.open(URL(string: "hangten://plan/warmup.entralpi.max-hang-ramp/workout")!)
+        let picker = app.buttons["plan.trainingEdge.edgePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 20))
+        XCTAssertTrue(picker.label.contains("Choose depth"))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        XCTAssertFalse(app.buttons["Pause"].exists)
+        attachScreenshot(named: "Entralpi requires training edge depth", app: app)
+        picker.tap()
+        XCTAssertTrue(app.buttons["29 mm"].waitForExistence(timeout: 5))
+        app.buttons["29 mm"].tap()
+        XCTAssertTrue(picker.label.contains("29 mm"))
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.isEnabled)
+        attachScreenshot(named: "Entralpi selected training edge", app: app)
+        start.tap()
+        let pause = app.buttons["Pause"]
+        XCTAssertTrue(pause.waitForExistence(timeout: 60))
+        pause.tap()
+        let board = app.descendants(matching: .any).matching(identifier: "boardModel.3d").firstMatch
+        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        XCTAssertEqual(board.value as? String, "Left 29 mm edge, Right 29 mm edge")
+        XCTAssertTrue(app.staticTexts["Rest"].exists)
+        attachScreenshot(named: "Entralpi rest previews athlete-selected 29 mm edges", app: app)
+    }
+
+    func testEntralpiTrainingEdgeIsRestoredAndEditableInLandscape() {
+        var app = launchPlan("warmup.entralpi.max-hang-ramp", landscape: true,
+                             boardID: "metolius.wood-grips-compact-ii")
+        let picker = app.buttons["plan.trainingEdge.edgePicker"]
+        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        picker.tap()
+        app.buttons["29 mm"].tap()
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        app.terminate()
+
+        app = launchPlan("warmup.entralpi.max-hang-ramp", landscape: true,
+                         boardID: "metolius.wood-grips-compact-ii", resetHoldSelections: false)
+        let restored = app.buttons["plan.trainingEdge.edgePicker"]
+        XCTAssertTrue(restored.waitForExistence(timeout: 10))
+        XCTAssertTrue(restored.label.contains("29 mm"))
+        restored.tap()
+        app.buttons["19 mm"].tap()
+        XCTAssertTrue(restored.label.contains("19 mm"))
+        XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
+        attachScreenshot(named: "Entralpi remembered depth remains editable in landscape", app: app)
     }
 
     func testMaxHangsTrainingEdgeIsRestoredAfterRelaunch() {

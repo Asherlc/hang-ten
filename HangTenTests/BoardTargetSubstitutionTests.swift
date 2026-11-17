@@ -22,8 +22,8 @@ final class ContactResolverTests: XCTestCase {
         ] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let plan = PlanCatalog.maxHangs
-            XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
-            let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
+            XCTAssertTrue(TrainingEdgeSelection.availableDepths(for: plan, on: board).contains(depth))
+            let selected = try XCTUnwrap(TrainingEdgeSelection.resolvedPlans(for: plan, on: board)[depth])
             let accessibleCue = try XCTUnwrap(BoardModelSurface.highlightedContactCue(
                 for: board.contacts,
                 highlightedContactIDs: ids
@@ -45,12 +45,58 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
+    func testEntralpiOffersEveryResolvableMeasuredTrainingEdgeWithoutLopezBounds() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertEqual(TrainingEdgeSelection.availableDepths(for: plan, on: board), [29, 19])
+        XCTAssertNil(TrainingEdgeSelection.selecting(20, in: plan, on: board))
+        XCTAssertNil(TrainingEdgeSelection.selecting(.nan, in: plan, on: board))
+    }
+
+    func testEntralpiOffersMeasuredDepthsFromAdjustableBoardPositions() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertEqual(TrainingEdgeSelection.availableDepths(for: plan, on: board), [18, 15, 10])
+        let selected = try XCTUnwrap(TrainingEdgeSelection.selecting(15, in: plan, on: board))
+        let step = try XCTUnwrap(selected.steps.first { !$0.isRestStep })
+        let task = try XCTUnwrap(step.segments.first?.target?.planTasks?.first)
+        let selection = try ContactResolver.resolveSelection(task, step: step, board: board)
+        XCTAssertEqual(selection.positionID, "depth-15mm")
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-18", "edge-18"])
+        XCTAssertTrue(selection.contacts.allSatisfy { $0.depth == .range(.init(minimum: 15, maximum: 15)) })
+    }
+
+    func testEntralpiDoesNotOfferDepthsWithoutAResolvableMatchingPair() throws {
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        XCTAssertTrue(TrainingEdgeSelection.availableDepths(for: plan,
+            on: fixtureBoard(rightDepth: 19...19)).isEmpty)
+    }
+
+    func testEntralpiChosenDepthControlsEveryHangPreviewAndRecordedContact() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let source = try XCTUnwrap(PlanCatalog.plan(id: "warmup.entralpi.max-hang-ramp"))
+        let selected = try XCTUnwrap(TrainingEdgeSelection.selecting(29, in: source, on: board))
+        XCTAssertEqual(selected.steps.map(\.instruction), source.steps.map(\.instruction))
+        XCTAssertEqual(selected.steps.map(\.duration), source.steps.map(\.duration))
+        XCTAssertEqual(selected.steps.filter(\.isRestStep), source.steps.filter(\.isRestStep))
+        for step in selected.steps where !step.isRestStep {
+            XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), ["edge-29-left", "edge-29-right"])
+        }
+        let recorded = try WorkoutActivityRecorder().segments(for: selected, on: board)
+        let work = recorded.filter { $0.kind == .work }
+        XCTAssertEqual(work.count, 3)
+        for segment in work {
+            XCTAssertEqual(segment.target?.resolvedContactSnapshot?.contactIDs, ["edge-29-left", "edge-29-right"])
+        }
+        XCTAssertNil(source.steps.first?.segments.first?.target?.planTasks?.first?.first?.target?.depth)
+    }
+
     func testLopezMaxHangsRejectsUnsupportedAndOutOfRangeEdgeSelections() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-2000"))
-        XCTAssertNil(MaxHangsEdgeSelection.selecting(20, in: PlanCatalog.maxHangs, on: board))
-        XCTAssertNil(MaxHangsEdgeSelection.selecting(22, in: PlanCatalog.maxHangs, on: board))
-        XCTAssertNil(MaxHangsEdgeSelection.selecting(7, in: PlanCatalog.maxHangs, on: board))
-        XCTAssertTrue(MaxHangsEdgeSelection.availableDepths(for: PlanCatalog.abrahangs, on: board).isEmpty)
+        XCTAssertNil(TrainingEdgeSelection.selecting(20, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(TrainingEdgeSelection.selecting(22, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertNil(TrainingEdgeSelection.selecting(7, in: PlanCatalog.maxHangs, on: board))
+        XCTAssertTrue(TrainingEdgeSelection.availableDepths(for: PlanCatalog.abrahangs, on: board).isEmpty)
     }
 
     func testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard() throws {
@@ -523,7 +569,7 @@ final class ContactResolverTests: XCTestCase {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
         // The source plan offers 8–20 mm; the athlete chooses the exact edge
         // through the production plan-page path before a session is resolved.
-        let selected = try XCTUnwrap(MaxHangsEdgeSelection.resolvedPlans(
+        let selected = try XCTUnwrap(TrainingEdgeSelection.resolvedPlans(
             for: PlanCatalog.maxHangs, on: board)[20])
         let step = try XCTUnwrap(selected.steps.first { !$0.isRestStep })
         let target = try XCTUnwrap(step.segments.first { $0.kind == .work }?.target)

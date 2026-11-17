@@ -219,27 +219,27 @@ final class AppStoreTests: XCTestCase {
         XCTAssertTrue(AppStore(defaults: defaults).rememberedHoldSubstitutions(for: holdSubstitutionFixture()).isEmpty)
     }
 
-    func testRememberedMaxHangsDepthRestoresOnlyTheAthletesSelectionAfterRelaunch() {
+    func testRememberedTrainingEdgeDepthRestoresOnlyTheAthletesSelectionAfterRelaunch() {
         let defaults = makeDefaults()
         let fixture = maxHangsDepthPreferenceFixture()
         let store = AppStore(defaults: defaults)
-        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
+        XCTAssertNil(store.rememberedTrainingEdgeDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
 
-        store.rememberMaxHangsDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+        store.rememberTrainingEdgeDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
 
-        XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
             for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
 
-        store.rememberMaxHangsDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
-        XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+        store.rememberTrainingEdgeDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
             for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 20)
     }
 
-    func testRememberedMaxHangsDepthKeepsPlanBoardAndRevisionContextsSeparate() {
+    func testRememberedTrainingEdgeDepthKeepsPlanBoardAndRevisionContextsSeparate() {
         let defaults = makeDefaults()
         let store = AppStore(defaults: defaults)
         let original = maxHangsDepthPreferenceFixture()
-        store.rememberMaxHangsDepth(15, for: original.plan, on: original.board, availableDepths: [15, 20])
+        store.rememberTrainingEdgeDepth(15, for: original.plan, on: original.board, availableDepths: [15, 20])
         let otherContexts = [
             maxHangsDepthPreferenceFixture(planID: "another-plan"),
             maxHangsDepthPreferenceFixture(boardID: "another-board"),
@@ -247,38 +247,57 @@ final class AppStoreTests: XCTestCase {
         ]
 
         for fixture in otherContexts {
-            XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
-            store.rememberMaxHangsDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
-            XCTAssertEqual(store.rememberedMaxHangsDepth(for: original.plan, on: original.board, availableDepths: [15, 20]), 15)
-            XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+            XCTAssertNil(store.rememberedTrainingEdgeDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
+            store.rememberTrainingEdgeDepth(20, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+            XCTAssertEqual(store.rememberedTrainingEdgeDepth(for: original.plan, on: original.board, availableDepths: [15, 20]), 15)
+            XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
                 for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 20)
         }
     }
 
-    func testRememberedMaxHangsDepthRejectsUnavailableAndNonfiniteDepths() {
+    func testRememberedTrainingEdgeDepthRejectsUnavailableAndNonfiniteDepths() {
         let defaults = makeDefaults()
         let store = AppStore(defaults: defaults)
         let fixture = maxHangsDepthPreferenceFixture()
-        store.rememberMaxHangsDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
-        XCTAssertEqual(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
-        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: [20]))
-        XCTAssertNil(store.rememberedMaxHangsDepth(for: fixture.plan, on: fixture.board, availableDepths: []))
+        store.rememberTrainingEdgeDepth(15, for: fixture.plan, on: fixture.board, availableDepths: [15, 20])
+        XCTAssertEqual(store.rememberedTrainingEdgeDepth(for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
+        XCTAssertNil(store.rememberedTrainingEdgeDepth(for: fixture.plan, on: fixture.board, availableDepths: [20]))
+        XCTAssertNil(store.rememberedTrainingEdgeDepth(for: fixture.plan, on: fixture.board, availableDepths: []))
 
         for depth in [30, Double.infinity, Double.nan] {
-            store.rememberMaxHangsDepth(depth, for: fixture.plan, on: fixture.board,
+            store.rememberTrainingEdgeDepth(depth, for: fixture.plan, on: fixture.board,
                                        availableDepths: [15, 20, .infinity, .nan])
-            XCTAssertEqual(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+            XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
                 for: fixture.plan, on: fixture.board, availableDepths: [15, 20]), 15)
         }
     }
 
-    func testRememberedMaxHangsDepthIgnoresCorruptStoredPreferences() {
+    func testRememberedTrainingEdgeDepthIgnoresCorruptStoredPreferences() {
         let defaults = makeDefaults()
         defaults.set(Data("not-json".utf8), forKey: "HangTen.maxHangsDepths.v1")
         let fixture = maxHangsDepthPreferenceFixture()
 
-        XCTAssertNil(AppStore(defaults: defaults).rememberedMaxHangsDepth(
+        XCTAssertNil(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
             for: fixture.plan, on: fixture.board, availableDepths: [15, 20]))
+    }
+
+    func testEntralpiTrainingDepthCanBeRememberedChangedAndClearedWithoutChangingMaxHangs() {
+        let defaults = makeDefaults()
+        let store = AppStore(defaults: defaults)
+        let ramp = maxHangsDepthPreferenceFixture(planID: "warmup.entralpi.max-hang-ramp")
+        let maxHangs = maxHangsDepthPreferenceFixture()
+        store.rememberTrainingEdgeDepth(15, for: maxHangs.plan, on: maxHangs.board, availableDepths: [15, 20])
+        store.rememberTrainingEdgeDepth(29, for: ramp.plan, on: ramp.board, availableDepths: [19, 29])
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
+            for: ramp.plan, on: ramp.board, availableDepths: [19, 29]), 29)
+        store.rememberTrainingEdgeDepth(19, for: ramp.plan, on: ramp.board, availableDepths: [19, 29])
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
+            for: ramp.plan, on: ramp.board, availableDepths: [19, 29]), 19)
+        store.rememberTrainingEdgeDepth(nil, for: ramp.plan, on: ramp.board, availableDepths: [19, 29])
+        XCTAssertNil(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
+            for: ramp.plan, on: ramp.board, availableDepths: [19, 29]))
+        XCTAssertEqual(AppStore(defaults: defaults).rememberedTrainingEdgeDepth(
+            for: maxHangs.plan, on: maxHangs.board, availableDepths: [15, 20]), 15)
     }
 
     func testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice() throws {
@@ -2379,14 +2398,17 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
                 let firstTask = try XCTUnwrap(firstWorkStep.segments.first { $0.kind == .work }?.target?.planTasks?.first)
                 let sourceDepth = PlanDepth.measured(.init(minimum: 14, maximum: 14))
                 XCTAssertEqual(firstTask.map { $0.target?.depth }, [sourceDepth, sourceDepth])
-                XCTAssertEqual(prepared.requests.count, 1)
+                // Its three-finger pockets are also asymmetric: 40 mm left
+                // and 20 mm right cannot supply a matching two-hand pair.
+                XCTAssertEqual(prepared.requests.count, 2)
                 XCTAssertNil(PlanHoldSubstitutions.applying([:], to: plan, on: board, prepared: prepared))
-                let request = try XCTUnwrap(prepared.requests.first)
                 let selectedDepth = PlanDepth.measured(.init(minimum: 15, maximum: 15))
-                let option = try XCTUnwrap(request.options.first { option in
-                    option.target.planTasks?.first?.allSatisfy { $0.target?.depth == selectedDepth } == true
-                })
-                selections[request.id] = option.id
+                for request in prepared.requests {
+                    let option = try XCTUnwrap(request.options.first { option in
+                        option.target.planTasks?.first?.allSatisfy { $0.target?.depth == selectedDepth } == true
+                    })
+                    selections[request.id] = option.id
+                }
             }
             let session = try XCTUnwrap(PlanHoldSubstitutions.applying(
                 selections, to: plan, on: board, prepared: prepared))

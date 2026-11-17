@@ -97,7 +97,8 @@ struct TrainView: View {
             }
             .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
                 if let plan = deepLinkedWorkoutPlan {
-                    if PlanHoldSubstitutions.requests(for: plan, on: store.board(for: plan)).isEmpty {
+                    if !TrainingEdgeSelection.requiresDepthChoice(for: plan),
+                       PlanHoldSubstitutions.requests(for: plan, on: store.board(for: plan)).isEmpty {
                         WorkoutAccessGate(plan: plan)
                     } else {
                         PlanDetailView(plan: plan)

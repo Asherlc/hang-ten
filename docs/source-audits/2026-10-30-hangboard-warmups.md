@@ -54,6 +54,7 @@ cardio, mobility and climbing pyramid are outside this requested excerpt.
 | Work timing | Source permits 5–10 seconds; fixed timer selects five seconds. Instructions preserve the full range; notes disclose the selected value. |
 | Recovery timing | Source permits 1–2 minutes between efforts; timer selects 60 seconds twice. Recovery instructions preserve the range; no final rest. |
 | Hand / target / grip | Source says use the training edge and grip. Playback selects two hands, explicitly disclosed in notes; edge predicates have no inferred depth, shape, grip or finger identities. |
+| Training-edge depth choice (checked November 16, 2026) | Step 6 says to use the edge and grip of the upcoming work sets; “Why ramp up before max hangs?” repeats that relationship. Plan detail therefore asks the athlete for an exact measured training-edge depth available on the selected board, with no automatic first-use depth. The chosen depth narrows all three session targets; it does not add a millimeter prescription to the canonical source plan. The helper copy “Use the edge and grip you will train.” paraphrases step 6. Valid prior athlete choices remain editable per plan, board and revision; workout links enter this setup. |
 | Relative load / evidence limits | Percentages stay in instructions, not added-weight fields. Author identifies coaching practice, not a climbing-trial protocol. |
 | Totals / provenance | Three efforts, two rests, 135 seconds; adapted for branch, timer and hand-count choices. |
 
