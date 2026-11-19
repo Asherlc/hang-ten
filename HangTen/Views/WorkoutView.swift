@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 import UIKit
 
@@ -1579,6 +1580,7 @@ struct WorkoutView: View {
 	private func meter(step: WorkoutStep) -> some View {
 		MotherboardMeterView(
 			measurement: motherboardBluetoothService.latestMeasurement,
+			measurementUpdates: motherboardBluetoothService.$latestMeasurement.dropFirst().eraseToAnyPublisher(),
 			peakLoadKGF: recorder.currentStepID == step.id ? recorder.currentPeakLoadKGF : nil,
 			actualLoadedTime: recorder.currentStepID == step.id ? recorder.currentLoadedDuration : 0,
 			plannedActiveDuration: step.activeDuration,
