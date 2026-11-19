@@ -11,7 +11,7 @@ final class FreeWorkoutUITests: XCTestCase {
         let entry = app.buttons["train.freeWorkout"]
         tapVisibleButton(entry, in: app, timeout: 15)
         XCTAssertTrue(anyElement(app, "freeWorkout.start").waitForExistence(timeout: 10))
-        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Custom Workout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.empty"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.last"].exists)
         // The start sheet replaces the old timeline builder and session.
@@ -83,7 +83,7 @@ final class FreeWorkoutUITests: XCTestCase {
         // Start sheet dismissed after finish; reopen without reset so history remains.
         let entry = app.buttons["train.freeWorkout"]
         tapVisibleButton(entry, in: app, timeout: 15)
-        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 15))
+        XCTAssertTrue(app.navigationBars["Custom Workout"].waitForExistence(timeout: 15))
         let last = app.buttons["freeWorkout.last"]
         XCTAssertTrue(last.waitForExistence(timeout: 15))
         XCTAssertTrue(last.isEnabled, "Last workout should unlock after finishing ≥1 completed set")
@@ -226,7 +226,193 @@ final class FreeWorkoutUITests: XCTestCase {
         )
     }
 
+    func testTrainShowsCustomWorkoutAndFreeformEntries() {
+        let app = launchResetFreeWorkout()
+        let custom = app.buttons["train.freeWorkout"]
+        XCTAssertTrue(custom.waitForExistence(timeout: 10))
+        XCTAssertTrue(
+            custom.label.localizedCaseInsensitiveContains("custom workout"),
+            "The exercise/set log entry should be named Custom Workout: \(custom.label)"
+        )
+        XCTAssertFalse(custom.label.localizedCaseInsensitiveContains("freeform"))
+
+        let freeform = app.buttons["train.freeform"]
+        XCTAssertTrue(freeform.waitForExistence(timeout: 10), "Freeform should be reachable directly from Train")
+        XCTAssertEqual(freeform.label, "Freeform")
+    }
+
+    func testFreeformEntryOpensSetupWithDepthAndDisabledStart() {
+        let app = launchResetFreeWorkout()
+        let entry = app.buttons["train.freeform"]
+        tapVisibleButton(entry, in: app, timeout: 15)
+
+        XCTAssertTrue(app.navigationBars["Freeform"].waitForExistence(timeout: 10))
+        XCTAssertTrue(anyElement(app, "freeform.depth").waitForExistence(timeout: 10))
+        XCTAssertTrue(anyElement(app, "freeform.tare").waitForExistence(timeout: 10))
+
+        let start = app.buttons["freeform.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        XCTAssertFalse(start.isEnabled, "Start requires a valid depth and a streaming sensor")
+        captureReviewScreenshot("freeform-setup")
+    }
+
+    /// Full simulated Freeform lifecycle: enter depth, record a loaded effort
+    /// with a release, pause/resume, finish, save, and confirm depth in history.
+    func testFreeformLifecycleRecordsPauseResumeFinishAndSavesDepthToHistory() {
+        XCUIDevice.shared.orientation = .portrait
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.honestone"
+        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        // Deterministic load/release cycles: an effort opens after the loaded
+        // samples pass debounce and closes after the unloaded samples.
+        app.launchEnvironment["HANGTEN_REVIEW_FREEFORM_SAMPLE_LOADS"] = "0,20,20,20,0,0,0,20,20,20,0,0"
+        app.launch()
+
+        // The review fixture flag also routes Train to Settings. The simulated
+        // scale needs the flag, so leave Settings explicitly before continuing.
+        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            app.navigationBars["Settings"].buttons.firstMatch.tap()
+        }
+        XCTAssertTrue(app.buttons["train.freeform"].waitForExistence(timeout: 10))
+
+        tapVisibleButton(app.buttons["train.freeform"], in: app, timeout: 15)
+        XCTAssertTrue(app.navigationBars["Freeform"].waitForExistence(timeout: 10))
+        enterDepthAndStartFreeform(app)
+
+        // A confirmed open effort with positive measured duration. A pending
+        // one-sample candidate has no row, so this is not a claim about release.
+        XCTAssertTrue(
+            anyElement(app, "freeform.effort.effort-1").waitForExistence(timeout: 12),
+            "A loaded effort with positive duration should be detected"
+        )
+        let loaded = anyElement(app, "freeform.live.loaded")
+        XCTAssertTrue(loaded.waitForExistence(timeout: 5))
+        // A pending one-sample candidate has no row; require a positive
+        // measured duration before exercising pause/resume.
+        let positiveLoaded = expectation(
+            for: NSPredicate(format: "label MATCHES '.*[1-9].*'"),
+            evaluatedWith: loaded
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [positiveLoaded], timeout: 5), .completed)
+        XCTAssertTrue(anyElement(app, "freeform.live.depth").waitForExistence(timeout: 5))
+        captureReviewScreenshot("freeform-live")
+
+        // Pause -> explicit resume.
+        tapVisibleButton(app.buttons["freeform.pause"], in: app, timeout: 5)
+        XCTAssertTrue(anyElement(app, "freeform.paused.user").waitForExistence(timeout: 5))
+        captureReviewScreenshot("freeform-paused")
+
+        XCUIDevice.shared.orientation = .landscapeRight
+        waitForFreeformOrientation(app, landscape: true)
+        XCTAssertTrue(anyElement(app, "freeform.paused.user").waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["freeform.resume"].isEnabled)
+        captureReviewScreenshot("freeform-landscape")
+        XCUIDevice.shared.orientation = .portrait
+        waitForFreeformOrientation(app, landscape: false)
+
+        let resume = app.buttons["freeform.resume"]
+        XCTAssertTrue(resume.waitForExistence(timeout: 5))
+        tapVisibleButton(resume, in: app, timeout: 5)
+        XCTAssertTrue(app.buttons["freeform.pause"].waitForExistence(timeout: 5))
+        XCTAssertFalse(anyElement(app, "freeform.paused.user").exists)
+
+        // Finish -> summary shows the entered depth.
+        tapVisibleButton(app.buttons["freeform.finish"], in: app, timeout: 10)
+        let summary = app.navigationBars["Summary"]
+        XCTAssertTrue(summary.waitForExistence(timeout: 10))
+        let summaryDepth = app.staticTexts["summary.edgeDepth"]
+        XCTAssertTrue(summaryDepth.waitForExistence(timeout: 10))
+        XCTAssertTrue(summaryDepth.label.contains("18.5"))
+        captureReviewScreenshot("freeform-summary")
+
+        tapVisibleButton(app.buttons["workout.summary.save"], in: app, timeout: 10)
+        let saved = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: summary)
+        XCTAssertEqual(XCTWaiter.wait(for: [saved], timeout: 10), .completed)
+
+        // History -> saved Freeform session still carries its depth.
+        tapVisibleControl(app.buttons["History"], in: app, timeout: 15)
+        XCTAssertTrue(app.navigationBars["History"].waitForExistence(timeout: 10))
+        let savedSession = app.staticTexts.matching(NSPredicate(format: "label == %@", "Freeform")).firstMatch
+        XCTAssertTrue(savedSession.waitForExistence(timeout: 10))
+        captureReviewScreenshot("freeform-history")
+        savedSession.tap()
+        XCTAssertTrue(app.navigationBars["Session summary"].waitForExistence(timeout: 10))
+        let historyDepth = app.staticTexts["summary.edgeDepth"]
+        XCTAssertTrue(historyDepth.waitForExistence(timeout: 10))
+        XCTAssertTrue(historyDepth.label.contains("18.5"))
+        captureReviewScreenshot("freeform-history-detail")
+    }
+
+    /// Empty Finish must offer Keep training and return to a live session.
+    func testFreeformEmptyFinishKeepTrainingRecoversLiveSession() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.honestone"
+        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        // No load at all, so Finish has nothing savable.
+        app.launchEnvironment["HANGTEN_REVIEW_FREEFORM_SAMPLE_LOADS"] = "0,0,0,0,0,0"
+        app.launch()
+
+        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            app.navigationBars["Settings"].buttons.firstMatch.tap()
+        }
+        tapVisibleButton(app.buttons["train.freeform"], in: app, timeout: 15)
+        XCTAssertTrue(app.navigationBars["Freeform"].waitForExistence(timeout: 10))
+        enterDepthAndStartFreeform(app)
+
+        XCTAssertFalse(anyElement(app, "freeform.effort.effort-1").exists)
+        tapVisibleButton(app.buttons["freeform.finish"], in: app, timeout: 10)
+
+        let keepTraining = app.alerts["No efforts recorded"].buttons.matching(
+            identifier: "freeform.empty.keepTraining"
+        ).firstMatch
+        XCTAssertTrue(keepTraining.waitForExistence(timeout: 5))
+        keepTraining.tap()
+
+        XCTAssertTrue(app.buttons["freeform.pause"].waitForExistence(timeout: 5))
+        XCTAssertTrue(anyElement(app, "freeform.live.loaded").waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["freeform.finish"].isEnabled)
+    }
+
     // MARK: - Helpers
+
+    private func enterDepthAndStartFreeform(_ app: XCUIApplication) {
+        let depth = app.textFields["freeform.depth"]
+        XCTAssertTrue(depth.waitForExistence(timeout: 10))
+        depth.tap()
+        depth.typeText("18.5")
+
+        let done = app.buttons["freeform.keyboard.done"]
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        done.tap()
+
+        let start = app.buttons["freeform.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable {
+            app.scrollViews.containing(.textField, identifier: "freeform.depth").firstMatch.swipeUp()
+        }
+        tapVisibleControl(start, in: app, timeout: 12)
+        XCTAssertTrue(app.buttons["freeform.pause"].waitForExistence(timeout: 10))
+    }
+
+    private func waitForFreeformOrientation(_ app: XCUIApplication, landscape: Bool) {
+        let viewport = expectation(for: NSPredicate { _, _ in
+            let frame = app.windows.firstMatch.frame
+            return landscape ? frame.width > frame.height : frame.height > frame.width
+        }, evaluatedWith: app)
+        XCTAssertEqual(XCTWaiter.wait(for: [viewport], timeout: 10), .completed)
+    }
+
+    private func captureReviewScreenshot(_ name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
 
     private func launchResetFreeWorkout() -> XCUIApplication {
         let app = XCUIApplication()
@@ -354,7 +540,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
     private func confirmEndWorkoutDialog(in app: XCUIApplication) {
         XCTAssertTrue(
-            app.staticTexts["End this free workout?"].waitForExistence(timeout: 8),
+            app.staticTexts["End this custom workout?"].waitForExistence(timeout: 8),
             "Expected Finish confirmation dialog"
         )
 

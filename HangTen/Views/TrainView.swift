@@ -41,6 +41,7 @@ struct TrainView: View {
         environment: ProcessInfo.processInfo.environment
     )
     @State private var showsFreeWorkout = false
+    @State private var showsFreeform = false
 
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
@@ -51,7 +52,10 @@ struct TrainView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 22) {
                     selectedBoardCard
-                    freeWorkoutButton
+                    VStack(spacing: 12) {
+                        freeWorkoutButton
+                        freeformButton
+                    }
                     favoritesSection
                 }
                 .padding(.horizontal, 20)
@@ -140,6 +144,10 @@ struct TrainView: View {
                 FreeWorkoutStartSheet(isPresented: $showsFreeWorkout)
                     .environmentObject(store)
             }
+            .sheet(isPresented: $showsFreeform) {
+                FreeformWorkoutView(isPresented: $showsFreeform)
+                    .environmentObject(store)
+            }
         }
     }
 
@@ -200,13 +208,26 @@ struct TrainView: View {
         Button {
             showsFreeWorkout = true
         } label: {
-            Label("Start free workout", systemImage: "plus")
+            Label("Start custom workout", systemImage: "plus")
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .tint(.hangGreenDark)
         .accessibilityIdentifier("train.freeWorkout")
+    }
+
+    private var freeformButton: some View {
+        Button {
+            showsFreeform = true
+        } label: {
+            Label("Freeform", systemImage: "waveform.path.ecg")
+                .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+        .controlSize(.large)
+        .tint(.hangGreenDark)
+        .accessibilityIdentifier("train.freeform")
     }
 
     @ViewBuilder

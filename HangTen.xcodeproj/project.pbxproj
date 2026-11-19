@@ -26,6 +26,9 @@
 		A7F3C91E2B4D8E6A0C9F12D4 /* FreeWorkoutDraftMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8E4D02F3C5E9F7B1D0A23E5 /* FreeWorkoutDraftMigration.swift */; };
 		D4A8F1C29E6B4D0A8F3C5E71 /* FreeWorkoutRestTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B9F2D30A7C5E1B9F4D6E82 /* FreeWorkoutRestTimer.swift */; };
 		F1A2B3C4D5E6F708192A3B58 /* FreeWorkoutFinish.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */; };
+		FD0000000000000000000001 /* FreeformWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0000000000000000000002 /* FreeformWorkout.swift */; };
+		FD0000000000000000000003 /* FreeformWorkoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0000000000000000000004 /* FreeformWorkoutView.swift */; };
+		FD0000000000000000000005 /* FreeformWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0000000000000000000006 /* FreeformWorkoutTests.swift */; };
 		1615E79EA23842FDAD1EBFEA /* FreeWorkoutLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F112E2145AE4C0AA500D26A /* FreeWorkoutLogTests.swift */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
 		A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000006 /* GripHandSurfaceShader.metal */; };
@@ -412,6 +415,9 @@
 		B8E4D02F3C5E9F7B1D0A23E5 /* FreeWorkoutDraftMigration.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDraftMigration.swift; path = FreeWorkoutDraftMigration.swift; sourceTree = "<group>"; };
 		E5B9F2D30A7C5E1B9F4D6E82 /* FreeWorkoutRestTimer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutRestTimer.swift; path = FreeWorkoutRestTimer.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutFinish.swift; path = FreeWorkoutFinish.swift; sourceTree = "<group>"; };
+		FD0000000000000000000002 /* FreeformWorkout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeformWorkout.swift; path = FreeformWorkout.swift; sourceTree = "<group>"; };
+		FD0000000000000000000004 /* FreeformWorkoutView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeformWorkoutView.swift; path = FreeformWorkoutView.swift; sourceTree = "<group>"; };
+		FD0000000000000000000006 /* FreeformWorkoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeformWorkoutTests.swift; path = FreeformWorkoutTests.swift; sourceTree = "<group>"; };
 		4F112E2145AE4C0AA500D26A /* FreeWorkoutLogTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutLogTests.swift; path = FreeWorkoutLogTests.swift; sourceTree = "<group>"; };
 		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
 		C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutTests.swift; path = FreeWorkoutTests.swift; sourceTree = "<group>"; };
@@ -723,6 +729,7 @@
 				F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */,
 				F1A2B3C4D5E6F708192A3B57 /* FreeWorkoutGuidedHangCountdown.swift */,
 				F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */,
+				FD0000000000000000000002 /* FreeformWorkout.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -763,6 +770,7 @@
 				F1A2B3C4D5E6F708192A3B51 /* FreeWorkoutAddExerciseSheet.swift */,
 				F1A2B3C4D5E6F708192A3B53 /* FreeWorkoutGuidedHangView.swift */,
 				F1A2B3C4D5E6F708192A3B55 /* FreeWorkoutLogSetSheet.swift */,
+				FD0000000000000000000004 /* FreeformWorkoutView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -845,6 +853,7 @@
 				BB00000000000000000000A3 /* DeepLinkManagerTests.swift */,
 				C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */,
 				4F112E2145AE4C0AA500D26A /* FreeWorkoutLogTests.swift */,
+				FD0000000000000000000006 /* FreeformWorkoutTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -1206,6 +1215,8 @@
 				F1A2B3C4D5E6F708192A3B54 /* FreeWorkoutLogSetSheet.swift in Sources */,
 				F1A2B3C4D5E6F708192A3B56 /* FreeWorkoutGuidedHangCountdown.swift in Sources */,
 				F1A2B3C4D5E6F708192A3B5A /* FreeWorkoutDecimalText.swift in Sources */,
+				FD0000000000000000000001 /* FreeformWorkout.swift in Sources */,
+				FD0000000000000000000003 /* FreeformWorkoutView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1277,6 +1288,7 @@
 				AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */,
 				36C9B0D20A18D7D5A46A4A67 /* FreeWorkoutTests.swift in Sources */,
 				1615E79EA23842FDAD1EBFEA /* FreeWorkoutLogTests.swift in Sources */,
+				FD0000000000000000000005 /* FreeformWorkoutTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

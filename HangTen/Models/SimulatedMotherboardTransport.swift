@@ -27,6 +27,23 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
 
     nonisolated static let defaultSamples = tareSamples + bodyweightSamples + activeWorkoutSamples
 
+    /// DEBUG-only: build a repeating script from comma-separated aggregate
+    /// loads. Each load is encoded on the first sensor so the live protocol's
+    /// calibration resolves it back to the same force. Used by the Freeform
+    /// lifecycle UI test to produce deterministic load/release cycles.
+    nonisolated static func samples(fromLoadScript script: String) -> [MotherboardMeasurement] {
+        script.split(separator: ",").enumerated().compactMap { index, raw in
+            guard let load = Double(raw.trimmingCharacters(in: .whitespaces)) else { return nil }
+            return MotherboardMeasurement(
+                timestamp: Date(timeIntervalSince1970: Double(index)),
+                sampleNumber: UInt16(index + 1),
+                batteryValue: 88,
+                sensorLoadsKGF: [load, 0, 0, 0],
+                aggregateLoadKGF: load
+            )
+        }
+    }
+
     var eventHandler: ((MotherboardTransportEvent) -> Void)?
 
     private let samples: [MotherboardMeasurement]
@@ -38,6 +55,7 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
     )
     private var streamTimer: DispatchSourceTimer?
     private var nextSampleIndex = 0
+    private var nextSampleNumber: UInt16 = 0
     private var isStreaming = false
 
     init(
@@ -138,7 +156,11 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         if nextSampleIndex >= samples.count {
             nextSampleIndex = repeatStartIndex
         }
-        eventHandler?(.notification(Self.rawFrame(for: sample), Date()))
+        // Scripts repeat, but sample identity must not: emit a running counter
+        // so a replayed script frame is never mistaken for a stale sample.
+        let sampleNumber = nextSampleNumber
+        nextSampleNumber &+= 1
+        eventHandler?(.notification(Self.rawFrame(for: sample, number: sampleNumber), Date()))
     }
 
     private func cancelStream() {
@@ -148,15 +170,18 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
         streamTimer = nil
     }
 
-    private static func rawFrame(for measurement: MotherboardMeasurement) -> Data {
+    private static func rawFrame(
+        for measurement: MotherboardMeasurement,
+        number: UInt16
+    ) -> Data {
         let sensorLoads = (0..<4).map { index in
             measurement.sensorLoadsKGF.indices.contains(index)
                 ? measurement.sensorLoadsKGF[index]
                 : measurement.aggregateLoadKGF / 4
         }
         var bytes = [
-            UInt8(measurement.sampleNumber & 0x00FF),
-            UInt8(measurement.sampleNumber >> 8),
+            UInt8(number & 0x00FF),
+            UInt8(number >> 8),
             UInt8(measurement.batteryValue & 0x00FF),
             UInt8(measurement.batteryValue >> 8)
         ]
