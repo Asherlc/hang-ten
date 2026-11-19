@@ -376,7 +376,6 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      checks: write
     steps:
       # actions/checkout v4.2.2
       - name: Check out source
@@ -388,7 +387,7 @@ jobs:
       - name: Validate workflow syntax
         uses: reviewdog/action-actionlint@619a81ec64ff8c0211cd6146eb2b21e8f1d7f440
         with:
-          reporter: github-check
+          reporter: github-annotations
           filter_mode: nofilter
           fail_level: error
 
