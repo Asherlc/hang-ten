@@ -258,6 +258,13 @@ and tare but remains diagnostic-only. These wiring assumptions require physical
 device validation after firmware changes. Other supported profiles use their
 own adapters and capabilities.
 
+The balance rocker displays the existing left/right channel shares: it levels
+when those shares are equal and is unavailable when no measured load is present
+or the aggregate is below the detection threshold. That balance availability is
+separate from the configured detection threshold, which still governs loaded
+time and the Loaded/Unloaded status. The meter reserves its layout across zero
+and loaded states, so switching between them does not change its height.
+
 Completed detailed sessions retain at most 20,000 eligible raw measurements and
 record truncation when further samples are dropped. `WorkoutSessionStore` keeps
 the 20 newest detailed sessions.

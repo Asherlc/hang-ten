@@ -219,6 +219,8 @@ struct MotherboardMeterView: View {
     let thresholdKGF: Double
     var showsConnectionStatus = true
 
+    @ScaledMetric(relativeTo: .caption2) private var loadStatusIconSize = 18
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .lastTextBaseline) {
@@ -229,6 +231,7 @@ struct MotherboardMeterView: View {
                     Text(currentForceText)
                         .font(.system(.title, design: .rounded, weight: .heavy))
                         .foregroundStyle(Color.hangInk)
+                        .monospacedDigit()
                 }
 
                 Spacer()
@@ -241,6 +244,7 @@ struct MotherboardMeterView: View {
                         Text(peakForceText)
                             .font(.system(.subheadline, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangInk)
+                            .monospacedDigit()
                     }
                 }
             }
@@ -258,8 +262,18 @@ struct MotherboardMeterView: View {
             }
 
             HStack {
-                Label(loadStatus.label, systemImage: loadStatus.icon)
-                    .foregroundStyle(loadStatus.tint)
+                HStack {
+                    Image(systemName: loadStatus.icon)
+                        .frame(width: loadStatusIconSize, height: loadStatusIconSize)
+                        .accessibilityHidden(true)
+                    ZStack(alignment: .leading) {
+                        Text(MotherboardLoadStatus.unloaded.label)
+                            .hidden()
+                            .accessibilityHidden(true)
+                        Text(loadStatus.label)
+                    }
+                }
+                .foregroundStyle(loadStatus.tint)
                 Spacer()
                 if let threshold = formattedForce(thresholdKGF) {
                     Text("Threshold \(threshold)")
@@ -269,15 +283,10 @@ struct MotherboardMeterView: View {
             .font(.system(.caption2, design: .rounded, weight: .bold))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("FORCE VS THRESHOLD")
+                Text("LEFT / RIGHT BALANCE")
                     .font(.system(.caption2, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
-                MotherboardForceRockerView(
-                    state: MotherboardForceRocker.state(
-                        loadKGF: measurement?.aggregateLoadKGF,
-                        thresholdKGF: thresholdKGF
-                    )
-                )
+                MotherboardBalanceRockerView(state: balanceRockerState)
             }
 
             balanceContent
@@ -286,6 +295,7 @@ struct MotherboardMeterView: View {
                 .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
                 .accessibilityLabel(bodyweightFeedbackText)
+                .monospacedDigit()
 
             if showsConnectionStatus {
                 Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
@@ -322,26 +332,39 @@ struct MotherboardMeterView: View {
         return measurement.aggregateLoadKGF >= max(thresholdKGF, 0) ? .loaded : .unloaded
     }
 
-    @ViewBuilder
+    private var balanceRockerState: MotherboardBalanceRocker.State {
+        MotherboardBalanceRocker.state(
+            measurement: state == .streaming ? measurement : nil,
+            thresholdKGF: thresholdKGF
+        )
+    }
+
     private var balanceContent: some View {
-        if MotherboardBalancePresentation(for: measurement) == .available,
-           let balance = balancePercentages {
+        let balance = balancePercentages
+        let showsBalance = MotherboardBalancePresentation(for: measurement) == .available && balance != nil
+
+        return ZStack(alignment: .leading) {
             HStack {
-                balanceValue(title: "LEFT", value: balance.left)
+                balanceValue(title: "LEFT", value: balance?.left ?? "—")
                 Spacer()
-                balanceValue(title: "RIGHT", value: balance.right)
+                balanceValue(title: "RIGHT", value: balance?.right ?? "—")
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Balance: left \(balance.left), right \(balance.right)")
-        } else {
+            .accessibilityLabel("Balance: left \(balance?.left ?? "—"), right \(balance?.right ?? "—")")
+            .opacity(showsBalance ? 1 : 0)
+            .accessibilityHidden(!showsBalance)
+
             Text(MotherboardBalancePresentation(for: measurement).unavailableCopy ?? "Balance unavailable — waiting for a measured load.")
                 .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
+                .opacity(showsBalance ? 0 : 1)
+                .accessibilityHidden(showsBalance)
         }
     }
 
     private var balancePercentages: (left: String, right: String)? {
-        guard let measurement,
+        guard case .available = balanceRockerState,
+              let measurement,
               let left = formattedPercentage(measurement.leftShare * 100),
               let right = formattedPercentage(measurement.rightShare * 100),
               measurement.leftShare > 0 || measurement.rightShare > 0 else {
@@ -373,6 +396,7 @@ struct MotherboardMeterView: View {
             Text(value)
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
+                .monospacedDigit()
         }
     }
 
@@ -388,8 +412,8 @@ struct MotherboardMeterView: View {
     }
 }
 
-private struct MotherboardForceRockerView: View {
-    let state: MotherboardForceRocker.State
+private struct MotherboardBalanceRockerView: View {
+    let state: MotherboardBalanceRocker.State
 
     var body: some View {
         ZStack {
@@ -413,13 +437,16 @@ private struct MotherboardForceRockerView: View {
         .frame(maxWidth: .infinity, minHeight: 46)
         .animation(.spring(response: 0.2, dampingFraction: 0.72), value: state)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(MotherboardForceRocker.accessibilityLabel)
+        .accessibilityLabel(MotherboardBalanceRocker.accessibilityLabel)
         .accessibilityValue(state.accessibilityValue)
         .accessibilityIdentifier("motherboard.forceRocker")
     }
 
     private var tint: Color {
-        state.isAtOrAboveThreshold ? .hangGreenDark : .hangMuted
+        switch state {
+        case .available: .hangGreenDark
+        case .unavailable: .hangMuted
+        }
     }
 }
 

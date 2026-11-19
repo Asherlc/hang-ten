@@ -209,65 +209,56 @@ enum MotherboardConnectionState: Equatable {
     }
 }
 
-enum MotherboardForceRocker {
-    static let accessibilityLabel = "Force versus threshold rocker"
+enum MotherboardBalanceRocker {
+    static let accessibilityLabel = "Left/right load balance"
 
     enum State: Equatable {
         case unavailable
-        case underTarget(tiltFraction: Double)
-        case centered
-        case overTarget(tiltFraction: Double)
+        case available(tiltFraction: Double)
 
         var tiltFraction: Double {
             switch self {
-            case .unavailable, .centered:
+            case .unavailable:
                 0
-            case let .underTarget(tiltFraction), let .overTarget(tiltFraction):
+            case let .available(tiltFraction):
                 tiltFraction
             }
         }
 
         var accessibilityValue: String {
             switch self {
-            case .unavailable: "Unavailable"
-            case .underTarget: "Below threshold"
-            case .centered: "At threshold"
-            case .overTarget: "Above threshold"
-            }
-        }
-
-        var isAtOrAboveThreshold: Bool {
-            switch self {
-            case .centered, .overTarget:
-                true
-            case .unavailable, .underTarget:
-                false
+            case .unavailable:
+                return "Unavailable"
+            case let .available(tiltFraction):
+                if abs(tiltFraction) < 0.01 {
+                    return "Balanced"
+                }
+                return tiltFraction > 0 ? "Right side lower" : "Left side lower"
             }
         }
     }
 
-    static func state(loadKGF: Double?, thresholdKGF: Double) -> State {
-        guard let loadKGF,
-              loadKGF.isFinite,
-              loadKGF >= 0,
-              thresholdKGF.isFinite,
-              thresholdKGF > 0 else {
+    static func state(measurement: MotherboardMeasurement?, thresholdKGF: Double) -> State {
+        guard thresholdKGF.isFinite, thresholdKGF > 0,
+              let measurement,
+              measurement.aggregateLoadKGF.isFinite,
+              measurement.aggregateLoadKGF >= thresholdKGF else {
             return .unavailable
         }
 
-        if loadKGF == thresholdKGF {
-            return .centered
+        let referenceChannels = measurement.sensorLoadsKGF.prefix(3)
+        guard referenceChannels.count == 3,
+              referenceChannels.allSatisfy({ $0.isFinite }) else {
+            return .unavailable
         }
 
-        if loadKGF < thresholdKGF {
-            return .underTarget(tiltFraction: max(loadKGF / thresholdKGF - 1, -1))
+        let leftLoad = measurement.leftLoadKGF
+        let rightLoad = measurement.rightLoadKGF
+        guard leftLoad + rightLoad > 0 else {
+            return .unavailable
         }
 
-        let thresholdRatio = thresholdKGF / loadKGF
-        guard thresholdRatio > 0.5 else {
-            return .overTarget(tiltFraction: 1)
-        }
-        return .overTarget(tiltFraction: 1 / thresholdRatio - 1)
+        return .available(tiltFraction: measurement.rightShare - measurement.leftShare)
     }
 }
 

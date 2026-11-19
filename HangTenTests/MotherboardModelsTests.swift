@@ -1,3 +1,5 @@
+import SwiftUI
+import UIKit
 import XCTest
 @testable import HangTen
 
@@ -141,35 +143,150 @@ final class MotherboardModelsTests: XCTestCase {
         XCTAssertEqual(decoded.initialWeight, .sensor)
     }
 
-    func testForceRockerCentersAtThresholdAndTiltsTowardLoadDirection() {
-        XCTAssertEqual(
-            MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 10),
-            .centered
+    func testBalanceRockerLevelsForSymmetricalHighLoad() {
+        let state = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [60, 60, 60, 60], aggregate: 180),
+            thresholdKGF: 2.5
         )
-        XCTAssertEqual(
-            MotherboardForceRocker.state(loadKGF: 5, thresholdKGF: 10),
-            .underTarget(tiltFraction: -0.5)
+
+        XCTAssertEqual(state, .available(tiltFraction: 0))
+        XCTAssertEqual(state.tiltFraction, 0, accuracy: 0.0001)
+        XCTAssertEqual(state.accessibilityValue, "Balanced")
+        XCTAssertEqual(MotherboardBalanceRocker.accessibilityLabel, "Left/right load balance")
+    }
+
+    func testBalanceRockerTiltsTowardTheHeavierSide() {
+        let rightHeavy = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [4, 8, 12, 0], aggregate: 24),
+            thresholdKGF: 2.5
         )
-        XCTAssertEqual(
-            MotherboardForceRocker.state(loadKGF: 25, thresholdKGF: 10),
-            .overTarget(tiltFraction: 1)
+        let leftHeavy = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [12, 8, 4, 0], aggregate: 24),
+            thresholdKGF: 2.5
         )
+
+        XCTAssertGreaterThan(rightHeavy.tiltFraction, 0)
+        XCTAssertEqual(rightHeavy.accessibilityValue, "Right side lower")
+        XCTAssertLessThan(leftHeavy.tiltFraction, 0)
+        XCTAssertEqual(leftHeavy.accessibilityValue, "Left side lower")
+    }
+
+    func testBalanceRockerTiltFollowsShareRatherThanAbsoluteLoad() {
+        let light = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [4, 6, 10, 0], aggregate: 20),
+            thresholdKGF: 2.5
+        )
+        let heavy = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [40, 60, 100, 0], aggregate: 200),
+            thresholdKGF: 2.5
+        )
+
+        XCTAssertEqual(light.tiltFraction, heavy.tiltFraction, accuracy: 0.0001)
+    }
+
+    func testBalanceRockerIgnoresTheFourthChannel() {
+        let baseline = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [4, 6, 10, 0], aggregate: 20),
+            thresholdKGF: 2.5
+        )
+        let changed = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [4, 6, 10, 1000], aggregate: 20),
+            thresholdKGF: 2.5
+        )
+
+        XCTAssertEqual(baseline, changed)
+    }
+
+    func testBalanceRockerIsUnavailableWithoutLoadOrBelowThreshold() {
         XCTAssertEqual(
-            MotherboardForceRocker.state(
-                loadKGF: Double.greatestFiniteMagnitude,
-                thresholdKGF: Double.leastNonzeroMagnitude
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: [4, 4, 4, 4], aggregate: 2.4),
+                thresholdKGF: 2.5
             ),
-            .overTarget(tiltFraction: 1)
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: [0, 0, 0, 0], aggregate: 30),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(measurement: nil, thresholdKGF: 2.5),
+            .unavailable
         )
     }
 
-    func testForceRockerIsUnavailableForMissingOrInvalidMeasurements() {
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: nil, thresholdKGF: 10), .unavailable)
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: .nan, thresholdKGF: 10), .unavailable)
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: -1, thresholdKGF: 10), .unavailable)
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 0), .unavailable)
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: -1), .unavailable)
-        XCTAssertEqual(MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: .infinity), .unavailable)
+    func testBalanceRockerIsUnavailableForInvalidThresholdAggregateOrChannels() {
+        let validLoads = [4.0, 4.0, 4.0, 4.0]
+
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: validLoads, aggregate: 30),
+                thresholdKGF: 0
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: validLoads, aggregate: 30),
+                thresholdKGF: .nan
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: validLoads, aggregate: 30),
+                thresholdKGF: .infinity
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: validLoads, aggregate: .nan),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: validLoads, aggregate: .infinity),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: [4, .nan, 4, 4], aggregate: 30),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: [4, 4, .infinity, 4], aggregate: 30),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+        XCTAssertEqual(
+            MotherboardBalanceRocker.state(
+                measurement: measurement(sensorLoads: [4, 4], aggregate: 30),
+                thresholdKGF: 2.5
+            ),
+            .unavailable
+        )
+    }
+
+    func testBalanceRockerStaysLevelForTotalForceOnlySensors() {
+        let state = MotherboardBalanceRocker.state(
+            measurement: measurement(sensorLoads: [], aggregate: 100),
+            thresholdKGF: 2.5
+        )
+
+        XCTAssertEqual(state, .unavailable)
+        XCTAssertEqual(state.tiltFraction, 0)
     }
 
     func testBalancePresentationExplainsWhenOnlyAggregateForceIsAvailable() {
@@ -183,6 +300,113 @@ final class MotherboardModelsTests: XCTestCase {
         )
         XCTAssertEqual(MotherboardBalancePresentation(for: multiChannel), .available)
         XCTAssertEqual(MotherboardBalancePresentation(for: nil), .unavailable)
+    }
+
+    @MainActor
+    func testMeterHeightStaysStableAcrossLoadTransitions() {
+        func meterHeight(
+            sensorLoads: [Double],
+            aggregate: Double,
+            width: CGFloat,
+            dynamicType: DynamicTypeSize,
+            bodyweight: Double?
+        ) -> CGFloat {
+            let view = MotherboardMeterView(
+                measurement: measurement(sensorLoads: sensorLoads, aggregate: aggregate),
+                peakLoadKGF: nil,
+                actualLoadedTime: 0,
+                plannedActiveDuration: 0,
+                bodyweightKGF: bodyweight,
+                unit: .kgf,
+                state: .streaming,
+                thresholdKGF: 2.5,
+                showsConnectionStatus: false
+            )
+            let controller = UIHostingController(
+                rootView: view.environment(\.dynamicTypeSize, dynamicType)
+            )
+            return controller.sizeThatFits(
+                in: CGSize(width: width, height: UIView.layoutFittingExpandedSize.height)
+            ).height
+        }
+
+        for width in [CGFloat(320), CGFloat(393)] {
+            for dynamicType in [DynamicTypeSize.large, .accessibility3] {
+                for bodyweight in [nil, Double(70)] {
+                    let zeroLoadHeight = meterHeight(
+                        sensorLoads: [0, 0, 0, 0],
+                        aggregate: 0,
+                        width: width,
+                        dynamicType: dynamicType,
+                        bodyweight: bodyweight
+                    )
+                    let loadedHeight = meterHeight(
+                        sensorLoads: [20, 20, 20, 0],
+                        aggregate: 60,
+                        width: width,
+                        dynamicType: dynamicType,
+                        bodyweight: bodyweight
+                    )
+                    XCTAssertGreaterThan(zeroLoadHeight, 0)
+                    XCTAssertEqual(
+                        zeroLoadHeight,
+                        loadedHeight,
+                        accuracy: 0.5,
+                        "Zero-load vs loaded height differed at width \(width), dynamic type \(dynamicType), bodyweight \(String(describing: bodyweight))"
+                    )
+
+                    let balancedHeight = meterHeight(
+                        sensorLoads: [20, 20, 20, 0],
+                        aggregate: 60,
+                        width: width,
+                        dynamicType: dynamicType,
+                        bodyweight: bodyweight
+                    )
+                    let asymmetricHeight = meterHeight(
+                        sensorLoads: [4, 8, 12, 0],
+                        aggregate: 24,
+                        width: width,
+                        dynamicType: dynamicType,
+                        bodyweight: bodyweight
+                    )
+                    XCTAssertEqual(
+                        balancedHeight,
+                        asymmetricHeight,
+                        accuracy: 0.5,
+                        "Balanced vs asymmetric height differed at width \(width), dynamic type \(dynamicType), bodyweight \(String(describing: bodyweight))"
+                    )
+                }
+            }
+        }
+
+        let snapshots: [(String, [Double], Double)] = [
+            ("zero", [0, 0, 0, 0], 0),
+            ("balanced", [20, 20, 20, 0], 60),
+            ("asymmetric", [4, 8, 12, 0], 24)
+        ]
+        for (name, sensorLoads, aggregate) in snapshots {
+            let view = MotherboardMeterView(
+                measurement: measurement(sensorLoads: sensorLoads, aggregate: aggregate),
+                peakLoadKGF: nil,
+                actualLoadedTime: 0,
+                plannedActiveDuration: 0,
+                bodyweightKGF: nil,
+                unit: .kgf,
+                state: .streaming,
+                thresholdKGF: 2.5,
+                showsConnectionStatus: false
+            )
+            let renderer = ImageRenderer(
+                content: view
+                    .environment(\.dynamicTypeSize, .large)
+                    .frame(width: 393)
+            )
+            guard let image = renderer.uiImage else { continue }
+            let attachment = XCTAttachment(image: image)
+            attachment.name = "meter-\(name)-aggregate-\(Int(aggregate))-channels-\(sensorLoads.map { String(Int($0)) }.joined(separator: "-"))"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
     }
 
     func testConnectionStateShowsWorkoutMeterOnlyWhileStreaming() {
