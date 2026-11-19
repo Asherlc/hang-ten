@@ -86,8 +86,8 @@ final class FreeformWorkoutTests: XCTestCase {
 
         start(workout: &workout, depth: 18, latestSampleNumber: 5)
         receive(&workout, load: 80, at: 0, number: 5)
-        receive(&workout, load: 80, at: -0.25, number: 6, elapsed: 0.25, receiptAt: 0.25)
-        receive(&workout, load: 80, at: 0.5, number: 7, elapsed: 0.25, receiptAt: 0.25)
+        receive(&workout, load: 80, at: -0.25, number: 6, elapsed: 0.25, sampleElapsed: -0.25)
+        receive(&workout, load: 80, at: 0.5, number: 7, elapsed: 0.25, sampleElapsed: 0.5)
         XCTAssertNil(workout.liveMeasurement)
         receive(&workout, load: 12, at: 0.5, number: 8)
         XCTAssertEqual(workout.liveMeasurement?.sampleNumber, 8)
@@ -293,6 +293,9 @@ final class FreeformWorkoutTests: XCTestCase {
         receive(&workout, load: 10, at: 1)
         receive(&workout, load: 12, at: 1.2)
         receive(&workout, load: 0, at: 2.2)
+        receive(&workout, load: 0, at: 2.25)
+        XCTAssertEqual(workout.efforts.first?.duration ?? 0, 1.25, accuracy: 0.001)
+        XCTAssertEqual(workout.efforts.first?.sampleCount, 4)
         receive(&workout, load: 0, at: 2.35)
 
         XCTAssertEqual(workout.efforts.first?.duration ?? 0, 1.2, accuracy: 0.001)
@@ -357,9 +360,9 @@ final class FreeformWorkoutTests: XCTestCase {
         var workout = newWorkout()
         start(workout: &workout, depth: 18)
         receive(&workout, load: 10, at: 10, number: 1)
-        receive(&workout, load: 999, at: 9, number: 2, elapsed: 11, receiptAt: 11)
+        receive(&workout, load: 999, at: 9, number: 2, elapsed: 11, sampleElapsed: 9)
         XCTAssertEqual(workout.liveMeasurement?.sampleNumber, 1)
-        receive(&workout, load: 14, at: 10.2, number: 3, elapsed: 12, receiptAt: 12)
+        receive(&workout, load: 14, at: 10.2, number: 3, elapsed: 12, sampleElapsed: 10.2)
 
         XCTAssertLessThan(workout.efforts.first?.peakLoadKGF ?? 999, 100)
         XCTAssertLessThan(workout.loadedDuration, 0.5)
@@ -367,7 +370,7 @@ final class FreeformWorkoutTests: XCTestCase {
         var batch = newWorkout()
         start(workout: &batch, depth: 18)
         receive(&batch, load: 10, at: 1, number: 1)
-        receive(&batch, load: 12, at: 1, number: 2, elapsed: 1.001, receiptAt: 1.0012)
+        receive(&batch, load: 12, at: 1, number: 2, elapsed: 1.001, sampleElapsed: 1)
         XCTAssertEqual(batch.liveMeasurement?.sampleNumber, 2)
         XCTAssertTrue(batch.efforts.isEmpty)
         receive(&batch, load: 0, at: 1.2, number: 3)
@@ -411,9 +414,9 @@ final class FreeformWorkoutTests: XCTestCase {
         workout.resume()
 
         // Sample captured during the pause but delivered after resume is rejected.
-        receive(&workout, load: 10, at: 4.875, elapsed: 2.125, receiptAt: 5.125)
+        receive(&workout, load: 10, at: 4.875, elapsed: 2.125, sampleElapsed: 1.875)
         XCTAssertNil(workout.liveMeasurement)
-        receive(&workout, load: 10, at: 5, elapsed: 2.125, receiptAt: 5.125)
+        receive(&workout, load: 10, at: 5, elapsed: 2.125, sampleElapsed: 2)
         XCTAssertNil(workout.liveMeasurement)
         XCTAssertEqual(workout.efforts.count, 1)
 
@@ -462,9 +465,9 @@ final class FreeformWorkoutTests: XCTestCase {
         workout.resume()
 
         // Close the pause after a 60s rollback. Fresh wall stamps are now
-        // earlier than the session start. Delivery age still identifies stale
+        // earlier than the session start. Monotonic receive time identifies stale
         // packets, and replay identity does not depend on the wall clock.
-        receive(&workout, load: 90, at: -56.25, number: 3, elapsed: 2.25, receiptAt: -55.75)
+        receive(&workout, load: 90, at: -56.25, number: 3, elapsed: 2.25, sampleElapsed: 1.75)
         receive(&workout, load: 90, at: -55.75, number: 2, elapsed: 2.25)
         XCTAssertNil(workout.liveMeasurement)
         receive(&workout, load: 12, at: -55.75, number: 4, elapsed: 2.25)
@@ -474,7 +477,7 @@ final class FreeformWorkoutTests: XCTestCase {
 
         // A forward jump during the next effort cannot stretch its duration or
         // split it from the release while the monotonic stream is continuous.
-        receive(&workout, load: 0, at: 120, number: 6, elapsed: 2.5)
+        receive(&workout, load: 0, at: 120, number: 6, elapsed: 2.55, sampleElapsed: 2.5)
         XCTAssertEqual(workout.efforts.map(\.peakLoadKGF), [10, 20])
         XCTAssertEqual(workout.loadedDuration, 0.5, accuracy: 0.0001)
     }
@@ -545,7 +548,11 @@ final class FreeformWorkoutTests: XCTestCase {
         var defaultDebounce = FreeformWorkout()
         start(workout: &defaultDebounce, depth: 18)
         receive(&defaultDebounce, load: 10, at: 1)
-        XCTAssertNil(defaultDebounce.finish(at: 1.5))
+        XCTAssertNil(defaultDebounce.finish(at: 1.1))
+        XCTAssertEqual(defaultDebounce.state, .active)
+        receive(&defaultDebounce, load: 12, at: 1.2)
+        XCTAssertEqual(defaultDebounce.efforts.first?.duration ?? 0, 0.2, accuracy: 0.001)
+        XCTAssertEqual(defaultDebounce.efforts.first?.sampleCount, 2)
 
         // Zero debounce opens an interval immediately, but with no observed
         // duration it must still be filtered out at finish.
@@ -648,7 +655,7 @@ final class FreeformWorkoutTests: XCTestCase {
         at seconds: TimeInterval,
         number: UInt16? = nil,
         elapsed: TimeInterval? = nil,
-        receiptAt: TimeInterval? = nil
+        sampleElapsed: TimeInterval? = nil
     ) {
         let measurement = MotherboardMeasurement(
             timestamp: origin.addingTimeInterval(seconds),
@@ -659,8 +666,8 @@ final class FreeformWorkoutTests: XCTestCase {
         )
         workout.consume(
             measurement,
-            elapsed: elapsed ?? seconds,
-            receiptDate: origin.addingTimeInterval(receiptAt ?? seconds)
+            sampleElapsed: sampleElapsed ?? elapsed ?? seconds,
+            elapsed: elapsed ?? seconds
         )
     }
 }

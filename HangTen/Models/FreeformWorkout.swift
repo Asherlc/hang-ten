@@ -133,32 +133,24 @@ struct FreeformWorkout {
         state = .active
     }
 
-    /// `elapsed` and `receiptDate` describe the same receipt. Use wall time to
-    /// estimate this packet's age, then do detection on the active clock.
+    /// Both times are on the active workout clock. `sampleElapsed` is projected
+    /// from the transport event's monotonic receive time, shared by its batch.
     mutating func consume(
         _ measurement: MotherboardMeasurement,
-        elapsed: TimeInterval,
-        receiptDate: Date
+        sampleElapsed: TimeInterval,
+        elapsed: TimeInterval
     ) {
         guard state == .active || state == .paused,
               Self.followsInStream(measurement.sampleNumber, latestSampleNumber) else { return }
-        let age = receiptDate.timeIntervalSince(measurement.timestamp)
-        guard age.isFinite, age >= 0 else { return }
+        guard elapsed.isFinite, sampleElapsed.isFinite, sampleElapsed <= elapsed else { return }
         if state == .paused {
             latestSampleNumber = measurement.sampleNumber
             return
         }
 
-        let projectedElapsed = elapsed - age
         guard measurement.aggregateLoadKGF.isFinite,
-              projectedElapsed.isFinite, projectedElapsed >= 0,
-              resumeCutoff.map({ projectedElapsed > $0 }) ?? true else { return }
-
-        // Frames decoded from one notification share its receive time. Keep
-        // that time even if projection introduces small differences per frame.
-        let sampleElapsed = liveMeasurement?.timestamp == measurement.timestamp
-            ? lastAcceptedSampleElapsed ?? projectedElapsed
-            : projectedElapsed
+              sampleElapsed >= 0,
+              resumeCutoff.map({ sampleElapsed > $0 }) ?? true else { return }
         if let last = lastAcceptedSampleElapsed, sampleElapsed < last { return }
 
         // A new sample arriving after a silent stream is the post-gap boundary:
@@ -257,16 +249,17 @@ struct FreeformWorkout {
         endDate: Date = Date()
     ) -> WorkoutSessionRecord? {
         guard state == .active || state == .paused, elapsed.isFinite else { return nil }
-        recorder.pause(at: elapsed)
-        self.elapsed = max(0, elapsed)
-
-        let detectedEfforts = recorder.recordedEfforts(stepID: Self.recorderStepID)
+        var finishedRecorder = recorder
+        finishedRecorder.pause(at: elapsed)
+        let detectedEfforts = finishedRecorder.recordedEfforts(stepID: Self.recorderStepID)
         guard !detectedEfforts.isEmpty else {
             // Nothing savable yet. Leave the session where it was and keep the
             // last accepted sample so the "Keep training" action on the
             // empty-finish alert can continue the live session unchanged.
             return nil
         }
+        recorder = finishedRecorder
+        self.elapsed = max(0, elapsed)
 
         var steps: [WorkoutStepMeasurement] = []
         var stepTitles: [String] = []

@@ -4,7 +4,7 @@ struct MotherboardWorkoutRecorder {
     private struct StepState {
         let plannedActiveDuration: TimeInterval
         let stepStartElapsed: TimeInterval
-        var intervals: [LoadInterval] = []
+        var closedEfforts: [RecordedEffort] = []
         var openStart: TimeInterval?
         var pendingStart: TimeInterval?
         var pendingRelease: TimeInterval?
@@ -15,11 +15,6 @@ struct MotherboardWorkoutRecorder {
         var lastMeasurementTimestamp: Date?
         var observedElapsed: TimeInterval?
 
-        // Per-effort bookkeeping, parallel to `intervals`. A self-paced step can
-        // contain several auto-detected efforts; each needs its own peak and
-        // sample count when it is surfaced as a separate workout step.
-        var effortPeaks: [Double] = []
-        var effortSampleCounts: [Int] = []
         var currentEffortPeak: Double?
         var currentEffortSampleCount = 0
 
@@ -53,7 +48,7 @@ struct MotherboardWorkoutRecorder {
 
     var recordedWorkStepIDs: Set<String> {
         Set(states.compactMap { id, state in
-            let hasWork = state.intervals.contains { $0.duration > 0 }
+            let hasWork = state.closedEfforts.contains { $0.interval.duration > 0 }
                 || (id == currentStepID && currentLoadedDuration > 0)
             return hasWork ? id : nil
         })
@@ -260,7 +255,7 @@ struct MotherboardWorkoutRecorder {
             return WorkoutStepMeasurement(
                 stepID: stepID,
                 plannedActiveDuration: state.plannedActiveDuration,
-                intervals: state.intervals,
+                intervals: state.closedEfforts.map(\.interval),
                 peakLoadKGF: state.peakLoadKGF,
                 sampleCount: state.sampleCount,
                 status: state.status
@@ -277,16 +272,7 @@ struct MotherboardWorkoutRecorder {
     /// to use `finish(at:)`.
     func recordedEfforts(stepID: String, includeCurrent: Bool = false) -> [RecordedEffort] {
         guard let state = states[stepID], state.plannedActiveDuration == 0 else { return [] }
-        var efforts = state.intervals.enumerated().compactMap { index, interval -> RecordedEffort? in
-            guard interval.duration > 0,
-                  state.effortPeaks.indices.contains(index),
-                  state.effortSampleCounts.indices.contains(index) else { return nil }
-            return RecordedEffort(
-                interval: interval,
-                peakLoadKGF: state.effortPeaks[index],
-                sampleCount: state.effortSampleCounts[index]
-            )
-        }
+        var efforts = state.closedEfforts.filter { $0.interval.duration > 0 }
         // The live list shows only efforts with a confirmed open interval and
         // positive observed duration. A lone pending-start spike is a noise
         // candidate, not an effort row.
@@ -297,8 +283,8 @@ struct MotherboardWorkoutRecorder {
         efforts.append(
             RecordedEffort(
                 interval: LoadInterval(start: start, end: end),
-                peakLoadKGF: state.currentEffortPeak ?? 0,
-                sampleCount: state.currentEffortSampleCount
+                peakLoadKGF: max(state.currentEffortPeak ?? 0, state.pendingReleasePeak ?? 0),
+                sampleCount: state.currentEffortSampleCount + state.pendingReleaseSampleCount
             )
         )
         return efforts
@@ -328,16 +314,12 @@ struct MotherboardWorkoutRecorder {
         var effortPeak = state.currentEffortPeak
         var effortSampleCount = state.currentEffortSampleCount
         if state.permitsMergeWithPrevious,
-           let previous = state.intervals.last,
-           start - previous.end <= configuration.mergeGapDuration {
-            state.intervals.removeLast()
-            if let previousPeak = state.effortPeaks.last {
-                effortPeak = max(effortPeak ?? previousPeak, previousPeak)
-            }
-            effortSampleCount += state.effortSampleCounts.last ?? 0
-            state.effortPeaks.removeLast()
-            state.effortSampleCounts.removeLast()
-            state.openStart = previous.start
+           let previous = state.closedEfforts.last,
+           start - previous.interval.end <= configuration.mergeGapDuration {
+            state.closedEfforts.removeLast()
+            effortPeak = max(effortPeak ?? previous.peakLoadKGF, previous.peakLoadKGF)
+            effortSampleCount += previous.sampleCount
+            state.openStart = previous.interval.start
         } else {
             state.openStart = start
         }
@@ -367,9 +349,11 @@ struct MotherboardWorkoutRecorder {
         guard let start = state.openStart else { return }
         if includePendingRelease { commitPendingRelease(in: &state) }
         let end = max(start, state.clippedTime(time))
-        state.intervals.append(LoadInterval(start: start, end: end))
-        state.effortPeaks.append(state.currentEffortPeak ?? 0)
-        state.effortSampleCounts.append(state.currentEffortSampleCount)
+        state.closedEfforts.append(RecordedEffort(
+            interval: LoadInterval(start: start, end: end),
+            peakLoadKGF: state.currentEffortPeak ?? 0,
+            sampleCount: state.currentEffortSampleCount
+        ))
         state.openStart = nil
         state.pendingRelease = nil
         state.currentEffortPeak = nil
@@ -379,7 +363,7 @@ struct MotherboardWorkoutRecorder {
     }
 
     private func loadedDuration(in state: StepState, at time: TimeInterval) -> TimeInterval {
-        let closedDuration = state.intervals.reduce(0) { $0 + $1.duration }
+        let closedDuration = state.closedEfforts.reduce(0) { $0 + $1.interval.duration }
         guard let openStart = state.openStart else { return closedDuration }
         return closedDuration + max(0, state.clippedTime(time) - openStart)
     }

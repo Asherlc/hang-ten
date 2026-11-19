@@ -29,15 +29,14 @@ struct HangTenApp: App {
 		let environment = ProcessInfo.processInfo.environment
 		let useMotherboardReviewFixture = environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
 		let transport: MotherboardTransport
-		if useMotherboardReviewFixture,
-		   let script = environment["HANGTEN_REVIEW_FREEFORM_SAMPLE_LOADS"],
-		   !script.isEmpty {
-			transport = SimulatedMotherboardTransport(
-				samples: SimulatedMotherboardTransport.samples(fromLoadScript: script),
-				streamInterval: .milliseconds(150)
-			)
-		} else if useMotherboardReviewFixture {
-			transport = SimulatedMotherboardTransport()
+		if useMotherboardReviewFixture {
+			let samples = environment["HANGTEN_REVIEW_FREEFORM_SAMPLE_LOADS"]
+				.map(SimulatedMotherboardTransport.samples(fromLoadScript:)) ?? []
+			if samples.isEmpty {
+				transport = SimulatedMotherboardTransport()
+			} else {
+				transport = SimulatedMotherboardTransport(samples: samples, streamInterval: .milliseconds(150))
+			}
 		} else {
 			transport = CoreBluetoothMotherboardTransport()
 		}

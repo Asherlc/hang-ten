@@ -4,6 +4,14 @@ import XCTest
 @testable import HangTen
 
 final class SimulatedMotherboardTransportTests: XCTestCase {
+    func testLoadScriptDropsValuesOutsideSigned24BitADC() {
+        let samples = SimulatedMotherboardTransport.samples(
+            fromLoadScript: "12, nan, inf, 9000, -9000, 8388.608, -8388.609, -8388.608, 8388.607, 0"
+        )
+        XCTAssertEqual(samples.map(\.aggregateLoadKGF), [12, -8388.608, 8388.607, 0])
+        XCTAssertTrue(SimulatedMotherboardTransport.samples(fromLoadScript: "oops,nan,9000").isEmpty)
+    }
+
     func testDefaultFixtureStartsWithTareAndRelaxedJugHangPhases() {
         let samples = SimulatedMotherboardTransport.defaultSamples
         let tareSamples = samples.prefix(15)

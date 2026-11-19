@@ -121,12 +121,15 @@ struct FreeformWorkoutView: View {
             )
             .environmentObject(store)
         }
-        .onReceive(service.$latestMeasurement) { measurement in
-            guard let measurement,
-                  workout.state == .active || (canResume && !streamRestartedWhilePaused) else { return }
+        .onReceive(service.timedMeasurementUpdates) { sample in
+            guard workout.state == .active || (canResume && !streamRestartedWhilePaused) else { return }
+            let now = WorkoutClock.monotonicTime
+            guard sample.receivedAtUptime <= now else { return }
+            let sampleElapsed = workout.state == .active
+                ? accumulatedElapsed + (sample.receivedAtUptime - startUptime)
+                : accumulatedElapsed
             let previousMeasurement = workout.liveMeasurement
-            let receivedAt = Date()
-            workout.consume(measurement, elapsed: elapsed(), receiptDate: receivedAt)
+            workout.consume(sample.measurement, sampleElapsed: sampleElapsed, elapsed: elapsed(at: now))
             // Only a sample the detector accepted changes the live measurement.
             // Rejected or raw packets must not reach the balance display.
             if workout.liveMeasurement != previousMeasurement {
@@ -400,9 +403,9 @@ struct FreeformWorkoutView: View {
     }
 
     /// Elapsed active time from the single monotonic clock, freezing on pause.
-    private func elapsed() -> TimeInterval {
+    private func elapsed(at uptime: TimeInterval = WorkoutClock.monotonicTime) -> TimeInterval {
         guard workout.state == .active else { return accumulatedElapsed }
-        return accumulatedElapsed + max(0, WorkoutClock.monotonicTime - startUptime)
+        return accumulatedElapsed + max(0, uptime - startUptime)
     }
 
     private func elapsedText() -> String {

@@ -34,9 +34,11 @@ final class SimulatedMotherboardTransport: MotherboardTransport, MotherboardSimu
     nonisolated static func samples(fromLoadScript script: String) -> [MotherboardMeasurement] {
         script.split(separator: ",").enumerated().compactMap { index, raw in
             guard let load = Double(raw.trimmingCharacters(in: .whitespaces)) else { return nil }
+            let adc = (load * 1_000).rounded()
+            guard adc.isFinite, adc >= -8_388_608, adc <= 8_388_607 else { return nil }
             return MotherboardMeasurement(
                 timestamp: Date(timeIntervalSince1970: Double(index)),
-                sampleNumber: UInt16(index + 1),
+                sampleNumber: UInt16(truncatingIfNeeded: index + 1),
                 batteryValue: 88,
                 sensorLoadsKGF: [load, 0, 0, 0],
                 aggregateLoadKGF: load
