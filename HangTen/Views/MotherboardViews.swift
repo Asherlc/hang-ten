@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import SwiftUI
 import UIKit
 
@@ -35,6 +36,7 @@ struct MotherboardCard: View {
             if service.state == .streaming {
                 MotherboardMeterView(
                     measurement: service.latestMeasurement,
+                    measurementUpdates: service.$latestMeasurement.dropFirst().eraseToAnyPublisher(),
                     peakLoadKGF: nil,
                     actualLoadedTime: 0,
                     plannedActiveDuration: 0,
@@ -184,6 +186,7 @@ struct MotherboardSettingsView: View {
 
 struct MotherboardMeterView: View {
     let measurement: MotherboardMeasurement?
+    let measurementUpdates: AnyPublisher<MotherboardMeasurement?, Never>
     let peakLoadKGF: Double?
     let actualLoadedTime: TimeInterval
     let plannedActiveDuration: TimeInterval
@@ -193,6 +196,8 @@ struct MotherboardMeterView: View {
     let thresholdKGF: Double
     var showsConnectionStatus = true
     var showsBodyweightFeedback = true
+
+    @State private var balanceRocker = MotherboardBalanceRocker()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -265,6 +270,22 @@ struct MotherboardMeterView: View {
         }
         .padding(14)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .onAppear {
+            updateBalanceRocker(with: measurement)
+        }
+        .onReceive(measurementUpdates) { newMeasurement in
+            updateBalanceRocker(with: newMeasurement)
+        }
+        .onChange(of: thresholdKGF) { _, _ in
+            balanceRocker.reset()
+            updateBalanceRocker(with: measurement)
+        }
+        .onChange(of: state) { _, _ in
+            balanceRocker.reset()
+        }
+        .onDisappear {
+            balanceRocker.reset()
+        }
     }
 
     private var currentForceText: String {
@@ -284,9 +305,19 @@ struct MotherboardMeterView: View {
     }
 
     private var balanceRockerState: MotherboardBalanceRocker.State {
-        MotherboardBalanceRocker.state(
-            measurement: state == .streaming ? measurement : nil,
-            thresholdKGF: thresholdKGF
+        guard state == .streaming else { return .unavailable }
+        return balanceRocker.displayedState
+    }
+
+    private func updateBalanceRocker(with measurement: MotherboardMeasurement?) {
+        guard state == .streaming else {
+            balanceRocker.reset()
+            return
+        }
+        balanceRocker.consume(
+            measurement: measurement,
+            thresholdKGF: thresholdKGF,
+            at: ProcessInfo.processInfo.systemUptime
         )
     }
 
@@ -314,11 +345,9 @@ struct MotherboardMeterView: View {
     }
 
     private var balancePercentages: (left: String, right: String)? {
-        guard case .available = balanceRockerState,
-              let measurement,
-              let left = formattedPercentage(measurement.leftShare * 100),
-              let right = formattedPercentage(measurement.rightShare * 100),
-              measurement.leftShare > 0 || measurement.rightShare > 0 else {
+        guard case let .available(tiltFraction) = balanceRockerState,
+              let left = formattedPercentage((1 - tiltFraction) * 50),
+              let right = formattedPercentage((1 + tiltFraction) * 50) else {
             return nil
         }
         return (left, right)

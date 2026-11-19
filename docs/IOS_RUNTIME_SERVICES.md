@@ -258,11 +258,15 @@ and tare but remains diagnostic-only. These wiring assumptions require physical
 device validation after firmware changes. Other supported profiles use their
 own adapters and capabilities.
 
-The balance rocker displays the existing left/right channel shares: it levels
-when those shares are equal and is unavailable when no measured load is present
-or the aggregate is below the detection threshold. That balance availability is
-separate from the configured detection threshold, which still governs loaded
-time and recording. The sensor settings meter omits the bodyweight baseline and
+The balance rocker displays the existing left/right channel shares and levels
+when those shares are equal. Its display is temporally gated using the
+detection configuration's own 100 ms debounce and 80% release threshold: balance
+appears only after an above-threshold load is sustained, the last valid tilt is
+held while a drop is pending, and a brief dip that recovers cancels that pending
+drop. The raw current-force readout still updates on every sample, and
+loaded-time recording is unchanged. The configured detection threshold still
+governs both that display gate and recording. The sensor settings meter omits
+the bodyweight baseline and
 load-state labels, since live force already communicates load state. The meter
 reserves its layout across zero and loaded states, so switching between them does
 not change its height. The sensor settings screen focuses on the sensor profile,
