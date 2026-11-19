@@ -744,6 +744,10 @@ jobs:
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
               HangTenUITests/FreeWorkoutUITests/testPullUpCompletionCanBeUndoneAfterSkippingRest
+              HangTenUITests/FreeWorkoutUITests/testTrainShowsCustomWorkoutAndFreeformEntries
+              HangTenUITests/FreeWorkoutUITests/testFreeformEntryOpensSetupWithDepthAndDisabledStart
+              HangTenUITests/FreeWorkoutUITests/testFreeformLifecycleRecordsPauseResumeFinishAndSavesDepthToHistory
+              HangTenUITests/FreeWorkoutUITests/testFreeformEmptyFinishKeepTrainingRecoversLiveSession
     timeout-minutes: 90
 
     steps:

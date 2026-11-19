@@ -22,6 +22,7 @@ HangTen/Models/FreeWorkoutGuidedHangCountdown.swift
 HangTen/Models/FreeWorkoutLog.swift
 HangTen/Models/FreeWorkoutLogStore.swift
 HangTen/Models/FreeWorkoutRestTimer.swift
+HangTen/Models/FreeformWorkout.swift
 HangTen/Models/HealthKitService.swift
 HangTen/Models/LiveRopeController.swift
 HangTen/Models/LiveRopeMesh.swift
@@ -97,6 +98,7 @@ HangTen/Views/FreeWorkoutGuidedHangView.swift
 HangTen/Views/FreeWorkoutLogSessionView.swift
 HangTen/Views/FreeWorkoutLogSetSheet.swift
 HangTen/Views/FreeWorkoutStartSheet.swift
+HangTen/Views/FreeformWorkoutView.swift
 HangTen/Views/GripDiagramView.swift
 HangTen/Views/GripHandModelView.swift
 HangTen/Views/MotherboardViews.swift
