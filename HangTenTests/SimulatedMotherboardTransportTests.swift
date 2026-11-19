@@ -1,4 +1,5 @@
 #if DEBUG
+import Combine
 import XCTest
 @testable import HangTen
 
@@ -76,26 +77,50 @@ final class SimulatedMotherboardTransportTests: XCTestCase {
         )
 
         let streamStartedAt = Date()
+        // The fixture script repeats, but the transport emits a running UInt16
+        // sample counter, so the latest frame is not pinned to a wall-clock slot.
+        // Subscribe first and collect exactly two complete fixture cycles.
+        let expectedCount = samples.count * 2
+        let collected = expectation(description: "two complete fixture cycles")
+        var received: [MotherboardMeasurement] = []
+        let observation = service.$latestMeasurement
+            .compactMap { $0 }
+            .prefix(expectedCount)
+            .sink { _ in
+                collected.fulfill()
+            } receiveValue: { measurement in
+                received.append(measurement)
+            }
+        defer {
+            observation.cancel()
+            service.disconnect()
+        }
+
         service.connect()
-        try await Task.sleep(for: .milliseconds(950))
-
         XCTAssertEqual(service.state, .streaming)
-        XCTAssertNotNil(service.latestMeasurement)
-        XCTAssertEqual(service.latestMeasurement!.sampleNumber, 1)
-        XCTAssertEqual(service.latestMeasurement!.aggregateLoadKGF, 0.4, accuracy: 0.05)
-        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[0], 0.2, accuracy: 0.05)
-        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[1], 0, accuracy: 0.05)
-        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[2], 0.2, accuracy: 0.05)
-        XCTAssertEqual(service.latestMeasurement!.sensorLoadsKGF[3], 0.1, accuracy: 0.05)
-        XCTAssertGreaterThanOrEqual(service.latestMeasurement!.timestamp, streamStartedAt)
+        await fulfillment(of: [collected], timeout: 5)
 
-        let firstCycleTimestamp = service.latestMeasurement!.timestamp
-        try await Task.sleep(for: .milliseconds(350))
-
-        XCTAssertEqual(service.latestMeasurement?.sampleNumber, 2)
-        XCTAssertNotNil(service.latestMeasurement)
-        XCTAssertEqual(service.latestMeasurement!.aggregateLoadKGF, 5.2, accuracy: 0.05)
-        XCTAssertGreaterThan(service.latestMeasurement!.timestamp, firstCycleTimestamp)
+        XCTAssertEqual(received.count, expectedCount)
+        var expectedSampleNumber: UInt16 = 0
+        var previousTimestamp = streamStartedAt
+        for (index, measurement) in received.enumerated() {
+            let expected = samples[index % samples.count]
+            XCTAssertEqual(measurement.sampleNumber, expectedSampleNumber)
+            expectedSampleNumber &+= 1
+            XCTAssertEqual(measurement.aggregateLoadKGF, expected.aggregateLoadKGF, accuracy: 0.05)
+            for channel in 0..<4 {
+                XCTAssertEqual(
+                    measurement.sensorLoadsKGF[channel],
+                    expected.sensorLoadsKGF[channel],
+                    accuracy: 0.05
+                )
+            }
+            XCTAssertGreaterThanOrEqual(measurement.timestamp, streamStartedAt)
+            if index > 0 {
+                XCTAssertGreaterThan(measurement.timestamp, previousTimestamp)
+            }
+            previousTimestamp = measurement.timestamp
+        }
     }
 
     private func measurement(timestamp: TimeInterval, sampleNumber: UInt16, load: Double) -> MotherboardMeasurement {

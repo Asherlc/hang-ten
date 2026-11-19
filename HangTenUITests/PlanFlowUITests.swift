@@ -17,8 +17,23 @@ final class WorkoutEndUITests: XCTestCase {
         for (step, side, contraction) in [(1, "left", "OISO"), (5, "right", "OISO"), (33, "left", "YISO"), (37, "right", "YISO")] {
             let app = openWorkout(URL(string: "hangten://plan/warmup.pitchsix.recruitment-prep/workout")!,
                 historyTitle: "PitchSix · Recruitment warm-up", reviewStep: step)
-            app.buttons["Pause"].tap()
-            XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 5))
+            // Address the stable primary control and confirm genuine pause before
+            // asserting cues: a slow run can leave the interval advancing, so the
+            // targeted step is reselected while paused when it is no longer current.
+            let primary = app.buttons["workout.primaryControl"]
+            let resumePredicate = NSPredicate(format: "label == %@", "Resume")
+            for _ in 0..<3 {
+                if primary.label == "Resume" { break }
+                XCTAssertEqual(primary.label, "Pause")
+                primary.tap()
+                let paused = XCTNSPredicateExpectation(predicate: resumePredicate, object: primary)
+                if XCTWaiter().wait(for: [paused], timeout: 2) == .completed { break }
+            }
+            XCTAssertEqual(primary.label, "Resume")
+            let picker = app.buttons["workout.routinePicker"]
+            if !picker.label.hasPrefix("Step \(step) of") {
+                selectWorkoutStep(titled: "Step \(step), ", in: app)
+            }
             let cue = app.descendants(matching: .any).matching(identifier: "workout.gripCue.\(side)").firstMatch
             XCTAssertTrue(cue.waitForExistence(timeout: 10))
             XCTAssertTrue(cue.label.localizedCaseInsensitiveContains("half crimp"), cue.label)
