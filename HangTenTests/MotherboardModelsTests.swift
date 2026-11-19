@@ -394,7 +394,8 @@ final class MotherboardModelsTests: XCTestCase {
                 unit: .kgf,
                 state: .streaming,
                 thresholdKGF: 2.5,
-                showsConnectionStatus: false
+                showsConnectionStatus: false,
+                showsBodyweightFeedback: false
             )
             let renderer = ImageRenderer(
                 content: view
