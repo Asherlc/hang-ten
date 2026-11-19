@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import SwiftUI
 import UIKit
 
@@ -35,6 +36,7 @@ struct MotherboardCard: View {
             if service.state == .streaming {
                 MotherboardMeterView(
                     measurement: service.latestMeasurement,
+                    measurementUpdates: service.$latestMeasurement.dropFirst().eraseToAnyPublisher(),
                     peakLoadKGF: nil,
                     actualLoadedTime: 0,
                     plannedActiveDuration: 0,
@@ -42,7 +44,8 @@ struct MotherboardCard: View {
                     unit: settings.forceUnit,
                     state: service.state,
                     thresholdKGF: settings.thresholdKGF,
-                    showsConnectionStatus: false
+                    showsConnectionStatus: false,
+                    showsBodyweightFeedback: false
                 )
             }
 
@@ -154,18 +157,6 @@ struct MotherboardSettingsView: View {
             }
 
             Section {
-                Stepper(value: bodyweightCaptureDuration, in: 3...10, step: 1) {
-                    Text("Relaxed jug hang: \(bodyweightCaptureDurationText)")
-                }
-                .accessibilityLabel("Relaxed jug hang capture duration")
-                .accessibilityValue(bodyweightCaptureDurationText)
-            } header: {
-                Text("Bodyweight baseline")
-            } footer: {
-                Text("Choose how long to measure your relaxed jug hang before a workout. The board averages this load as your bodyweight baseline.")
-            }
-
-            Section {
                 LabeledContent("Connection", value: service.state.label)
 
                 Button(action: service.tare) {
@@ -184,21 +175,6 @@ struct MotherboardSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private var bodyweightCaptureDuration: Binding<TimeInterval> {
-        Binding(
-            get: { min(max(settings.bodyweightCaptureDuration.rounded(), 3), 10) },
-            set: { settings.bodyweightCaptureDuration = min(max($0.rounded(), 3), 10) }
-        )
-    }
-
-    private var bodyweightCaptureDurationText: String {
-        MotherboardUserVisibleFormatting.duration(
-            bodyweightCaptureDuration.wrappedValue,
-            unitStyle: .long,
-            fractionDigits: 0
-        ) ?? "—"
-    }
-
     private var tareDescription: String {
         let profile = service.connectedProfile ?? settings.forceSensorProfile
         if ForceSensorAdapterRegistry.adapter(for: profile)?.capabilities.contains(.hardwareTare) == true {
@@ -210,6 +186,7 @@ struct MotherboardSettingsView: View {
 
 struct MotherboardMeterView: View {
     let measurement: MotherboardMeasurement?
+    let measurementUpdates: AnyPublisher<MotherboardMeasurement?, Never>
     let peakLoadKGF: Double?
     let actualLoadedTime: TimeInterval
     let plannedActiveDuration: TimeInterval
@@ -221,6 +198,9 @@ struct MotherboardMeterView: View {
     /// For unstructured sessions (no planned duration) show the measured loaded
     /// total explicitly instead of a generic "Listening" line.
     var showsTotalLoadedTime = false
+    var showsBodyweightFeedback = true
+
+    @State private var balanceRocker = MotherboardBalanceRocker()
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -232,6 +212,7 @@ struct MotherboardMeterView: View {
                     Text(currentForceText)
                         .font(.system(.title, design: .rounded, weight: .heavy))
                         .foregroundStyle(Color.hangInk)
+                        .monospacedDigit()
                 }
 
                 Spacer()
@@ -244,6 +225,7 @@ struct MotherboardMeterView: View {
                         Text(peakForceText)
                             .font(.system(.subheadline, design: .rounded, weight: .bold))
                             .foregroundStyle(Color.hangInk)
+                            .monospacedDigit()
                     }
                 }
             }
@@ -266,35 +248,28 @@ struct MotherboardMeterView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
-            HStack {
-                Label(loadStatus.label, systemImage: loadStatus.icon)
-                    .foregroundStyle(loadStatus.tint)
-                Spacer()
-                if let threshold = formattedForce(thresholdKGF) {
-                    Text("Threshold \(threshold)")
-                        .foregroundStyle(Color.hangMuted)
-                }
+            if let threshold = formattedForce(thresholdKGF) {
+                Text("Threshold \(threshold)")
+                    .foregroundStyle(Color.hangMuted)
+                    .font(.system(.caption2, design: .rounded, weight: .bold))
             }
-            .font(.system(.caption2, design: .rounded, weight: .bold))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text("FORCE VS THRESHOLD")
+                Text("LEFT / RIGHT BALANCE")
                     .font(.system(.caption2, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)
-                MotherboardForceRockerView(
-                    state: MotherboardForceRocker.state(
-                        loadKGF: measurement?.aggregateLoadKGF,
-                        thresholdKGF: thresholdKGF
-                    )
-                )
+                MotherboardBalanceRockerView(state: balanceRockerState)
             }
 
             balanceContent
 
-            Text(bodyweightFeedbackText)
-                .font(.system(.caption, design: .rounded, weight: .medium))
-                .foregroundStyle(Color.hangMuted)
-                .accessibilityLabel(bodyweightFeedbackText)
+            if showsBodyweightFeedback {
+                Text(bodyweightFeedbackText)
+                    .font(.system(.caption, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangMuted)
+                    .accessibilityLabel(bodyweightFeedbackText)
+                    .monospacedDigit()
+            }
 
             if showsConnectionStatus {
                 Label(state.label, systemImage: state == .streaming ? "dot.radiowaves.left.and.right" : "circle.fill")
@@ -304,6 +279,22 @@ struct MotherboardMeterView: View {
         }
         .padding(14)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .onAppear {
+            updateBalanceRocker(with: measurement)
+        }
+        .onReceive(measurementUpdates) { newMeasurement in
+            updateBalanceRocker(with: newMeasurement)
+        }
+        .onChange(of: thresholdKGF) { _, _ in
+            balanceRocker.reset()
+            updateBalanceRocker(with: measurement)
+        }
+        .onChange(of: state) { _, _ in
+            balanceRocker.reset()
+        }
+        .onDisappear {
+            balanceRocker.reset()
+        }
     }
 
     private var currentForceText: String {
@@ -322,38 +313,50 @@ struct MotherboardMeterView: View {
         return text
     }
 
-    private var loadStatus: MotherboardLoadStatus {
-        guard state == .streaming else { return .sensorUnavailable }
-        guard let measurement,
-              measurement.aggregateLoadKGF.isFinite else {
-            return .waitingForLoad
-        }
-        return measurement.aggregateLoadKGF >= max(thresholdKGF, 0) ? .loaded : .unloaded
+    private var balanceRockerState: MotherboardBalanceRocker.State {
+        guard state == .streaming else { return .unavailable }
+        return balanceRocker.displayedState
     }
 
-    @ViewBuilder
+    private func updateBalanceRocker(with measurement: MotherboardMeasurement?) {
+        guard state == .streaming else {
+            balanceRocker.reset()
+            return
+        }
+        balanceRocker.consume(
+            measurement: measurement,
+            thresholdKGF: thresholdKGF,
+            at: ProcessInfo.processInfo.systemUptime
+        )
+    }
+
     private var balanceContent: some View {
-        if MotherboardBalancePresentation(for: measurement) == .available,
-           let balance = balancePercentages {
+        let balance = balancePercentages
+        let showsBalance = MotherboardBalancePresentation(for: measurement) == .available && balance != nil
+
+        return ZStack(alignment: .leading) {
             HStack {
-                balanceValue(title: "LEFT", value: balance.left)
+                balanceValue(title: "LEFT", value: balance?.left ?? "—")
                 Spacer()
-                balanceValue(title: "RIGHT", value: balance.right)
+                balanceValue(title: "RIGHT", value: balance?.right ?? "—")
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Balance: left \(balance.left), right \(balance.right)")
-        } else {
+            .accessibilityLabel("Balance: left \(balance?.left ?? "—"), right \(balance?.right ?? "—")")
+            .opacity(showsBalance ? 1 : 0)
+            .accessibilityHidden(!showsBalance)
+
             Text(MotherboardBalancePresentation(for: measurement).unavailableCopy ?? "Balance unavailable — waiting for a measured load.")
                 .font(.system(.caption, design: .rounded, weight: .medium))
                 .foregroundStyle(Color.hangMuted)
+                .opacity(showsBalance ? 0 : 1)
+                .accessibilityHidden(showsBalance)
         }
     }
 
     private var balancePercentages: (left: String, right: String)? {
-        guard let measurement,
-              let left = formattedPercentage(measurement.leftShare * 100),
-              let right = formattedPercentage(measurement.rightShare * 100),
-              measurement.leftShare > 0 || measurement.rightShare > 0 else {
+        guard case let .available(tiltFraction) = balanceRockerState,
+              let left = formattedPercentage((1 - tiltFraction) * 50),
+              let right = formattedPercentage((1 + tiltFraction) * 50) else {
             return nil
         }
         return (left, right)
@@ -382,6 +385,7 @@ struct MotherboardMeterView: View {
             Text(value)
                 .font(.system(.subheadline, design: .rounded, weight: .bold))
                 .foregroundStyle(Color.hangInk)
+                .monospacedDigit()
         }
     }
 
@@ -397,8 +401,8 @@ struct MotherboardMeterView: View {
     }
 }
 
-private struct MotherboardForceRockerView: View {
-    let state: MotherboardForceRocker.State
+private struct MotherboardBalanceRockerView: View {
+    let state: MotherboardBalanceRocker.State
 
     var body: some View {
         ZStack {
@@ -422,41 +426,16 @@ private struct MotherboardForceRockerView: View {
         .frame(maxWidth: .infinity, minHeight: 46)
         .animation(.spring(response: 0.2, dampingFraction: 0.72), value: state)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(MotherboardForceRocker.accessibilityLabel)
+        .accessibilityLabel(MotherboardBalanceRocker.accessibilityLabel)
         .accessibilityValue(state.accessibilityValue)
         .accessibilityIdentifier("motherboard.forceRocker")
     }
 
     private var tint: Color {
-        state.isAtOrAboveThreshold ? .hangGreenDark : .hangMuted
-    }
-}
-
-enum MotherboardLoadStatus: Equatable {
-    case sensorUnavailable
-    case waitingForLoad
-    case loaded
-    case unloaded
-
-    var label: String {
-        switch self {
-        case .sensorUnavailable: "Sensor unavailable"
-        case .waitingForLoad: "Waiting for load"
-        case .loaded: "Loaded"
-        case .unloaded: "Unloaded"
+        switch state {
+        case .available: .hangGreenDark
+        case .unavailable: .hangMuted
         }
-    }
-
-    var icon: String {
-        switch self {
-        case .loaded: "figure.climbing"
-        case .unloaded: "hand.raised"
-        case .sensorUnavailable, .waitingForLoad: "questionmark.circle"
-        }
-    }
-
-    var tint: Color {
-        self == .loaded ? .hangGreenDark : .hangMuted
     }
 }
 

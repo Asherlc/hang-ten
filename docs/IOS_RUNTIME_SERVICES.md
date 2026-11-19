@@ -258,6 +258,22 @@ and tare but remains diagnostic-only. These wiring assumptions require physical
 device validation after firmware changes. Other supported profiles use their
 own adapters and capabilities.
 
+The balance rocker displays the existing left/right channel shares and levels
+when those shares are equal. Its display is temporally gated using the
+detection configuration's own 100 ms debounce and 80% release threshold: balance
+appears only after an above-threshold load is sustained, the last valid tilt is
+held while a drop is pending, and a brief dip that recovers cancels that pending
+drop. The raw current-force readout still updates on every sample, and
+loaded-time recording is unchanged. The configured detection threshold still
+governs both that display gate and recording. The sensor settings meter omits
+the bodyweight baseline and
+load-state labels, since live force already communicates load state. The meter
+reserves its layout across zero and loaded states, so switching between them does
+not change its height. The sensor settings screen focuses on the sensor profile,
+detection threshold, and connection/tare controls; it no longer exposes a
+bodyweight-baseline capture-duration control, though the persisted duration and
+workout preparation still use that value.
+
 Completed detailed sessions retain at most 20,000 eligible raw measurements and
 record truncation when further samples are dropped. `WorkoutSessionStore` keeps
 the 20 newest detailed sessions.

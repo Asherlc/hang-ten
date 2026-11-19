@@ -209,65 +209,141 @@ enum MotherboardConnectionState: Equatable {
     }
 }
 
-enum MotherboardForceRocker {
-    static let accessibilityLabel = "Force versus threshold rocker"
+struct MotherboardBalanceRocker {
+    static let accessibilityLabel = "Left/right load balance"
 
     enum State: Equatable {
         case unavailable
-        case underTarget(tiltFraction: Double)
-        case centered
-        case overTarget(tiltFraction: Double)
+        case available(tiltFraction: Double)
 
         var tiltFraction: Double {
             switch self {
-            case .unavailable, .centered:
+            case .unavailable:
                 0
-            case let .underTarget(tiltFraction), let .overTarget(tiltFraction):
+            case let .available(tiltFraction):
                 tiltFraction
             }
         }
 
         var accessibilityValue: String {
             switch self {
-            case .unavailable: "Unavailable"
-            case .underTarget: "Below threshold"
-            case .centered: "At threshold"
-            case .overTarget: "Above threshold"
-            }
-        }
-
-        var isAtOrAboveThreshold: Bool {
-            switch self {
-            case .centered, .overTarget:
-                true
-            case .unavailable, .underTarget:
-                false
+            case .unavailable:
+                return "Unavailable"
+            case let .available(tiltFraction):
+                if abs(tiltFraction) < 0.01 {
+                    return "Balanced"
+                }
+                return tiltFraction > 0 ? "Right side lower" : "Left side lower"
             }
         }
     }
 
-    static func state(loadKGF: Double?, thresholdKGF: Double) -> State {
-        guard let loadKGF,
-              loadKGF.isFinite,
-              loadKGF >= 0,
-              thresholdKGF.isFinite,
-              thresholdKGF > 0 else {
+    private(set) var displayedState: State = .unavailable
+
+    private var pendingTransitionStart: TimeInterval?
+    private var lastThresholdKGF: Double?
+    private var lastTime: TimeInterval?
+
+    private static let detectionDefaults = MotherboardDetectionConfiguration()
+
+    /// Validated geometry for a single sample; retained as the sole source of tilt values.
+    static func state(measurement: MotherboardMeasurement?, thresholdKGF: Double) -> State {
+        guard thresholdKGF.isFinite, thresholdKGF > 0,
+              let measurement,
+              measurement.aggregateLoadKGF.isFinite,
+              measurement.aggregateLoadKGF >= thresholdKGF else {
             return .unavailable
         }
 
-        if loadKGF == thresholdKGF {
-            return .centered
+        guard Self.hasUsableChannels(measurement) else {
+            return .unavailable
         }
 
-        if loadKGF < thresholdKGF {
-            return .underTarget(tiltFraction: max(loadKGF / thresholdKGF - 1, -1))
+        let leftLoad = measurement.leftLoadKGF
+        let rightLoad = measurement.rightLoadKGF
+        guard leftLoad + rightLoad > 0 else {
+            return .unavailable
         }
 
-        let thresholdRatio = thresholdKGF / loadKGF
-        guard thresholdRatio > 0.5 else {
-            return .overTarget(tiltFraction: 1)
+        return .available(tiltFraction: measurement.rightShare - measurement.leftShare)
+    }
+
+    /// Feeds one sample into the display gate. `at` must be monotonic process uptime.
+    mutating func consume(
+        measurement: MotherboardMeasurement?,
+        thresholdKGF: Double,
+        at: TimeInterval
+    ) {
+        guard thresholdKGF.isFinite, thresholdKGF > 0, at.isFinite else {
+            reset()
+            return
         }
-        return .overTarget(tiltFraction: 1 / thresholdRatio - 1)
+        if let lastTime, at < lastTime {
+            reset()
+            return
+        }
+        if let lastThresholdKGF, lastThresholdKGF != thresholdKGF {
+            reset()
+            return
+        }
+        lastTime = at
+        lastThresholdKGF = thresholdKGF
+
+        guard let measurement,
+              measurement.aggregateLoadKGF.isFinite,
+              measurement.aggregateLoadKGF >= 0,
+              Self.hasUsableChannels(measurement) else {
+            reset()
+            return
+        }
+
+        let candidate = Self.state(measurement: measurement, thresholdKGF: thresholdKGF)
+        let releaseCandidate = Self.state(
+            measurement: measurement,
+            thresholdKGF: thresholdKGF * Self.detectionDefaults.releaseRatio
+        )
+
+        switch displayedState {
+        case .unavailable:
+            guard case .available = candidate else {
+                pendingTransitionStart = nil
+                return
+            }
+            guard let pending = pendingTransitionStart else {
+                pendingTransitionStart = at
+                return
+            }
+            if at - pending >= Self.detectionDefaults.debounceDuration {
+                displayedState = candidate
+                pendingTransitionStart = nil
+            }
+        case .available:
+            if case .available = releaseCandidate {
+                displayedState = releaseCandidate
+                pendingTransitionStart = nil
+                return
+            }
+            guard let pending = pendingTransitionStart else {
+                pendingTransitionStart = at
+                return
+            }
+            if at - pending >= Self.detectionDefaults.debounceDuration {
+                displayedState = .unavailable
+                pendingTransitionStart = nil
+            }
+        }
+    }
+
+    mutating func reset() {
+        displayedState = .unavailable
+        pendingTransitionStart = nil
+        lastThresholdKGF = nil
+        lastTime = nil
+    }
+
+    private static func hasUsableChannels(_ measurement: MotherboardMeasurement) -> Bool {
+        let referenceChannels = measurement.sensorLoadsKGF.prefix(3)
+        return referenceChannels.count == 3 && referenceChannels.allSatisfy { $0.isFinite }
     }
 }
 

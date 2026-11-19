@@ -29,6 +29,33 @@ final class SettingsUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["Each routine includes its source link."].exists)
         XCTAssertFalse(app.staticTexts["Read the evidence overview"].exists)
     }
+
+    func testSensorBalanceBecomesAvailableForSimulatedLoad() {
+        let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launch()
+
+        let rocker = app.otherElements["motherboard.forceRocker"]
+        XCTAssertTrue(rocker.waitForExistence(timeout: 10))
+
+        let availableValues = ["Balanced", "Left side lower", "Right side lower"]
+        let available = expectation(
+            for: NSPredicate(format: "value IN %@", availableValues),
+            evaluatedWith: rocker,
+            handler: nil
+        )
+        wait(for: [available], timeout: 20)
+
+        let percentages = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "label BEGINSWITH %@", "Balance: left "))
+            .firstMatch
+        XCTAssertTrue(percentages.waitForExistence(timeout: 5))
+
+        let attachment = XCTAttachment(screenshot: app.screenshot())
+        attachment.name = "Sensor balance available"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
 }
 
 final class WorkoutChooserUITests: XCTestCase {

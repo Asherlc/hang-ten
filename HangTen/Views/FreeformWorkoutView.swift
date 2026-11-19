@@ -23,6 +23,9 @@ struct FreeformWorkoutView: View {
     /// Set when the connection is lost while active or paused; used to tell the
     /// model whether Resume follows an actual stream restart.
     @State private var streamRestartedWhilePaused = false
+    /// Carries only accepted samples from the model's live measurement to the
+    /// meter's stabilized balance display; raw scale packets never pass through.
+    @State private var meterMeasurements = PassthroughSubject<MotherboardMeasurement?, Never>()
 
     private var resolvedDepth: Double? {
         FreeformWorkout.normalizedDepth(from: depthText)
@@ -121,8 +124,14 @@ struct FreeformWorkoutView: View {
         .onReceive(service.$latestMeasurement) { measurement in
             guard let measurement,
                   workout.state == .active || (canResume && !streamRestartedWhilePaused) else { return }
+            let previousMeasurement = workout.liveMeasurement
             let receivedAt = Date()
             workout.consume(measurement, elapsed: elapsed(), receiptDate: receivedAt)
+            // Only a sample the detector accepted changes the live measurement.
+            // Rejected or raw packets must not reach the balance display.
+            if workout.liveMeasurement != previousMeasurement {
+                meterMeasurements.send(workout.liveMeasurement)
+            }
         }
         // One timer is the only clock source. Elapsed time is derived from the
         // monotonic system uptime so it cannot jump when the wall clock changes.
@@ -133,7 +142,9 @@ struct FreeformWorkoutView: View {
             let current = elapsed()
             // One timer also detects a silent stream. Closing at the last
             // accepted sample prevents a late frame from booking the stall.
-            _ = workout.interruptStreamGapIfNeeded(at: current)
+            if workout.interruptStreamGapIfNeeded(at: current) {
+                meterMeasurements.send(nil)
+            }
             workout.updateElapsed(current)
         }
         .onChange(of: scenePhase) { _, phase in
@@ -214,6 +225,7 @@ struct FreeformWorkoutView: View {
                     // Only the last accepted sample feeds the display, so force
                     // and per-sensor balance never show a stale or rejected frame.
                     measurement: workout.liveMeasurement,
+                    measurementUpdates: meterMeasurements.eraseToAnyPublisher(),
                     peakLoadKGF: workout.peakLoadKGF,
                     actualLoadedTime: workout.loadedDuration,
                     plannedActiveDuration: 0,
@@ -222,7 +234,8 @@ struct FreeformWorkoutView: View {
                     state: service.state,
                     thresholdKGF: settings.thresholdKGF,
                     showsConnectionStatus: true,
-                    showsTotalLoadedTime: true
+                    showsTotalLoadedTime: true,
+                    showsBodyweightFeedback: false
                 )
 
                 HStack(alignment: .firstTextBaseline) {
@@ -406,6 +419,7 @@ struct FreeformWorkoutView: View {
         let current = elapsed()
         accumulatedElapsed = current
         workout.pause(at: current)
+        meterMeasurements.send(nil)
     }
 
     private func pauseForInterruption() {
@@ -413,6 +427,7 @@ struct FreeformWorkoutView: View {
         let current = elapsed()
         accumulatedElapsed = current
         workout.pause(at: current)
+        meterMeasurements.send(nil)
     }
 
     private func resume() {
