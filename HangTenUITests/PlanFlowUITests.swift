@@ -14,22 +14,29 @@ final class WorkoutEndUITests: XCTestCase {
     }
 
     func testImportedPitchSixWarmupShowsBothSidesAndContractionTypes() {
+        let app = XCUIApplication()
+        app.launchArguments = ["-workoutAudioCuesEnabled", "NO"]
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_STEP": "1"
+        ]
+        app.terminate()
+        app.open(URL(string: "hangten://plan/warmup.pitchsix.recruitment-prep/workout")!)
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 60))
+        let primary = app.buttons["workout.primaryControl"]
+        let resumePredicate = NSPredicate(format: "label == %@", "Resume")
+        for _ in 0..<3 {
+            if primary.label == "Resume" { break }
+            XCTAssertEqual(primary.label, "Pause")
+            primary.tap()
+            let paused = XCTNSPredicateExpectation(predicate: resumePredicate, object: primary)
+            if XCTWaiter().wait(for: [paused], timeout: 2) == .completed { break }
+        }
+        XCTAssertEqual(primary.label, "Resume")
+        // Use the routine picker to inspect all four cues in the paused session.
         for (step, side, contraction) in [(1, "left", "OISO"), (5, "right", "OISO"), (33, "left", "YISO"), (37, "right", "YISO")] {
-            let app = openWorkout(URL(string: "hangten://plan/warmup.pitchsix.recruitment-prep/workout")!,
-                historyTitle: "PitchSix · Recruitment warm-up", reviewStep: step)
-            // Address the stable primary control and confirm genuine pause before
-            // asserting cues: a slow run can leave the interval advancing, so the
-            // targeted step is reselected while paused when it is no longer current.
-            let primary = app.buttons["workout.primaryControl"]
-            let resumePredicate = NSPredicate(format: "label == %@", "Resume")
-            for _ in 0..<3 {
-                if primary.label == "Resume" { break }
-                XCTAssertEqual(primary.label, "Pause")
-                primary.tap()
-                let paused = XCTNSPredicateExpectation(predicate: resumePredicate, object: primary)
-                if XCTWaiter().wait(for: [paused], timeout: 2) == .completed { break }
-            }
-            XCTAssertEqual(primary.label, "Resume")
             let picker = app.buttons["workout.routinePicker"]
             if !picker.label.hasPrefix("Step \(step) of") {
                 selectWorkoutStep(titled: "Step \(step), ", in: app)
@@ -47,7 +54,6 @@ final class WorkoutEndUITests: XCTestCase {
                 XCTAssertTrue(cue.waitForExistence(timeout: 10))
                 attachScreenshot(named: "PitchSix right YISO landscape")
             }
-            app.terminate()
         }
     }
 
@@ -589,8 +595,12 @@ final class PlanFlowUITests: XCTestCase {
         let picker = app.buttons["plan.trainingEdge.edgePicker"]
         XCTAssertTrue(picker.waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["plan.startRoutine"].isEnabled)
+        // Move the picker clear of the floating tab bar before tapping.
+        scrollUp(in: app, distance: 0.25)
         picker.tap()
-        app.buttons["29 mm"].tap()
+        let initialDepth = app.buttons["29 mm"]
+        XCTAssertTrue(initialDepth.waitForExistence(timeout: 5))
+        initialDepth.tap()
         XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         app.terminate()
 
@@ -599,8 +609,11 @@ final class PlanFlowUITests: XCTestCase {
         let restored = app.buttons["plan.trainingEdge.edgePicker"]
         XCTAssertTrue(restored.waitForExistence(timeout: 10))
         XCTAssertTrue(restored.label.contains("29 mm"))
+        scrollUp(in: app, distance: 0.25)
         restored.tap()
-        app.buttons["19 mm"].tap()
+        let editedDepth = app.buttons["19 mm"]
+        XCTAssertTrue(editedDepth.waitForExistence(timeout: 5))
+        editedDepth.tap()
         XCTAssertTrue(restored.label.contains("19 mm"))
         XCTAssertTrue(app.buttons["plan.startRoutine"].isEnabled)
         attachScreenshot(named: "Entralpi remembered depth remains editable in landscape", app: app)
