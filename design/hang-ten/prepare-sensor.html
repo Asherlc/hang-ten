@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>prepare-sensor · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("prepare-sensor.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQxLjMzIiB5PSIxNDYuODMiIHdpZHRoPSIzMC42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzLjMzIiB5PSIyNDIiIHdpZHRoPSIzMTUuMzMiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNDMuMzMiIHk9IjI5OC4zMyIgd2lkdGg9Ijk1LjMzIiBoZWlnaHQ9IjM0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzLjMzIiB5PSIzNDguNjciIHdpZHRoPSIxMTkuMzMiIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDIxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIyIiB5PSI0NzguNjciIHdpZHRoPSIzNTgiIGhlaWdodD0iMTA0LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI2MDIuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMTU3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI3OTYuOTgiIHdpZHRoPSIxMDMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQxLjMzIiB5PSIxNDYuODMiIHdpZHRoPSIzMC42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzLjMzIiB5PSIyNDIiIHdpZHRoPSIzMTUuMzMiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNDMuMzMiIHk9IjI5OC4zMyIgd2lkdGg9Ijk1LjMzIiBoZWlnaHQ9IjM0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzLjMzIiB5PSIzNDguNjciIHdpZHRoPSIxMTkuMzMiIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDIxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIyIiB5PSI0NzguNjciIHdpZHRoPSIzNTgiIGhlaWdodD0iMTA0LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI2MDIuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMTU3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI3OTYuOTgiIHdpZHRoPSIxMDMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="prepare-sensor" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="15">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="End" style="left:20px;top:66px;width:53.33px;height:36px;background-position:-20px -66px">
+      <span class="dc-text" data-dc-original="End" aria-label="End" style="left:0px;top:0px;width:53.33px;height:36px">End</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues" style="left:281px;top:66px;width:45px;height:36px;background-position:-281px -66px">
+      <span class="dc-text" data-dc-original="Turn off spoken cues" aria-label="Turn off spoken cues" style="left:0px;top:0px;width:45px;height:36px">Turn off spoken cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options" style="left:342px;top:66px;width:40px;height:36px;background-position:-342px -66px">
+      <span class="dc-text" data-dc-original="Workout options" aria-label="Workout options" style="left:0px;top:0px;width:40px;height:36px">Workout options</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:156.67px;top:73.67px;width:88.67px;height:20.67px;background-position:-156.67px -73.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-step-1-of-9" data-dc-role="AXButton" role="button" aria-label="Step 1 of 9" style="left:20px;top:132px;width:89.33px;height:44px;background-position:-20px -132px">
+      <span class="dc-text" data-dc-original="Step 1 of 9" aria-label="Step 1 of 9" style="left:0px;top:14.17px;width:67.67px;height:15.67px">Step 1 of 9</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang" data-dc-role="AXStaticText" role="text" aria-label="Hang" style="left:341.33px;top:146.83px;width:30.67px;height:14.33px;background-position:-341.33px -146.83px">
+      <span class="dc-text" data-dc-original="Hang" aria-label="Hang" style="left:0px;top:0px;width:30.67px;height:14.33px">Hang</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-1" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 1" style="left:20px;top:189px;width:252px;height:40.67px;background-position:-20px -189px">
+      <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:0px;width:252px;height:40.67px">Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-remove-your-hands-and-all-wei" data-dc-role="AXStaticText" role="text" aria-label="Remove your hands and all weight from the sensor while it establishes zero load." style="left:43.33px;top:242px;width:315.33px;height:40.33px;background-position:-43.33px -242px">
+      <span class="dc-text dc-multiline" data-dc-original="Remove your hands and all weight from the sensor while it establishes zero load." aria-label="Remove your hands and all weight from the sensor while it establishes zero load." style="left:0px;top:0px;width:315.33px;height:40.33px">Remove your hands and all weight from the sensor while it establishes zero load.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-start-tare" data-dc-role="AXButton" role="button" aria-label="Start tare" style="left:43.33px;top:298.33px;width:95.33px;height:34.33px;background-position:-43.33px -298.33px">
+      <span class="dc-text" data-dc-original="Start tare" aria-label="Start tare" style="left:0px;top:0px;width:95.33px;height:34.33px">Start tare</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-skip-preparation" data-dc-role="AXButton" role="button" aria-label="Skip preparation" style="left:43.33px;top:348.67px;width:119.33px;height:18px;background-position:-43.33px -348.67px">
+      <span class="dc-text" data-dc-original="Skip preparation" aria-label="Skip preparation" style="left:0px;top:0px;width:119.33px;height:18px">Skip preparation</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-start" data-dc-role="AXButton" role="button" aria-label="Start" style="left:20px;top:362.33px;width:362px;height:49.33px;background-position:-20px -362.33px">
+      <span class="dc-text" data-dc-original="Start" aria-label="Start" style="left:173.67px;top:15px;width:38px;height:19.33px">Start</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-skip-step-1-max-hang-set-1" data-dc-role="AXButton" role="button" aria-label="Skip step 1: Max hang · set 1" style="left:20px;top:421.67px;width:362px;height:38px;background-position:-20px -421.67px">
+      <span class="dc-text" data-dc-original="Skip step" aria-label="Skip step" style="left:133.33px;top:10px;width:97.5px;height:18px">Skip step</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-grindstone-hangboard" data-dc-role="AXGenericElement" role="group" aria-label="Grindstone hangboard" style="left:22px;top:478.67px;width:358px;height:104.67px;background-position:-22px -478.67px">
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-20-mm-left-edges-half-cri" data-dc-role="AXGenericElement" role="group" aria-label="20 mm left edges, Half crimp, Exact fingers: index, middle, ring, and pinky, both hands" style="left:20px;top:602.33px;width:362px;height:157.67px;background-position:-20px -602.33px">
+      <span class="dc-text" data-dc-original="20 MM LEFT EDGES" aria-label="20 MM LEFT EDGES" style="left:121px;top:9.98px;width:120px;height:12px">20 MM LEFT EDGES</span>
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:137px;top:29.98px;width:88px;height:21.67px">Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-instructions" data-dc-role="AXStaticText" role="text" aria-label="INSTRUCTIONS" style="left:38px;top:796.98px;width:103px;height:13.33px;background-position:-38px -796.98px">
+      <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

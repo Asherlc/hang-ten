@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>end-workout · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("end-workout.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQxLjMzIiB5PSIxNDYuODMiIHdpZHRoPSIzMC42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNDIuNjciIHdpZHRoPSI3Mi4zMyIgaGVpZ2h0PSIxNS42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjcxLjMzIiB3aWR0aD0iMTM4LjMzIiBoZWlnaHQ9IjU1IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIzMjkuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1NyIgeT0iNDI3IiB3aWR0aD0iMjg4IiBoZWlnaHQ9IjQ4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjU3IiB5PSI0ODMiIHdpZHRoPSIyODgiIGhlaWdodD0iNDgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTciIHk9IjUzOSIgd2lkdGg9IjI4OCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjAyLjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE1Ny42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNzk2Ljk4IiB3aWR0aD0iMTAzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQxLjMzIiB5PSIxNDYuODMiIHdpZHRoPSIzMC42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNDIuNjciIHdpZHRoPSI3Mi4zMyIgaGVpZ2h0PSIxNS42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjcxLjMzIiB3aWR0aD0iMTM4LjMzIiBoZWlnaHQ9IjU1IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIzMjkuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1NyIgeT0iNDI3IiB3aWR0aD0iMjg4IiBoZWlnaHQ9IjQ4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjU3IiB5PSI0ODMiIHdpZHRoPSIyODgiIGhlaWdodD0iNDgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTciIHk9IjUzOSIgd2lkdGg9IjI4OCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjAyLjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE1Ny42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNzk2Ljk4IiB3aWR0aD0iMTAzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="end-workout" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="16">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="End" style="left:20px;top:66px;width:53.33px;height:36px;background-position:-20px -66px">
+      <span class="dc-text" data-dc-original="End" aria-label="End" style="left:0px;top:0px;width:53.33px;height:36px">End</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues" style="left:281px;top:66px;width:45px;height:36px;background-position:-281px -66px">
+      <span class="dc-text" data-dc-original="Turn off spoken cues" aria-label="Turn off spoken cues" style="left:0px;top:0px;width:45px;height:36px">Turn off spoken cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options" style="left:342px;top:66px;width:40px;height:36px;background-position:-342px -66px">
+      <span class="dc-text" data-dc-original="Workout options" aria-label="Workout options" style="left:0px;top:0px;width:40px;height:36px">Workout options</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:156.67px;top:73.67px;width:88.67px;height:20.67px;background-position:-156.67px -73.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-step-1-of-9" data-dc-role="AXButton" role="button" aria-label="Step 1 of 9" style="left:20px;top:132px;width:89.33px;height:44px;background-position:-20px -132px">
+      <span class="dc-text" data-dc-original="Step 1 of 9" aria-label="Step 1 of 9" style="left:0px;top:14.17px;width:67.67px;height:15.67px">Step 1 of 9</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang" data-dc-role="AXStaticText" role="text" aria-label="Hang" style="left:341.33px;top:146.83px;width:30.67px;height:14.33px;background-position:-341.33px -146.83px">
+      <span class="dc-text" data-dc-original="Hang" aria-label="Hang" style="left:0px;top:0px;width:30.67px;height:14.33px">Hang</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-1" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 1" style="left:20px;top:189px;width:252px;height:40.67px;background-position:-20px -189px">
+      <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:0px;width:252px;height:40.67px">Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-both-hands" data-dc-role="AXStaticText" role="text" aria-label="Both hands" style="left:20px;top:242.67px;width:72.33px;height:15.67px;background-position:-20px -242.67px">
+      <span class="dc-text" data-dc-original="Both hands" aria-label="Both hands" style="left:0px;top:0px;width:72.33px;height:15.67px">Both hands</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-00-10" data-dc-role="AXStaticText" role="text" aria-label="00:10" style="left:20px;top:271.33px;width:138.33px;height:55px;background-position:-20px -271.33px">
+      <span class="dc-text" data-dc-original="00:10" aria-label="00:10" style="left:0px;top:0px;width:138.33px;height:55px">00:10</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-0" data-dc-role="AXGenericElement" role="group" aria-label="0%" style="left:20px;top:329.33px;width:362px;height:24px;background-position:-20px -329.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="button-start" data-dc-role="AXButton" role="button" aria-label="Start" style="left:20px;top:362.33px;width:362px;height:49.33px;background-position:-20px -362.33px">
+      <span class="dc-text" data-dc-original="Start" aria-label="Start" style="left:173.67px;top:15px;width:38px;height:19.33px">Start</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-save-session" data-dc-role="AXButton" role="button" aria-label="Save session" style="left:57px;top:427px;width:288px;height:48px;background-position:-57px -427px">
+      <span class="dc-text" data-dc-original="Save session" aria-label="Save session" style="left:92px;top:16px;width:104px;height:21px">Save session</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-discard-session" data-dc-role="AXButton" role="button" aria-label="Discard session" style="left:57px;top:483px;width:288px;height:48px;background-position:-57px -483px">
+      <span class="dc-text" data-dc-original="Discard session" aria-label="Discard session" style="left:0px;top:0px;width:288px;height:48px">Discard session</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-keep-training" data-dc-role="AXButton" role="button" aria-label="Keep training" style="left:57px;top:539px;width:288px;height:48px;background-position:-57px -539px">
+      <span class="dc-text" data-dc-original="Keep training" aria-label="Keep training" style="left:0px;top:0px;width:288px;height:48px">Keep training</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-20-mm-left-edges-half-cri" data-dc-role="AXGenericElement" role="group" aria-label="20 mm left edges, Half crimp, Exact fingers: index, middle, ring, and pinky, both hands" style="left:20px;top:602.33px;width:362px;height:157.67px;background-position:-20px -602.33px">
+      <span class="dc-text" data-dc-original="20 MM LEFT EDGES" aria-label="20 MM LEFT EDGES" style="left:121px;top:9.98px;width:120px;height:12px">20 MM LEFT EDGES</span>
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:137px;top:29.98px;width:88px;height:21.67px">Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-instructions" data-dc-role="AXStaticText" role="text" aria-label="INSTRUCTIONS" style="left:38px;top:796.98px;width:103px;height:13.33px;background-position:-38px -796.98px">
+      <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

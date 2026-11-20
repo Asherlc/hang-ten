@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>plans · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("plans.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMTE5LjY3IiB3aWR0aD0iODciIGhlaWdodD0iNDAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjE2OSIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMjI4IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjY3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIzMTMuMzMiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjM1My42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI2MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNDE0IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjYwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI0NzQuMzMiIHdpZHRoPSIzNzAiIGhlaWdodD0iODIuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjU1Ni42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI2MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNjUyIiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjUyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI3MDQiIHdpZHRoPSIzNzAiIGhlaWdodD0iNTIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9Ijc1NS42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI1MiIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+"); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iMTE5LjY3IiB3aWR0aD0iODciIGhlaWdodD0iNDAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjE2OSIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMjI4IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjY3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIzMTMuMzMiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjM1My42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI2MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNDE0IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjYwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI0NzQuMzMiIHdpZHRoPSIzNzAiIGhlaWdodD0iODIuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjU1Ni42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI2MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNjUyIiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjUyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI3MDQiIHdpZHRoPSIzNzAiIGhlaWdodD0iNTIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9Ijc1NS42NyIgd2lkdGg9IjM3MCIgaGVpZ2h0PSI1MiIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="plans" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="11">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="heading-plans" data-dc-role="AXHeading" role="heading" aria-label="Plans" style="left:16px;top:119.67px;width:87px;height:40.67px;background-position:-16px -119.67px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:87px;height:40.67px">Plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-search-workouts" data-dc-role="AXTextField" role="textbox" aria-label="Search workouts" style="left:16px;top:169px;width:370px;height:44px;background-position:-16px -169px">
+    </div>
+    <div class="dc-layer" data-dc-id="button-training-on-wood-grips-compact-ii" data-dc-role="AXButton" role="button" aria-label="Training on, Wood Grips Compact II" style="left:16px;top:228px;width:370px;height:67.67px;background-position:-16px -228px">
+      <span class="dc-text" data-dc-original="Training on" aria-label="Training on" style="left:56px;top:15px;width:62.67px;height:14.33px">Training on</span>
+      <span class="dc-text" data-dc-original="Wood Grips Compact II" aria-label="Wood Grips Compact II" style="left:56px;top:32.33px;width:182.33px;height:20.33px">Wood Grips Compact II</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-browse-by-focus" data-dc-role="AXHeading" role="heading" aria-label="Browse by focus" style="left:16px;top:313.33px;width:370px;height:40.33px;background-position:-16px -313.33px">
+      <span class="dc-text" data-dc-original="Browse by focus" aria-label="Browse by focus" style="left:0px;top:0px;width:370px;height:40.33px">Browse by focus</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-finger-strength" data-dc-role="AXButton" role="button" aria-label="Finger strength" style="left:16px;top:353.67px;width:370px;height:60.33px;background-position:-16px -353.67px">
+      <span class="dc-text" data-dc-original="Finger strength" aria-label="Finger strength" style="left:16px;top:20px;width:122.33px;height:20.33px">Finger strength</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-finger-endurance" data-dc-role="AXButton" role="button" aria-label="Finger endurance" style="left:16px;top:414px;width:370px;height:60.33px;background-position:-16px -414px">
+      <span class="dc-text" data-dc-original="Finger endurance" aria-label="Finger endurance" style="left:16px;top:20px;width:139.33px;height:20.33px">Finger endurance</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-mixed-workouts-workouts-that-comb" data-dc-role="AXButton" role="button" aria-label="Mixed workouts, Workouts that combine different exercises" style="left:16px;top:474.33px;width:370px;height:82.33px;background-position:-16px -474.33px">
+      <span class="dc-text" data-dc-original="Mixed workouts" aria-label="Mixed workouts" style="left:16px;top:20px;width:125.33px;height:20.33px">Mixed workouts</span>
+      <span class="dc-text" data-dc-original="Workouts that combine different exercises" aria-label="Workouts that combine different exercises" style="left:16px;top:44.33px;width:289.33px;height:18px">Workouts that combine different exercises</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-warm-ups" data-dc-role="AXButton" role="button" aria-label="Warm-ups" style="left:16px;top:556.67px;width:370px;height:60.33px;background-position:-16px -556.67px">
+      <span class="dc-text" data-dc-original="Warm-ups" aria-label="Warm-ups" style="left:16px;top:20px;width:83.67px;height:20.33px">Warm-ups</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-all-workouts" data-dc-role="AXButton" role="button" aria-label="All workouts" style="left:16px;top:652px;width:370px;height:52px;background-position:-16px -652px">
+      <span class="dc-text" data-dc-original="All workouts" aria-label="All workouts" style="left:16px;top:15.83px;width:93px;height:20.33px">All workouts</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-my-routines" data-dc-role="AXButton" role="button" aria-label="My routines" style="left:16px;top:704px;width:370px;height:52px;background-position:-16px -704px">
+      <span class="dc-text" data-dc-original="My routines" aria-label="My routines" style="left:16px;top:15.83px;width:89.33px;height:20.33px">My routines</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-create-routine" data-dc-role="AXButton" role="button" aria-label="Create routine" style="left:16px;top:755.67px;width:370px;height:52px;background-position:-16px -755.67px">
+      <span class="dc-text" data-dc-original="Create routine" aria-label="Create routine" style="left:19.33px;top:15.83px;width:145px;height:20.33px">Create routine</span>
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

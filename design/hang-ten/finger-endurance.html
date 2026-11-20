@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>finger-endurance · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("finger-endurance.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjI3Ni42NyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjE2OSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQ5NC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI1MDAuMzMiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTA4LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNiIgeT0iNjQ1IiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1MSIgd2lkdGg9IjI4My42NyIgaGVpZ2h0PSIxMjkiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+"); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjI3Ni42NyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjE2OSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQ5NC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI1MDAuMzMiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTA4LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNiIgeT0iNjQ1IiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1MSIgd2lkdGg9IjI4My42NyIgaGVpZ2h0PSIxMjkiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="finger-endurance" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="14">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Plans" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:44px;height:44px">Plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-filter" data-dc-role="AXButton" role="button" aria-label="Filter" style="left:346px;top:66px;width:36px;height:36px;background-position:-346px -66px">
+      <span class="dc-text" data-dc-original="Filter" aria-label="Filter" style="left:0px;top:0px;width:36px;height:36px">Filter</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-finger-endurance" data-dc-role="AXHeading" role="heading" aria-label="Finger endurance" style="left:16px;top:119.67px;width:276.67px;height:40.67px;background-position:-16px -119.67px">
+      <span class="dc-text" data-dc-original="Finger endurance" aria-label="Finger endurance" style="left:0px;top:0px;width:276.67px;height:40.67px">Finger endurance</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-search-workouts" data-dc-role="AXTextField" role="textbox" aria-label="Search workouts" style="left:16px;top:169px;width:370px;height:44px;background-position:-16px -169px">
+    </div>
+    <div class="dc-layer" data-dc-id="heading-3-workouts" data-dc-role="AXHeading" role="heading" aria-label="3 workouts" style="left:16px;top:228px;width:370px;height:40.33px;background-position:-16px -228px">
+      <span class="dc-text" data-dc-original="3 workouts" aria-label="3 workouts" style="left:0px;top:0px;width:370px;height:40.33px">3 workouts</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-f80-force-board-to-favorites" data-dc-role="AXButton" role="button" aria-label="Add F80 Force Board to favorites" style="left:326px;top:283.33px;width:44px;height:44px;background-position:-326px -283.33px">
+      <span class="dc-text" data-dc-original="Add F80 Force Board to favorites" aria-label="Add F80 Force Board to favorites" style="left:0px;top:0px;width:44px;height:44px">Add F80 Force Board to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-f80-force-board-25m-30s-advanced-" data-dc-role="AXButton" role="button" aria-label="F80 Force Board, 25m 30s · Advanced, Needs hold substitutes, Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge., Hangs" style="left:32px;top:289.33px;width:283.67px;height:169px;background-position:-32px -289.33px">
+      <span class="dc-text" data-dc-original="F80 Force Board" aria-label="F80 Force Board" style="left:0px;top:0px;width:131.67px;height:20.33px">F80 Force Board</span>
+      <span class="dc-text" data-dc-original="25m 30s · Advanced" aria-label="25m 30s · Advanced" style="left:0px;top:26.33px;width:141px;height:18px">25m 30s · Advanced</span>
+      <span class="dc-text dc-multiline" data-dc-original="Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge." aria-label="Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge." style="left:0px;top:70.67px;width:263px;height:78px">Three sets of up to 12 10-second hangs at 80% MFSi with real-time force feedback on an instrumented 12 mm edge.</span>
+      <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:154.67px;width:36.33px;height:14.33px">Hangs</span>
+      <span class="dc-text" data-dc-original="Needs hold substitutes" aria-label="Needs hold substitutes" style="left:4.67px;top:50.33px;width:166px;height:14.67px">Needs hold substitutes</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-eva-intermittent-dead-hangs-t" data-dc-role="AXButton" role="button" aria-label="Add Eva Intermittent Dead-Hangs to favorites" style="left:326px;top:494.33px;width:44px;height:44px;background-position:-326px -494.33px">
+      <span class="dc-text" data-dc-original="Add Eva Intermittent Dead-Hangs to favorites" aria-label="Add Eva Intermittent Dead-Hangs to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Eva Intermittent Dead-Hangs to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-eva-intermittent-dead-hangs-5m-30" data-dc-role="AXButton" role="button" aria-label="Eva Intermittent Dead-Hangs, 5m 30s · Intermediate+, Intermittent dead-hangs with 10-second hangs and 5-second rests., Hangs" style="left:32px;top:500.33px;width:283.67px;height:108.67px;background-position:-32px -500.33px">
+      <span class="dc-text" data-dc-original="Eva Intermittent Dead-Hangs" aria-label="Eva Intermittent Dead-Hangs" style="left:0px;top:0px;width:231.67px;height:20.33px">Eva Intermittent Dead-Hangs</span>
+      <span class="dc-text" data-dc-original="5m 30s · Intermediate+" aria-label="5m 30s · Intermediate+" style="left:0px;top:26.33px;width:160px;height:18px">5m 30s · Intermediate+</span>
+      <span class="dc-text dc-multiline" data-dc-original="Intermittent dead-hangs with 10-second hangs and 5-second rests." aria-label="Intermittent dead-hangs with 10-second hangs and 5-second rests." style="left:0px;top:50.33px;width:237.67px;height:38px">Intermittent dead-hangs with 10-second hangs and 5-second rests.</span>
+      <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:94.33px;width:36.33px;height:14.33px">Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-megos-one-arm-7-3-repeaters-t" data-dc-role="AXButton" role="button" aria-label="Add Megos · One-arm 7/3 Repeaters to favorites" style="left:326px;top:645px;width:44px;height:44px;background-position:-326px -645px">
+      <span class="dc-text" data-dc-original="Add Megos · One-arm 7/3 Repeaters to favorites" aria-label="Add Megos · One-arm 7/3 Repeaters to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Megos · One-arm 7/3 Repeaters to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-megos-one-arm-7-3-repeaters-18-mi" data-dc-role="AXButton" role="button" aria-label="Megos · One-arm 7/3 Repeaters, 18 min · Advanced, Needs hold substitutes, Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery., Hangs" style="left:32px;top:651px;width:283.67px;height:129px;background-position:-32px -651px">
+      <span class="dc-text" data-dc-original="Megos · One-arm 7/3 Repeaters" aria-label="Megos · One-arm 7/3 Repeaters" style="left:0px;top:0px;width:252.33px;height:20.33px">Megos · One-arm 7/3 Repeaters</span>
+      <span class="dc-text" data-dc-original="18 min · Advanced" aria-label="18 min · Advanced" style="left:0px;top:26.33px;width:125.33px;height:18px">18 min · Advanced</span>
+      <span class="dc-text dc-multiline" data-dc-original="Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery." aria-label="Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery." style="left:0px;top:70.67px;width:264px;height:38px">Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery.</span>
+      <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:114.67px;width:36.33px;height:14.33px">Hangs</span>
+      <span class="dc-text" data-dc-original="Needs hold substitutes" aria-label="Needs hold substitutes" style="left:4.67px;top:50.33px;width:166px;height:14.67px">Needs hold substitutes</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>warm-ups · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("warm-ups.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjE2Ni4zMyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjEwOC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQzNCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NDAiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTA4LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjE2Ni4zMyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjEwOC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQzNCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NDAiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTA4LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="warm-ups" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="12">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Plans" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:44px;height:44px">Plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-filter" data-dc-role="AXButton" role="button" aria-label="Filter" style="left:346px;top:66px;width:36px;height:36px;background-position:-346px -66px">
+      <span class="dc-text" data-dc-original="Filter" aria-label="Filter" style="left:0px;top:0px;width:36px;height:36px">Filter</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-warm-ups" data-dc-role="AXHeading" role="heading" aria-label="Warm-ups" style="left:16px;top:119.67px;width:166.33px;height:40.67px;background-position:-16px -119.67px">
+      <span class="dc-text" data-dc-original="Warm-ups" aria-label="Warm-ups" style="left:0px;top:0px;width:166.33px;height:40.67px">Warm-ups</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-search-workouts" data-dc-role="AXTextField" role="textbox" aria-label="Search workouts" style="left:16px;top:169px;width:370px;height:44px;background-position:-16px -169px">
+    </div>
+    <div class="dc-layer" data-dc-id="heading-2-workouts" data-dc-role="AXHeading" role="heading" aria-label="2 workouts" style="left:16px;top:228px;width:370px;height:40.33px;background-position:-16px -228px">
+      <span class="dc-text" data-dc-original="2 workouts" aria-label="2 workouts" style="left:0px;top:0px;width:370px;height:40.33px">2 workouts</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-pitchsix-recruitment-warm-up-" data-dc-role="AXButton" role="button" aria-label="Add PitchSix · Recruitment warm-up to favorites" style="left:326px;top:283.33px;width:44px;height:44px;background-position:-326px -283.33px">
+      <span class="dc-text" data-dc-original="Add PitchSix · Recruitment warm-up to favorites" aria-label="Add PitchSix · Recruitment warm-up to favorites" style="left:0px;top:0px;width:44px;height:44px">Add PitchSix · Recruitment warm-up to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-pitchsix-recruitment-warm-up-9m-3" data-dc-role="AXButton" role="button" aria-label="PitchSix · Recruitment warm-up, 9m 30s · Warm-up, Six effort levels · two 5-second pulls per hand at each level., Hangs" style="left:32px;top:289.33px;width:283.67px;height:108.67px;background-position:-32px -289.33px">
+      <span class="dc-text" data-dc-original="PitchSix · Recruitment warm-up" aria-label="PitchSix · Recruitment warm-up" style="left:0px;top:0px;width:252.33px;height:20.33px">PitchSix · Recruitment warm-up</span>
+      <span class="dc-text" data-dc-original="9m 30s · Warm-up" aria-label="9m 30s · Warm-up" style="left:0px;top:26.33px;width:128.67px;height:18px">9m 30s · Warm-up</span>
+      <span class="dc-text dc-multiline" data-dc-original="Six effort levels · two 5-second pulls per hand at each level." aria-label="Six effort levels · two 5-second pulls per hand at each level." style="left:0px;top:50.33px;width:252.67px;height:38px">Six effort levels · two 5-second pulls per hand at each level.</span>
+      <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:94.33px;width:36.33px;height:14.33px">Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-entralpi-pre-max-hang-ramp-to" data-dc-role="AXButton" role="button" aria-label="Add Entralpi · Pre-max-hang ramp to favorites" style="left:326px;top:434px;width:44px;height:44px;background-position:-326px -434px">
+      <span class="dc-text" data-dc-original="Add Entralpi · Pre-max-hang ramp to favorites" aria-label="Add Entralpi · Pre-max-hang ramp to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Entralpi · Pre-max-hang ramp to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-entralpi-pre-max-hang-ramp-2m-15s" data-dc-role="AXButton" role="button" aria-label="Entralpi · Pre-max-hang ramp, 2m 15s · Warm-up, Three progressively harder hangs on your training edge and grip., Hangs" style="left:32px;top:440px;width:283.67px;height:108.67px;background-position:-32px -440px">
+      <span class="dc-text" data-dc-original="Entralpi · Pre-max-hang ramp" aria-label="Entralpi · Pre-max-hang ramp" style="left:0px;top:0px;width:235px;height:20.33px">Entralpi · Pre-max-hang ramp</span>
+      <span class="dc-text" data-dc-original="2m 15s · Warm-up" aria-label="2m 15s · Warm-up" style="left:0px;top:26.33px;width:125.67px;height:18px">2m 15s · Warm-up</span>
+      <span class="dc-text dc-multiline" data-dc-original="Three progressively harder hangs on your training edge and grip." aria-label="Three progressively harder hangs on your training edge and grip." style="left:0px;top:50.33px;width:254.67px;height:38px">Three progressively harder hangs on your training edge and grip.</span>
+      <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:94.33px;width:36.33px;height:14.33px">Hangs</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

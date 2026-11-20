@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>workout-sensor-single-landscape · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("workout-sensor-single-landscape.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 874px; height: 402px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 874px; height: 402px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 874px 402px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NzQiIGhlaWdodD0iNDAyIiB2aWV3Qm94PSIwIDAgODc0IDQwMiI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iODc0IiBoZWlnaHQ9IjQwMiI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSI0MiIgeT0iMjgiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3MzEiIHk9IjI4IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNzkyIiB5PSIyOCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM5Mi42NyIgeT0iMzUuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3OCIgeT0iODgiIHdpZHRoPSIxODYuMzMiIGhlaWdodD0iNDUiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjkzIiB5PSI5MC4xNyIgd2lkdGg9IjEwMyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI2MzYuMzMiIHk9IjEwMy4zMyIgd2lkdGg9IjMwLjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIzMiIgeT0iMTcyLjMzIiB3aWR0aD0iNDEwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMTguMTciIHk9IjI2MS45MiIgd2lkdGg9IjYxLjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY5NC4xNyIgeT0iMjYxLjkyIiB3aWR0aD0iNjEuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjMxMy4xOCIgd2lkdGg9IjEwMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1ODAiIHk9IjM2MyIgd2lkdGg9IjIxNiIgaGVpZ2h0PSIzNSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0ODAuNjciIHk9IjM3MC44NSIgd2lkdGg9IjM4IiBoZWlnaHQ9IjE5LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ1OS4zMyIgeT0iMzczLjMzIiB3aWR0aD0iMTMiIGhlaWdodD0iMTQuNjciIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NzQiIGhlaWdodD0iNDAyIiB2aWV3Qm94PSIwIDAgODc0IDQwMiI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iODc0IiBoZWlnaHQ9IjQwMiI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSI0MiIgeT0iMjgiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3MzEiIHk9IjI4IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNzkyIiB5PSIyOCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM5Mi42NyIgeT0iMzUuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3OCIgeT0iODgiIHdpZHRoPSIxODYuMzMiIGhlaWdodD0iNDUiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjkzIiB5PSI5MC4xNyIgd2lkdGg9IjEwMyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI2MzYuMzMiIHk9IjEwMy4zMyIgd2lkdGg9IjMwLjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIzMiIgeT0iMTcyLjMzIiB3aWR0aD0iNDEwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMTguMTciIHk9IjI2MS45MiIgd2lkdGg9IjYxLjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY5NC4xNyIgeT0iMjYxLjkyIiB3aWR0aD0iNjEuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iOTAiIHk9IjMxMy4xOCIgd2lkdGg9IjEwMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1ODAiIHk9IjM2MyIgd2lkdGg9IjIxNiIgaGVpZ2h0PSIzNSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0ODAuNjciIHk9IjM3MC44NSIgd2lkdGg9IjM4IiBoZWlnaHQ9IjE5LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ1OS4zMyIgeT0iMzczLjMzIiB3aWR0aD0iMTMiIGhlaWdodD0iMTQuNjciIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 874px 402px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="workout-sensor-single-landscape" data-dc-width="874"
+       data-dc-height="402" data-dc-scale="3" data-dc-holes="14">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="button-end" data-dc-role="AXButton" role="button" aria-label="End" style="left:42px;top:28px;width:53.33px;height:36px;background-position:-42px -28px">
+      <span class="dc-text" data-dc-original="End" aria-label="End" style="left:0px;top:0px;width:53.33px;height:36px">End</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues" style="left:731px;top:28px;width:45px;height:36px;background-position:-731px -28px">
+      <span class="dc-text" data-dc-original="Turn off spoken cues" aria-label="Turn off spoken cues" style="left:0px;top:0px;width:45px;height:36px">Turn off spoken cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options" style="left:792px;top:28px;width:40px;height:36px;background-position:-792px -28px">
+      <span class="dc-text" data-dc-original="Workout options" aria-label="Workout options" style="left:0px;top:0px;width:40px;height:36px">Workout options</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:392.67px;top:35.67px;width:88.67px;height:20.67px;background-position:-392.67px -35.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-step-1-of-9-max-hang-set-1" data-dc-role="AXButton" role="button" aria-label="Step 1 of 9, Max hang · set 1" style="left:78px;top:88px;width:186.33px;height:45px;background-position:-78px -88px">
+      <span class="dc-text" data-dc-original="Step 1 of 9" aria-label="Step 1 of 9" style="left:0px;top:0px;width:67.67px;height:15.67px">Step 1 of 9</span>
+      <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:18.67px;width:164.67px;height:26.33px">Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-00-10" data-dc-role="AXStaticText" role="text" aria-label="00:10" style="left:693px;top:90.17px;width:103px;height:40.67px;background-position:-693px -90.17px">
+      <span class="dc-text" data-dc-original="00:10" aria-label="00:10" style="left:0px;top:0px;width:103px;height:40.67px">00:10</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang" data-dc-role="AXStaticText" role="text" aria-label="Hang" style="left:636.33px;top:103.33px;width:30.67px;height:14.33px;background-position:-636.33px -103.33px">
+      <span class="dc-text" data-dc-original="Hang" aria-label="Hang" style="left:0px;top:0px;width:30.67px;height:14.33px">Hang</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-grindstone-hangboard" data-dc-role="AXGenericElement" role="group" aria-label="Grindstone hangboard" style="left:232px;top:172.33px;width:410px;height:120px;background-position:-232px -172.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-half-crimp" data-dc-role="AXStaticText" role="text" aria-label="Half crimp" style="left:118.17px;top:261.92px;width:61.67px;height:14.33px;background-position:-118.17px -261.92px">
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:0px;top:0px;width:61.67px;height:14.33px">Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-half-crimp-2" data-dc-role="AXStaticText" role="text" aria-label="Half crimp" style="left:694.17px;top:261.92px;width:61.67px;height:14.33px;background-position:-694.17px -261.92px">
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:0px;top:0px;width:61.67px;height:14.33px">Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-instructions" data-dc-role="AXStaticText" role="text" aria-label="INSTRUCTIONS" style="left:90px;top:313.18px;width:103px;height:13.33px;background-position:-90px -313.18px">
+      <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-skip-step-1-max-hang-set-1" data-dc-role="AXButton" role="button" aria-label="Skip step 1: Max hang · set 1" style="left:580px;top:363px;width:216px;height:35px;background-position:-580px -363px">
+      <span class="dc-text" data-dc-original="Skip step 1: Max hang · set 1" aria-label="Skip step 1: Max hang · set 1" style="left:0px;top:0px;width:216px;height:35px">Skip step 1: Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-start" data-dc-role="AXStaticText" role="text" aria-label="Start" style="left:480.67px;top:370.85px;width:38px;height:19.33px;background-position:-480.67px -370.85px">
+      <span class="dc-text" data-dc-original="Start" aria-label="Start" style="left:0px;top:0px;width:38px;height:19.33px">Start</span>
+    </div>
+    <div class="dc-layer" data-dc-id="image-play" data-dc-role="AXImage" role="img" aria-label="Play" style="left:459.33px;top:373.33px;width:13px;height:14.67px;background-position:-459.33px -373.33px">
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

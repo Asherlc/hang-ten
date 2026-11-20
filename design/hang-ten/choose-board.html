@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>choose-board · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("choose-board.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDUuMzMiIHk9IjczLjY3IiB3aWR0aD0iMTExLjMzIiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIxMTciIHdpZHRoPSIzNzAiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzM4IiB5PSIxODgiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTk0LjY3IiB3aWR0aD0iMTUzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3MyIgeT0iMTk0LjY3IiB3aWR0aD0iMTUzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNTIiIHdpZHRoPSIxNzQiIGhlaWdodD0iMjM0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwOCIgeT0iMjUyIiB3aWR0aD0iMTc0IiBoZWlnaHQ9IjIzNCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNTAwIiB3aWR0aD0iMTc0IiBoZWlnaHQ9IjIzNCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMDgiIHk9IjUwMCIgd2lkdGg9IjE3NCIgaGVpZ2h0PSIyMzQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTQyIiB5PSI3NTYiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMzAiIHk9Ijc2MyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDUuMzMiIHk9IjczLjY3IiB3aWR0aD0iMTExLjMzIiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIxMTciIHdpZHRoPSIzNzAiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzM4IiB5PSIxODgiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTk0LjY3IiB3aWR0aD0iMTUzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3MyIgeT0iMTk0LjY3IiB3aWR0aD0iMTUzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNTIiIHdpZHRoPSIxNzQiIGhlaWdodD0iMjM0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwOCIgeT0iMjUyIiB3aWR0aD0iMTc0IiBoZWlnaHQ9IjIzNCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNTAwIiB3aWR0aD0iMTc0IiBoZWlnaHQ9IjIzNCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMDgiIHk9IjUwMCIgd2lkdGg9IjE3NCIgaGVpZ2h0PSIyMzQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTQyIiB5PSI3NTYiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMzAiIHk9Ijc2MyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="choose-board" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="15">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Train" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:44px;height:44px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Choose board" style="left:145.33px;top:73.67px;width:111.33px;height:20.67px;background-position:-145.33px -73.67px">
+      <span class="dc-text" data-dc-original="Choose board" aria-label="Choose board" style="left:0px;top:0px;width:111.33px;height:20.67px">Choose board</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-search-boards" data-dc-role="AXTextField" role="textbox" aria-label="Search boards" style="left:16px;top:117px;width:370px;height:44px;background-position:-16px -117px">
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-filter-by-manufacturer" data-dc-role="AXPopUpButton" role="combobox" aria-label="Filter by manufacturer" style="left:338px;top:188px;width:44px;height:44px;background-position:-338px -188px">
+      <span class="dc-text" data-dc-original="Filter by manufacturer" aria-label="Filter by manufacturer" style="left:0px;top:0px;width:44px;height:44px">Filter by manufacturer</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-all-boards" data-dc-role="AXRadioButton" role="radio" aria-label="All boards" style="left:20px;top:194.67px;width:153px;height:32px;background-position:-20px -194.67px">
+      <span class="dc-text" data-dc-original="All boards" aria-label="All boards" style="left:0px;top:0px;width:153px;height:32px">All boards</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-favorites" data-dc-role="AXRadioButton" role="radio" aria-label="Favorites" style="left:173px;top:194.67px;width:153px;height:32px;background-position:-173px -194.67px">
+      <span class="dc-text" data-dc-original="Favorites" aria-label="Favorites" style="left:0px;top:0px;width:153px;height:32px">Favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-cyclops-011-blue-x-black" data-dc-role="AXButton" role="button" aria-label="Cyclops #011 Blue x Black" style="left:20px;top:252px;width:174px;height:234px;background-position:-20px -252px">
+      <span class="dc-text" data-dc-original="Cyclops #011 Blue x Black" aria-label="Cyclops #011 Blue x Black" style="left:0px;top:0px;width:174px;height:234px">Cyclops #011 Blue x Black</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-beastmaker-1000" data-dc-role="AXButton" role="button" aria-label="Beastmaker 1000" style="left:208px;top:252px;width:174px;height:234px;background-position:-208px -252px">
+      <span class="dc-text" data-dc-original="Beastmaker 1000" aria-label="Beastmaker 1000" style="left:0px;top:0px;width:174px;height:234px">Beastmaker 1000</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-beastmaker-2000" data-dc-role="AXButton" role="button" aria-label="Beastmaker 2000" style="left:20px;top:500px;width:174px;height:234px;background-position:-20px -500px">
+      <span class="dc-text" data-dc-original="Beastmaker 2000" aria-label="Beastmaker 2000" style="left:0px;top:0px;width:174px;height:234px">Beastmaker 2000</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-dual" data-dc-role="AXButton" role="button" aria-label="DUAL" style="left:208px;top:500px;width:174px;height:234px;background-position:-208px -500px">
+      <span class="dc-text" data-dc-original="DUAL" aria-label="DUAL" style="left:0px;top:0px;width:174px;height:234px">DUAL</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-view-hold-specs-for-pocket-hangbo" data-dc-role="AXButton" role="button" aria-label="View hold specs for POCKET Hangboard | Lines Edition" style="left:142px;top:756px;width:44px;height:44px;background-position:-142px -756px">
+      <span class="dc-text" data-dc-original="View hold specs for POCKET Hangboard | Lines Edition" aria-label="View hold specs for POCKET Hangboard | Lines Edition" style="left:0px;top:0px;width:44px;height:44px">View hold specs for POCKET Hangboard | Lines Edition</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-view-hold-specs-for-unlevel" data-dc-role="AXButton" role="button" aria-label="View hold specs for UNLEVEL" style="left:330px;top:763px;width:44px;height:44px;background-position:-330px -763px">
+      <span class="dc-text" data-dc-original="View hold specs for UNLEVEL" aria-label="View hold specs for UNLEVEL" style="left:0px;top:0px;width:44px;height:44px">View hold specs for UNLEVEL</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

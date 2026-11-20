@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>report-problem · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("report-problem.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iODIiIHdpZHRoPSI3Ni42NyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMzIiIHk9Ijg5LjY3IiB3aWR0aD0iMTM3LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxNTMiIHdpZHRoPSIzNDUiIGhlaWdodD0iNDIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjIwOSIgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjMyIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE3NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDE0IiB3aWR0aD0iMTMyIiBoZWlnaHQ9IjE3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI0MzciIHdpZHRoPSIzNjIiIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjUwMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI2MiIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+"); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iODIiIHdpZHRoPSI3Ni42NyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxMzIiIHk9Ijg5LjY3IiB3aWR0aD0iMTM3LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxNTMiIHdpZHRoPSIzNDUiIGhlaWdodD0iNDIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjIwOSIgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjMyIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE3NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDE0IiB3aWR0aD0iMTMyIiBoZWlnaHQ9IjE3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI0MzciIHdpZHRoPSIzNjIiIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjUwMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI2MiIgZmlsbD0iYmxhY2siLz48L21hc2s+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiIG1hc2s9InVybCgjaG9sZXMpIi8+PC9zdmc+");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="report-problem" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="8">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Cancel" style="left:20px;top:82px;width:76.67px;height:36px;background-position:-20px -82px">
+      <span class="dc-text" data-dc-original="Cancel" aria-label="Cancel" style="left:0px;top:0px;width:76.67px;height:36px">Cancel</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title-2" data-dc-role="AXHeading" role="heading" aria-label="Report a problem" style="left:132px;top:89.67px;width:137.67px;height:20.67px;background-position:-132px -89.67px">
+      <span class="dc-text" data-dc-original="Report a problem" aria-label="Report a problem" style="left:0px;top:0px;width:137.67px;height:20.67px">Report a problem</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-wrong-hold-highlight-alignmen" data-dc-role="AXStaticText" role="text" aria-label="Wrong hold, highlight alignment, or workout step? Describe what you see." style="left:20px;top:153px;width:345px;height:42px;background-position:-20px -153px">
+      <span class="dc-text dc-multiline" data-dc-original="Wrong hold, highlight alignment, or workout step? Describe what you see." aria-label="Wrong hold, highlight alignment, or workout step? Describe what you see." style="left:0px;top:0px;width:345px;height:42px">Wrong hold, highlight alignment, or workout step? Describe what you see.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-what-went-wrong" data-dc-role="AXStaticText" role="text" aria-label="WHAT WENT WRONG" style="left:20px;top:209px;width:150px;height:17px;background-position:-20px -209px">
+      <span class="dc-text" data-dc-original="WHAT WENT WRONG" aria-label="WHAT WENT WRONG" style="left:0px;top:0px;width:150px;height:17px">WHAT WENT WRONG</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textentryarea-what-went-wrong" data-dc-role="AXTextArea" role="textbox" aria-label="What went wrong" aria-multiline="true" style="left:20px;top:232px;width:362px;height:174px;background-position:-20px -232px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-email-optional" data-dc-role="AXStaticText" role="text" aria-label="EMAIL (OPTIONAL)" style="left:20px;top:414px;width:132px;height:17px;background-position:-20px -414px">
+      <span class="dc-text" data-dc-original="EMAIL (OPTIONAL)" aria-label="EMAIL (OPTIONAL)" style="left:0px;top:0px;width:132px;height:17px">EMAIL (OPTIONAL)</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-email-for-follow-up" data-dc-role="AXTextField" role="textbox" aria-label="Email for follow-up" style="left:20px;top:437px;width:362px;height:46px;background-position:-20px -437px">
+      <span class="dc-text" data-dc-original="Email for follow-up" aria-label="Email for follow-up" style="left:11px;top:15px;width:140px;height:20px">Email for follow-up</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-send-report" data-dc-role="AXButton" role="button" aria-label="Send report" aria-disabled="true" style="left:20px;top:503px;width:362px;height:62px;background-position:-20px -503px">
+      <span class="dc-text" data-dc-original="Send report" aria-label="Send report" style="left:132px;top:24px;width:98px;height:20px">Send report</span>
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

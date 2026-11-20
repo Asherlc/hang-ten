@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>mixed-workouts · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("mixed-workouts.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjI1MC42NyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjEyOSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQ1NC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NjAuMzMiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTUxIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNiIgeT0iNjQ3LjMzIiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1My4zMyIgd2lkdGg9IjI4My42NyIgaGVpZ2h0PSIxMjkiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjgxOC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDYiIHk9IjY2IiB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTYiIHk9IjExOS42NyIgd2lkdGg9IjI1MC42NyIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTY5IiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyMjgiIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzI2IiB5PSIyODMuMzMiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMjg5LjMzIiB3aWR0aD0iMjgzLjY3IiBoZWlnaHQ9IjEyOSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjQ1NC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NjAuMzMiIHdpZHRoPSIyODMuNjciIGhlaWdodD0iMTUxIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNiIgeT0iNjQ3LjMzIiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1My4zMyIgd2lkdGg9IjI4My42NyIgaGVpZ2h0PSIxMjkiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjYiIHk9IjgxOC4zMyIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="mixed-workouts" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="15">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Plans" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:44px;height:44px">Plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-filter" data-dc-role="AXButton" role="button" aria-label="Filter" style="left:346px;top:66px;width:36px;height:36px;background-position:-346px -66px">
+      <span class="dc-text" data-dc-original="Filter" aria-label="Filter" style="left:0px;top:0px;width:36px;height:36px">Filter</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-mixed-workouts" data-dc-role="AXHeading" role="heading" aria-label="Mixed workouts" style="left:16px;top:119.67px;width:250.67px;height:40.67px;background-position:-16px -119.67px">
+      <span class="dc-text" data-dc-original="Mixed workouts" aria-label="Mixed workouts" style="left:0px;top:0px;width:250.67px;height:40.67px">Mixed workouts</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-search-workouts" data-dc-role="AXTextField" role="textbox" aria-label="Search workouts" style="left:16px;top:169px;width:370px;height:44px;background-position:-16px -169px">
+    </div>
+    <div class="dc-layer" data-dc-id="heading-5-workouts" data-dc-role="AXHeading" role="heading" aria-label="5 workouts" style="left:16px;top:228px;width:370px;height:40.33px;background-position:-16px -228px">
+      <span class="dc-text" data-dc-original="5 workouts" aria-label="5 workouts" style="left:0px;top:0px;width:370px;height:40.33px">5 workouts</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-metolius-10-minute-entry-to-f" data-dc-role="AXButton" role="button" aria-label="Add Metolius 10-minute · Entry to favorites" style="left:326px;top:283.33px;width:44px;height:44px;background-position:-326px -283.33px">
+      <span class="dc-text" data-dc-original="Add Metolius 10-minute · Entry to favorites" aria-label="Add Metolius 10-minute · Entry to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Metolius 10-minute · Entry to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-metolius-10-minute-entry-10-min-e" data-dc-role="AXButton" role="button" aria-label="Metolius 10-minute · Entry, 10 min · Entry, Needs hold substitutes, Ten 60-second hangboard sequences., Hangs · Pull-ups · Core" style="left:32px;top:289.33px;width:283.67px;height:129px;background-position:-32px -289.33px">
+      <span class="dc-text" data-dc-original="Metolius 10-minute · Entry" aria-label="Metolius 10-minute · Entry" style="left:0px;top:0px;width:209.33px;height:20.33px">Metolius 10-minute · Entry</span>
+      <span class="dc-text" data-dc-original="10 min · Entry" aria-label="10 min · Entry" style="left:0px;top:26.33px;width:93px;height:18px">10 min · Entry</span>
+      <span class="dc-text dc-multiline" data-dc-original="Ten 60-second hangboard sequences." aria-label="Ten 60-second hangboard sequences." style="left:0px;top:70.67px;width:156.67px;height:38px">Ten 60-second hangboard sequences.</span>
+      <span class="dc-text" data-dc-original="Hangs · Pull-ups · Core" aria-label="Hangs · Pull-ups · Core" style="left:0px;top:114.67px;width:130.67px;height:14.33px">Hangs · Pull-ups · Core</span>
+      <span class="dc-text" data-dc-original="Needs hold substitutes" aria-label="Needs hold substitutes" style="left:4.67px;top:50.33px;width:166px;height:14.67px">Needs hold substitutes</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-metolius-10-minute-intermedia" data-dc-role="AXButton" role="button" aria-label="Add Metolius 10-minute · Intermediate to favorites" style="left:326px;top:454.33px;width:44px;height:44px;background-position:-326px -454.33px">
+      <span class="dc-text" data-dc-original="Add Metolius 10-minute · Intermediate to favorites" aria-label="Add Metolius 10-minute · Intermediate to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Metolius 10-minute · Intermediate to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-metolius-10-minute-intermediate-1" data-dc-role="AXButton" role="button" aria-label="Metolius 10-minute · Intermediate, 10 min · Intermediate, Needs hold substitutes, Ten 60-second hangboard sequences., Hangs · Pull-ups · Core" style="left:32px;top:460.33px;width:283.67px;height:151px;background-position:-32px -460.33px">
+      <span class="dc-text dc-multiline" data-dc-original="Metolius 10-minute · Intermediate" aria-label="Metolius 10-minute · Intermediate" style="left:0px;top:0px;width:167px;height:42.33px">Metolius 10-minute · Intermediate</span>
+      <span class="dc-text" data-dc-original="10 min · Intermediate" aria-label="10 min · Intermediate" style="left:0px;top:48.33px;width:143.67px;height:18px">10 min · Intermediate</span>
+      <span class="dc-text dc-multiline" data-dc-original="Ten 60-second hangboard sequences." aria-label="Ten 60-second hangboard sequences." style="left:0px;top:92.67px;width:156.67px;height:38px">Ten 60-second hangboard sequences.</span>
+      <span class="dc-text" data-dc-original="Hangs · Pull-ups · Core" aria-label="Hangs · Pull-ups · Core" style="left:0px;top:136.67px;width:130.67px;height:14.33px">Hangs · Pull-ups · Core</span>
+      <span class="dc-text" data-dc-original="Needs hold substitutes" aria-label="Needs hold substitutes" style="left:4.67px;top:72.33px;width:166px;height:14.67px">Needs hold substitutes</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-metolius-10-minute-advanced-t" data-dc-role="AXButton" role="button" aria-label="Add Metolius 10-minute · Advanced to favorites" style="left:326px;top:647.33px;width:44px;height:44px;background-position:-326px -647.33px">
+      <span class="dc-text" data-dc-original="Add Metolius 10-minute · Advanced to favorites" aria-label="Add Metolius 10-minute · Advanced to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Metolius 10-minute · Advanced to favorites</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-metolius-10-minute-advanced-10-mi" data-dc-role="AXButton" role="button" aria-label="Metolius 10-minute · Advanced, 10 min · Advanced, Needs hold substitutes, Ten 60-second hangboard sequences., Hangs · Pull-ups · Core" style="left:32px;top:653.33px;width:283.67px;height:129px;background-position:-32px -653.33px">
+      <span class="dc-text" data-dc-original="Metolius 10-minute · Advanced" aria-label="Metolius 10-minute · Advanced" style="left:0px;top:0px;width:246.33px;height:20.33px">Metolius 10-minute · Advanced</span>
+      <span class="dc-text" data-dc-original="10 min · Advanced" aria-label="10 min · Advanced" style="left:0px;top:26.33px;width:125px;height:18px">10 min · Advanced</span>
+      <span class="dc-text dc-multiline" data-dc-original="Ten 60-second hangboard sequences." aria-label="Ten 60-second hangboard sequences." style="left:0px;top:70.67px;width:156.67px;height:38px">Ten 60-second hangboard sequences.</span>
+      <span class="dc-text" data-dc-original="Hangs · Pull-ups · Core" aria-label="Hangs · Pull-ups · Core" style="left:0px;top:114.67px;width:130.67px;height:14.33px">Hangs · Pull-ups · Core</span>
+      <span class="dc-text" data-dc-original="Needs hold substitutes" aria-label="Needs hold substitutes" style="left:4.67px;top:50.33px;width:166px;height:14.67px">Needs hold substitutes</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+    <div class="dc-layer" data-dc-id="button-add-hooper-s-beta-introductory-ho" data-dc-role="AXButton" role="button" aria-label="Add Hooper&#x27;s Beta · Introductory Home Hangboard to favorites" style="left:326px;top:818.33px;width:44px;height:44px;background-position:-326px -818.33px">
+      <span class="dc-text" data-dc-original="Add Hooper&#x27;s Beta · Introductory Home Hangboard to favorites" aria-label="Add Hooper&#x27;s Beta · Introductory Home Hangboard to favorites" style="left:0px;top:0px;width:44px;height:44px">Add Hooper&#x27;s Beta · Introductory Home Hangboard to favorites</span>
+    </div>
+  </div>
+  <script src="../canvas-text.js"></script>
+</body>
+</html>

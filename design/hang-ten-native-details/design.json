@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "title": "Hang Ten · Native details",
+  "kind": "prototype",
+  "description": "Current Hang Ten iOS design captured from revision 01a4de85f on an iPhone 17 Pro simulator running iOS 26.5. Native renderings are the baseline. Move named layers and edit their copy using Design Canvas. Sensor values come from deterministic review transports.",
+  "artboards": [
+    {
+      "id": "report-problem",
+      "title": "Report a problem",
+      "file": "report-problem.html",
+      "width": 402,
+      "height": 874,
+      "group": "Workout sheets"
+    },
+    {
+      "id": "unlock",
+      "title": "Unlock Hang Ten",
+      "file": "unlock.html",
+      "width": 402,
+      "height": 874,
+      "group": "Workout sheets"
+    },
+    {
+      "id": "workout-sensor-single-active",
+      "title": "Hang · Tindeq Progressor",
+      "group": "Connected workout · Hang",
+      "file": "workout-sensor-single-active.html",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "workout-sensor-single-landscape-meter",
+      "title": "Landscape · Tindeq Progressor · force meter",
+      "group": "Connected workout · Landscape",
+      "file": "workout-sensor-single-landscape-meter.html",
+      "width": 874,
+      "height": 402
+    },
+    {
+      "id": "settings-health",
+      "title": "Settings · Apple Health",
+      "group": "Settings",
+      "file": "settings-health.html",
+      "width": 402,
+      "height": 874
+    }
+  ]
+}
