@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 874px; height: 402px; overflow: hidde
   background-size: 874px 402px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -66,37 +67,11 @@ html, body { margin: 0; padding: 0; width: 874px; height: 402px; overflow: hidde
       <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
     </div>
     <div class="dc-layer" data-dc-id="instruction" data-dc-role="AXStaticText" data-dc-clipped="true" role="text" aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:90px;top:331.51px;width:450.33px;height:58px;background-position:-90px -331.51px">
-      <span class="dc-text" data-dc-original="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:0px;top:0px;width:450.33px;height:58px">Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:0px;top:0px;width:450.33px;height:58px">Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.</span>
     </div>
     <div class="dc-layer" data-dc-id="image-forward" data-dc-role="AXImage" role="img" aria-label="Forward" style="left:636px;top:384.33px;width:22px;height:12.33px;background-position:-636px -384.33px">
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

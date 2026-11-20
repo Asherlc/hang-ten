@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -47,13 +48,13 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="image-infinity-circle-fill" data-dc-role="AXImage" role="img" aria-label="infinity.circle.fill" style="left:171.33px;top:165px;width:59.33px;height:59.33px;background-position:-171.33px -165px">
     </div>
     <div class="dc-layer" data-dc-id="statictext-adapted-session-five-10-secon" data-dc-role="AXStaticText" role="text" aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:20px;top:221px;width:349.67px;height:58px;background-position:-20px -221px">
-      <span class="dc-text" data-dc-original="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:0px;top:0px;width:349.67px;height:58px">Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:0px;top:0px;width:349.67px;height:58px">Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-grindstone" data-dc-role="AXStaticText" role="text" aria-label="Grindstone" style="left:20px;top:289px;width:69px;height:15.67px;background-position:-20px -289px">
       <span class="dc-text" data-dc-original="Grindstone" aria-label="Grindstone" style="left:0px;top:0px;width:69px;height:15.67px">Grindstone</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-you-ve-completed-your-2-free-" data-dc-role="AXStaticText" role="text" aria-label="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." style="left:49.83px;top:306px;width:302.33px;height:61.33px;background-position:-49.83px -306px">
-      <span class="dc-text" data-dc-original="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." aria-label="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." style="left:0px;top:0px;width:302.33px;height:61.33px">You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase.</span>
+      <span class="dc-text dc-multiline" data-dc-original="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." aria-label="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." style="left:0px;top:0px;width:302.33px;height:61.33px">You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase.</span>
     </div>
     <div class="dc-layer" data-dc-id="button-unlock-for-2-99" data-dc-role="AXButton" role="button" aria-label="Unlock for $2.99" style="left:44px;top:391.33px;width:314px;height:50.33px;background-position:-44px -391.33px">
       <span class="dc-text" data-dc-original="Unlock for $2.99" aria-label="Unlock for $2.99" style="left:0px;top:0px;width:314px;height:50.33px">Unlock for $2.99</span>
@@ -92,32 +93,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:0px;top:0px;width:88px;height:21.67px">Half crimp</span>
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

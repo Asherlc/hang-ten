@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -49,7 +50,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="button-pitchsix-recruitment-warm-up-9m-3" data-dc-role="AXButton" role="button" aria-label="PitchSix · Recruitment warm-up, 9m 30s · Warm-up, Six effort levels · two 5-second pulls per hand at each level., Hangs" style="left:32px;top:289.33px;width:283.67px;height:108.67px;background-position:-32px -289.33px">
       <span class="dc-text" data-dc-original="PitchSix · Recruitment warm-up" aria-label="PitchSix · Recruitment warm-up" style="left:0px;top:0px;width:252.33px;height:20.33px">PitchSix · Recruitment warm-up</span>
       <span class="dc-text" data-dc-original="9m 30s · Warm-up" aria-label="9m 30s · Warm-up" style="left:0px;top:26.33px;width:128.67px;height:18px">9m 30s · Warm-up</span>
-      <span class="dc-text" data-dc-original="Six effort levels · two 5-second pulls per hand at each level." aria-label="Six effort levels · two 5-second pulls per hand at each level." style="left:0px;top:50.33px;width:252.67px;height:38px">Six effort levels · two 5-second pulls per hand at each level.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Six effort levels · two 5-second pulls per hand at each level." aria-label="Six effort levels · two 5-second pulls per hand at each level." style="left:0px;top:50.33px;width:252.67px;height:38px">Six effort levels · two 5-second pulls per hand at each level.</span>
       <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:94.33px;width:36.33px;height:14.33px">Hangs</span>
     </div>
     <div class="dc-layer" data-dc-id="button-add-entralpi-pre-max-hang-ramp-to" data-dc-role="AXButton" role="button" aria-label="Add Entralpi · Pre-max-hang ramp to favorites" style="left:326px;top:434px;width:44px;height:44px;background-position:-326px -434px">
@@ -58,7 +59,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="button-entralpi-pre-max-hang-ramp-2m-15s" data-dc-role="AXButton" role="button" aria-label="Entralpi · Pre-max-hang ramp, 2m 15s · Warm-up, Three progressively harder hangs on your training edge and grip., Hangs" style="left:32px;top:440px;width:283.67px;height:108.67px;background-position:-32px -440px">
       <span class="dc-text" data-dc-original="Entralpi · Pre-max-hang ramp" aria-label="Entralpi · Pre-max-hang ramp" style="left:0px;top:0px;width:235px;height:20.33px">Entralpi · Pre-max-hang ramp</span>
       <span class="dc-text" data-dc-original="2m 15s · Warm-up" aria-label="2m 15s · Warm-up" style="left:0px;top:26.33px;width:125.67px;height:18px">2m 15s · Warm-up</span>
-      <span class="dc-text" data-dc-original="Three progressively harder hangs on your training edge and grip." aria-label="Three progressively harder hangs on your training edge and grip." style="left:0px;top:50.33px;width:254.67px;height:38px">Three progressively harder hangs on your training edge and grip.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Three progressively harder hangs on your training edge and grip." aria-label="Three progressively harder hangs on your training edge and grip." style="left:0px;top:50.33px;width:254.67px;height:38px">Three progressively harder hangs on your training edge and grip.</span>
       <span class="dc-text" data-dc-original="Hangs" aria-label="Hangs" style="left:0px;top:94.33px;width:36.33px;height:14.33px">Hangs</span>
     </div>
     <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
@@ -71,32 +72,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
     </a>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

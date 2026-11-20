@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -44,7 +45,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="image-sensor-tag-radiowaves-forward-fill" data-dc-role="AXImage" role="img" aria-label="sensor.tag.radiowaves.forward.fill" style="left:43px;top:161px;width:24px;height:16.33px;background-position:-43px -161px">
     </div>
     <div class="dc-layer" data-dc-id="statictext-connect-a-supported-sensor-au" data-dc-role="AXStaticText" role="text" aria-label="Connect a supported sensor automatically to see live force while you train." style="left:84px;top:183.33px;width:274.67px;height:33.67px;background-position:-84px -183.33px">
-      <span class="dc-text" data-dc-original="Connect a supported sensor automatically to see live force while you train." aria-label="Connect a supported sensor automatically to see live force while you train." style="left:0px;top:0px;width:274.67px;height:33.67px">Connect a supported sensor automatically to see live force while you train.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Connect a supported sensor automatically to see live force while you train." aria-label="Connect a supported sensor automatically to see live force while you train." style="left:0px;top:0px;width:274.67px;height:33.67px">Connect a supported sensor automatically to see live force while you train.</span>
     </div>
     <div class="dc-layer" data-dc-id="button-connect-sensor" data-dc-role="AXButton" role="button" aria-label="Connect sensor" style="left:38px;top:231px;width:326px;height:34.33px;background-position:-38px -231px">
       <span class="dc-text" data-dc-original="Connect sensor" aria-label="Connect sensor" style="left:0px;top:0px;width:326px;height:34.33px">Connect sensor</span>
@@ -85,10 +86,10 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="image-heart-text-square-fill" data-dc-role="AXImage" role="img" aria-label="heart.text.square.fill" style="left:44.67px;top:623.33px;width:17px;height:17px;background-position:-44.67px -623.33px">
     </div>
     <div class="dc-layer" data-dc-id="statictext-connect-once-to-save-complete" data-dc-role="AXStaticText" role="text" aria-label="Connect once to save completed routines as functional strength workouts." style="left:82px;top:646px;width:271.67px;height:33.67px;background-position:-82px -646px">
-      <span class="dc-text" data-dc-original="Connect once to save completed routines as functional strength workouts." aria-label="Connect once to save completed routines as functional strength workouts." style="left:0px;top:0px;width:271.67px;height:33.67px">Connect once to save completed routines as functional strength workouts.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Connect once to save completed routines as functional strength workouts." aria-label="Connect once to save completed routines as functional strength workouts." style="left:0px;top:0px;width:271.67px;height:33.67px">Connect once to save completed routines as functional strength workouts.</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-apple-health-history-is-unava" data-dc-role="AXStaticText" role="text" aria-label="Apple Health history is unavailable; completed sessions stay on this device." style="left:36px;top:691.67px;width:283.67px;height:33.67px;background-position:-36px -691.67px">
-      <span class="dc-text" data-dc-original="Apple Health history is unavailable; completed sessions stay on this device." aria-label="Apple Health history is unavailable; completed sessions stay on this device." style="left:0px;top:0px;width:283.67px;height:33.67px">Apple Health history is unavailable; completed sessions stay on this device.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Apple Health history is unavailable; completed sessions stay on this device." aria-label="Apple Health history is unavailable; completed sessions stay on this device." style="left:0px;top:0px;width:283.67px;height:33.67px">Apple Health history is unavailable; completed sessions stay on this device.</span>
     </div>
     <div class="dc-layer" data-dc-id="button-connect-apple-health" data-dc-role="AXButton" role="button" aria-label="Connect Apple Health" style="left:36px;top:737.33px;width:330px;height:42px;background-position:-36px -737.33px">
       <span class="dc-text" data-dc-original="Connect Apple Health" aria-label="Connect Apple Health" style="left:41.33px;top:12px;width:158.67px;height:18px">Connect Apple Health</span>
@@ -103,32 +104,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
     </a>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

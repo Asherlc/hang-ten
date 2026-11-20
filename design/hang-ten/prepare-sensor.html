@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -51,7 +52,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:0px;width:252px;height:40.67px">Max hang · set 1</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-remove-your-hands-and-all-wei" data-dc-role="AXStaticText" role="text" aria-label="Remove your hands and all weight from the sensor while it establishes zero load." style="left:43.33px;top:242px;width:315.33px;height:40.33px;background-position:-43.33px -242px">
-      <span class="dc-text" data-dc-original="Remove your hands and all weight from the sensor while it establishes zero load." aria-label="Remove your hands and all weight from the sensor while it establishes zero load." style="left:0px;top:0px;width:315.33px;height:40.33px">Remove your hands and all weight from the sensor while it establishes zero load.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Remove your hands and all weight from the sensor while it establishes zero load." aria-label="Remove your hands and all weight from the sensor while it establishes zero load." style="left:0px;top:0px;width:315.33px;height:40.33px">Remove your hands and all weight from the sensor while it establishes zero load.</span>
     </div>
     <div class="dc-layer" data-dc-id="button-start-tare" data-dc-role="AXButton" role="button" aria-label="Start tare" style="left:43.33px;top:298.33px;width:95.33px;height:34.33px;background-position:-43.33px -298.33px">
       <span class="dc-text" data-dc-original="Start tare" aria-label="Start tare" style="left:0px;top:0px;width:95.33px;height:34.33px">Start tare</span>
@@ -75,32 +76,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

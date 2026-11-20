@@ -44,7 +44,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
     <div class="dc-layer" data-dc-id="statictext-session-complete" data-dc-role="AXStaticText" role="text" aria-label="Session complete" style="left:20px;top:132px;width:281px;height:40.67px;background-position:-20px -132px">
       <span class="dc-text" data-dc-original="Session complete" aria-label="Session complete" style="left:0px;top:0px;width:281px;height:40.67px">Session complete</span>
     </div>
-    <div class="dc-layer" data-dc-id="button-cancel-preparation" data-dc-role="AXButton" role="button" aria-label="Cancel preparation" style="left:20px;top:191.67px;width:362px;height:51.33px;background-position:-20px -191.67px">
+    <div class="dc-layer" data-dc-id="statictext-session-date" data-dc-role="AXStaticText" role="text" aria-label="November 19, 2026 at 7:10 PM" style="left:20px;top:191.67px;width:362px;height:51.33px;background-position:-20px -191.67px">
       <span class="dc-text" data-dc-original="November 19, 2026 at 7:10 PM" aria-label="November 19, 2026 at 7:10 PM" style="left:12px;top:26.67px;width:187.33px;height:15.67px">November 19, 2026 at 7:10 PM</span>
     </div>
     <div class="dc-layer" data-dc-id="heading-workout-steps" data-dc-role="AXHeading" role="heading" aria-label="Workout steps" style="left:16px;top:270.67px;width:370px;height:40.33px;background-position:-16px -270.67px">
@@ -105,32 +105,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Saving adds this session to history and Apple Health, if connected." aria-label="Saving adds this session to history and Apple Health, if connected." style="left:0px;top:0px;width:366.33px;height:14.33px">Saving adds this session to history and Apple Health, if connected.</span>
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -49,7 +50,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-hang-for-10-seconds-on-your-c" data-dc-role="AXStaticText" role="text" aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:38px;top:339.31px;width:323px;height:103.33px;background-position:-38px -339.31px">
-      <span class="dc-text" data-dc-original="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:0px;top:0px;width:323px;height:103.33px">Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:0px;top:0px;width:323px;height:103.33px">Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-10s-hang-3m-recovery-half-cri" data-dc-role="AXStaticText" role="text" aria-label="10s hang · 3m recovery · half crimp · 3s in reserve" style="left:38px;top:453.65px;width:294.33px;height:14.33px;background-position:-38px -453.65px">
       <span class="dc-text" data-dc-original="10s hang · 3m recovery · half crimp · 3s in reserve" aria-label="10s hang · 3m recovery · half crimp · 3s in reserve" style="left:0px;top:0px;width:294.33px;height:14.33px">10s hang · 3m recovery · half crimp · 3s in reserve</span>
@@ -92,32 +93,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Streaming" aria-label="Streaming" style="left:0px;top:0px;width:81px;height:13.33px">Streaming</span>
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

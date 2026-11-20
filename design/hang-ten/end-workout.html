@@ -62,7 +62,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Start" aria-label="Start" style="left:173.67px;top:15px;width:38px;height:19.33px">Start</span>
     </div>
     <div class="dc-layer" data-dc-id="button-save-session" data-dc-role="AXButton" role="button" aria-label="Save session" style="left:57px;top:427px;width:288px;height:48px;background-position:-57px -427px">
-      <span class="dc-text" data-dc-original="Skip step" aria-label="Skip step" style="left:96.33px;top:4.67px;width:97.5px;height:18px">Skip step</span>
+      <span class="dc-text" data-dc-original="Save session" aria-label="Save session" style="left:92px;top:16px;width:104px;height:21px">Save session</span>
     </div>
     <div class="dc-layer" data-dc-id="button-discard-session" data-dc-role="AXButton" role="button" aria-label="Discard session" style="left:57px;top:483px;width:288px;height:48px;background-position:-57px -483px">
       <span class="dc-text" data-dc-original="Discard session" aria-label="Discard session" style="left:0px;top:0px;width:288px;height:48px">Discard session</span>
@@ -78,32 +78,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
     </div>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>

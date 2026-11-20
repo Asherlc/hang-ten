@@ -22,6 +22,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
   background-size: 402px 874px; background-repeat: no-repeat; }
 .dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
   font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-multiline { white-space: normal; }
 .dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
   </style>
 </head>
@@ -64,7 +65,7 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="Add circuit" aria-label="Add circuit" style="left:19.33px;top:15.83px;width:118.33px;height:20.33px">Add circuit</span>
     </div>
     <div class="dc-layer" data-dc-id="statictext-add-exercises-and-rest-steps-" data-dc-role="AXStaticText" role="text" aria-label="Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run." style="left:16px;top:608.33px;width:370px;height:61.67px;background-position:-16px -608.33px">
-      <span class="dc-text" data-dc-original="Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run." aria-label="Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run." style="left:0px;top:0px;width:370px;height:61.67px">Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run.</span>
+      <span class="dc-text dc-multiline" data-dc-original="Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run." aria-label="Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run." style="left:0px;top:0px;width:370px;height:61.67px">Add exercises and rest steps to sets. Use a circuit to repeat sets together, with rest between rounds. Repeat counts include the first run.</span>
     </div>
     <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
       <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
@@ -76,32 +77,6 @@ html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidde
       <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
     </a>
   </div>
-  <script>
-(function () {
-  var root = document.querySelector('[data-dc-artboard]');
-  if (!root) return;
-  var style = getComputedStyle(document.documentElement);
-  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
-  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
-  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
-  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
-  function refresh() {
-    var texts = root.querySelectorAll('.dc-text');
-    for (var i = 0; i < texts.length; i++) {
-      var el = texts[i];
-      var original = el.getAttribute('data-dc-original') || '';
-      var changed = el.textContent !== original;
-      el.classList.toggle('dc-revealed', changed);
-      el.setAttribute('aria-label', changed ? el.textContent : original);
-    }
-  }
-  refresh();
-  if (window.MutationObserver) {
-    new MutationObserver(refresh).observe(root, {
-      subtree: true, childList: true, characterData: true
-    });
-  }
-})();
-  </script>
+  <script src="../canvas-text.js"></script>
 </body>
 </html>
