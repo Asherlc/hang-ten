@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>summary · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("summary.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNTYuNjciIHk9IjczLjY3IiB3aWR0aD0iODguNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjgyIiB3aWR0aD0iODIiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjU1LjMzIiB5PSI4MiIgd2lkdGg9IjEyNi42NyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNjIuNjciIHk9Ijg5LjY3IiB3aWR0aD0iNzYuMzMiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjEzMiIgd2lkdGg9IjI4MSIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTkxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUxLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyNzAuNjciIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjMzMCIgd2lkdGg9IjExNS42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMzU1IiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjM3MC4zMyIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSIzOTMiIHdpZHRoPSIxMTAuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjQ0NSIgd2lkdGg9IjMyLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NzAiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNDg1LjMzIiB3aWR0aD0iMzEuMzMiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjUzOS4zMyIgd2lkdGg9IjExNy42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNTY0LjMzIiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjU3OS42NyIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI2MDIuMzMiIHdpZHRoPSIxMTAuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1NC4zMyIgd2lkdGg9IjMyLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI2NzkuMzMiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNjk0LjY3IiB3aWR0aD0iMzEuMzMiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9Ijc0OC42NyIgd2lkdGg9IjExOCIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNzczLjY3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9Ijc4OSIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3LjgzIiB5PSI4MTcuNjciIHdpZHRoPSIzNjYuMzMiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNTYuNjciIHk9IjczLjY3IiB3aWR0aD0iODguNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjgyIiB3aWR0aD0iODIiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjU1LjMzIiB5PSI4MiIgd2lkdGg9IjEyNi42NyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNjIuNjciIHk9Ijg5LjY3IiB3aWR0aD0iNzYuMzMiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjEzMiIgd2lkdGg9IjI4MSIgaGVpZ2h0PSI0MC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTkxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUxLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSIyNzAuNjciIHdpZHRoPSIzNzAiIGhlaWdodD0iNDAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjMzMCIgd2lkdGg9IjExNS42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iMzU1IiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjM3MC4zMyIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSIzOTMiIHdpZHRoPSIxMTAuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjQ0NSIgd2lkdGg9IjMyLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI0NzAiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNDg1LjMzIiB3aWR0aD0iMzEuMzMiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjUzOS4zMyIgd2lkdGg9IjExNy42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNTY0LjMzIiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjU3OS42NyIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI2MDIuMzMiIHdpZHRoPSIxMTAuNjciIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjY1NC4zMyIgd2lkdGg9IjMyLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSI2NzkuMzMiIHdpZHRoPSI1NCIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNjk0LjY3IiB3aWR0aD0iMzEuMzMiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9Ijc0OC42NyIgd2lkdGg9IjExOCIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMiIgeT0iNzczLjY3IiB3aWR0aD0iNTQiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9Ijc4OSIgd2lkdGg9IjIyLjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3LjgzIiB5PSI4MTcuNjciIHdpZHRoPSIzNjYuMzMiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="summary" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="25">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:156.67px;top:73.67px;width:88.67px;height:20.67px;background-position:-156.67px -73.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Discard" style="left:20px;top:82px;width:82px;height:36px;background-position:-20px -82px">
+      <span class="dc-text" data-dc-original="Discard" aria-label="Discard" style="left:0px;top:0px;width:82px;height:36px">Discard</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-save-session" data-dc-role="AXButton" role="button" aria-label="Save session" style="left:255.33px;top:82px;width:126.67px;height:36px;background-position:-255.33px -82px">
+      <span class="dc-text" data-dc-original="Save session" aria-label="Save session" style="left:0px;top:0px;width:126.67px;height:36px">Save session</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title-2" data-dc-role="AXHeading" role="heading" aria-label="Summary" style="left:162.67px;top:89.67px;width:76.33px;height:20.67px;background-position:-162.67px -89.67px">
+      <span class="dc-text" data-dc-original="Summary" aria-label="Summary" style="left:0px;top:0px;width:76.33px;height:20.67px">Summary</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-session-complete" data-dc-role="AXStaticText" role="text" aria-label="Session complete" style="left:20px;top:132px;width:281px;height:40.67px;background-position:-20px -132px">
+      <span class="dc-text" data-dc-original="Session complete" aria-label="Session complete" style="left:0px;top:0px;width:281px;height:40.67px">Session complete</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-cancel-preparation" data-dc-role="AXButton" role="button" aria-label="Cancel preparation" style="left:20px;top:191.67px;width:362px;height:51.33px;background-position:-20px -191.67px">
+      <span class="dc-text" data-dc-original="November 19, 2026 at 7:10 PM" aria-label="November 19, 2026 at 7:10 PM" style="left:12px;top:26.67px;width:187.33px;height:15.67px">November 19, 2026 at 7:10 PM</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-workout-steps" data-dc-role="AXHeading" role="heading" aria-label="Workout steps" style="left:16px;top:270.67px;width:370px;height:40.33px;background-position:-16px -270.67px">
+      <span class="dc-text" data-dc-original="Workout steps" aria-label="Workout steps" style="left:0px;top:0px;width:370px;height:40.33px">Workout steps</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-1" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 1" style="left:32px;top:330px;width:115.67px;height:18px;background-position:-32px -330px">
+      <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:0px;width:115.67px;height:18px">Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-planned" data-dc-role="AXStaticText" role="text" aria-label="PLANNED" style="left:32px;top:355px;width:54px;height:13.33px;background-position:-32px -355px">
+      <span class="dc-text" data-dc-original="PLANNED" aria-label="PLANNED" style="left:0px;top:0px;width:54px;height:13.33px">PLANNED</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-10s" data-dc-role="AXStaticText" role="text" aria-label="10s" style="left:32px;top:370.33px;width:22.67px;height:15.67px;background-position:-32px -370.33px">
+      <span class="dc-text" data-dc-original="10s" aria-label="10s" style="left:0px;top:0px;width:22.67px;height:15.67px">10s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang-both-hands" data-dc-role="AXStaticText" role="text" aria-label="Hang • Both hands" style="left:32px;top:393px;width:110.67px;height:14.33px;background-position:-32px -393px">
+      <span class="dc-text" data-dc-original="Hang • Both hands" aria-label="Hang • Both hands" style="left:0px;top:0px;width:110.67px;height:14.33px">Hang • Both hands</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-rest" data-dc-role="AXStaticText" role="text" aria-label="Rest" style="left:32px;top:445px;width:32.67px;height:18px;background-position:-32px -445px">
+      <span class="dc-text" data-dc-original="Rest" aria-label="Rest" style="left:0px;top:0px;width:32.67px;height:18px">Rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-planned-2" data-dc-role="AXStaticText" role="text" aria-label="PLANNED" style="left:32px;top:470px;width:54px;height:13.33px;background-position:-32px -470px">
+      <span class="dc-text" data-dc-original="PLANNED" aria-label="PLANNED" style="left:0px;top:0px;width:54px;height:13.33px">PLANNED</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-180s" data-dc-role="AXStaticText" role="text" aria-label="180s" style="left:32px;top:485.33px;width:31.33px;height:15.67px;background-position:-32px -485.33px">
+      <span class="dc-text" data-dc-original="180s" aria-label="180s" style="left:0px;top:0px;width:31.33px;height:15.67px">180s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-2" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 2" style="left:32px;top:539.33px;width:117.67px;height:18px;background-position:-32px -539.33px">
+      <span class="dc-text" data-dc-original="Max hang · set 2" aria-label="Max hang · set 2" style="left:0px;top:0px;width:117.67px;height:18px">Max hang · set 2</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-planned-3" data-dc-role="AXStaticText" role="text" aria-label="PLANNED" style="left:32px;top:564.33px;width:54px;height:13.33px;background-position:-32px -564.33px">
+      <span class="dc-text" data-dc-original="PLANNED" aria-label="PLANNED" style="left:0px;top:0px;width:54px;height:13.33px">PLANNED</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-10s-2" data-dc-role="AXStaticText" role="text" aria-label="10s" style="left:32px;top:579.67px;width:22.67px;height:15.67px;background-position:-32px -579.67px">
+      <span class="dc-text" data-dc-original="10s" aria-label="10s" style="left:0px;top:0px;width:22.67px;height:15.67px">10s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang-both-hands-2" data-dc-role="AXStaticText" role="text" aria-label="Hang • Both hands" style="left:32px;top:602.33px;width:110.67px;height:14.33px;background-position:-32px -602.33px">
+      <span class="dc-text" data-dc-original="Hang • Both hands" aria-label="Hang • Both hands" style="left:0px;top:0px;width:110.67px;height:14.33px">Hang • Both hands</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-rest-2" data-dc-role="AXStaticText" role="text" aria-label="Rest" style="left:32px;top:654.33px;width:32.67px;height:18px;background-position:-32px -654.33px">
+      <span class="dc-text" data-dc-original="Rest" aria-label="Rest" style="left:0px;top:0px;width:32.67px;height:18px">Rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-planned-4" data-dc-role="AXStaticText" role="text" aria-label="PLANNED" style="left:32px;top:679.33px;width:54px;height:13.33px;background-position:-32px -679.33px">
+      <span class="dc-text" data-dc-original="PLANNED" aria-label="PLANNED" style="left:0px;top:0px;width:54px;height:13.33px">PLANNED</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-180s-2" data-dc-role="AXStaticText" role="text" aria-label="180s" style="left:32px;top:694.67px;width:31.33px;height:15.67px;background-position:-32px -694.67px">
+      <span class="dc-text" data-dc-original="180s" aria-label="180s" style="left:0px;top:0px;width:31.33px;height:15.67px">180s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-3" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 3" style="left:32px;top:748.67px;width:118px;height:18px;background-position:-32px -748.67px">
+      <span class="dc-text" data-dc-original="Max hang · set 3" aria-label="Max hang · set 3" style="left:0px;top:0px;width:118px;height:18px">Max hang · set 3</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-planned-5" data-dc-role="AXStaticText" role="text" aria-label="PLANNED" style="left:32px;top:773.67px;width:54px;height:13.33px;background-position:-32px -773.67px">
+      <span class="dc-text" data-dc-original="PLANNED" aria-label="PLANNED" style="left:0px;top:0px;width:54px;height:13.33px">PLANNED</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-10s-3" data-dc-role="AXStaticText" role="text" aria-label="10s" style="left:32px;top:789px;width:22.67px;height:15.67px;background-position:-32px -789px">
+      <span class="dc-text" data-dc-original="10s" aria-label="10s" style="left:0px;top:0px;width:22.67px;height:15.67px">10s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-saving-adds-this-session-to-h" data-dc-role="AXStaticText" role="text" aria-label="Saving adds this session to history and Apple Health, if connected." style="left:17.83px;top:817.67px;width:366.33px;height:14.33px;background-position:-17.83px -817.67px">
+      <span class="dc-text" data-dc-original="Saving adds this session to history and Apple Health, if connected." aria-label="Saving adds this session to history and Apple Health, if connected." style="left:0px;top:0px;width:366.33px;height:14.33px">Saving adds this session to history and Apple Health, if connected.</span>
+    </div>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

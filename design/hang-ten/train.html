@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>train · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("train.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIzNDIuNjciIHk9IjY2IiB3aWR0aD0iMzkuMzMiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTgxIiB5PSI3My42NyIgd2lkdGg9IjM5LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ1LjY3IiB5PSIxNTIiIHdpZHRoPSIzMTAuNjciIGhlaWdodD0iODAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI0NCIgd2lkdGg9Ijg5LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSIyNjIuMzMiIHdpZHRoPSIyMTUuNjciIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI5OC4zMyIgd2lkdGg9IjEzOS4zMyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODkuMzMiIHk9IjI5OC4zMyIgd2lkdGg9IjE1NCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMzg2LjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NzYuNjciIHdpZHRoPSI3NS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNTA3IiB3aWR0aD0iMTIzIiBoZWlnaHQ9IjIwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI1NDQuMzMiIHdpZHRoPSIyMTcuMzMiIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU3OS4zMyIgd2lkdGg9IjE0MS4zMyIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI2OCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTU0IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNDAiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIzNDIuNjciIHk9IjY2IiB3aWR0aD0iMzkuMzMiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTgxIiB5PSI3My42NyIgd2lkdGg9IjM5LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ1LjY3IiB5PSIxNTIiIHdpZHRoPSIzMTAuNjciIGhlaWdodD0iODAiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI0NCIgd2lkdGg9Ijg5LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSIyNjIuMzMiIHdpZHRoPSIyMTUuNjciIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI5OC4zMyIgd2lkdGg9IjEzOS4zMyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODkuMzMiIHk9IjI5OC4zMyIgd2lkdGg9IjE1NCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMzg2LjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NzYuNjciIHdpZHRoPSI3NS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNTA3IiB3aWR0aD0iMTIzIiBoZWlnaHQ9IjIwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI1NDQuMzMiIHdpZHRoPSIyMTcuMzMiIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU3OS4zMyIgd2lkdGg9IjE0MS4zMyIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI2OCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTU0IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNDAiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="train" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="15">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="button-settings" data-dc-role="AXButton" role="button" aria-label="Settings" style="left:342.67px;top:66px;width:39.33px;height:36px;background-position:-342.67px -66px">
+      <span class="dc-text" data-dc-original="Settings" aria-label="Settings" style="left:0px;top:0px;width:39.33px;height:36px">Settings</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Train" style="left:181px;top:73.67px;width:39.67px;height:20.67px;background-position:-181px -73.67px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:39.67px;height:20.67px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-wood-grips-compact-ii-han" data-dc-role="AXGenericElement" role="group" aria-label="Wood Grips Compact II hangboard" style="left:45.67px;top:152px;width:310.67px;height:80px;background-position:-45.67px -152px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-your-board" data-dc-role="AXStaticText" role="text" aria-label="YOUR BOARD" style="left:38px;top:244px;width:89.33px;height:13.33px;background-position:-38px -244px">
+      <span class="dc-text" data-dc-original="YOUR BOARD" aria-label="YOUR BOARD" style="left:0px;top:0px;width:89.33px;height:13.33px">YOUR BOARD</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-wood-grips-compact-ii" data-dc-role="AXStaticText" role="text" aria-label="Wood Grips Compact II" style="left:38px;top:262.33px;width:215.67px;height:24px;background-position:-38px -262.33px">
+      <span class="dc-text" data-dc-original="Wood Grips Compact II" aria-label="Wood Grips Compact II" style="left:0px;top:0px;width:215.67px;height:24px">Wood Grips Compact II</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-change-board" data-dc-role="AXButton" role="button" aria-label="Change board" style="left:38px;top:298.33px;width:139.33px;height:48px;background-position:-38px -298.33px">
+      <span class="dc-text" data-dc-original="Change board" aria-label="Change board" style="left:0px;top:0px;width:139.33px;height:48px">Change board</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-view-hold-specs" data-dc-role="AXButton" role="button" aria-label="View hold specs" style="left:189.33px;top:298.33px;width:154px;height:48px;background-position:-189.33px -298.33px">
+      <span class="dc-text" data-dc-original="View hold specs" aria-label="View hold specs" style="left:0px;top:0px;width:154px;height:48px">View hold specs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-start-free-workout" data-dc-role="AXButton" role="button" aria-label="Start free workout" style="left:20px;top:386.33px;width:362px;height:50.33px;background-position:-20px -386.33px">
+      <span class="dc-text" data-dc-original="Start free workout" aria-label="Start free workout" style="left:0px;top:0px;width:362px;height:50.33px">Start free workout</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-favorites" data-dc-role="AXStaticText" role="text" aria-label="FAVORITES" style="left:38px;top:476.67px;width:75.33px;height:13.33px;background-position:-38px -476.67px">
+      <span class="dc-text" data-dc-original="FAVORITES" aria-label="FAVORITES" style="left:0px;top:0px;width:75.33px;height:13.33px">FAVORITES</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-no-favorites-yet" data-dc-role="AXStaticText" role="text" aria-label="No favorites yet" style="left:38px;top:507px;width:123px;height:20.33px;background-position:-38px -507px">
+      <span class="dc-text" data-dc-original="No favorites yet" aria-label="No favorites yet" style="left:0px;top:0px;width:123px;height:20.33px">No favorites yet</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-star-a-plan-to-keep-it-handy-" data-dc-role="AXStaticText" role="text" aria-label="Star a plan to keep it handy here." style="left:38px;top:544.33px;width:217.33px;height:18px;background-position:-38px -544.33px">
+      <span class="dc-text" data-dc-original="Star a plan to keep it handy here." aria-label="Star a plan to keep it handy here." style="left:0px;top:0px;width:217.33px;height:18px">Star a plan to keep it handy here.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-browse-plans" data-dc-role="AXButton" role="button" aria-label="Browse plans" style="left:38px;top:579.33px;width:141.33px;height:50.33px;background-position:-38px -579.33px">
+      <span class="dc-text" data-dc-original="Browse plans" aria-label="Browse plans" style="left:0px;top:0px;width:141.33px;height:50.33px">Browse plans</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

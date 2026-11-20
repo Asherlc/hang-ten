@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>unlock · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("unlock.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODMuNjciIHk9IjczLjY3IiB3aWR0aD0iMzQuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzE1IiB5PSI4MiIgd2lkdGg9IjY3IiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMwNC4zMyIgeT0iMTM5LjU0IiB3aWR0aD0iNzcuNjciIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzAiIHk9IjE0MCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3MS4zMyIgeT0iMTY1IiB3aWR0aD0iNTkuMzMiIGhlaWdodD0iNTkuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjIyMSIgd2lkdGg9IjM0OS42NyIgaGVpZ2h0PSI1OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjg5IiB3aWR0aD0iNjkiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNDkuODMiIHk9IjMwNiIgd2lkdGg9IjMwMi4zMyIgaGVpZ2h0PSI2MS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0NCIgeT0iMzkxLjMzIiB3aWR0aD0iMzE0IiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEzMy4zMyIgeT0iNDUzLjY3IiB3aWR0aD0iMTM1LjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI1MjIiIHdpZHRoPSIyMTIuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOCIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDYiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOSIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNTUiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOSIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjA4LjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjQ5LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI2OTYuNjciIHdpZHRoPSIxMTMuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTciIHk9Ijg1Mi4yOCIgd2lkdGg9Ijg4IiBoZWlnaHQ9IjIxLjY3IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODMuNjciIHk9IjczLjY3IiB3aWR0aD0iMzQuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzE1IiB5PSI4MiIgd2lkdGg9IjY3IiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMwNC4zMyIgeT0iMTM5LjU0IiB3aWR0aD0iNzcuNjciIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzAiIHk9IjE0MCIgd2lkdGg9IjU4IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE3MS4zMyIgeT0iMTY1IiB3aWR0aD0iNTkuMzMiIGhlaWdodD0iNTkuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjIyMSIgd2lkdGg9IjM0OS42NyIgaGVpZ2h0PSI1OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjg5IiB3aWR0aD0iNjkiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNDkuODMiIHk9IjMwNiIgd2lkdGg9IjMwMi4zMyIgaGVpZ2h0PSI2MS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0NCIgeT0iMzkxLjMzIiB3aWR0aD0iMzE0IiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEzMy4zMyIgeT0iNDUzLjY3IiB3aWR0aD0iMTM1LjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI1MjIiIHdpZHRoPSIyMTIuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOCIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDYiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOSIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNTUiIHk9IjU0OS4zMyIgd2lkdGg9IjEwOSIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjA4LjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjQ5LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI2OTYuNjciIHdpZHRoPSIxMTMuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNjgiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQwIiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTciIHk9Ijg1Mi4yOCIgd2lkdGg9Ijg4IiBoZWlnaHQ9IjIxLjY3IiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="unlock" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="21">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Train" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:44px;height:44px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Plan" style="left:183.67px;top:73.67px;width:34.67px;height:20.67px;background-position:-183.67px -73.67px">
+      <span class="dc-text" data-dc-original="Plan" aria-label="Plan" style="left:0px;top:0px;width:34.67px;height:20.67px">Plan</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-close" data-dc-role="AXButton" role="button" aria-label="Close" style="left:315px;top:82px;width:67px;height:36px;background-position:-315px -82px">
+      <span class="dc-text" data-dc-original="Close" aria-label="Close" style="left:0px;top:0px;width:67px;height:36px">Close</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-12m-50s" data-dc-role="AXStaticText" role="text" aria-label="12m 50s" style="left:304.33px;top:139.54px;width:77.67px;height:15.67px;background-position:-304.33px -139.54px">
+      <span class="dc-text" data-dc-original="12m 50s" aria-label="12m 50s" style="left:0px;top:0px;width:77.67px;height:15.67px">12m 50s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-advanced" data-dc-role="AXStaticText" role="text" aria-label="Advanced" style="left:30px;top:140px;width:58px;height:14.33px;background-position:-30px -140px">
+      <span class="dc-text" data-dc-original="Advanced" aria-label="Advanced" style="left:0px;top:0px;width:58px;height:14.33px">Advanced</span>
+    </div>
+    <div class="dc-layer" data-dc-id="image-infinity-circle-fill" data-dc-role="AXImage" role="img" aria-label="infinity.circle.fill" style="left:171.33px;top:165px;width:59.33px;height:59.33px;background-position:-171.33px -165px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-adapted-session-five-10-secon" data-dc-role="AXStaticText" role="text" aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:20px;top:221px;width:349.67px;height:58px;background-position:-20px -221px">
+      <span class="dc-text" data-dc-original="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:0px;top:0px;width:349.67px;height:58px">Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-grindstone" data-dc-role="AXStaticText" role="text" aria-label="Grindstone" style="left:20px;top:289px;width:69px;height:15.67px;background-position:-20px -289px">
+      <span class="dc-text" data-dc-original="Grindstone" aria-label="Grindstone" style="left:0px;top:0px;width:69px;height:15.67px">Grindstone</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-you-ve-completed-your-2-free-" data-dc-role="AXStaticText" role="text" aria-label="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." style="left:49.83px;top:306px;width:302.33px;height:61.33px;background-position:-49.83px -306px">
+      <span class="dc-text" data-dc-original="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." aria-label="You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase." style="left:0px;top:0px;width:302.33px;height:61.33px">You’ve completed your 2 free workouts. Unlock unlimited workouts for a one-time purchase.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-unlock-for-2-99" data-dc-role="AXButton" role="button" aria-label="Unlock for $2.99" style="left:44px;top:391.33px;width:314px;height:50.33px;background-position:-44px -391.33px">
+      <span class="dc-text" data-dc-original="Unlock for $2.99" aria-label="Unlock for $2.99" style="left:0px;top:0px;width:314px;height:50.33px">Unlock for $2.99</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-restore-purchases" data-dc-role="AXButton" role="button" aria-label="Restore Purchases" style="left:133.33px;top:453.67px;width:135.67px;height:18px;background-position:-133.33px -453.67px">
+      <span class="dc-text" data-dc-original="Restore Purchases" aria-label="Restore Purchases" style="left:0px;top:0px;width:135.67px;height:18px">Restore Purchases</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-weight-tracking-optional" data-dc-role="AXStaticText" role="text" aria-label="WEIGHT TRACKING · OPTIONAL" style="left:38px;top:522px;width:212.67px;height:13.33px;background-position:-38px -522px">
+      <span class="dc-text" data-dc-original="WEIGHT TRACKING · OPTIONAL" aria-label="WEIGHT TRACKING · OPTIONAL" style="left:0px;top:0px;width:212.67px;height:13.33px">WEIGHT TRACKING · OPTIONAL</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-skip" data-dc-role="AXRadioButton" role="radio" aria-label="Skip" style="left:38px;top:549.33px;width:108px;height:32px;background-position:-38px -549.33px">
+      <span class="dc-text" data-dc-original="Skip" aria-label="Skip" style="left:0px;top:0px;width:108px;height:32px">Skip</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-scale" data-dc-role="AXRadioButton" role="radio" aria-label="Scale" style="left:146px;top:549.33px;width:109px;height:32px;background-position:-146px -549.33px">
+      <span class="dc-text" data-dc-original="Scale" aria-label="Scale" style="left:0px;top:0px;width:109px;height:32px">Scale</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-manual" data-dc-role="AXRadioButton" role="radio" aria-label="Manual" style="left:255px;top:549.33px;width:109px;height:32px;background-position:-255px -549.33px">
+      <span class="dc-text" data-dc-original="Manual" aria-label="Manual" style="left:0px;top:0px;width:109px;height:32px">Manual</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-start-routine" data-dc-role="AXButton" role="button" aria-label="Start routine" style="left:20px;top:608.33px;width:362px;height:49.33px;background-position:-20px -608.33px">
+      <span class="dc-text" data-dc-original="Start routine" aria-label="Start routine" style="left:0px;top:0px;width:362px;height:49.33px">Start routine</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-first-hold-cue" data-dc-role="AXStaticText" role="text" aria-label="FIRST HOLD CUE" style="left:38px;top:696.67px;width:113.33px;height:13.33px;background-position:-38px -696.67px">
+      <span class="dc-text" data-dc-original="FIRST HOLD CUE" aria-label="FIRST HOLD CUE" style="left:0px;top:0px;width:113.33px;height:13.33px">FIRST HOLD CUE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-half-crimp" data-dc-role="AXStaticText" role="text" aria-label="Half crimp" style="left:157px;top:852.28px;width:88px;height:21.67px;background-position:-157px -852.28px">
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:0px;top:0px;width:88px;height:21.67px">Half crimp</span>
+    </div>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

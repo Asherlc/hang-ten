@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>history-empty · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("history-empty.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNzIiIHk9IjczLjY3IiB3aWR0aD0iNTgiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTcyIiB5PSIxODUuMzMiIHdpZHRoPSI1MyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3NS4zMyIgeT0iMjgxIiB3aWR0aD0iMjUxLjMzIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNzIiIHk9IjczLjY3IiB3aWR0aD0iNTgiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTcyIiB5PSIxODUuMzMiIHdpZHRoPSI1MyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI3NS4zMyIgeT0iMjgxIiB3aWR0aD0iMjUxLjMzIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="history-empty" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="6">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="History" style="left:172px;top:73.67px;width:58px;height:20.67px;background-position:-172px -73.67px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:58px;height:20.67px">History</span>
+    </div>
+    <div class="dc-layer" data-dc-id="image-clock-arrow-circlepath" data-dc-role="AXImage" role="img" aria-label="clock.arrow.circlepath" style="left:172px;top:185.33px;width:53px;height:48px;background-position:-172px -185.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-save-a-completed-workout-to-r" data-dc-role="AXStaticText" role="text" aria-label="Save a completed workout to review it here." style="left:75.33px;top:281px;width:251.33px;height:38px;background-position:-75.33px -281px">
+      <span class="dc-text" data-dc-original="Save a completed workout to review it here." aria-label="Save a completed workout to review it here." style="left:0px;top:0px;width:251.33px;height:38px">Save a completed workout to review it here.</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

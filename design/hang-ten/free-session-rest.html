@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>free-session-rest · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("free-session-rest.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxODEiIHk9IjczLjY3IiB3aWR0aD0iMzkuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjgyIiB3aWR0aD0iNjciIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzExIiB5PSI4MiIgd2lkdGg9IjcxIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE0OC42NyIgeT0iODkuNjciIHdpZHRoPSIxMDQuMzMiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjE0NCIgd2lkdGg9IjkyIiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxODYiIHdpZHRoPSIzNjIiIGhlaWdodD0iODciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI5Ni42NyIgd2lkdGg9IjEzOS4zMyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODkuMzMiIHk9IjI5Ni42NyIgd2lkdGg9IjE1NCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNCIgeT0iMzQ2LjY3IiB3aWR0aD0iNjMuMzMiIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTA1LjMzIiB5PSIzNDYuNjciIHdpZHRoPSI2My4zMyIgaGVpZ2h0PSI0NiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNzYuNjciIHk9IjM0Ni42NyIgd2lkdGg9IjU2LjMzIiBoZWlnaHQ9IjQ2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI3Ny4zMyIgeT0iMzQ2LjY3IiB3aWR0aD0iOTAuNjciIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM4NC42NyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjQiIHk9IjQ2MiIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NzQuOTEiIHdpZHRoPSI3NS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNTA1LjI0IiB3aWR0aD0iMTIzIiBoZWlnaHQ9IjIwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI1MjEuMzgiIHdpZHRoPSI3LjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEyMi44MyIgeT0iNTIxLjM4IiB3aWR0aD0iMTMuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQ2LjY3IiB5PSI1MjEuMzgiIHdpZHRoPSIxOS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDAuNjciIHk9IjUyMS4zOCIgd2lkdGg9IjEwLjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNCIgeT0iNTQ2LjY3IiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTk3IiB5PSI1NTMiIHdpZHRoPSIxMTkiIGhlaWdodD0iMzEuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjU1OS43MSIgd2lkdGg9IjcuNjciIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU3Ny42NyIgd2lkdGg9IjE0MS4zMyIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjYwLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxODEiIHk9IjczLjY3IiB3aWR0aD0iMzkuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjgyIiB3aWR0aD0iNjciIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzExIiB5PSI4MiIgd2lkdGg9IjcxIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE0OC42NyIgeT0iODkuNjciIHdpZHRoPSIxMDQuMzMiIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjE0NCIgd2lkdGg9IjkyIiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIxODYiIHdpZHRoPSIzNjIiIGhlaWdodD0iODciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjI5Ni42NyIgd2lkdGg9IjEzOS4zMyIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxODkuMzMiIHk9IjI5Ni42NyIgd2lkdGg9IjE1NCIgaGVpZ2h0PSI0OCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNCIgeT0iMzQ2LjY3IiB3aWR0aD0iNjMuMzMiIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTA1LjMzIiB5PSIzNDYuNjciIHdpZHRoPSI2My4zMyIgaGVpZ2h0PSI0NiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNzYuNjciIHk9IjM0Ni42NyIgd2lkdGg9IjU2LjMzIiBoZWlnaHQ9IjQ2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI3Ny4zMyIgeT0iMzQ2LjY3IiB3aWR0aD0iOTAuNjciIGhlaWdodD0iNDYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM4NC42NyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjQiIHk9IjQ2MiIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NzQuOTEiIHdpZHRoPSI3NS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNTA1LjI0IiB3aWR0aD0iMTIzIiBoZWlnaHQ9IjIwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI1MjEuMzgiIHdpZHRoPSI3LjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjEyMi44MyIgeT0iNTIxLjM4IiB3aWR0aD0iMTMuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjQ2LjY3IiB5PSI1MjEuMzgiIHdpZHRoPSIxOS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNDAuNjciIHk9IjUyMS4zOCIgd2lkdGg9IjEwLjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyNCIgeT0iNTQ2LjY3IiB3aWR0aD0iNDQiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTk3IiB5PSI1NTMiIHdpZHRoPSIxMTkiIGhlaWdodD0iMzEuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjU1OS43MSIgd2lkdGg9IjcuNjciIGhlaWdodD0iMTgiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjU3Ny42NyIgd2lkdGg9IjE0MS4zMyIgaGVpZ2h0PSI1MC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNjYwLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjUwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="free-session-rest" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="28">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Train" style="left:181px;top:73.67px;width:39.67px;height:20.67px;background-position:-181px -73.67px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:39.67px;height:20.67px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Close" style="left:20px;top:82px;width:67px;height:36px;background-position:-20px -82px">
+      <span class="dc-text" data-dc-original="Close" aria-label="Close" style="left:0px;top:0px;width:67px;height:36px">Close</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-finish" data-dc-role="AXButton" role="button" aria-label="Finish" style="left:311px;top:82px;width:71px;height:36px;background-position:-311px -82px">
+      <span class="dc-text" data-dc-original="Finish" aria-label="Finish" style="left:0px;top:0px;width:71px;height:36px">Finish</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title-2" data-dc-role="AXHeading" role="heading" aria-label="Free workout" style="left:148.67px;top:89.67px;width:104.33px;height:20.67px;background-position:-148.67px -89.67px">
+      <span class="dc-text" data-dc-original="Free workout" aria-label="Free workout" style="left:0px;top:0px;width:104.33px;height:20.67px">Free workout</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-elapsed-0-25" data-dc-role="AXStaticText" role="text" aria-label="Elapsed 0:25" style="left:20px;top:144px;width:92px;height:18px;background-position:-20px -144px">
+      <span class="dc-text" data-dc-original="Elapsed 0:25" aria-label="Elapsed 0:25" style="left:0px;top:0px;width:92px;height:18px">Elapsed 0:25</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-honestone-hangboard" data-dc-role="AXGenericElement" role="group" aria-label="Honestone hangboard" style="left:20px;top:186px;width:362px;height:87px;background-position:-20px -186px">
+      <span class="dc-text" data-dc-original="YOUR BOARD" aria-label="YOUR BOARD" style="left:18px;top:56.24px;width:89.33px;height:13.33px">YOUR BOARD</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-change-board" data-dc-role="AXButton" role="button" aria-label="Change board" style="left:38px;top:296.67px;width:139.33px;height:48px;background-position:-38px -296.67px">
+      <span class="dc-text" data-dc-original="Change board" aria-label="Change board" style="left:0px;top:0px;width:139.33px;height:48px">Change board</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-view-hold-specs" data-dc-role="AXButton" role="button" aria-label="View hold specs" style="left:189.33px;top:296.67px;width:154px;height:48px;background-position:-189.33px -296.67px">
+      <span class="dc-text" data-dc-original="View hold specs" aria-label="View hold specs" style="left:0px;top:0px;width:154px;height:48px">View hold specs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-subtract-30-seconds-of-rest" data-dc-role="AXButton" role="button" aria-label="Subtract 30 seconds of rest" style="left:34px;top:346.67px;width:63.33px;height:46px;background-position:-34px -346.67px">
+      <span class="dc-text" data-dc-original="Subtract 30 seconds of rest" aria-label="Subtract 30 seconds of rest" style="left:0px;top:0px;width:63.33px;height:46px">Subtract 30 seconds of rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-30-seconds-of-rest" data-dc-role="AXButton" role="button" aria-label="Add 30 seconds of rest" style="left:105.33px;top:346.67px;width:63.33px;height:46px;background-position:-105.33px -346.67px">
+      <span class="dc-text" data-dc-original="Add 30 seconds of rest" aria-label="Add 30 seconds of rest" style="left:0px;top:0px;width:63.33px;height:46px">Add 30 seconds of rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-60-seconds-of-rest" data-dc-role="AXButton" role="button" aria-label="Add 60 seconds of rest" style="left:176.67px;top:346.67px;width:56.33px;height:46px;background-position:-176.67px -346.67px">
+      <span class="dc-text" data-dc-original="Add 60 seconds of rest" aria-label="Add 60 seconds of rest" style="left:0px;top:0px;width:56.33px;height:46px">Add 60 seconds of rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-skip-rest" data-dc-role="AXButton" role="button" aria-label="Skip rest" style="left:277.33px;top:346.67px;width:90.67px;height:46px;background-position:-277.33px -346.67px">
+      <span class="dc-text" data-dc-original="Skip rest" aria-label="Skip rest" style="left:0px;top:0px;width:90.67px;height:46px">Skip rest</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-start-free-workout" data-dc-role="AXButton" role="button" aria-label="Start free workout" style="left:20px;top:384.67px;width:362px;height:50.33px;background-position:-20px -384.67px">
+      <span class="dc-text" data-dc-original="Start free workout" aria-label="Start free workout" style="left:0px;top:0px;width:362px;height:50.33px">Start free workout</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-options-for-hang" data-dc-role="AXPopUpButton" role="combobox" aria-label="Options for Hang" style="left:324px;top:462px;width:44px;height:44px;background-position:-324px -462px">
+      <span class="dc-text" data-dc-original="Options for Hang" aria-label="Options for Hang" style="left:0px;top:0px;width:44px;height:44px">Options for Hang</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-favorites" data-dc-role="AXStaticText" role="text" aria-label="FAVORITES" style="left:38px;top:474.91px;width:75.33px;height:13.33px;background-position:-38px -474.91px">
+      <span class="dc-text" data-dc-original="FAVORITES" aria-label="FAVORITES" style="left:0px;top:0px;width:75.33px;height:13.33px">FAVORITES</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-no-favorites-yet" data-dc-role="AXStaticText" role="text" aria-label="No favorites yet" style="left:38px;top:505.24px;width:123px;height:20.33px;background-position:-38px -505.24px">
+      <span class="dc-text" data-dc-original="No favorites yet" aria-label="No favorites yet" style="left:0px;top:0px;width:123px;height:20.33px">No favorites yet</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-element" data-dc-role="AXStaticText" role="text" aria-label="#" style="left:34px;top:521.38px;width:7.67px;height:13.33px;background-position:-34px -521.38px">
+      <span class="dc-text" data-dc-original="#" aria-label="#" style="left:0px;top:0px;width:7.67px;height:13.33px">#</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-kg" data-dc-role="AXStaticText" role="text" aria-label="kg" style="left:122.83px;top:521.38px;width:13.33px;height:13.33px;background-position:-122.83px -521.38px">
+      <span class="dc-text" data-dc-original="kg" aria-label="kg" style="left:0px;top:0px;width:13.33px;height:13.33px">kg</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-sec" data-dc-role="AXStaticText" role="text" aria-label="sec" style="left:246.67px;top:521.38px;width:19.67px;height:13.33px;background-position:-246.67px -521.38px">
+      <span class="dc-text" data-dc-original="sec" aria-label="sec" style="left:0px;top:0px;width:19.67px;height:13.33px">sec</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-element-2" data-dc-role="AXStaticText" role="text" aria-label="✓" style="left:340.67px;top:521.38px;width:10.67px;height:13.33px;background-position:-340.67px -521.38px">
+      <span class="dc-text" data-dc-original="✓" aria-label="✓" style="left:0px;top:0px;width:10.67px;height:13.33px">✓</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-hang-set-1-mark-incomplete" data-dc-role="AXButton" role="button" aria-label="Hang, set 1, mark incomplete" style="left:324px;top:546.67px;width:44px;height:44px;background-position:-324px -546.67px">
+      <span class="dc-text" data-dc-original="Hang, set 1, mark incomplete" aria-label="Hang, set 1, mark incomplete" style="left:0px;top:0px;width:44px;height:44px">Hang, set 1, mark incomplete</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-hang-set-1-duration-in-seconds" data-dc-role="AXTextField" role="textbox" aria-label="Hang, set 1, duration in seconds" style="left:197px;top:553px;width:119px;height:31.67px;background-position:-197px -553px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-1" data-dc-role="AXStaticText" role="text" aria-label="1" style="left:34px;top:559.71px;width:7.67px;height:18px;background-position:-34px -559.71px">
+      <span class="dc-text" data-dc-original="1" aria-label="1" style="left:0px;top:0px;width:7.67px;height:18px">1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-browse-plans" data-dc-role="AXButton" role="button" aria-label="Browse plans" style="left:38px;top:577.67px;width:141.33px;height:50.33px;background-position:-38px -577.67px">
+      <span class="dc-text" data-dc-original="Browse plans" aria-label="Browse plans" style="left:0px;top:0px;width:141.33px;height:50.33px">Browse plans</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-add-exercise" data-dc-role="AXButton" role="button" aria-label="Add exercise" style="left:20px;top:660.67px;width:362px;height:50.33px;background-position:-20px -660.67px">
+      <span class="dc-text" data-dc-original="Add exercise" aria-label="Add exercise" style="left:0px;top:0px;width:362px;height:50.33px">Add exercise</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

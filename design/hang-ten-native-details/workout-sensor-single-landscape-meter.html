@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>workout-sensor-single-landscape-meter · native canvas</title>
+  <style>
+:root {
+  /* Hang Ten native warm palette (HangTen/Views/DesignSystem.swift) */
+  --hang-bg: #fefcf4;        /* hangCream / hangBackground */
+  --hang-panel: #ffffff;
+  --hang-ink: #1b2522;       /* hangInk */
+  --hang-muted: #616761;     /* hangMuted */
+  --hang-green: #7dba5d;     /* hangGreen */
+  --hang-green-dark: #3c673d;/* hangGreenDark */
+  --hang-line: #ded9c9;      /* hangLine */
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 874px; height: 402px; overflow: hidden;
+  background: var(--hang-bg); color: var(--hang-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-artboard { position: relative; width: 874px; height: 402px; overflow: hidden;
+  background: var(--hang-bg); }
+/* First child retained as the background layer / Design Canvas anchor. */
+.dc-bg { position: absolute; inset: 0; background: var(--hang-bg); }
+.dc-layer { position: absolute; }
+.dc-text { margin: 0; color: var(--hang-ink); }
+
+/* ---- Top bar: End · Max Hangs · sound + workout options ---- */
+.topbar { position: absolute; left: 28px; right: 28px; top: 26px; height: 48px;
+  display: flex; align-items: center; justify-content: space-between; }
+.topbar .dc-layer { position: relative; }
+.end-btn { min-width: 96px; height: 48px; padding: 0 22px; border-radius: 24px;
+  background: var(--hang-panel); box-shadow: 0 2px 10px rgba(27,37,34,.08);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--hang-green-dark); font-size: 18px; font-weight: 600; }
+.end-btn .dc-text { color: inherit; font: inherit; }
+.nav-title { font-size: 20px; font-weight: 700; letter-spacing: -.01em; }
+.nav-title .dc-text { color: inherit; font: inherit; }
+.nav-actions { display: flex; align-items: center; gap: 6px; padding: 4px;
+  background: var(--hang-panel); border-radius: 26px;
+  box-shadow: 0 2px 10px rgba(27,37,34,.08); }
+.icon-btn { width: 40px; height: 40px; border-radius: 20px; display: flex;
+  align-items: center; justify-content: center; color: var(--hang-green-dark); }
+.icon-btn svg { width: 22px; height: 22px; fill: none; stroke: currentColor;
+  stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+.icon-btn svg.dots circle { fill: currentColor; stroke: none; }
+
+/* ---- Brief, source-backed guidance ---- */
+.guidance { position: absolute; left: 0; right: 0; top: 94px; text-align: center; margin: 0; }
+.guidance .cue { display: block; font-size: 14px; color: var(--hang-muted); }
+.guidance .detail { display: block; margin-top: 5px; font-size: 13px; font-weight: 700;
+  letter-spacing: .03em; color: var(--hang-green-dark); }
+
+/* ---- Two-panel body: timer left, force right ---- */
+.panels { position: absolute; left: 28px; right: 28px; top: 152px; bottom: 28px;
+  display: flex; gap: 20px; }
+.panel { flex: 1; background: var(--hang-panel); border: 1px solid var(--hang-line);
+  border-radius: 24px; padding: 26px 30px; display: flex; flex-direction: column;
+  box-shadow: 0 4px 18px rgba(27,37,34,.05); }
+.panel .dc-layer { position: relative; }
+.panel-label { font-size: 12px; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--hang-muted); }
+.panel-label .dc-text { color: inherit; font: inherit; }
+
+/* Left: prominent 0:10 Hang timer + Start */
+.timer { margin-top: 14px; font-size: 86px; line-height: 1; font-weight: 700;
+  letter-spacing: -.045em; font-variant-numeric: tabular-nums; color: var(--hang-ink); }
+.start-btn { margin-top: auto; align-self: flex-start; min-width: 152px; height: 52px;
+  border: 0; border-radius: 26px; background: var(--hang-green-dark); color: #fff;
+  font: 700 19px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-shadow: 0 4px 12px rgba(60,103,61,.35); cursor: pointer; }
+
+/* Right: Current force 90.0 kgf + secondary Streaming status */
+.force-value { margin-top: 12px; font-size: 64px; line-height: 1; font-weight: 700;
+  letter-spacing: -.035em; font-variant-numeric: tabular-nums; color: var(--hang-ink); }
+.force-value .dc-text { color: inherit; font: inherit; }
+.status { margin-top: auto; display: flex; align-items: center; gap: 10px;
+  font-size: 15px; font-weight: 600; color: var(--hang-muted); }
+.status .dc-text { color: inherit; font: inherit; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--hang-green);
+  box-shadow: 0 0 0 4px rgba(125,186,93,.18); }
+
+/* Retired layers stay in the DOM (hidden) so Design Canvas comments still attach. */
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="workout-sensor-single-landscape-meter" data-dc-width="874"
+       data-dc-height="402">
+    <div class="dc-bg" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="dc-layer end-btn" data-dc-id="button-end" data-dc-role="AXButton" role="button" aria-label="End">
+        <span class="dc-text" data-dc-original="End" aria-label="End">End</span>
+      </div>
+      <div class="dc-layer nav-title" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs">
+        <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs">Max Hangs</span>
+      </div>
+      <div class="nav-actions">
+        <div class="dc-layer icon-btn" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4z"></path>
+            <path d="M16 9a4 4 0 0 1 0 6"></path>
+            <path d="M18.5 6.5a7.5 7.5 0 0 1 0 11"></path>
+          </svg>
+        </div>
+        <div class="dc-layer icon-btn" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options">
+          <svg class="dots" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="5" cy="12" r="1.7"></circle>
+            <circle cx="12" cy="12" r="1.7"></circle>
+            <circle cx="19" cy="12" r="1.7"></circle>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <p class="guidance" id="load-guidance" data-dc-id="statictext-load-guidance" data-dc-role="AXStaticText" role="text">
+      <span class="cue">Choose a load you could hold for 13 seconds. Stop at 10 seconds.</span>
+      <span class="detail">Half crimp · 3 min recovery</span>
+    </p>
+
+    <section class="panels">
+      <div class="panel panel-hang">
+        <span class="panel-label">Hang</span>
+        <div class="timer" id="hang-timer" data-dc-id="statictext-hang-timer" data-dc-role="AXStaticText" role="text">0:10</div>
+        <button class="start-btn" id="button-start" data-dc-id="button-start" data-dc-role="AXButton" role="button" type="button">Start</button>
+      </div>
+      <div class="panel panel-force">
+        <div class="dc-layer panel-label" data-dc-id="statictext-current-force" data-dc-role="AXStaticText" role="text" aria-label="CURRENT FORCE">
+          <span class="dc-text" data-dc-original="CURRENT FORCE" aria-label="CURRENT FORCE">CURRENT FORCE</span>
+        </div>
+        <div class="dc-layer force-value" data-dc-id="statictext-72-0-kgf" data-dc-role="AXStaticText" role="text" aria-label="90.0 kgf">
+          <span class="dc-text" data-dc-original="90.0 kgf" aria-label="90.0 kgf">90.0 kgf</span>
+        </div>
+        <div class="dc-layer status" data-dc-id="statictext-streaming" data-dc-role="AXStaticText" role="text" aria-label="Streaming">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="dc-text" data-dc-original="Streaming" aria-label="Streaming">Streaming</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Retired layers: hidden, but retained verbatim with their exact data-dc-id so comments stay attached. -->
+    <div class="dc-layer" data-dc-id="genericelement-0" data-dc-role="AXGenericElement" role="group" aria-label="0%" style="display:none"></div>
+    <div class="dc-layer" data-dc-id="statictext-0-0s-loaded-of-10-0s-planned" data-dc-role="AXStaticText" role="text" aria-label="0.0s loaded of 10.0s planned" style="display:none">
+      <span class="dc-text" data-dc-original="0.0s loaded of 10.0s planned" aria-label="0.0s loaded of 10.0s planned">0.0s loaded of 10.0s planned</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-threshold-2-5-kgf" data-dc-role="AXStaticText" role="text" aria-label="Threshold 2.5 kgf" style="display:none">
+      <span class="dc-text" data-dc-original="Threshold 2.5 kgf" aria-label="Threshold 2.5 kgf">Threshold 2.5 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-left-right-balance" data-dc-role="AXStaticText" role="text" aria-label="LEFT / RIGHT BALANCE" style="display:none">
+      <span class="dc-text" data-dc-original="LEFT / RIGHT BALANCE" aria-label="LEFT / RIGHT BALANCE">LEFT / RIGHT BALANCE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-left-right-load-balance" data-dc-role="AXGenericElement" role="group" aria-label="Left/right load balance" style="display:none"></div>
+    <div class="dc-layer" data-dc-id="statictext-balance-unavailable-this-sens" data-dc-role="AXStaticText" role="text" aria-label="Balance unavailable — this sensor provides total force only." style="display:none">
+      <span class="dc-text" data-dc-original="Balance unavailable — this sensor provides total force only." aria-label="Balance unavailable — this sensor provides total force only.">Balance unavailable — this sensor provides total force only.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-bodyweight-baseline-unavailab" data-dc-role="AXStaticText" role="text" aria-label="Bodyweight baseline unavailable." style="display:none">
+      <span class="dc-text" data-dc-original="Bodyweight baseline unavailable." aria-label="Bodyweight baseline unavailable.">Bodyweight baseline unavailable.</span>
+    </div>
+  </div>
+</body>
+</html>

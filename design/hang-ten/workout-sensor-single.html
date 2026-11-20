@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>workout-sensor-single · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("workout-sensor-single.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzM1LjY3IiB5PSIxNDYuODMiIHdpZHRoPSIzNi4zMyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNDIuNjciIHdpZHRoPSI3Mi4zMyIgaGVpZ2h0PSIxNS42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjcxLjMzIiB3aWR0aD0iMTM4LjMzIiBoZWlnaHQ9IjU1IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIzMjkuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDIxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI0NzguNjciIHdpZHRoPSIxNDMuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjIiIHk9IjUxMSIgd2lkdGg9IjM1OCIgaGVpZ2h0PSIxMDQuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjgyOS4zMSIgd2lkdGg9IjM2LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTMyIiB3aWR0aD0iODkuMzMiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzM1LjY3IiB5PSIxNDYuODMiIHdpZHRoPSIzNi4zMyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTg5IiB3aWR0aD0iMjUyIiBoZWlnaHQ9IjQwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIyNDIuNjciIHdpZHRoPSI3Mi4zMyIgaGVpZ2h0PSIxNS42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMjcxLjMzIiB3aWR0aD0iMTM4LjMzIiBoZWlnaHQ9IjU1IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSIzMjkuMzMiIHdpZHRoPSIzNjIiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjM2Mi4zMyIgd2lkdGg9IjM2MiIgaGVpZ2h0PSI0OS4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iNDIxLjY3IiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjM4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI0NzguNjciIHdpZHRoPSIxNDMuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjIiIHk9IjUxMSIgd2lkdGg9IjM1OCIgaGVpZ2h0PSIxMDQuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjgyOS4zMSIgd2lkdGg9IjM2LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="workout-sensor-single" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="15">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="End" style="left:20px;top:66px;width:53.33px;height:36px;background-position:-20px -66px">
+      <span class="dc-text" data-dc-original="End" aria-label="End" style="left:0px;top:0px;width:53.33px;height:36px">End</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues" style="left:281px;top:66px;width:45px;height:36px;background-position:-281px -66px">
+      <span class="dc-text" data-dc-original="Turn off spoken cues" aria-label="Turn off spoken cues" style="left:0px;top:0px;width:45px;height:36px">Turn off spoken cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options" style="left:342px;top:66px;width:40px;height:36px;background-position:-342px -66px">
+      <span class="dc-text" data-dc-original="Workout options" aria-label="Workout options" style="left:0px;top:0px;width:40px;height:36px">Workout options</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:156.67px;top:73.67px;width:88.67px;height:20.67px;background-position:-156.67px -73.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-step-1-of-9" data-dc-role="AXButton" role="button" aria-label="Step 1 of 9" style="left:20px;top:132px;width:89.33px;height:44px;background-position:-20px -132px">
+      <span class="dc-text" data-dc-original="Step 1 of 9" aria-label="Step 1 of 9" style="left:0px;top:14.17px;width:67.67px;height:15.67px">Step 1 of 9</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-ready" data-dc-role="AXStaticText" role="text" aria-label="Ready" style="left:335.67px;top:146.83px;width:36.33px;height:14.33px;background-position:-335.67px -146.83px">
+      <span class="dc-text" data-dc-original="Ready" aria-label="Ready" style="left:0px;top:0px;width:36.33px;height:14.33px">Ready</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-max-hang-set-1" data-dc-role="AXStaticText" role="text" aria-label="Max hang · set 1" style="left:20px;top:189px;width:252px;height:40.67px;background-position:-20px -189px">
+      <span class="dc-text" data-dc-original="Max hang · set 1" aria-label="Max hang · set 1" style="left:0px;top:0px;width:252px;height:40.67px">Max hang · set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-both-hands" data-dc-role="AXStaticText" role="text" aria-label="Both hands" style="left:20px;top:242.67px;width:72.33px;height:15.67px;background-position:-20px -242.67px">
+      <span class="dc-text" data-dc-original="Both hands" aria-label="Both hands" style="left:0px;top:0px;width:72.33px;height:15.67px">Both hands</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-00-01" data-dc-role="AXStaticText" role="text" aria-label="00:01" style="left:20px;top:271.33px;width:138.33px;height:55px;background-position:-20px -271.33px">
+      <span class="dc-text" data-dc-original="00:01" aria-label="00:01" style="left:0px;top:0px;width:138.33px;height:55px">00:01</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-0" data-dc-role="AXGenericElement" role="group" aria-label="0%" style="left:20px;top:329.33px;width:362px;height:24px;background-position:-20px -329.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="button-cancel-countdown" data-dc-role="AXButton" role="button" aria-label="Cancel countdown" style="left:20px;top:362.33px;width:362px;height:49.33px;background-position:-20px -362.33px">
+      <span class="dc-text" data-dc-original="Cancel countdown" aria-label="Cancel countdown" style="left:122.17px;top:15px;width:143px;height:19.33px">Cancel countdown</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-skip-step-1-max-hang-set-1" data-dc-role="AXButton" role="button" aria-label="Skip step 1: Max hang · set 1" style="left:20px;top:421.67px;width:362px;height:38px;background-position:-20px -421.67px">
+      <span class="dc-text" data-dc-original="Skip step" aria-label="Skip step" style="left:133.33px;top:10px;width:97.5px;height:18px">Skip step</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-next-hold-preview" data-dc-role="AXStaticText" role="text" aria-label="NEXT HOLD PREVIEW" style="left:20px;top:478.67px;width:143.67px;height:13.33px;background-position:-20px -478.67px">
+      <span class="dc-text" data-dc-original="NEXT HOLD PREVIEW" aria-label="NEXT HOLD PREVIEW" style="left:0px;top:0px;width:143.67px;height:13.33px">NEXT HOLD PREVIEW</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-grindstone-hangboard" data-dc-role="AXGenericElement" role="group" aria-label="Grindstone hangboard" style="left:22px;top:511px;width:358px;height:104.67px;background-position:-22px -511px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-next" data-dc-role="AXStaticText" role="text" aria-label="NEXT" style="left:38px;top:829.31px;width:36.33px;height:13.33px;background-position:-38px -829.31px">
+      <span class="dc-text" data-dc-original="NEXT" aria-label="NEXT" style="left:0px;top:0px;width:36.33px;height:13.33px">NEXT</span>
+    </div>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

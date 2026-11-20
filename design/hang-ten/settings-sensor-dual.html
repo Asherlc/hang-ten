@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>settings-sensor-dual · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("settings-sensor-dual.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNjcuNjciIHk9IjczLjY3IiB3aWR0aD0iNjYuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iODQiIHk9IjE1Ni4xNyIgd2lkdGg9IjExMSIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyOTQuMzMiIHk9IjE1OCIgd2lkdGg9IjU5LjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzIiB5PSIxNjEiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxNi4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI4NCIgeT0iMTgzLjMzIiB3aWR0aD0iMTc3LjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIyMjciIHdpZHRoPSI5NS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1MiIgeT0iMjQyLjMzIiB3aWR0aD0iMTE2IiBoZWlnaHQ9IjMzLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIyODYiIHdpZHRoPSIxMDIiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTIiIHk9IjMxMC4zMyIgd2lkdGg9Ijk3LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIzMzMuNjciIHdpZHRoPSIxMjkuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTQ0LjUiIHk9IjM2MiIgd2lkdGg9IjExMyIgaGVpZ2h0PSIyMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1MiIgeT0iNDA1IiB3aWR0aD0iMjk4IiBoZWlnaHQ9IjMzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NjYuMzMiIHdpZHRoPSI1MS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNDgyLjY3IiB3aWR0aD0iMjkiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjUxMi4zMyIgd2lkdGg9IjMyNiIgaGVpZ2h0PSIzNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxOS41IiB5PSI1NzYuMTciIHdpZHRoPSIzNjMiIGhlaWdodD0iNzEiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjY2Ny42NyIgd2lkdGg9IjQyIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI3MTEiIHdpZHRoPSI4Mi42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNzM3IiB3aWR0aD0iMTYzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwMSIgeT0iNzM3IiB3aWR0aD0iMTYzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIxNiIgeT0iNjIiIHdpZHRoPSI0NCIgaGVpZ2h0PSI0NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNjcuNjciIHk9IjczLjY3IiB3aWR0aD0iNjYuNjciIGhlaWdodD0iMjAuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iODQiIHk9IjE1Ni4xNyIgd2lkdGg9IjExMSIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyOTQuMzMiIHk9IjE1OCIgd2lkdGg9IjU5LjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQzIiB5PSIxNjEiIHdpZHRoPSIyNCIgaGVpZ2h0PSIxNi4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI4NCIgeT0iMTgzLjMzIiB3aWR0aD0iMTc3LjY3IiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIyMjciIHdpZHRoPSI5NS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1MiIgeT0iMjQyLjMzIiB3aWR0aD0iMTE2IiBoZWlnaHQ9IjMzLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIyODYiIHdpZHRoPSIxMDIiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTIiIHk9IjMxMC4zMyIgd2lkdGg9Ijk3LjMzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjUyIiB5PSIzMzMuNjciIHdpZHRoPSIxMjkuNjciIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTQ0LjUiIHk9IjM2MiIgd2lkdGg9IjExMyIgaGVpZ2h0PSIyMCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI1MiIgeT0iNDA1IiB3aWR0aD0iMjk4IiBoZWlnaHQ9IjMzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NjYuMzMiIHdpZHRoPSI1MS4zMyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNDgyLjY3IiB3aWR0aD0iMjkiIGhlaWdodD0iMTUuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjUxMi4zMyIgd2lkdGg9IjMyNiIgaGVpZ2h0PSIzNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxOS41IiB5PSI1NzYuMTciIHdpZHRoPSIzNjMiIGhlaWdodD0iNzEiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMjAiIHk9IjY2Ny42NyIgd2lkdGg9IjQyIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI3MTEiIHdpZHRoPSI4Mi42NyIgaGVpZ2h0PSIxOCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iNzM3IiB3aWR0aD0iMTYzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwMSIgeT0iNzM3IiB3aWR0aD0iMTYzIiBoZWlnaHQ9IjMyIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjY4IiB5PSI3OTUiIHdpZHRoPSI5NCIgaGVpZ2h0PSI1NCIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNTQiIHk9Ijc5NSIgd2lkdGg9Ijk0IiBoZWlnaHQ9IjU0IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjI0MCIgeT0iNzk1IiB3aWR0aD0iOTQiIGhlaWdodD0iNTQiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="settings-sensor-dual" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="24">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Train" style="left:16px;top:62px;width:44px;height:44px;background-position:-16px -62px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:44px;height:44px">Train</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Settings" style="left:167.67px;top:73.67px;width:66.67px;height:20.67px;background-position:-167.67px -73.67px">
+      <span class="dc-text" data-dc-original="Settings" aria-label="Settings" style="left:0px;top:0px;width:66.67px;height:20.67px">Settings</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-training-sensor" data-dc-role="AXStaticText" role="text" aria-label="Training sensor" style="left:84px;top:156.17px;width:111px;height:18px;background-position:-84px -156.17px">
+      <span class="dc-text" data-dc-original="Training sensor" aria-label="Training sensor" style="left:0px;top:0px;width:111px;height:18px">Training sensor</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-streaming" data-dc-role="AXStaticText" role="text" aria-label="Streaming" style="left:294.33px;top:158px;width:59.67px;height:14.33px;background-position:-294.33px -158px">
+      <span class="dc-text" data-dc-original="Streaming" aria-label="Streaming" style="left:0px;top:0px;width:59.67px;height:14.33px">Streaming</span>
+    </div>
+    <div class="dc-layer" data-dc-id="image-sensor-tag-radiowaves-forward-fill" data-dc-role="AXImage" role="img" aria-label="sensor.tag.radiowaves.forward.fill" style="left:43px;top:161px;width:24px;height:16.33px;background-position:-43px -161px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-live-force-readings-are-ready" data-dc-role="AXStaticText" role="text" aria-label="Live force readings are ready." style="left:84px;top:183.33px;width:177.67px;height:15.67px;background-position:-84px -183.33px">
+      <span class="dc-text" data-dc-original="Live force readings are ready." aria-label="Live force readings are ready." style="left:0px;top:0px;width:177.67px;height:15.67px">Live force readings are ready.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-current-force" data-dc-role="AXStaticText" role="text" aria-label="CURRENT FORCE" style="left:52px;top:227px;width:95.67px;height:13.33px;background-position:-52px -227px">
+      <span class="dc-text" data-dc-original="CURRENT FORCE" aria-label="CURRENT FORCE" style="left:0px;top:0px;width:95.67px;height:13.33px">CURRENT FORCE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-64-0-kgf" data-dc-role="AXStaticText" role="text" aria-label="64.0 kgf" style="left:52px;top:242.33px;width:116px;height:33.67px;background-position:-52px -242.33px">
+      <span class="dc-text" data-dc-original="64.0 kgf" aria-label="64.0 kgf" style="left:0px;top:0px;width:116px;height:33.67px">64.0 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-listening-for-load" data-dc-role="AXStaticText" role="text" aria-label="Listening for load." style="left:52px;top:286px;width:102px;height:14.33px;background-position:-52px -286px">
+      <span class="dc-text" data-dc-original="Listening for load." aria-label="Listening for load." style="left:0px;top:0px;width:102px;height:14.33px">Listening for load.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-threshold-2-5-kgf" data-dc-role="AXStaticText" role="text" aria-label="Threshold 2.5 kgf" style="left:52px;top:310.33px;width:97.33px;height:13.33px;background-position:-52px -310.33px">
+      <span class="dc-text" data-dc-original="Threshold 2.5 kgf" aria-label="Threshold 2.5 kgf" style="left:0px;top:0px;width:97.33px;height:13.33px">Threshold 2.5 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-left-right-balance" data-dc-role="AXStaticText" role="text" aria-label="LEFT / RIGHT BALANCE" style="left:52px;top:333.67px;width:129.67px;height:13.33px;background-position:-52px -333.67px">
+      <span class="dc-text" data-dc-original="LEFT / RIGHT BALANCE" aria-label="LEFT / RIGHT BALANCE" style="left:0px;top:0px;width:129.67px;height:13.33px">LEFT / RIGHT BALANCE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-left-right-load-balance" data-dc-role="AXGenericElement" role="group" aria-label="Left/right load balance" style="left:144.5px;top:362px;width:113px;height:20px;background-position:-144.5px -362px">
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-balance-left-50-right-50" data-dc-role="AXGenericElement" role="group" aria-label="Balance: left 50%, right 50%" style="left:52px;top:405px;width:298px;height:33.33px;background-position:-52px -405px">
+      <span class="dc-text" data-dc-original="LEFT" aria-label="LEFT" style="left:0px;top:0px;width:27.33px;height:13.33px">LEFT</span>
+      <span class="dc-text" data-dc-original="50%" aria-label="50%" style="left:0px;top:15.33px;width:34px;height:18px">50%</span>
+      <span class="dc-text" data-dc-original="RIGHT" aria-label="RIGHT" style="left:262.33px;top:0px;width:35.67px;height:13.33px">RIGHT</span>
+      <span class="dc-text" data-dc-original="50%" aria-label="50%" style="left:264px;top:15.33px;width:34px;height:18px">50%</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-battery" data-dc-role="AXStaticText" role="text" aria-label="BATTERY" style="left:38px;top:466.33px;width:51.33px;height:13.33px;background-position:-38px -466.33px">
+      <span class="dc-text" data-dc-original="BATTERY" aria-label="BATTERY" style="left:0px;top:0px;width:51.33px;height:13.33px">BATTERY</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-88" data-dc-role="AXStaticText" role="text" aria-label="88%" style="left:38px;top:482.67px;width:29px;height:15.67px;background-position:-38px -482.67px">
+      <span class="dc-text" data-dc-original="88%" aria-label="88%" style="left:0px;top:0px;width:29px;height:15.67px">88%</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-disconnect-sensor" data-dc-role="AXButton" role="button" aria-label="Disconnect sensor" style="left:38px;top:512.33px;width:326px;height:34.33px;background-position:-38px -512.33px">
+      <span class="dc-text" data-dc-original="Disconnect sensor" aria-label="Disconnect sensor" style="left:0px;top:0px;width:326px;height:34.33px">Disconnect sensor</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-sensor-settings" data-dc-role="AXButton" role="button" aria-label="Sensor settings" style="left:19.5px;top:576.17px;width:363px;height:71px;background-position:-19.5px -576.17px">
+      <span class="dc-text" data-dc-original="Sensor settings" aria-label="Sensor settings" style="left:64.5px;top:26.5px;width:113.33px;height:18px">Sensor settings</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-units" data-dc-role="AXStaticText" role="text" aria-label="UNITS" style="left:20px;top:667.67px;width:42px;height:13.33px;background-position:-20px -667.67px">
+      <span class="dc-text" data-dc-original="UNITS" aria-label="UNITS" style="left:0px;top:0px;width:42px;height:13.33px">UNITS</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-weight-unit" data-dc-role="AXStaticText" role="text" aria-label="Weight unit" style="left:38px;top:711px;width:82.67px;height:18px;background-position:-38px -711px">
+      <span class="dc-text" data-dc-original="Weight unit" aria-label="Weight unit" style="left:0px;top:0px;width:82.67px;height:18px">Weight unit</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-lb" data-dc-role="AXRadioButton" role="radio" aria-label="lb" style="left:38px;top:737px;width:163px;height:32px;background-position:-38px -737px">
+      <span class="dc-text" data-dc-original="lb" aria-label="lb" style="left:0px;top:0px;width:163px;height:32px">lb</span>
+    </div>
+    <div class="dc-layer" data-dc-id="radiobutton-kg" data-dc-role="AXRadioButton" role="radio" aria-label="kg" style="left:201px;top:737px;width:163px;height:32px;background-position:-201px -737px">
+      <span class="dc-text" data-dc-original="kg" aria-label="kg" style="left:0px;top:0px;width:163px;height:32px">kg</span>
+    </div>
+    <a href="train.html" class="dc-layer" data-dc-id="tab-train" data-dc-role="AXRadioButton" role="radio" aria-label="Train" style="left:68px;top:795px;width:94px;height:54px;background-position:-68px -795px">
+      <span class="dc-text" data-dc-original="Train" aria-label="Train" style="left:0px;top:0px;width:94px;height:54px">Train</span>
+    </a>
+    <a href="plans.html" class="dc-layer" data-dc-id="tab-plans" data-dc-role="AXRadioButton" role="radio" aria-label="Plans" style="left:154px;top:795px;width:94px;height:54px;background-position:-154px -795px">
+      <span class="dc-text" data-dc-original="Plans" aria-label="Plans" style="left:0px;top:0px;width:94px;height:54px">Plans</span>
+    </a>
+    <a href="history-empty.html" class="dc-layer" data-dc-id="tab-history" data-dc-role="AXRadioButton" role="radio" aria-label="History" style="left:240px;top:795px;width:94px;height:54px;background-position:-240px -795px">
+      <span class="dc-text" data-dc-original="History" aria-label="History" style="left:0px;top:0px;width:94px;height:54px">History</span>
+    </a>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

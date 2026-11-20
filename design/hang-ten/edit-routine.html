@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>edit-routine · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("edit-routine.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIzNDkiIHk9IjY2IiB3aWR0aD0iMzAiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTgzLjY3IiB5PSI3My42NyIgd2lkdGg9IjM0LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI4MiIgd2lkdGg9Ijc2LjY3IiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NS4zMyIgeT0iODkuNjciIHdpZHRoPSI5MS4zMyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTMyIiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSIxODcuMzMiIHdpZHRoPSIzMzgiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjI2MS4zMyIgd2lkdGg9IjQxLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ0IiB5PSIyOTguMzMiIHdpZHRoPSIzMTQiIGhlaWdodD0iMjIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjM2MC42NyIgd2lkdGg9IjIxMi42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0NCIgeT0iMzk3LjMzIiB3aWR0aD0iMzE0IiBoZWlnaHQ9IjY2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE0My4zMyIgeT0iNDY0LjMzIiB3aWR0aD0iMTMiIGhlaWdodD0iMTQuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjUyOCIgd2lkdGg9IjExNC4zMyIgaGVpZ2h0PSIyMC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjAuNjciIHk9IjUzMC4zMyIgd2lkdGg9IjQ5LjMzIiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI1NzAiIHdpZHRoPSIzNzAiIGhlaWdodD0iNTIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTIiIHk9IjYzMiIgd2lkdGg9IjMxOCIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNjczLjY3IiB3aWR0aD0iMzcwIiBoZWlnaHQ9Ijg0LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI3NTguNjciIHdpZHRoPSIzNzAiIGhlaWdodD0iNjguNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTUuMzMiIHk9Ijg0NC42NyIgd2lkdGg9IjE3LjY3IiBoZWlnaHQ9IjE3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjU0IiB5PSI4NTYuNjciIHdpZHRoPSIxNyIgaGVpZ2h0PSIxNSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNzAuMzMiIHk9Ijg1OC41NiIgd2lkdGg9Ijc5LjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIzNDkiIHk9IjY2IiB3aWR0aD0iMzAiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMTgzLjY3IiB5PSI3My42NyIgd2lkdGg9IjM0LjY3IiBoZWlnaHQ9IjIwLjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjIwIiB5PSI4MiIgd2lkdGg9Ijc2LjY3IiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1NS4zMyIgeT0iODkuNjciIHdpZHRoPSI5MS4zMyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iMTMyIiB3aWR0aD0iMzcwIiBoZWlnaHQ9IjQwLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMyIiB5PSIxODcuMzMiIHdpZHRoPSIzMzgiIGhlaWdodD0iNDQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjI2MS4zMyIgd2lkdGg9IjQxLjY3IiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjQ0IiB5PSIyOTguMzMiIHdpZHRoPSIzMTQiIGhlaWdodD0iMjIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzgiIHk9IjM2MC42NyIgd2lkdGg9IjIxMi42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSI0NCIgeT0iMzk3LjMzIiB3aWR0aD0iMzE0IiBoZWlnaHQ9IjY2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE0My4zMyIgeT0iNDY0LjMzIiB3aWR0aD0iMTMiIGhlaWdodD0iMTQuNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzIiIHk9IjUyOCIgd2lkdGg9IjExNC4zMyIgaGVpZ2h0PSIyMC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMjAuNjciIHk9IjUzMC4zMyIgd2lkdGg9IjQ5LjMzIiBoZWlnaHQ9IjE1LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI1NzAiIHdpZHRoPSIzNzAiIGhlaWdodD0iNTIiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTIiIHk9IjYzMiIgd2lkdGg9IjMxOCIgaGVpZ2h0PSIzMiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNiIgeT0iNjczLjY3IiB3aWR0aD0iMzcwIiBoZWlnaHQ9Ijg0LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE2IiB5PSI3NTguNjciIHdpZHRoPSIzNzAiIGhlaWdodD0iNjguNjciIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iNTUuMzMiIHk9Ijg0NC42NyIgd2lkdGg9IjE3LjY3IiBoZWlnaHQ9IjE3LjY3IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjU0IiB5PSI4NTYuNjciIHdpZHRoPSIxNyIgaGVpZ2h0PSIxNSIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyNzAuMzMiIHk9Ijg1OC41NiIgd2lkdGg9Ijc5LjY3IiBoZWlnaHQ9IjE0LjMzIiBmaWxsPSJibGFjayIvPjwvbWFzaz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ3aGl0ZSIgbWFzaz0idXJsKCNob2xlcykiLz48L3N2Zz4=");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="edit-routine" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="20">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="popupbutton-more" data-dc-role="AXPopUpButton" role="combobox" aria-label="More" style="left:349px;top:66px;width:30px;height:36px;background-position:-349px -66px">
+      <span class="dc-text" data-dc-original="More" aria-label="More" style="left:0px;top:0px;width:30px;height:36px">More</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Plan" style="left:183.67px;top:73.67px;width:34.67px;height:20.67px;background-position:-183.67px -73.67px">
+      <span class="dc-text" data-dc-original="Plan" aria-label="Plan" style="left:0px;top:0px;width:34.67px;height:20.67px">Plan</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="Cancel" style="left:20px;top:82px;width:76.67px;height:36px;background-position:-20px -82px">
+      <span class="dc-text" data-dc-original="Cancel" aria-label="Cancel" style="left:0px;top:0px;width:76.67px;height:36px">Cancel</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title-2" data-dc-role="AXHeading" role="heading" aria-label="Edit routine" style="left:155.33px;top:89.67px;width:91.33px;height:20.67px;background-position:-155.33px -89.67px">
+      <span class="dc-text" data-dc-original="Edit routine" aria-label="Edit routine" style="left:0px;top:0px;width:91.33px;height:20.67px">Edit routine</span>
+    </div>
+    <div class="dc-layer" data-dc-id="heading-routine" data-dc-role="AXHeading" role="heading" aria-label="Routine" style="left:16px;top:132px;width:370px;height:40.33px;background-position:-16px -132px">
+      <span class="dc-text" data-dc-original="Advanced" aria-label="Advanced" style="left:14px;top:8px;width:58px;height:14.33px">Advanced</span>
+      <span class="dc-text" data-dc-original="12m 50s" aria-label="12m 50s" style="left:288.33px;top:7.54px;width:77.67px;height:15.67px">12m 50s</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-board-no-board" data-dc-role="AXPopUpButton" role="combobox" aria-label="Board, No board" style="left:32px;top:187.33px;width:338px;height:44px;background-position:-32px -187.33px">
+      <span class="dc-text" data-dc-original="Board" aria-label="Board" style="left:12px;top:11.83px;width:45.33px;height:20.33px">Board</span>
+      <span class="dc-text" data-dc-original="No board" aria-label="No board" style="left:239px;top:12px;width:70.67px;height:20.33px">No board</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-name" data-dc-role="AXStaticText" role="text" aria-label="Name" style="left:32px;top:261.33px;width:41.67px;height:18px;background-position:-32px -261.33px">
+      <span class="dc-text" data-dc-original="Name" aria-label="Name" style="left:0px;top:0px;width:41.67px;height:18px">Name</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-max-hangs" data-dc-role="AXTextField" role="textbox" aria-label="Max Hangs" style="left:44px;top:298.33px;width:314px;height:22px;background-position:-44px -298.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-weight-tracking-optional" data-dc-role="AXStaticText" role="text" aria-label="WEIGHT TRACKING · OPTIONAL" style="left:38px;top:360.67px;width:212.67px;height:13.33px;background-position:-38px -360.67px">
+      <span class="dc-text" data-dc-original="WEIGHT TRACKING · OPTIONAL" aria-label="WEIGHT TRACKING · OPTIONAL" style="left:0px;top:0px;width:212.67px;height:13.33px">WEIGHT TRACKING · OPTIONAL</span>
+    </div>
+    <div class="dc-layer" data-dc-id="textfield-adapted-session-five-10-second" data-dc-role="AXTextField" role="textbox" aria-label="Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve." style="left:44px;top:397.33px;width:314px;height:66px;background-position:-44px -397.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="image-play" data-dc-role="AXImage" role="img" aria-label="Play" style="left:143.33px;top:464.33px;width:13px;height:14.67px;background-position:-143.33px -464.33px">
+    </div>
+    <div class="dc-layer" data-dc-id="heading-sets-circuits" data-dc-role="AXHeading" role="heading" aria-label="Sets &amp; circuits" style="left:32px;top:528px;width:114.33px;height:20.33px;background-position:-32px -528px">
+      <span class="dc-text" data-dc-original="Sets &amp; circuits" aria-label="Sets &amp; circuits" style="left:0px;top:0px;width:114.33px;height:20.33px">Sets &amp; circuits</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-reorder" data-dc-role="AXButton" role="button" aria-label="Reorder" style="left:320.67px;top:530.33px;width:49.33px;height:15.67px;background-position:-320.67px -530.33px">
+      <span class="dc-text" data-dc-original="Reorder" aria-label="Reorder" style="left:0px;top:0px;width:49.33px;height:15.67px">Reorder</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-set-1" data-dc-role="AXButton" role="button" aria-label="Set 1" style="left:16px;top:570px;width:370px;height:52px;background-position:-16px -570px">
+      <span class="dc-text" data-dc-original="Set 1" aria-label="Set 1" style="left:17px;top:15.83px;width:76.33px;height:20.33px">Set 1</span>
+    </div>
+    <div class="dc-layer" data-dc-id="slider-repeat-4-times" data-dc-role="AXSlider" role="slider" aria-label="Repeat 4 times" style="left:52px;top:632px;width:318px;height:32px;background-position:-52px -632px">
+      <span class="dc-text" data-dc-original="Repeat 4 times" aria-label="Repeat 4 times" style="left:0px;top:5.83px;width:114.67px;height:20.33px">Repeat 4 times</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-max-hang-hang-10-sec-both-hands-e" data-dc-role="AXButton" role="button" aria-label="Max hang, Hang · 10 sec · Both hands · Edges · 4 fingers · Half crimp" style="left:16px;top:673.67px;width:370px;height:84.67px;background-position:-16px -673.67px">
+      <span class="dc-text" data-dc-original="10s hang · 3m recovery · half crimp · 3s in reserve" aria-label="10s hang · 3m recovery · half crimp · 3s in reserve" style="left:22px;top:68.94px;width:273px;height:13.33px">10s hang · 3m recovery · half crimp · 3s in reserve</span>
+      <span class="dc-text" data-dc-original="Max hang" aria-label="Max hang" style="left:36px;top:15px;width:74.33px;height:20.33px">Max hang</span>
+      <span class="dc-text" data-dc-original="Hang · 10 sec · Both hands · Edges · 4 fingers · Half crimp" aria-label="Hang · 10 sec · Both hands · Edges · 4 fingers · Half crimp" style="left:36px;top:39.33px;width:267.33px;height:30.33px">Hang · 10 sec · Both hands · Edges · 4 fingers · Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-rest-rest-180-sec" data-dc-role="AXButton" role="button" aria-label="Rest, Rest · 180 sec" style="left:16px;top:758.67px;width:370px;height:68.67px;background-position:-16px -758.67px">
+      <span class="dc-text" data-dc-original="SESSION FLOW" aria-label="SESSION FLOW" style="left:22px;top:54.78px;width:102.33px;height:13.33px">SESSION FLOW</span>
+      <span class="dc-text" data-dc-original="Rest" aria-label="Rest" style="left:36px;top:15px;width:34px;height:20.33px">Rest</span>
+      <span class="dc-text" data-dc-original="Rest · 180 sec" aria-label="Rest · 180 sec" style="left:36px;top:39.33px;width:79.67px;height:14.33px">Rest · 180 sec</span>
+      <span class="dc-text" data-dc-original="9 cues" aria-label="9 cues" style="left:309.33px;top:54.28px;width:38.67px;height:14.33px">9 cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="image-add" data-dc-role="AXImage" role="img" aria-label="Add" style="left:55.33px;top:844.67px;width:17.67px;height:17.67px;background-position:-55.33px -844.67px">
+    </div>
+    <div class="dc-layer" data-dc-id="image-repeat-1" data-dc-role="AXImage" role="img" aria-label="Repeat 1" style="left:54px;top:856.67px;width:17px;height:15px;background-position:-54px -856.67px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-12m-40s-total" data-dc-role="AXStaticText" role="text" aria-label="12m 40s total" style="left:270.33px;top:858.56px;width:79.67px;height:14.33px;background-position:-270.33px -858.56px">
+      <span class="dc-text" data-dc-original="12m 40s total" aria-label="12m 40s total" style="left:0px;top:0px;width:79.67px;height:14.33px">12m 40s total</span>
+    </div>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

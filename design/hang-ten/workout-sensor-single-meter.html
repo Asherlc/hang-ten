@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>workout-sensor-single-meter · native canvas</title>
+  <style>
+:root {
+  --dc-shot: url("workout-sensor-single-meter.png");
+  --dc-reveal-fill: #fefcf4;
+  --dc-reveal-ink: #1b2522;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 402px; height: 874px; overflow: hidden;
+  background: #fefcf4; }
+.dc-artboard { position: relative; width: 402px; height: 874px; overflow: hidden; }
+.dc-bg { position: absolute; inset: 0; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat;
+  -webkit-mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTIwLjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE1Ny42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iMzE0Ljk4IiB3aWR0aD0iMTAzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSIzMzkuMzEiIHdpZHRoPSIzMjMiIGhlaWdodD0iMTAzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NTMuNjUiIHdpZHRoPSIyOTQuMzMiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjUxOC45OCIgd2lkdGg9Ijk1LjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMzNy42NyIgeT0iNTMxLjMxIiB3aWR0aD0iMzAuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjUzNC4zMSIgd2lkdGg9IjExNiIgaGVpZ2h0PSIzMy42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMDYiIHk9IjU0Ni42NSIgd2lkdGg9IjYyIiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI1NjgiIHdpZHRoPSIzMzQiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjU5MS45OCIgd2lkdGg9IjE2Mi42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNCIgeT0iNjE2LjMxIiB3aWR0aD0iOTcuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjYzOS42NSIgd2lkdGg9IjEyOS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDQuNSIgeT0iNjY4IiB3aWR0aD0iMTEzIiBoZWlnaHQ9IjIwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI3MTIuNDgiIHdpZHRoPSIyNzYuNjciIGhlaWdodD0iMzAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9Ijc1NC4zMSIgd2lkdGg9IjE4OS4zMyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNSIgeT0iNzc4LjY5IiB3aWR0aD0iODEiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg=="); mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDIiIGhlaWdodD0iODc0IiB2aWV3Qm94PSIwIDAgNDAyIDg3NCI+PG1hc2sgaWQ9ImhvbGVzIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iNDAyIiBoZWlnaHQ9Ijg3NCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0id2hpdGUiLz48cmVjdCB4PSIyMCIgeT0iNjYiIHdpZHRoPSI1My4zMyIgaGVpZ2h0PSIzNiIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyODEiIHk9IjY2IiB3aWR0aD0iNDUiIGhlaWdodD0iMzYiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQyIiB5PSI2NiIgd2lkdGg9IjQwIiBoZWlnaHQ9IjM2IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjE1Ni42NyIgeT0iNzMuNjciIHdpZHRoPSI4OC42NyIgaGVpZ2h0PSIyMC42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIyMCIgeT0iMTIwLjMzIiB3aWR0aD0iMzYyIiBoZWlnaHQ9IjE1Ny42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzOCIgeT0iMzE0Ljk4IiB3aWR0aD0iMTAzIiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSIzMzkuMzEiIHdpZHRoPSIzMjMiIGhlaWdodD0iMTAzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM4IiB5PSI0NTMuNjUiIHdpZHRoPSIyOTQuMzMiIGhlaWdodD0iMTQuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjUxOC45OCIgd2lkdGg9Ijk1LjY3IiBoZWlnaHQ9IjEzLjMzIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjMzNy42NyIgeT0iNTMxLjMxIiB3aWR0aD0iMzAuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjUzNC4zMSIgd2lkdGg9IjExNiIgaGVpZ2h0PSIzMy42NyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzMDYiIHk9IjU0Ni42NSIgd2lkdGg9IjYyIiBoZWlnaHQ9IjE4IiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI1NjgiIHdpZHRoPSIzMzQiIGhlaWdodD0iMjQiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjU5MS45OCIgd2lkdGg9IjE2Mi42NyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNCIgeT0iNjE2LjMxIiB3aWR0aD0iOTcuMzMiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9IjYzOS42NSIgd2lkdGg9IjEyOS42NyIgaGVpZ2h0PSIxMy4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIxNDQuNSIgeT0iNjY4IiB3aWR0aD0iMTEzIiBoZWlnaHQ9IjIwIiBmaWxsPSJibGFjayIvPjxyZWN0IHg9IjM0IiB5PSI3MTIuNDgiIHdpZHRoPSIyNzYuNjciIGhlaWdodD0iMzAuMzMiIGZpbGw9ImJsYWNrIi8+PHJlY3QgeD0iMzQiIHk9Ijc1NC4zMSIgd2lkdGg9IjE4OS4zMyIgaGVpZ2h0PSIxNC4zMyIgZmlsbD0iYmxhY2siLz48cmVjdCB4PSIzNSIgeT0iNzc4LjY5IiB3aWR0aD0iODEiIGhlaWdodD0iMTMuMzMiIGZpbGw9ImJsYWNrIi8+PC9tYXNrPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IndoaXRlIiBtYXNrPSJ1cmwoI2hvbGVzKSIvPjwvc3ZnPg==");
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.dc-layer { position: absolute; background-image: var(--dc-shot);
+  background-size: 402px 874px; background-repeat: no-repeat; }
+.dc-text { position: absolute; margin: 0; overflow: hidden; white-space: nowrap; color: transparent;
+  font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.dc-text.dc-revealed { color: var(--dc-reveal-ink); background: var(--dc-reveal-fill); }
+  </style>
+</head>
+<body>
+  <div class="dc-artboard" data-dc-artboard="workout-sensor-single-meter" data-dc-width="402"
+       data-dc-height="874" data-dc-scale="3" data-dc-holes="20">
+    <div class="dc-bg" aria-hidden="true"></div>
+    <div class="dc-layer" data-dc-id="navigation-back" data-dc-role="AXButton" role="button" aria-label="End" style="left:20px;top:66px;width:53.33px;height:36px;background-position:-20px -66px">
+      <span class="dc-text" data-dc-original="End" aria-label="End" style="left:0px;top:0px;width:53.33px;height:36px">End</span>
+    </div>
+    <div class="dc-layer" data-dc-id="button-turn-off-spoken-cues" data-dc-role="AXButton" role="button" aria-label="Turn off spoken cues" style="left:281px;top:66px;width:45px;height:36px;background-position:-281px -66px">
+      <span class="dc-text" data-dc-original="Turn off spoken cues" aria-label="Turn off spoken cues" style="left:0px;top:0px;width:45px;height:36px">Turn off spoken cues</span>
+    </div>
+    <div class="dc-layer" data-dc-id="popupbutton-workout-options" data-dc-role="AXPopUpButton" role="combobox" aria-label="Workout options" style="left:342px;top:66px;width:40px;height:36px;background-position:-342px -66px">
+      <span class="dc-text" data-dc-original="Workout options" aria-label="Workout options" style="left:0px;top:0px;width:40px;height:36px">Workout options</span>
+    </div>
+    <div class="dc-layer" data-dc-id="navigation-title" data-dc-role="AXHeading" role="heading" aria-label="Max Hangs" style="left:156.67px;top:73.67px;width:88.67px;height:20.67px;background-position:-156.67px -73.67px">
+      <span class="dc-text" data-dc-original="Max Hangs" aria-label="Max Hangs" style="left:0px;top:0px;width:88.67px;height:20.67px">Max Hangs</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-20-mm-left-edges-half-cri" data-dc-role="AXGenericElement" role="group" aria-label="20 mm left edges, Half crimp, Exact fingers: index, middle, ring, and pinky, both hands" style="left:20px;top:120.33px;width:362px;height:157.67px;background-position:-20px -120.33px">
+      <span class="dc-text" data-dc-original="20 MM LEFT EDGES" aria-label="20 MM LEFT EDGES" style="left:121px;top:9.98px;width:120px;height:12px">20 MM LEFT EDGES</span>
+      <span class="dc-text" data-dc-original="Half crimp" aria-label="Half crimp" style="left:137px;top:29.98px;width:88px;height:21.67px">Half crimp</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-instructions" data-dc-role="AXStaticText" role="text" aria-label="INSTRUCTIONS" style="left:38px;top:314.98px;width:103px;height:13.33px;background-position:-38px -314.98px">
+      <span class="dc-text" data-dc-original="INSTRUCTIONS" aria-label="INSTRUCTIONS" style="left:0px;top:0px;width:103px;height:13.33px">INSTRUCTIONS</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-hang-for-10-seconds-on-your-c" data-dc-role="AXStaticText" role="text" aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:38px;top:339.31px;width:323px;height:103.33px;background-position:-38px -339.31px">
+      <span class="dc-text" data-dc-original="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." aria-label="Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure." style="left:0px;top:0px;width:323px;height:103.33px">Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-10s-hang-3m-recovery-half-cri" data-dc-role="AXStaticText" role="text" aria-label="10s hang · 3m recovery · half crimp · 3s in reserve" style="left:38px;top:453.65px;width:294.33px;height:14.33px;background-position:-38px -453.65px">
+      <span class="dc-text" data-dc-original="10s hang · 3m recovery · half crimp · 3s in reserve" aria-label="10s hang · 3m recovery · half crimp · 3s in reserve" style="left:0px;top:0px;width:294.33px;height:14.33px">10s hang · 3m recovery · half crimp · 3s in reserve</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-current-force" data-dc-role="AXStaticText" role="text" aria-label="CURRENT FORCE" style="left:34px;top:518.98px;width:95.67px;height:13.33px;background-position:-34px -518.98px">
+      <span class="dc-text" data-dc-original="CURRENT FORCE" aria-label="CURRENT FORCE" style="left:0px;top:0px;width:95.67px;height:13.33px">CURRENT FORCE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-peak" data-dc-role="AXStaticText" role="text" aria-label="PEAK" style="left:337.67px;top:531.31px;width:30.33px;height:13.33px;background-position:-337.67px -531.31px">
+      <span class="dc-text" data-dc-original="PEAK" aria-label="PEAK" style="left:0px;top:0px;width:30.33px;height:13.33px">PEAK</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-80-0-kgf" data-dc-role="AXStaticText" role="text" aria-label="80.0 kgf" style="left:34px;top:534.31px;width:116px;height:33.67px;background-position:-34px -534.31px">
+      <span class="dc-text" data-dc-original="80.0 kgf" aria-label="80.0 kgf" style="left:0px;top:0px;width:116px;height:33.67px">80.0 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-90-0-kgf" data-dc-role="AXStaticText" role="text" aria-label="90.0 kgf" style="left:306px;top:546.65px;width:62px;height:18px;background-position:-306px -546.65px">
+      <span class="dc-text" data-dc-original="90.0 kgf" aria-label="90.0 kgf" style="left:0px;top:0px;width:62px;height:18px">90.0 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-51" data-dc-role="AXGenericElement" role="group" aria-label="51%" style="left:34px;top:568px;width:334px;height:24px;background-position:-34px -568px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-5-1s-loaded-of-10-0s-planned" data-dc-role="AXStaticText" role="text" aria-label="5.1s loaded of 10.0s planned" style="left:34px;top:591.98px;width:162.67px;height:14.33px;background-position:-34px -591.98px">
+      <span class="dc-text" data-dc-original="5.1s loaded of 10.0s planned" aria-label="5.1s loaded of 10.0s planned" style="left:0px;top:0px;width:162.67px;height:14.33px">5.1s loaded of 10.0s planned</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-threshold-2-5-kgf" data-dc-role="AXStaticText" role="text" aria-label="Threshold 2.5 kgf" style="left:34px;top:616.31px;width:97.33px;height:13.33px;background-position:-34px -616.31px">
+      <span class="dc-text" data-dc-original="Threshold 2.5 kgf" aria-label="Threshold 2.5 kgf" style="left:0px;top:0px;width:97.33px;height:13.33px">Threshold 2.5 kgf</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-left-right-balance" data-dc-role="AXStaticText" role="text" aria-label="LEFT / RIGHT BALANCE" style="left:34px;top:639.65px;width:129.67px;height:13.33px;background-position:-34px -639.65px">
+      <span class="dc-text" data-dc-original="LEFT / RIGHT BALANCE" aria-label="LEFT / RIGHT BALANCE" style="left:0px;top:0px;width:129.67px;height:13.33px">LEFT / RIGHT BALANCE</span>
+    </div>
+    <div class="dc-layer" data-dc-id="genericelement-left-right-load-balance" data-dc-role="AXGenericElement" role="group" aria-label="Left/right load balance" style="left:144.5px;top:668px;width:113px;height:20px;background-position:-144.5px -668px">
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-balance-unavailable-this-sens" data-dc-role="AXStaticText" role="text" aria-label="Balance unavailable — this sensor provides total force only." style="left:34px;top:712.48px;width:276.67px;height:30.33px;background-position:-34px -712.48px">
+      <span class="dc-text" data-dc-original="Balance unavailable — this sensor provides total force only." aria-label="Balance unavailable — this sensor provides total force only." style="left:0px;top:0px;width:276.67px;height:30.33px">Balance unavailable — this sensor provides total force only.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-bodyweight-baseline-unavailab" data-dc-role="AXStaticText" role="text" aria-label="Bodyweight baseline unavailable." style="left:34px;top:754.31px;width:189.33px;height:14.33px;background-position:-34px -754.31px">
+      <span class="dc-text" data-dc-original="Bodyweight baseline unavailable." aria-label="Bodyweight baseline unavailable." style="left:0px;top:0px;width:189.33px;height:14.33px">Bodyweight baseline unavailable.</span>
+    </div>
+    <div class="dc-layer" data-dc-id="statictext-streaming" data-dc-role="AXStaticText" role="text" aria-label="Streaming" style="left:35px;top:778.69px;width:81px;height:13.33px;background-position:-35px -778.69px">
+      <span class="dc-text" data-dc-original="Streaming" aria-label="Streaming" style="left:0px;top:0px;width:81px;height:13.33px">Streaming</span>
+    </div>
+  </div>
+  <script>
+(function () {
+  var root = document.querySelector('[data-dc-artboard]');
+  if (!root) return;
+  var style = getComputedStyle(document.documentElement);
+  var fill = style.getPropertyValue('--dc-reveal-fill').trim();
+  var ink = style.getPropertyValue('--dc-reveal-ink').trim();
+  if (fill) root.style.setProperty('--dc-reveal-fill', fill);
+  if (ink) root.style.setProperty('--dc-reveal-ink', ink);
+  function refresh() {
+    var texts = root.querySelectorAll('.dc-text');
+    for (var i = 0; i < texts.length; i++) {
+      var el = texts[i];
+      var original = el.getAttribute('data-dc-original') || '';
+      var changed = el.textContent !== original;
+      el.classList.toggle('dc-revealed', changed);
+      el.setAttribute('aria-label', changed ? el.textContent : original);
+    }
+  }
+  refresh();
+  if (window.MutationObserver) {
+    new MutationObserver(refresh).observe(root, {
+      subtree: true, childList: true, characterData: true
+    });
+  }
+})();
+  </script>
+</body>
+</html>

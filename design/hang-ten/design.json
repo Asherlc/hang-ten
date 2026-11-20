@@ -1,0 +1,392 @@
+{
+  "version": 1,
+  "title": "Hang Ten · UI workshop",
+  "kind": "prototype",
+  "description": "Current Hang Ten iOS design captured from revision 01a4de85f on an iPhone 17 Pro simulator running iOS 26.5. Native renderings are the baseline. Move named layers and edit their copy using Design Canvas. Sensor values come from deterministic review transports.",
+  "artboards": [
+    {
+      "id": "train",
+      "title": "Train",
+      "file": "train.html",
+      "width": 402,
+      "height": 874,
+      "group": "Train & boards"
+    },
+    {
+      "id": "choose-board",
+      "title": "Choose board",
+      "file": "choose-board.html",
+      "width": 402,
+      "height": 874,
+      "group": "Train & boards"
+    },
+    {
+      "id": "hold-specs",
+      "title": "Hold specs",
+      "file": "hold-specs.html",
+      "width": 402,
+      "height": 874,
+      "group": "Train & boards"
+    },
+    {
+      "id": "plans",
+      "title": "Plans",
+      "file": "plans.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan library"
+    },
+    {
+      "id": "all-workouts",
+      "title": "All workouts",
+      "file": "all-workouts.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan library"
+    },
+    {
+      "id": "finger-strength",
+      "title": "Finger strength",
+      "file": "finger-strength.html",
+      "width": 402,
+      "height": 874,
+      "group": "Browse by focus"
+    },
+    {
+      "id": "finger-endurance",
+      "title": "Finger endurance",
+      "file": "finger-endurance.html",
+      "width": 402,
+      "height": 874,
+      "group": "Browse by focus"
+    },
+    {
+      "id": "mixed-workouts",
+      "title": "Mixed workouts",
+      "file": "mixed-workouts.html",
+      "width": 402,
+      "height": 874,
+      "group": "Browse by focus"
+    },
+    {
+      "id": "warm-ups",
+      "title": "Warm-ups",
+      "file": "warm-ups.html",
+      "width": 402,
+      "height": 874,
+      "group": "Browse by focus"
+    },
+    {
+      "id": "my-routines",
+      "title": "My routines",
+      "file": "my-routines.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan library"
+    },
+    {
+      "id": "filter-workouts",
+      "title": "Filter workouts",
+      "file": "filter-workouts.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan library"
+    },
+    {
+      "id": "plan",
+      "title": "Plan detail",
+      "file": "plan.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan detail"
+    },
+    {
+      "id": "plan-manual",
+      "title": "Plan · manual weight",
+      "file": "plan-manual.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan detail"
+    },
+    {
+      "id": "plan-scale",
+      "title": "Plan · scale",
+      "file": "plan-scale.html",
+      "width": 402,
+      "height": 874,
+      "group": "Plan detail"
+    },
+    {
+      "id": "create-routine",
+      "title": "Create routine",
+      "file": "create-routine.html",
+      "width": 402,
+      "height": 874,
+      "group": "Routine editor"
+    },
+    {
+      "id": "edit-routine",
+      "title": "Edit routine",
+      "file": "edit-routine.html",
+      "width": 402,
+      "height": 874,
+      "group": "Routine editor"
+    },
+    {
+      "id": "workout-hang",
+      "title": "Workout · hang",
+      "file": "workout-hang.html",
+      "width": 402,
+      "height": 874,
+      "group": "Guided workout"
+    },
+    {
+      "id": "workout-rest",
+      "title": "Workout · rest",
+      "file": "workout-rest.html",
+      "width": 402,
+      "height": 874,
+      "group": "Guided workout"
+    },
+    {
+      "id": "workout-landscape",
+      "title": "Workout · landscape",
+      "file": "workout-landscape.html",
+      "width": 874,
+      "height": 402,
+      "group": "Guided workout"
+    },
+    {
+      "id": "workout-sensor",
+      "title": "Ready · Motherboard",
+      "file": "workout-sensor.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected workout · Ready"
+    },
+    {
+      "id": "workout-sensor-single",
+      "title": "Ready · Tindeq Progressor",
+      "file": "workout-sensor-single.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected workout · Ready"
+    },
+    {
+      "id": "workout-sensor-rest",
+      "title": "Rest · Motherboard",
+      "file": "workout-sensor-rest.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected workout · Rest"
+    },
+    {
+      "id": "workout-sensor-single-rest",
+      "title": "Rest · Tindeq Progressor",
+      "file": "workout-sensor-single-rest.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected workout · Rest"
+    },
+    {
+      "id": "workout-sensor-landscape",
+      "title": "Landscape · Motherboard",
+      "file": "workout-sensor-landscape.html",
+      "width": 874,
+      "height": 402,
+      "group": "Connected workout · Landscape"
+    },
+    {
+      "id": "workout-sensor-single-landscape",
+      "title": "Landscape · Tindeq Progressor",
+      "file": "workout-sensor-single-landscape.html",
+      "width": 874,
+      "height": 402,
+      "group": "Connected workout · Landscape"
+    },
+    {
+      "id": "workout-steps",
+      "title": "Routine steps",
+      "file": "workout-steps.html",
+      "width": 402,
+      "height": 874,
+      "group": "Workout sheets"
+    },
+    {
+      "id": "end-workout",
+      "title": "End workout confirmation",
+      "file": "end-workout.html",
+      "width": 402,
+      "height": 874,
+      "group": "Workout sheets"
+    },
+    {
+      "id": "free-workout",
+      "title": "Free workout · start",
+      "file": "free-workout.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout"
+    },
+    {
+      "id": "free-session-empty",
+      "title": "Free workout · empty",
+      "file": "free-session-empty.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout"
+    },
+    {
+      "id": "free-session",
+      "title": "Free workout · session",
+      "file": "free-session.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout"
+    },
+    {
+      "id": "free-session-rest",
+      "title": "Free workout · rest",
+      "file": "free-session-rest.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout"
+    },
+    {
+      "id": "add-exercise",
+      "title": "Add exercise",
+      "file": "add-exercise.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout sheets"
+    },
+    {
+      "id": "log-set",
+      "title": "Log set",
+      "file": "log-set.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout sheets"
+    },
+    {
+      "id": "guided-hang",
+      "title": "Guided hang",
+      "file": "guided-hang.html",
+      "width": 402,
+      "height": 874,
+      "group": "Free workout sheets"
+    },
+    {
+      "id": "summary",
+      "title": "Summary",
+      "file": "summary.html",
+      "width": 402,
+      "height": 874,
+      "group": "History"
+    },
+    {
+      "id": "history",
+      "title": "History",
+      "file": "history.html",
+      "width": 402,
+      "height": 874,
+      "group": "History"
+    },
+    {
+      "id": "history-empty",
+      "title": "History · empty",
+      "file": "history-empty.html",
+      "width": 402,
+      "height": 874,
+      "group": "History"
+    },
+    {
+      "id": "session-summary",
+      "title": "Session summary",
+      "file": "session-summary.html",
+      "width": 402,
+      "height": 874,
+      "group": "History"
+    },
+    {
+      "id": "settings",
+      "title": "Settings",
+      "file": "settings.html",
+      "width": 402,
+      "height": 874,
+      "group": "Settings"
+    },
+    {
+      "id": "sensor-settings",
+      "title": "Sensor settings",
+      "file": "sensor-settings.html",
+      "width": 402,
+      "height": 874,
+      "group": "Settings"
+    },
+    {
+      "id": "sensor-settings-single",
+      "title": "Sensor settings · Tindeq Progressor",
+      "file": "sensor-settings-single.html",
+      "width": 402,
+      "height": 874,
+      "group": "Settings"
+    },
+    {
+      "id": "settings-sensor-dual",
+      "title": "Connected sensor · Motherboard",
+      "file": "settings-sensor-dual.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected sensor"
+    },
+    {
+      "id": "settings-sensor-single",
+      "title": "Connected sensor · Tindeq Progressor",
+      "file": "settings-sensor-single.html",
+      "width": 402,
+      "height": 874,
+      "group": "Connected sensor"
+    },
+    {
+      "id": "prepare-sensor",
+      "title": "Prepare sensor · tare",
+      "file": "prepare-sensor.html",
+      "width": 402,
+      "height": 874,
+      "group": "Sensor preparation"
+    },
+    {
+      "id": "capture-bodyweight",
+      "title": "Prepare sensor · bodyweight",
+      "file": "capture-bodyweight.html",
+      "width": 402,
+      "height": 874,
+      "group": "Sensor preparation"
+    },
+    {
+      "id": "workout-sensor-meter",
+      "title": "Hang · Motherboard · force meter",
+      "group": "Connected workout · Hang",
+      "file": "workout-sensor-meter.html",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "workout-sensor-single-meter",
+      "title": "Hang · Tindeq Progressor · force meter",
+      "group": "Connected workout · Hang",
+      "file": "workout-sensor-single-meter.html",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": "workout-sensor-landscape-meter",
+      "title": "Landscape · Motherboard · force meter",
+      "group": "Connected workout · Landscape",
+      "file": "workout-sensor-landscape-meter.html",
+      "width": 874,
+      "height": 402
+    }
+  ]
+}
