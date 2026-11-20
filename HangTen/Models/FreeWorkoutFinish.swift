@@ -7,7 +7,9 @@ import Foundation
 /// when present, otherwise a fixed 5s work marker so `markSessionComplete` can
 /// record activity without inventing a parallel Health path.
 enum FreeWorkoutFinish {
-    static let defaultTitle = "Free workout"
+    /// UI title for newly saved custom-workout sessions. Previously saved
+    /// records keep their stored title; no migration is performed.
+    static let defaultTitle = "Custom Workout"
     /// Pull-up work marker when the set has no explicit duration (matches Metolius pull-up timing).
     static let defaultPullUpWorkDuration: TimeInterval = 5
     static let planID = "free.workout.log"

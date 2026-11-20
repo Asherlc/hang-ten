@@ -4,7 +4,7 @@ struct MotherboardWorkoutRecorder {
     private struct StepState {
         let plannedActiveDuration: TimeInterval
         let stepStartElapsed: TimeInterval
-        var intervals: [LoadInterval] = []
+        var closedEfforts: [RecordedEffort] = []
         var openStart: TimeInterval?
         var pendingStart: TimeInterval?
         var pendingRelease: TimeInterval?
@@ -14,6 +14,16 @@ struct MotherboardWorkoutRecorder {
         var permitsMergeWithPrevious = true
         var lastMeasurementTimestamp: Date?
         var observedElapsed: TimeInterval?
+
+        var currentEffortPeak: Double?
+        var currentEffortSampleCount = 0
+
+        // Frames observed after the first released frame but before the release
+        // debounce completes. They fall outside the interval that closes at the
+        // first released frame, so they are held here and dropped on a confirmed
+        // close (or folded back in if the effort resumes before the close).
+        var pendingReleasePeak: Double?
+        var pendingReleaseSampleCount = 0
 
         func clippedTime(_ time: TimeInterval) -> TimeInterval {
             plannedActiveDuration == 0 ? time : min(time, plannedEnd)
@@ -38,7 +48,7 @@ struct MotherboardWorkoutRecorder {
 
     var recordedWorkStepIDs: Set<String> {
         Set(states.compactMap { id, state in
-            let hasWork = state.intervals.contains { $0.duration > 0 }
+            let hasWork = state.closedEfforts.contains { $0.interval.duration > 0 }
                 || (id == currentStepID && currentLoadedDuration > 0)
             return hasWork ? id : nil
         })
@@ -93,6 +103,33 @@ struct MotherboardWorkoutRecorder {
         let isQualifying = measurement.aggregateLoadKGF >= configuration.thresholdKGF
         let isReleased = measurement.aggregateLoadKGF < configuration.thresholdKGF * configuration.releaseRatio
 
+        // Track peak and sample count for the effort currently being detected,
+        // including the debounce samples that precede the interval opening.
+        // Post-release debounce frames are counted separately so a confirmed
+        // close does not count frames after the interval's end timestamp.
+        if measurement.aggregateLoadKGF.isFinite {
+            if state.openStart != nil || isQualifying {
+                if state.openStart != nil, state.pendingRelease != nil {
+                    state.pendingReleasePeak = max(
+                        state.pendingReleasePeak ?? measurement.aggregateLoadKGF,
+                        measurement.aggregateLoadKGF
+                    )
+                    state.pendingReleaseSampleCount += 1
+                } else {
+                    state.currentEffortPeak = max(
+                        state.currentEffortPeak ?? measurement.aggregateLoadKGF,
+                        measurement.aggregateLoadKGF
+                    )
+                    state.currentEffortSampleCount += 1
+                }
+            } else {
+                state.currentEffortPeak = nil
+                state.currentEffortSampleCount = 0
+                state.pendingReleasePeak = nil
+                state.pendingReleaseSampleCount = 0
+            }
+        }
+
         if state.openStart == nil {
             if isQualifying {
                 if let pendingStart = state.pendingStart {
@@ -120,6 +157,9 @@ struct MotherboardWorkoutRecorder {
                 }
             }
         } else {
+            // Load returned before the release debounce completed. The held
+            // frames are inside the still-open effort, so fold them back in.
+            commitPendingRelease(in: &state)
             state.pendingRelease = nil
         }
 
@@ -130,10 +170,12 @@ struct MotherboardWorkoutRecorder {
     mutating func pause(at workoutElapsed: TimeInterval) {
         guard let currentStepID, var state = states[currentStepID] else { return }
         let time = state.closingTime(workoutElapsed)
-        closeInterval(in: &state, at: time)
+        closeInterval(in: &state, at: time, includePendingRelease: true)
         state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
+        state.currentEffortPeak = nil
+        state.currentEffortSampleCount = 0
         state.permitsMergeWithPrevious = false
         states[currentStepID] = state
         currentLoadedDuration = loadedDuration(in: state, at: time)
@@ -146,10 +188,12 @@ struct MotherboardWorkoutRecorder {
     ) {
         guard var state = states[stepID] else { return }
         let time = state.closingTime(workoutElapsed)
-        closeInterval(in: &state, at: time)
+        closeInterval(in: &state, at: time, includePendingRelease: true)
         state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
+        state.currentEffortPeak = nil
+        state.currentEffortSampleCount = 0
         state.status = status
         states[stepID] = state
         currentStepID = stepID
@@ -178,10 +222,12 @@ struct MotherboardWorkoutRecorder {
             stepStartElapsed: stepStartElapsed
         )
         let time = state.closingTime(workoutElapsed)
-        closeInterval(in: &state, at: time)
+        closeInterval(in: &state, at: time, includePendingRelease: true)
         state.lastMeasurementTimestamp = nil
         state.pendingStart = nil
         state.pendingRelease = nil
+        state.currentEffortPeak = nil
+        state.currentEffortSampleCount = 0
         state.permitsMergeWithPrevious = false
         state.status = .interrupted
         states[stepID] = state
@@ -193,9 +239,11 @@ struct MotherboardWorkoutRecorder {
         for stepID in stepOrder {
             guard var state = states[stepID] else { continue }
             let time = state.closingTime(workoutElapsed)
-            closeInterval(in: &state, at: time)
+            closeInterval(in: &state, at: time, includePendingRelease: true)
             state.pendingStart = nil
             state.pendingRelease = nil
+            state.currentEffortPeak = nil
+            state.currentEffortSampleCount = 0
             if state.sampleCount > 0, state.status == .unmeasured {
                 state.status = .measured
             }
@@ -207,12 +255,39 @@ struct MotherboardWorkoutRecorder {
             return WorkoutStepMeasurement(
                 stepID: stepID,
                 plannedActiveDuration: state.plannedActiveDuration,
-                intervals: state.intervals,
+                intervals: state.closedEfforts.map(\.interval),
                 peakLoadKGF: state.peakLoadKGF,
                 sampleCount: state.sampleCount,
                 status: state.status
             )
         }
+    }
+
+    /// Auto-detected efforts for a self-paced step, each with its own measured
+    /// interval, peak load and sample count. Zero-length intervals (a single
+    /// loaded sample with no observed duration) are not savable efforts and are
+    /// omitted. When `includeCurrent` is true the in-progress effort is appended
+    /// using the last observed sample time, without disturbing released efforts.
+    /// Returns an empty array for paced steps or unknown step IDs; those continue
+    /// to use `finish(at:)`.
+    func recordedEfforts(stepID: String, includeCurrent: Bool = false) -> [RecordedEffort] {
+        guard let state = states[stepID], state.plannedActiveDuration == 0 else { return [] }
+        var efforts = state.closedEfforts.filter { $0.interval.duration > 0 }
+        // The live list shows only efforts with a confirmed open interval and
+        // positive observed duration. A lone pending-start spike is a noise
+        // candidate, not an effort row.
+        guard includeCurrent, state.currentEffortSampleCount > 0,
+              let start = state.openStart else { return efforts }
+        let end = max(start, state.observedElapsed ?? start)
+        guard end > start else { return efforts }
+        efforts.append(
+            RecordedEffort(
+                interval: LoadInterval(start: start, end: end),
+                peakLoadKGF: max(state.currentEffortPeak ?? 0, state.pendingReleasePeak ?? 0),
+                sampleCount: state.currentEffortSampleCount + state.pendingReleaseSampleCount
+            )
+        )
+        return efforts
     }
 
     private mutating func state(
@@ -236,27 +311,59 @@ struct MotherboardWorkoutRecorder {
         state.pendingStart = nil
         state.pendingRelease = nil
 
+        var effortPeak = state.currentEffortPeak
+        var effortSampleCount = state.currentEffortSampleCount
         if state.permitsMergeWithPrevious,
-           let previous = state.intervals.last,
-           start - previous.end <= configuration.mergeGapDuration {
-            state.intervals.removeLast()
-            state.openStart = previous.start
+           let previous = state.closedEfforts.last,
+           start - previous.interval.end <= configuration.mergeGapDuration {
+            state.closedEfforts.removeLast()
+            effortPeak = max(effortPeak ?? previous.peakLoadKGF, previous.peakLoadKGF)
+            effortSampleCount += previous.sampleCount
+            state.openStart = previous.interval.start
         } else {
             state.openStart = start
         }
+        state.currentEffortPeak = effortPeak
+        state.currentEffortSampleCount = effortSampleCount
         state.permitsMergeWithPrevious = true
     }
 
-    private func closeInterval(in state: inout StepState, at time: TimeInterval) {
+    /// Folds post-release debounce frames back into the current effort. Used
+    /// when an effort closes at the last observed frame (pause/interrupt/finish)
+    /// or when load returns before the release debounce completes.
+    private func commitPendingRelease(in state: inout StepState) {
+        guard state.pendingReleaseSampleCount > 0 else { return }
+        if let peak = state.pendingReleasePeak {
+            state.currentEffortPeak = max(state.currentEffortPeak ?? peak, peak)
+        }
+        state.currentEffortSampleCount += state.pendingReleaseSampleCount
+        state.pendingReleasePeak = nil
+        state.pendingReleaseSampleCount = 0
+    }
+
+    private func closeInterval(
+        in state: inout StepState,
+        at time: TimeInterval,
+        includePendingRelease: Bool = false
+    ) {
         guard let start = state.openStart else { return }
+        if includePendingRelease { commitPendingRelease(in: &state) }
         let end = max(start, state.clippedTime(time))
-        state.intervals.append(LoadInterval(start: start, end: end))
+        state.closedEfforts.append(RecordedEffort(
+            interval: LoadInterval(start: start, end: end),
+            peakLoadKGF: state.currentEffortPeak ?? 0,
+            sampleCount: state.currentEffortSampleCount
+        ))
         state.openStart = nil
         state.pendingRelease = nil
+        state.currentEffortPeak = nil
+        state.currentEffortSampleCount = 0
+        state.pendingReleasePeak = nil
+        state.pendingReleaseSampleCount = 0
     }
 
     private func loadedDuration(in state: StepState, at time: TimeInterval) -> TimeInterval {
-        let closedDuration = state.intervals.reduce(0) { $0 + $1.duration }
+        let closedDuration = state.closedEfforts.reduce(0) { $0 + $1.interval.duration }
         guard let openStart = state.openStart else { return closedDuration }
         return closedDuration + max(0, state.clippedTime(time) - openStart)
     }

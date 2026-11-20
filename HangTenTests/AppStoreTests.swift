@@ -561,6 +561,80 @@ final class AppStoreTests: XCTestCase {
         XCTAssertFalse(historyStore.load()[0].healthUploadAttempted)
     }
 
+    func testSaveFreeformSessionUsesExistingStoresWithoutFabricatedActivityContext() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        // A fresh defaults suite does not isolate the default on-disk session
+        // directory; give this test its own directory so exact history IDs are
+        // meaningful.
+        let directory = FileManager.default.temporaryDirectory
+            .appendingPathComponent("AppStoreTests-Freeform-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+
+        let sessionStore = WorkoutSessionStore(defaults: defaults, directory: directory)
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        healthStore.authorizationState = .authorized
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutSessionStore: sessionStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        // AppStore derives sync from the stored authorization-request flag, not
+        // from the service's state. Enable it through the existing refresh path
+        // so a successful context-free save can be observed.
+        appStore.refreshHealthAuthorization()
+
+        let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
+        let step = WorkoutStepMeasurement(
+            stepID: "effort-1",
+            plannedActiveDuration: 0,
+            intervals: [LoadInterval(start: 0, end: 30)],
+            peakLoadKGF: 12,
+            sampleCount: 3,
+            status: .measured,
+            isGeneralActivity: true
+        )
+        let session = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "freeform",
+            planTitle: "Freeform",
+            recordedAt: startDate.addingTimeInterval(30),
+            startDate: startDate,
+            endDate: startDate.addingTimeInterval(30),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [step],
+            edgeDepthMM: 18
+        )
+
+        appStore.saveFreeformSession(session)
+        waitForHistory(in: appStore)
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertEqual(appStore.sessionHistory.map(\.id), [session.id])
+        XCTAssertEqual(appStore.sessionHistory.first?.edgeDepthMM, 18)
+        XCTAssertEqual(appStore.sessionHistory.first?.steps.count, 1)
+        XCTAssertEqual(appStore.lastSessionTitle, "Freeform")
+        XCTAssertNil(historyStore.load().first?.activityContext)
+        // The context-free overload records exactly one nil context.
+        XCTAssertEqual(healthStore.savedActivityContexts, [nil])
+
+        // Wait for the asynchronous disk write, then verify the depth survives
+        // a fresh store reading the same isolated directory.
+        appStore.flushSessionPersistenceSynchronously()
+        let reloaded = WorkoutSessionStore(defaults: defaults, directory: directory)
+        let loaded = expectation(description: "isolated session store reload")
+        reloaded.load { _ in loaded.fulfill() }
+        wait(for: [loaded], timeout: 5)
+        XCTAssertEqual(reloaded.sessions.first?.id, session.id)
+        XCTAssertEqual(reloaded.sessions.first?.edgeDepthMM, 18)
+    }
+
     func testCompletionBeforeConnectPersistsResolvedActivityContextAndUploadsItAfterConnect() throws {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

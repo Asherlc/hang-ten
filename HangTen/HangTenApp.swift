@@ -26,10 +26,20 @@ struct HangTenApp: App {
 		}
 
 		#if DEBUG
-		let useMotherboardReviewFixture = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
-		let transport: MotherboardTransport = useMotherboardReviewFixture
-			? SimulatedMotherboardTransport()
-			: CoreBluetoothMotherboardTransport()
+		let environment = ProcessInfo.processInfo.environment
+		let useMotherboardReviewFixture = environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
+		let transport: MotherboardTransport
+		if useMotherboardReviewFixture {
+			let samples = environment["HANGTEN_REVIEW_FREEFORM_SAMPLE_LOADS"]
+				.map(SimulatedMotherboardTransport.samples(fromLoadScript:)) ?? []
+			if samples.isEmpty {
+				transport = SimulatedMotherboardTransport()
+			} else {
+				transport = SimulatedMotherboardTransport(samples: samples, streamInterval: .milliseconds(150))
+			}
+		} else {
+			transport = CoreBluetoothMotherboardTransport()
+		}
 		#else
 		let transport: MotherboardTransport = CoreBluetoothMotherboardTransport()
 		#endif
@@ -39,7 +49,6 @@ struct HangTenApp: App {
 		let motherboardSettingsStore = MotherboardSettingsStore()
 		let workoutSessionStore = WorkoutSessionStore()
 		#if DEBUG
-		let environment = ProcessInfo.processInfo.environment
 		if let reviewedFreeWorkouts = environment["HANGTEN_REVIEW_FREE_WORKOUTS_USED"].flatMap(Int.init) {
 			UserDefaults.standard.set(
 				min(max(reviewedFreeWorkouts, 0), 2),

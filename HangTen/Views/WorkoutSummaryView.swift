@@ -283,12 +283,22 @@ private struct WorkoutSummaryContent: View {
                 .padding(.vertical, 4)
             }
 
+            if let edgeDepthMM = session.edgeDepthMM, edgeDepthMM.isFinite, edgeDepthMM > 0 {
+                Section("Edge depth") {
+                    Text(FreeformWorkout.depthText(edgeDepthMM))
+                        .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                        .foregroundStyle(Color.hangInk)
+                        .accessibilityIdentifier("summary.edgeDepth")
+                }
+            }
+
             Section(session.initialWeight.source == .sensor ? "Measured load" : "Workout steps") {
                 ForEach(Array(session.steps.enumerated()), id: \.element.stepID) { index, step in
                     stepRow(
                         step,
                         title: WorkoutSummaryFormatting.stepRowTitle(for: session, at: index),
-                        showsMeasuredLoad: session.initialWeight.source == .sensor
+                        showsMeasuredLoad: session.initialWeight.source == .sensor,
+                        isFreeformSession: session.planID == FreeformWorkout.planID
                     )
                 }
             }
@@ -357,7 +367,8 @@ private struct WorkoutSummaryContent: View {
     private func stepRow(
         _ step: WorkoutStepMeasurement,
         title: String,
-        showsMeasuredLoad: Bool
+        showsMeasuredLoad: Bool,
+        isFreeformSession: Bool
     ) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
@@ -373,7 +384,9 @@ private struct WorkoutSummaryContent: View {
             }
 
             HStack {
-                summaryValue(title: "Planned", value: step.plannedActiveDuration == 0 ? "Unspecified" : step.plannedActiveDuration.durationText)
+                if !isFreeformSession {
+                    summaryValue(title: "Planned", value: step.plannedActiveDuration == 0 ? "Unspecified" : step.plannedActiveDuration.durationText)
+                }
                 if let cycle = step.cycleDuration {
                     Spacer()
                     summaryValue(title: "Cycle", value: cycle.durationText)
@@ -386,8 +399,12 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
+            // Only Freeform's scale-only efforts have no side, grip or
+            // prescription. Other plans keep their existing semantic text even
+            // when a step is flagged as general activity.
             let semanticText = WorkoutSummaryFormatting.semanticText(for: step, unit: unit)
-            if semanticText.caseInsensitiveCompare(title) != .orderedSame {
+            if !isFreeformSession,
+               semanticText.caseInsensitiveCompare(title) != .orderedSame {
                 Text(semanticText)
                     .font(.system(.caption, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangMuted)

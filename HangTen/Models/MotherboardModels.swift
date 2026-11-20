@@ -386,6 +386,17 @@ struct LoadInterval: Codable, Equatable {
     var duration: TimeInterval { max(0, end - start) }
 }
 
+/// One auto-detected loaded effort: its measured interval plus the peak and
+/// sample count observed while that interval was open. Produced by
+/// ``MotherboardWorkoutRecorder`` for self-paced (unstructured) recording.
+struct RecordedEffort: Equatable {
+    let interval: LoadInterval
+    let peakLoadKGF: Double
+    let sampleCount: Int
+
+    var duration: TimeInterval { interval.duration }
+}
+
 struct WorkoutStepMeasurement: Codable, Equatable {
     let stepID: String
     let plannedActiveDuration: TimeInterval
@@ -507,6 +518,9 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit
     let motherboardMeasurements: [MotherboardMeasurement]
     let motherboardMeasurementsTruncated: Bool
+    /// User-entered edge depth in millimeters for a Freeform (scale-only) session.
+    /// Optional so previously saved sessions remain decodable.
+    let edgeDepthMM: Double?
 
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
@@ -515,6 +529,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         case loadAdjustmentKGF
         case loadAdjustmentDisplayUnit
         case motherboardMeasurements, motherboardMeasurementsTruncated
+        case edgeDepthMM
     }
 
     init(
@@ -534,7 +549,8 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         loadAdjustmentKGF: Double = 0,
         loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms,
         motherboardMeasurements: [MotherboardMeasurement] = [],
-        motherboardMeasurementsTruncated: Bool = false
+        motherboardMeasurementsTruncated: Bool = false,
+        edgeDepthMM: Double? = nil
     ) {
         self.id = id
         self.planID = planID
@@ -555,6 +571,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.loadAdjustmentDisplayUnit = loadAdjustmentDisplayUnit
         self.motherboardMeasurements = motherboardMeasurements
         self.motherboardMeasurementsTruncated = motherboardMeasurementsTruncated
+        self.edgeDepthMM = edgeDepthMM
     }
 
     func stepTitle(at index: Int) -> String {
@@ -606,6 +623,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         loadAdjustmentDisplayUnit = try container.decode(WorkoutLoadAdjustmentDisplayUnit.self, forKey: .loadAdjustmentDisplayUnit)
         motherboardMeasurements = try container.decode([MotherboardMeasurement].self, forKey: .motherboardMeasurements)
         motherboardMeasurementsTruncated = try container.decode(Bool.self, forKey: .motherboardMeasurementsTruncated)
+        edgeDepthMM = try container.decodeIfPresent(Double.self, forKey: .edgeDepthMM)
     }
 
     private static func normalizedLoadAdjustment(_ value: Double) -> Double {

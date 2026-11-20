@@ -623,6 +623,44 @@ final class AppStore: ObservableObject {
         )
     }
 
+    /// Saves a scale-only Freeform session through the existing session and
+    /// workout-history stores. No board, hand, grip, or prescription context is
+    /// fabricated for HealthKit.
+    func saveFreeformSession(_ session: WorkoutSessionRecord) {
+        workoutSessionStore.append(session) { [weak self] result in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.recordSessionPersistence(result)
+                if case .success = result {
+                    self.recordSavedWorkoutAccess()
+                }
+            }
+        }
+        sessionHistory = workoutSessionStore.sessions
+        lastSessionTitle = session.planTitle
+        setHealthAuthorizationError(nil, kind: nil)
+        preservesCompletionError = false
+
+        if hasRequestedHealthAuthorization {
+            workoutHistory = WorkoutHistorySnapshot(
+                entries: workoutHistory.entries,
+                source: .syncing
+            )
+        }
+        workoutHistoryService.recordCompletion(
+            planTitle: session.planTitle,
+            startDate: session.startDate,
+            endDate: session.endDate,
+            activityContext: nil,
+            shouldUploadToHealthKit: true
+        ) { [weak self] in
+            self?.publishWorkoutHistory(
+                errorContext: .completion,
+                recordingErrorMessage: nil
+            )
+        }
+    }
+
     func refreshHealthAuthorization() {
         healthAuthorizationState = healthKitService.authorizationState
         reconcileAuthorizedHealthKitStateIfNeeded()

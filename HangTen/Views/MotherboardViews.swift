@@ -195,6 +195,9 @@ struct MotherboardMeterView: View {
     let state: MotherboardConnectionState
     let thresholdKGF: Double
     var showsConnectionStatus = true
+    /// For unstructured sessions (no planned duration) show the measured loaded
+    /// total explicitly instead of a generic "Listening" line.
+    var showsTotalLoadedTime = false
     var showsBodyweightFeedback = true
 
     @State private var balanceRocker = MotherboardBalanceRocker()
@@ -233,6 +236,12 @@ struct MotherboardMeterView: View {
                 Text("\(actualLoadedTime.durationText) loaded of \(plannedActiveDuration.durationText) planned")
                     .font(.system(.caption, design: .rounded, weight: .medium))
                     .foregroundStyle(Color.hangMuted)
+            } else if showsTotalLoadedTime {
+                Text("\(actualLoadedTime.durationText) total loaded")
+                    .font(.system(.caption, design: .rounded, weight: .medium))
+                    .foregroundStyle(Color.hangMuted)
+                    .monospacedDigit()
+                    .accessibilityIdentifier("motherboard.totalLoadedTime")
             } else {
                 Text(state == .streaming ? "Listening for load." : "Connect the sensor to see live force.")
                     .font(.system(.caption, design: .rounded, weight: .medium))

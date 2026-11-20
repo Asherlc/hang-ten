@@ -25,7 +25,7 @@ struct FreeWorkoutStartSheet: View {
                     Button("Cancel") { isPresented = false }
                 }
             }
-            .navigationTitle("Free workout")
+            .navigationTitle("Custom Workout")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: FreeWorkoutStartRoute.self) { route in
                 switch route {
@@ -48,7 +48,7 @@ struct FreeWorkoutStartSheet: View {
         VStack(alignment: .leading, spacing: 20) {
             VStack(alignment: .leading, spacing: 8) {
                 SectionLabel(title: "In progress")
-                Text("You have a free workout in progress.")
+                Text("You have a custom workout in progress.")
                     .font(.system(.callout, design: .rounded, weight: .bold))
                     .foregroundStyle(Color.hangInk)
                 if let activeLog {
@@ -108,7 +108,7 @@ struct FreeWorkoutStartSheet: View {
                 Text("Start")
             } footer: {
                 if latest == nil {
-                    Text("Your last completed free workout will appear here.")
+                    Text("Your last completed custom workout will appear here.")
                 }
             }
 

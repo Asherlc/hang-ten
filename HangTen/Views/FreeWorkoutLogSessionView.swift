@@ -115,7 +115,7 @@ struct FreeWorkoutLogSessionView: View {
                 }
             }
         }
-        .navigationTitle("Free workout")
+        .navigationTitle("Custom Workout")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -159,7 +159,7 @@ struct FreeWorkoutLogSessionView: View {
             logSetSheet(for: target)
         }
         .confirmationDialog(
-            "End this free workout?",
+            "End this custom workout?",
             isPresented: $showsFinishConfirm,
             titleVisibility: .visible
         ) {

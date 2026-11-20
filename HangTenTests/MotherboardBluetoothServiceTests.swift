@@ -369,13 +369,25 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.connectedProfile, .progressor)
         XCTAssertEqual(transport.commands, [Data([0x65])])
 
+        var batch: [MotherboardBluetoothService.TimedMeasurement] = []
+        let observation = service.timedMeasurementUpdates.sink { batch.append($0) }
+        defer { observation.cancel() }
+        let wallDate = Date(timeIntervalSince1970: 1_234)
+        let beforeReception = WorkoutClock.monotonicTime
         transport.emit(.notification(Data([
             0x01, 0x10,
             0x00, 0x00, 0x48, 0x41, 0x40, 0x42, 0x0F, 0x00,
             0x00, 0x00, 0x00, 0x3F, 0xD0, 0x12, 0x13, 0x00
-        ]), Date(timeIntervalSince1970: 1_234)))
+        ]), wallDate))
 
         let measurement = try XCTUnwrap(service.latestMeasurement)
+        XCTAssertEqual(batch.count, 2)
+        let first = try XCTUnwrap(batch.first)
+        XCTAssertGreaterThanOrEqual(first.receivedAtUptime, beforeReception)
+        XCTAssertLessThanOrEqual(first.receivedAtUptime, WorkoutClock.monotonicTime)
+        XCTAssertTrue(batch.allSatisfy { $0.receivedAtUptime == first.receivedAtUptime })
+        XCTAssertTrue(batch.allSatisfy { $0.measurement.timestamp == wallDate })
+        XCTAssertEqual(batch.last?.measurement, measurement)
         XCTAssertEqual(measurement.aggregateLoadKGF, 0.5, accuracy: 0.000_001)
         XCTAssertEqual(measurement.sensorLoadsKGF, [])
         XCTAssertNil(service.batteryValue)

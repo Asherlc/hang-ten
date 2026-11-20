@@ -74,6 +74,11 @@ protocol MotherboardSimulationControlling: AnyObject {
 
 @MainActor
 final class MotherboardBluetoothService: ObservableObject {
+    struct TimedMeasurement {
+        let measurement: MotherboardMeasurement
+        let receivedAtUptime: TimeInterval
+    }
+
     @Published private(set) var state: MotherboardConnectionState = .idle
     @Published private(set) var latestMeasurement: MotherboardMeasurement?
     @Published private(set) var batteryValue: UInt16?
@@ -87,6 +92,11 @@ final class MotherboardBluetoothService: ObservableObject {
     @Published private(set) var isMeasuringBodyweight = false
     @Published private(set) var bodyweightMeasurementStartedAt: Date?
     @Published private(set) var bodyweightSampleCount = 0
+
+    private let timedMeasurements = PassthroughSubject<TimedMeasurement, Never>()
+    var timedMeasurementUpdates: AnyPublisher<TimedMeasurement, Never> {
+        timedMeasurements.eraseToAnyPublisher()
+    }
 
     let tareSampleTarget: Int
 
@@ -205,7 +215,7 @@ final class MotherboardBluetoothService: ObservableObject {
 
     func injectSimulationFrameForTesting(_ data: Data, receivedAt: Date) {
         guard state == .streaming else { return }
-        handleNotification(data, receivedAt: receivedAt)
+        handle(.notification(data, receivedAt))
     }
     #endif
 
@@ -258,7 +268,8 @@ final class MotherboardBluetoothService: ObservableObject {
             handleAdvertisement(
                 from: device,
                 advertisement: advertisement,
-                receivedAt: receivedAt
+                receivedAt: receivedAt,
+                receivedAtUptime: WorkoutClock.monotonicTime
             )
 
         case .connected:
@@ -289,7 +300,7 @@ final class MotherboardBluetoothService: ObservableObject {
             }
 
         case .notification(let data, let receivedAt):
-            handleNotification(data, receivedAt: receivedAt)
+            handleNotification(data, receivedAt: receivedAt, receivedAtUptime: WorkoutClock.monotonicTime)
 
         case .disconnected(let message):
             handleDisconnect(message)
@@ -323,9 +334,9 @@ final class MotherboardBluetoothService: ObservableObject {
         }
     }
 
-    private func handleNotification(_ data: Data, receivedAt: Date) {
+    private func handleNotification(_ data: Data, receivedAt: Date, receivedAtUptime: TimeInterval) {
         guard activeProfile == .motherboard else {
-            handleForceSensorNotification(data, receivedAt: receivedAt)
+            handleForceSensorNotification(data, receivedAt: receivedAt, receivedAtUptime: receivedAtUptime)
             return
         }
 
@@ -354,7 +365,7 @@ final class MotherboardBluetoothService: ObservableObject {
                     calibration: calibration,
                     tareKGF: tareKGF
                 )
-                latestMeasurement = measurement
+                publishMeasurement(measurement, receivedAtUptime: receivedAtUptime)
                 batteryValue = measurement.batteryValue
                 collectTareSample(measurement)
                 collectBodyweightSample(measurement)
@@ -380,7 +391,7 @@ final class MotherboardBluetoothService: ObservableObject {
         }
     }
 
-    private func handleForceSensorNotification(_ data: Data, receivedAt: Date) {
+    private func handleForceSensorNotification(_ data: Data, receivedAt: Date, receivedAtUptime: TimeInterval) {
         guard state == .streaming,
               let activeProfile,
               let adapter = ForceSensorAdapterRegistry.adapter(for: activeProfile) else {
@@ -396,13 +407,14 @@ final class MotherboardBluetoothService: ObservableObject {
         }
 
         consecutiveStreamingParserErrors = 0
-        publish(samples)
+        publish(samples, receivedAtUptime: receivedAtUptime)
     }
 
     private func handleAdvertisement(
         from device: MotherboardDiscoveredDevice,
         advertisement: ForceSensorAdvertisement,
-        receivedAt: Date
+        receivedAt: Date,
+        receivedAtUptime: TimeInterval
     ) {
         guard wantsConnection,
               (requestedProfile == .automatic || device.profile == requestedProfile),
@@ -433,10 +445,10 @@ final class MotherboardBluetoothService: ObservableObject {
                 self?.recoverAdvertisementStream()
             }
         )
-        publish(samples)
+        publish(samples, receivedAtUptime: receivedAtUptime)
     }
 
-    private func publish(_ samples: [ForceSensorSample]) {
+    private func publish(_ samples: [ForceSensorSample], receivedAtUptime: TimeInterval) {
         for sample in samples {
             nextForceSensorSampleNumber &+= 1
             let measurement = MotherboardMeasurement(
@@ -446,11 +458,16 @@ final class MotherboardBluetoothService: ObservableObject {
                 sensorLoadsKGF: [],
                 aggregateLoadKGF: max(0, sample.kilogramsForce - aggregateTareKGF)
             )
-            latestMeasurement = measurement
+            publishMeasurement(measurement, receivedAtUptime: receivedAtUptime)
             batteryValue = nil
             collectTareSample(measurement, untaredAggregateLoadKGF: sample.kilogramsForce)
             collectBodyweightSample(measurement)
         }
+    }
+
+    private func publishMeasurement(_ measurement: MotherboardMeasurement, receivedAtUptime: TimeInterval) {
+        latestMeasurement = measurement
+        timedMeasurements.send(TimedMeasurement(measurement: measurement, receivedAtUptime: receivedAtUptime))
     }
 
     private func handleDisconnect(_ message: String?) {
